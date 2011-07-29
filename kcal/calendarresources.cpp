@@ -768,17 +768,17 @@ void CalendarResources::Private::appendIncidences( IncidenceList &result,
 
 void CalendarResources::connectResource( ResourceCalendar *resource )
 {
-  connect( resource, SIGNAL( resourceChanged( ResourceCalendar * ) ),
-           SIGNAL( calendarChanged() ) );
-  connect( resource, SIGNAL( resourceSaved( ResourceCalendar * ) ),
-           SIGNAL( calendarSaved() ) );
+  connect( resource, SIGNAL(resourceChanged(ResourceCalendar*)),
+           SIGNAL(calendarChanged()) );
+  connect( resource, SIGNAL(resourceSaved(ResourceCalendar*)),
+           SIGNAL(calendarSaved()) );
 
   connect( resource, SIGNAL( resourceLoadError( ResourceCalendar *,
                                                 const QString & ) ),
-           SLOT( slotLoadError( ResourceCalendar *, const QString & ) ) );
+           SLOT(slotLoadError(ResourceCalendar*,QString)) );
   connect( resource, SIGNAL( resourceSaveError( ResourceCalendar *,
                                                 const QString & ) ),
-           SLOT( slotSaveError( ResourceCalendar *, const QString & ) ) );
+           SLOT(slotSaveError(ResourceCalendar*,QString)) );
 }
 
 ResourceCalendar *CalendarResources::resource( Incidence *incidence )

@@ -28,7 +28,7 @@ MBoxPrivate::MBoxPrivate( MBox *mbox )
   : mInitialMboxFileSize( 0 ), mMBox( mbox ),
     mSeparatorMatcher( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-9]" ) )
 {
-  connect( &mUnlockTimer, SIGNAL( timeout() ), SLOT( unlockMBox() ) );
+  connect( &mUnlockTimer, SIGNAL(timeout()), SLOT(unlockMBox()) );
 }
 
 MBoxPrivate::~MBoxPrivate()

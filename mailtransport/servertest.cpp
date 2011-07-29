@@ -452,14 +452,14 @@ ServerTest::ServerTest( QWidget *parent )
 {
   d->normalSocketTimer = new QTimer( this );
   d->normalSocketTimer->setSingleShot( true );
-  connect( d->normalSocketTimer, SIGNAL( timeout() ), SLOT( slotNormalNotPossible() ) );
+  connect( d->normalSocketTimer, SIGNAL(timeout()), SLOT(slotNormalNotPossible()) );
 
   d->secureSocketTimer = new QTimer( this );
   d->secureSocketTimer->setSingleShot( true );
-  connect( d->secureSocketTimer, SIGNAL( timeout() ), SLOT( slotSslNotPossible() ) );
+  connect( d->secureSocketTimer, SIGNAL(timeout()), SLOT(slotSslNotPossible()) );
 
   d->progressTimer = new QTimer( this );
-  connect( d->progressTimer, SIGNAL( timeout() ), SLOT( slotUpdateProgress() ) );
+  connect( d->progressTimer, SIGNAL(timeout()), SLOT(slotUpdateProgress()) );
 }
 
 ServerTest::~ServerTest()
@@ -514,8 +514,8 @@ void ServerTest::start()
 
   connect( d->normalSocket, SIGNAL(connected()), SLOT(slotNormalPossible()) );
   connect( d->normalSocket, SIGNAL(failed()), SLOT(slotNormalNotPossible()) );
-  connect( d->normalSocket, SIGNAL(data(const QString&)),
-           SLOT(slotReadNormal(const QString&)) );
+  connect( d->normalSocket, SIGNAL(data(QString)),
+           SLOT(slotReadNormal(QString)) );
   connect( d->normalSocket, SIGNAL(tlsDone()), SLOT(slotTlsDone()));
   d->normalSocket->reconnect();
   d->normalSocketTimer->start( 10000 );
@@ -526,8 +526,8 @@ void ServerTest::start()
   d->secureSocket->setSecure( true );
   connect( d->secureSocket, SIGNAL(connected()), SLOT(slotSslPossible()) );
   connect( d->secureSocket, SIGNAL(failed()), SLOT(slotSslNotPossible()) );
-  connect( d->secureSocket, SIGNAL(data(const QString&) ),
-           SLOT(slotReadSecure(const QString&)) );
+  connect( d->secureSocket, SIGNAL(data(QString)),
+           SLOT(slotReadSecure(QString)) );
   d->secureSocket->reconnect();
   d->secureSocketTimer->start( 10000 );
 }

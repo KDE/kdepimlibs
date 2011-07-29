@@ -172,8 +172,8 @@ void TestGData::fetchProfileId( const QString &pid )
   qDebug() << "# profileId: " << pid;
   qDebug() << "##############################\n";
 
-  connect( b, SIGNAL( listedBlogs( const QList<QMap<QString,QString> >& ) ),
-           this, SLOT( listBlogs( const QList<QMap<QString,QString> >& ) ) );
+  connect( b, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+           this, SLOT(listBlogs(QList<QMap<QString,QString> >)) );
   b->listBlogs();
   listBlogsTimer->start( TIMEOUT );
 }
@@ -189,8 +189,8 @@ void TestGData::listBlogs( const QList<QMap<QString,QString> >& listedBlogs )
   }
   qDebug() << "###########################\n";
 
-  connect( b, SIGNAL( listedRecentPosts(const QList<KBlog::BlogPost>&) ),
-           this, SLOT( listRecentPosts(const QList<KBlog::BlogPost>&) ) );
+  connect( b, SIGNAL(listedRecentPosts(QList<KBlog::BlogPost>)),
+           this, SLOT(listRecentPosts(QList<KBlog::BlogPost>)) );
   b->listRecentPosts( DOWNLOADCOUNT );
   listRecentPostsTimer->start( TIMEOUT );
 }
@@ -207,8 +207,8 @@ void TestGData::listRecentPosts(
   }
   qDebug() << "#################################\n";
 
-  connect( b, SIGNAL( createdPost( KBlog::BlogPost* ) ),
-           this, SLOT( createPost( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL(createdPost(KBlog::BlogPost*)),
+           this, SLOT(createPost(KBlog::BlogPost*)) );
   b->createPost( p ); // start chain
   createPostTimer->start( TIMEOUT );
 }
@@ -221,8 +221,8 @@ void TestGData::createPost( KBlog::BlogPost *post )
   qDebug() << "################################\n";
   QVERIFY( post->status() == BlogPost::Created );
 
-  connect( b, SIGNAL( createdComment( const KBlog::BlogPost*, const KBlog::BlogComment* ) ),
-           this, SLOT( createComment( const KBlog::BlogPost*, const KBlog::BlogComment* ) ) );
+  connect( b, SIGNAL(createdComment(const KBlog::BlogPost*,const KBlog::BlogComment*)),
+           this, SLOT(createComment(const KBlog::BlogPost*,const KBlog::BlogComment*)) );
   b->createComment( p, c );
   createCommentTimer->start( TIMEOUT );
 }
@@ -236,8 +236,8 @@ void TestGData::createComment( const KBlog::BlogPost *post, const KBlog::BlogCom
   qDebug() << "################################\n";
   QVERIFY( comment->status() == BlogComment::Created );
 
-  connect( b, SIGNAL( removedComment( const KBlog::BlogPost*, const KBlog::BlogComment * ) ),
-           this, SLOT( removeComment( const KBlog::BlogPost*, const KBlog::BlogComment* ) ) );
+  connect( b, SIGNAL(removedComment(const KBlog::BlogPost*,const KBlog::BlogComment*)),
+           this, SLOT(removeComment(const KBlog::BlogPost*,const KBlog::BlogComment*)) );
   b->removeComment( p, c );
   removeCommentTimer->start( TIMEOUT );
 }
@@ -251,8 +251,8 @@ void TestGData::removeComment( const KBlog::BlogPost *post, const KBlog::BlogCom
   qDebug() << "################################\n";
   QVERIFY( comment->status() == BlogComment::Created );
 
-  connect( b, SIGNAL( modifiedPost( KBlog::BlogPost* ) ),
-           this, SLOT( modifyPost( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL(modifiedPost(KBlog::BlogPost*)),
+           this, SLOT(modifyPost(KBlog::BlogPost*)) );
   p->setContent( mModifiedContent );
   b->modifyPost( p );
   modifyPostTimer->start( TIMEOUT );
@@ -266,8 +266,8 @@ void TestGData::modifyPost( KBlog::BlogPost *post )
   qDebug() << "################################\n";
   QVERIFY( post->status() == BlogPost::Modified );
 
-  connect( b, SIGNAL( fetchedPost( KBlog::BlogPost* ) ),
-           this, SLOT( fetchPost( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
+           this, SLOT(fetchPost(KBlog::BlogPost*)) );
   p->setContent( "TestGData: created content." );
   b->fetchPost( p );
   fetchPostTimer->start( TIMEOUT );
@@ -282,8 +282,8 @@ void TestGData::fetchPost( KBlog::BlogPost *post )
   QVERIFY( post->status() == BlogPost::Fetched );
 //   QVERIFY( post->content() == mModifiedContent ); // changed by GData
 
-  connect( b, SIGNAL( removedPost( KBlog::BlogPost* ) ),
-           this, SLOT( removePost( KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL(removedPost(KBlog::BlogPost*)),
+           this, SLOT(removePost(KBlog::BlogPost*)) );
   b->removePost( p );
   removePostTimer->start( TIMEOUT );
 }
@@ -418,59 +418,59 @@ void TestGData::testNetwork()
   c->setCreationDateTime( mCDateTime );
   c->setModificationDateTime( mMDateTime );
 
-  connect( b, SIGNAL( errorPost( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ),
-           this, SLOT( error( KBlog::Blog::ErrorType, const QString&, KBlog::BlogPost* ) ) );
+  connect( b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
+           this, SLOT(error(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)) );
 
   TestGDataWarnings *warnings = new TestGDataWarnings();
 
   fetchProfileIdTimer = new QTimer( this );
   fetchProfileIdTimer->setSingleShot( true );
-  connect( fetchProfileIdTimer, SIGNAL( timeout() ),
-           warnings, SLOT( fetchProfileIdTimeoutWarning() ) );
+  connect( fetchProfileIdTimer, SIGNAL(timeout()),
+           warnings, SLOT(fetchProfileIdTimeoutWarning()) );
 
   listBlogsTimer = new QTimer( this );
   listBlogsTimer->setSingleShot( true );
-  connect( listBlogsTimer, SIGNAL( timeout() ),
-           warnings, SLOT( listBlogsTimeoutWarning() ) );
+  connect( listBlogsTimer, SIGNAL(timeout()),
+           warnings, SLOT(listBlogsTimeoutWarning()) );
 
   listRecentPostsTimer = new QTimer( this );
   listRecentPostsTimer->setSingleShot( true );
-  connect( listRecentPostsTimer, SIGNAL( timeout() ),
-           warnings, SLOT( listRecentPostsTimeoutWarning() ) );
+  connect( listRecentPostsTimer, SIGNAL(timeout()),
+           warnings, SLOT(listRecentPostsTimeoutWarning()) );
 
   fetchPostTimer = new QTimer( this );
   fetchPostTimer->setSingleShot( true );
-  connect( fetchPostTimer, SIGNAL( timeout() ),
-           warnings, SLOT( fetchPostTimeoutWarning() ) );
+  connect( fetchPostTimer, SIGNAL(timeout()),
+           warnings, SLOT(fetchPostTimeoutWarning()) );
 
   modifyPostTimer = new QTimer( this );
   modifyPostTimer->setSingleShot( true );
-  connect( modifyPostTimer, SIGNAL( timeout() ),
-           warnings, SLOT( modifyPostTimeoutWarning() ) );
+  connect( modifyPostTimer, SIGNAL(timeout()),
+           warnings, SLOT(modifyPostTimeoutWarning()) );
 
   createPostTimer = new QTimer( this );
   createPostTimer->setSingleShot( true );
-  connect( createPostTimer, SIGNAL( timeout() ),
-           warnings, SLOT( createPostTimeoutWarning() ) );
+  connect( createPostTimer, SIGNAL(timeout()),
+           warnings, SLOT(createPostTimeoutWarning()) );
 
   createCommentTimer = new QTimer( this );
   createCommentTimer->setSingleShot( true );
-  connect( createCommentTimer, SIGNAL( timeout() ),
-           warnings, SLOT( createCommentTimeoutWarning() ) );
+  connect( createCommentTimer, SIGNAL(timeout()),
+           warnings, SLOT(createCommentTimeoutWarning()) );
 
   removeCommentTimer = new QTimer( this );
   removeCommentTimer->setSingleShot( true );
-  connect( removeCommentTimer, SIGNAL( timeout() ),
-           warnings, SLOT( removeCommentTimeoutWarning() ) );
+  connect( removeCommentTimer, SIGNAL(timeout()),
+           warnings, SLOT(removeCommentTimeoutWarning()) );
 
   removePostTimer = new QTimer( this );
   removePostTimer->setSingleShot( true );
-  connect( removePostTimer, SIGNAL( timeout() ),
-           warnings, SLOT( removePostTimeoutWarning() ) );
+  connect( removePostTimer, SIGNAL(timeout()),
+           warnings, SLOT(removePostTimeoutWarning()) );
 
   // start the chain
-  connect( b, SIGNAL( fetchedProfileId( const QString & ) ),
-          this, SLOT( fetchProfileId( const QString & ) ) );
+  connect( b, SIGNAL(fetchedProfileId(QString)),
+          this, SLOT(fetchProfileId(QString)) );
   b->fetchProfileId();
   fetchProfileIdTimer->start( TIMEOUT );
 

@@ -90,16 +90,16 @@ ResourceCached::ResourceCached()
   : ResourceCalendar(),
     d( new Private )
 {
-  connect( &d->mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
-  connect( &d->mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );
+  connect( &d->mReloadTimer, SIGNAL(timeout()), SLOT(slotReload()) );
+  connect( &d->mSaveTimer, SIGNAL(timeout()), SLOT(slotSave()) );
 }
 
 ResourceCached::ResourceCached( const KConfigGroup &group )
   : ResourceCalendar( group ),
     d( new Private )
 {
-  connect( &d->mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
-  connect( &d->mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );
+  connect( &d->mReloadTimer, SIGNAL(timeout()), SLOT(slotReload()) );
+  connect( &d->mSaveTimer, SIGNAL(timeout()), SLOT(slotSave()) );
 }
 
 ResourceCached::~ResourceCached()

@@ -112,12 +112,12 @@ ConfigDialog::ConfigDialog( QWidget *parent, const QString &resourceFamily,
     d->mConfigWidget->setInEditMode( false );
     d->mConfigWidget->loadSettings( d->mResource );
     d->mConfigWidget->show();
-    connect( d->mConfigWidget, SIGNAL( setReadOnly( bool ) ),
-             SLOT( setReadOnly( bool ) ) );
+    connect( d->mConfigWidget, SIGNAL(setReadOnly(bool)),
+             SLOT(setReadOnly(bool)) );
   }
 
-  connect( d->mName, SIGNAL( textChanged(const QString &) ),
-           SLOT( slotNameChanged(const QString &) ) );
+  connect( d->mName, SIGNAL(textChanged(QString)),
+           SLOT(slotNameChanged(QString)) );
 
   slotNameChanged( d->mName->text() );
   setMinimumSize( sizeHint() );

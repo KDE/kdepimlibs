@@ -139,7 +139,7 @@ TransportManager::TransportManager()
 
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForUnregistration, this );
-  connect( watcher, SIGNAL( serviceUnregistered( const QString& ) ), SLOT( dbusServiceUnregistered() ) );
+  connect( watcher, SIGNAL(serviceUnregistered(QString)), SLOT(dbusServiceUnregistered()) );
 
   QDBusConnection::sessionBus().connect( QString(), QString(),
                               DBUS_INTERFACE_NAME, DBUS_CHANGE_SIGNAL,

@@ -91,15 +91,15 @@ void ResourceLocalDir::Private::init()
 
   mResource->setSavePolicy( SaveDelayed );
 
-  connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
-           this, SLOT( updateIncidenceInCalendar( const QString & ) ) );
-  connect( &mDirWatch, SIGNAL( created( const QString & ) ),
-           this, SLOT( addIncidenceToCalendar( const QString & ) ) );
-  connect( &mDirWatch, SIGNAL( deleted( const QString & ) ),
-           this, SLOT( deleteIncidenceFromCalendar( const QString & ) ) );
+  connect( &mDirWatch, SIGNAL(dirty(QString)),
+           this, SLOT(updateIncidenceInCalendar(QString)) );
+  connect( &mDirWatch, SIGNAL(created(QString)),
+           this, SLOT(addIncidenceToCalendar(QString)) );
+  connect( &mDirWatch, SIGNAL(deleted(QString)),
+           this, SLOT(deleteIncidenceFromCalendar(QString)) );
 
-  connect ( this, SIGNAL(resourceChanged( ResourceCalendar *)),
-            mResource, SIGNAL(resourceChanged( ResourceCalendar *)) );
+  connect ( this, SIGNAL(resourceChanged(ResourceCalendar*)),
+            mResource, SIGNAL(resourceChanged(ResourceCalendar*)) );
 
   mLock = new KABC::Lock( mURL.path() );
 

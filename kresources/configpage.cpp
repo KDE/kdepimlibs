@@ -164,8 +164,8 @@ ConfigPage::ConfigPage( QWidget *parent )
   d->mListView->setHeaderItem( new QTreeWidgetItem( headerLabels ) );
 
   groupBoxLayout->addWidget( d->mListView, 1, 0 );
-  connect( d->mListView, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
-           this, SLOT( slotEdit() ) );
+  connect( d->mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+           this, SLOT(slotEdit()) );
 
   KDialogButtonBox *buttonBox = new KDialogButtonBox( groupBox, Qt::Vertical );
   d->mAddButton = buttonBox->addButton( i18n( "&Add..." ),
@@ -192,12 +192,12 @@ ConfigPage::ConfigPage( QWidget *parent )
 
   mainLayout->addWidget( groupBox );
 
-  connect( d->mFamilyCombo, SIGNAL( activated( int ) ),
-           SLOT( slotFamilyChanged( int ) ) );
-  connect( d->mListView, SIGNAL( itemSelectionChanged() ),
-           SLOT( slotSelectionChanged() ) );
-  connect( d->mListView, SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
-           SLOT( slotItemClicked( QTreeWidgetItem * ) ) );
+  connect( d->mFamilyCombo, SIGNAL(activated(int)),
+           SLOT(slotFamilyChanged(int)) );
+  connect( d->mListView, SIGNAL(itemSelectionChanged()),
+           SLOT(slotSelectionChanged()) );
+  connect( d->mListView, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+           SLOT(slotItemClicked(QTreeWidgetItem*)) );
 
   d->mLastItem = 0;
 

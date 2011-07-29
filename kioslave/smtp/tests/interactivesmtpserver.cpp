@@ -105,7 +105,7 @@ InteractiveSMTPServer::InteractiveSMTPServer( QObject* parent )
   listen( localhost, 2525 );
   setMaxPendingConnections( 1 );
 
-  connect( this, SIGNAL( newConnection() ), this, SLOT( newConnectionAvailable() ) );
+  connect( this, SIGNAL(newConnection()), this, SLOT(newConnectionAvailable()) );
 }
 
 void InteractiveSMTPServer::newConnectionAvailable()

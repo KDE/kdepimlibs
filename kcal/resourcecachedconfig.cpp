@@ -83,8 +83,8 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent )
   d->mGroup->addButton( automaticReloadOnStartup, 1 );
   d->mGroup->addButton( intervalRadio, 2 );
 
-  connect( intervalRadio, SIGNAL( toggled( bool ) ),
-           SLOT( slotIntervalToggled( bool ) ) );
+  connect( intervalRadio, SIGNAL(toggled(bool)),
+           SLOT(slotIntervalToggled(bool)) );
 
   KHBox *intervalBox = new KHBox;
   new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );
@@ -151,8 +151,8 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent )
   d->mGroup->addButton( onExit, 1 );
   d->mGroup->addButton( intervalRadio, 2 );
 
-  connect( intervalRadio, SIGNAL( toggled( bool ) ),
-           SLOT( slotIntervalToggled( bool ) ) );
+  connect( intervalRadio, SIGNAL(toggled(bool)),
+           SLOT(slotIntervalToggled(bool)) );
 
   KHBox *intervalBox = new KHBox;
   new QLabel( i18nc( "@label:spinbox", "Interval in minutes:" ), intervalBox );

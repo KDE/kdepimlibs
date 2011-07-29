@@ -116,12 +116,12 @@ void ResourceLocal::init()
 
   setSavePolicy( SaveDelayed );
 
-  connect( &d->mDirWatch, SIGNAL( dirty( const QString & ) ),
-           SLOT( reload() ) );
-  connect( &d->mDirWatch, SIGNAL( created( const QString & ) ),
-           SLOT( reload() ) );
-  connect( &d->mDirWatch, SIGNAL( deleted( const QString & ) ),
-           SLOT( reload() ) );
+  connect( &d->mDirWatch, SIGNAL(dirty(QString)),
+           SLOT(reload()) );
+  connect( &d->mDirWatch, SIGNAL(created(QString)),
+           SLOT(reload()) );
+  connect( &d->mDirWatch, SIGNAL(deleted(QString)),
+           SLOT(reload()) );
 
   d->mLock = new KABC::Lock( d->mURL.path() );
 

@@ -66,7 +66,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   if(d->mCategoriesList.isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
-    connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
             this,SLOT(slotTriggerCreatePost()));
     listCategories();
   }
@@ -158,8 +158,8 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     job->addMetaData( "ConnectTimeout", "50" );
     job->addMetaData( "UserAgent", userAgent() );
   
-    connect( job, SIGNAL(result(KJob *)),
-             this, SLOT(slotCreatePost(KJob *)) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(slotCreatePost(KJob*)) );
     // HACK: uuh this a bit ugly now... reenable the original publish argument,
     // since createPost should have parsed now
     post->setPrivate(publish);
@@ -179,7 +179,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   if(d->mCategoriesList.isEmpty()){
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
-    connect(this,SIGNAL(listedCategories(const QList<QMap<QString,QString> >&)),
+    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
             this,SLOT(slotTriggerModifyPost()));
     listCategories();
   }

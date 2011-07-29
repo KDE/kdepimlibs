@@ -423,10 +423,10 @@ void Query::call( const QString &server,
     job->addMetaData( mapIter.key(), mapIter.value() );
   }
 
-  connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
-  connect( job, SIGNAL( result( KJob * ) ),
-           this, SLOT( slotResult( KJob * ) ) );
+  connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
+           this, SLOT(slotData(KIO::Job*,QByteArray)) );
+  connect( job, SIGNAL(result(KJob*)),
+           this, SLOT(slotResult(KJob*)) );
 
   d->mPendingJobs.append( job );
 }

@@ -41,7 +41,7 @@ KCMKResources::KCMKResources( QWidget *parent, const QVariantList &l )
   layout->setMargin( 0 );
   mConfigPage = new KRES::ConfigPage( this );
   layout->addWidget( mConfigPage );
-  connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
+  connect( mConfigPage, SIGNAL(changed(bool)), SIGNAL(changed(bool)) );
   setButtons( Help | Apply );
   KAboutData *about =
    new KAboutData( I18N_NOOP( "kcmkresources" ), 0,

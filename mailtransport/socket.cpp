@@ -162,15 +162,15 @@ void Socket::reconnect()
 
   d->socket->setProtocol( QSsl::AnyProtocol );
 
-  connect( d->socket, SIGNAL( stateChanged( QAbstractSocket::SocketState ) ),
-           SLOT( slotStateChanged( QAbstractSocket::SocketState ) ) );
-  connect( d->socket, SIGNAL( modeChanged( QSslSocket::SslMode ) ),
-           SLOT( slotModeChanged( QSslSocket::SslMode ) ) );
-  connect( d->socket, SIGNAL( connected() ), SLOT( slotConnected() ) );
-  connect( d->socket, SIGNAL( readyRead() ), SLOT( slotSocketRead() ) );
-  connect( d->socket, SIGNAL( encrypted() ), SIGNAL( connected() ) );
-  connect( d->socket, SIGNAL( sslErrors( const QList<QSslError> & ) ),
-           SLOT( slotSslErrors( const QList<QSslError>& ) ) );
+  connect( d->socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
+           SLOT(slotStateChanged(QAbstractSocket::SocketState)) );
+  connect( d->socket, SIGNAL(modeChanged(QSslSocket::SslMode)),
+           SLOT(slotModeChanged(QSslSocket::SslMode)) );
+  connect( d->socket, SIGNAL(connected()), SLOT(slotConnected()) );
+  connect( d->socket, SIGNAL(readyRead()), SLOT(slotSocketRead()) );
+  connect( d->socket, SIGNAL(encrypted()), SIGNAL(connected()) );
+  connect( d->socket, SIGNAL(sslErrors(QList<QSslError>)),
+           SLOT(slotSslErrors(QList<QSslError>)) );
 }
 
 void Socket::write( const QString &text )

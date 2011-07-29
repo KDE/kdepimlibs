@@ -86,7 +86,7 @@ SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   }
 
   d->mResourceId->setCurrentRow( 0 );
-  connect( d->mResourceId, SIGNAL( itemActivated(QListWidgetItem*)),
+  connect( d->mResourceId, SIGNAL(itemActivated(QListWidgetItem*)),
            SLOT(accept()) );
 }
 

@@ -198,14 +198,14 @@ void SMTPConfigWidget::init()
                                  Transport::EnumAuthenticationType::GSSAPI ) );
   }
 
-  connect( d->ui.checkCapabilities, SIGNAL( clicked() ),
-           SLOT( checkSmtpCapabilities() ) );
-  connect( d->ui.kcfg_host, SIGNAL( textChanged(QString) ),
-           SLOT( hostNameChanged(QString) ) );
-  connect( d->encryptionGroup, SIGNAL( buttonClicked( int ) ),
-           SLOT( encryptionChanged(int) ) );
-  connect( d->ui.kcfg_requiresAuthentication, SIGNAL( toggled(bool) ),
-           SLOT( ensureValidAuthSelection() ) );
+  connect( d->ui.checkCapabilities, SIGNAL(clicked()),
+           SLOT(checkSmtpCapabilities()) );
+  connect( d->ui.kcfg_host, SIGNAL(textChanged(QString)),
+           SLOT(hostNameChanged(QString)) );
+  connect( d->encryptionGroup, SIGNAL(buttonClicked(int)),
+           SLOT(encryptionChanged(int)) );
+  connect( d->ui.kcfg_requiresAuthentication, SIGNAL(toggled(bool)),
+           SLOT(ensureValidAuthSelection()) );
 
   if ( !d->transport->isValid() ) {
     checkHighestEnabledButton( d->encryptionGroup );
@@ -242,10 +242,10 @@ void SMTPConfigWidget::checkSmtpCapabilities()
   d->ui.checkCapabilitiesStack->setCurrentIndex( 1 );
   BusyCursorHelper *busyCursorHelper = new BusyCursorHelper( d->serverTest );
 
-  connect( d->serverTest, SIGNAL( finished( QList<int> ) ),
-           SLOT(slotFinished( QList<int> )));
-  connect( d->serverTest, SIGNAL( finished( QList<int> ) ),
-           busyCursorHelper, SLOT( deleteLater() ) );
+  connect( d->serverTest, SIGNAL(finished(QList<int>)),
+           SLOT(slotFinished(QList<int>)));
+  connect( d->serverTest, SIGNAL(finished(QList<int>)),
+           busyCursorHelper, SLOT(deleteLater()) );
   d->ui.checkCapabilities->setEnabled( false );
   d->serverTest->start();
   d->serverTestFailed = false;
