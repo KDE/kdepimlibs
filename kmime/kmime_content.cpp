@@ -558,8 +558,8 @@ void Content::addContent( Content *c, bool prepend )
 void Content::removeContent( Content *c, bool del )
 {
   Q_D( Content );
-  Q_ASSERT( d->multipartContents.contains( c ) );
-
+  if( !d->multipartContents.contains( c ) )
+    return;
   // This method makes no sense for encapsulated messages. Should be covered by the above
   // assert already, though.
   Q_ASSERT( !bodyIsMessage() );
