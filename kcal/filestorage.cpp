@@ -109,22 +109,27 @@ bool FileStorage::load()
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
   bool success;
+  QString productId;
   // First try the supplied format. Otherwise fall through to iCalendar, then
   // to vCalendar
   success = saveFormat() && saveFormat()->load( calendar(), d->mFileName );
-  if ( !success ) {
+  if ( success ) {
+    productId = saveFormat()->loadedProductId();
+  } else {
     ICalFormat iCal;
 
     success = iCal.load( calendar(), d->mFileName );
 
-    if ( !success ) {
+    if ( success ) {
+      productId = iCal.loadedProductId();
+    } else {
       if ( iCal.exception() ) {
         if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
           // Expected non vCalendar file, but detected vCalendar
           kDebug() << "Fallback to VCalFormat";
           VCalFormat vCal;
           success = vCal.load( calendar(), d->mFileName );
-          calendar()->setProductId( vCal.productId() );
+          productId = vCal.loadedProductId();
         } else {
           return false;
         }
@@ -132,11 +137,10 @@ bool FileStorage::load()
         kDebug() << "Warning! There should be an exception set.";
         return false;
       }
-    } else {
-      calendar()->setProductId( iCal.loadedProductId() );
     }
   }
 
+  calendar()->setProductId( productId );
   calendar()->setModified( false );
 
   return true;
