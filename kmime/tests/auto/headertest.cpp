@@ -592,6 +592,21 @@ void HeaderTest::testContentTypeHeader()
   h = new ContentType( 0, "text/plain;\n name==?ISO-8859-1?Q?lor=E9m_ipsum=2Etxt?=" );
   QCOMPARE( h->name(), QString::fromUtf8( "lorém ipsum.txt" ) );
   delete h;
+
+  // make ervin's unit test happy
+  h = new ContentType;
+  h->setMimeType( "MULTIPART/MIXED" );
+  QVERIFY( h->isMultipart() );
+  QVERIFY( h->isMediatype( "multipart" ) );
+  QVERIFY( h->isMediatype( "Multipart" ) );
+  QVERIFY( h->isMediatype( "MULTIPART" ) );
+  QVERIFY( h->isSubtype( "mixed" ) );
+  QVERIFY( h->isSubtype( "Mixed" ) );
+  QVERIFY( h->isSubtype( "MIXED" ) );
+  QCOMPARE( h->mimeType(), QByteArray( "MULTIPART/MIXED" ) );
+  QCOMPARE( h->mediaType(), QByteArray( "MULTIPART" ) );
+  QCOMPARE( h->subType(), QByteArray( "MIXED" ) );
+  delete h;
 }
 
 void HeaderTest::testTokenHeader()
