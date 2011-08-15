@@ -1,23 +1,23 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+  Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
-    Based on KMail code by:
-    Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
+  Based on KMail code by:
+  Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "smtpjob.h"
@@ -173,8 +173,10 @@ void SmtpJob::startSmtpJob()
 
       bool keep = transport()->storePassword();
 
-      KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-      dlg.setPrompt( i18n( "You need to supply a username and a password to use this SMTP server." ) );
+      KPasswordDialog dlg( 0,
+                           KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
+      dlg.setPrompt( i18n( "You need to supply a username and a password "
+                           "to use this SMTP server." ) );
       dlg.setKeepPassword( keep );
       dlg.addCommentLine( QString(), transport()->name() );
       dlg.setUsername( user );
@@ -239,10 +241,12 @@ void SmtpJob::startSmtpJob()
   KIO::Scheduler::assignJobToSlave( d->slave, job );
 #else
   SmtpSession *session = new SmtpSession( this );
-  connect( session, SIGNAL(result(MailTransport::SmtpSession*)), SLOT(smtpSessionResult(MailTransport::SmtpSession*)) );
+  connect( session, SIGNAL(result(MailTransport::SmtpSession*)),
+           SLOT(smtpSessionResult(MailTransport::SmtpSession*)) );
   session->setUseTLS( transport()->encryption() == Transport::EnumEncryption::TLS );
-  if ( transport()->requiresAuthentication() )
+  if ( transport()->requiresAuthentication() ) {
     session->setSaslMethod( transport()->authenticationTypeString() );
+  }
   session->sendMessage( destination, buffer() );
 #endif
 
