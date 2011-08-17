@@ -35,6 +35,10 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
 
+#include <kglobal.h>
+
+static const KCatalogLoader loader("libkpimutils");
+
 using namespace KPIMUtils;
 
 //-----------------------------------------------------------------------------
