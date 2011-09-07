@@ -86,7 +86,7 @@ QString ScheduleMessage::statusName( ScheduleMessage::Status status )
 {
   switch( status ) {
   case PublishNew:
-    return i18nc( "@item new message posting", "New Message Publish" );
+    return i18nc( "@item new message posting", "New Message Published" );
   case PublishUpdate:
     return i18nc( "@item updated message", "Updated Message Published" );
   case Obsolete:
