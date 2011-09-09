@@ -115,7 +115,7 @@ class ListBase : public QList<T *>
     */
     bool removeRef( T *t )
     {
-      if ( !contains( t ) ) {
+      if ( !this->contains( t ) ) {
         return false;
       } else {
         if ( mAutoDelete ) {

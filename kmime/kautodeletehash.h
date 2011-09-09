@@ -64,7 +64,7 @@ public:
    */
   ~KAutoDeleteHash() { while ( ! QHash<Key, T *>::isEmpty() ) {
                          T *value = *QHash<Key, T *>::begin();
-                         erase( QHash<Key, T *>::begin() );
+                         this->erase( QHash<Key, T *>::begin() );
                          delete value;
                        }
                      }
