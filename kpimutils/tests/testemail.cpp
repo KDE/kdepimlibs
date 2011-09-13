@@ -106,6 +106,7 @@ void EMailTest::testGetNameAndEmail_data()
                                                   " <firstname@lastname.com>"
                                                << "Lastname, Firstname" << "firstname@lastname.com"
                                                << true;
+  QTest::newRow( "# in domain" ) << "Matt Douhan <dm3tt@db0zdf.#rpl.deu.eu>" << "Matt Douhan" << "dm3tt@db0zdf.#rpl.deu.eu" << true;
 }
 
 void EMailTest::testIsValidEmailAddress()
@@ -293,6 +294,8 @@ void EMailTest::testIsValidEmailAddress_data()
   QTest::newRow( "" ) << "matt \"[foobar]\" Douhan <matt@fruitsalad.org>" << AddressOk;
 
   QTest::newRow( "" ) << "Matt Douhan <matt\"@@\"fruitsalad.org>" << TooFewAts;
+
+  QTest::newRow( "# in domain" ) << "dm3tt@db0zdf.#rpl.deu.eu" << AddressOk;
 }
 
 void EMailTest::testIsValidAddressList()
@@ -400,7 +403,7 @@ void EMailTest::testIsValidSimpleEmailAddress_data()
   QTest::newRow( "" ) << "\"m@tt\"@fruitsalad.org" << true;
 
   QTest::newRow( "" ) << "matt\"@@\"fruitsalad.org" << false;
-
+  QTest::newRow( "# in domain" ) << "dm3tt@db0zdf.#rpl.deu.eu" << true;
 
   // add tests for missing local/domain parts
   QTest::newRow( "" ) << "@mattfruitsalad.org" << false;
@@ -439,6 +442,8 @@ void EMailTest::testGetEmailAddress_data()
                       << QString();
   QTest::newRow( "" ) << "Matt Douhan <matt@[123.123.123.123]>"
                       << "matt@[123.123.123.123]";
+  QTest::newRow( "" ) << "dm3tt@db0zdf.#rpl.deu.eu" << "dm3tt@db0zdf.#rpl.deu.eu";
+
 
 }
 

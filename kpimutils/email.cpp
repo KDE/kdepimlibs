@@ -634,7 +634,7 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
   if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
     addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
   } else {
-    addrRx += "[\\w-]+(\\.[\\w-]+)*";
+    addrRx += "[\\w-#]+(\\.[\\w-#]+)*";
   }
   QRegExp rx( addrRx );
   return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
