@@ -166,6 +166,10 @@ bool MBox::load( const QString &fileName )
     if ( d->isMBoxSeparator( line ) ||
          ( d->mMboxFile.atEnd() && ( prevSeparator.size() != 0 ) ) ) {
 
+      // if we are the at the file end, update pos to not forget the last line
+      if ( d->mMboxFile.atEnd() )
+        pos = d->mMboxFile.pos();
+
       // Found the separator or at end of file, the message starts at offs
       quint64 msgSize = pos - offs;
 
@@ -450,8 +454,10 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     }
 
     line = d->mMboxFile.readLine();
-    while ( !d->isMBoxSeparator( line ) && !d->mMboxFile.atEnd() ) {
+    while ( !d->isMBoxSeparator( line ) ) {
       message += line;
+      if ( d->mMboxFile.atEnd() )
+        break;
       line = d->mMboxFile.readLine();
     }
   } else {
