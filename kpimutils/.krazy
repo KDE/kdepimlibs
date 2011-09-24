@@ -1,1 +1,2 @@
 EXTRA style,null
+SKIP /tests/
