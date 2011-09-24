@@ -37,7 +37,7 @@
 
 #include <kglobal.h>
 
-static const KCatalogLoader loader("libkpimutils");
+static const KCatalogLoader loader( "libkpimutils" );
 
 using namespace KPIMUtils;
 
