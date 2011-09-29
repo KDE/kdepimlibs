@@ -240,6 +240,10 @@ void MboxTest::testSaveAndLoad()
   for ( int i = 0; i < 2; ++i ) {
     QCOMPARE( infos3.at(i), infos2.at(i) );
 
+    QCOMPARE( infos3.at(i).messageOffset(), infos1.at(i).messageOffset() );
+    QCOMPARE( infos3.at(i).separatorSize(), infos1.at(i).separatorSize() );
+    QCOMPARE( infos3.at(i).messageSize(), infos1.at(i).messageSize() );
+    
     quint64 minSize = infos2.at(i).messageSize();
     quint64 maxSize = infos2.at(i).messageSize() + 1;
     QVERIFY( infos3.at(i).messageSize() >= minSize  );
