@@ -179,17 +179,7 @@ bool MBox::load( const QString &fileName )
         MBoxEntry entry;
         entry.d->mOffset = offs;
         entry.d->mSeparatorSize = prevSeparator.size();
-
-        // There is always a blank line and a separator line between two emails.
-        // Sometimes there are two '\n' characters added to the email (i.e. when
-        // the mail self did not end with a '\n' char) and sometimes only one to
-        // achieve this. When reading the file it is not possible to see which
-        // was the case.
-        if ( d->mMboxFile.atEnd() ) {
-          entry.d->mMessageSize = msgSize; // We use readLine so there's no additional '\n'
-        } else {
-          entry.d->mMessageSize = msgSize - 1;
-        }
+        entry.d->mMessageSize = msgSize - 1;
 
         // Don't add the separator size and the newline up to the message size.
         entry.d->mMessageSize -= prevSeparator.size() + 1;
