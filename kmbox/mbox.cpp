@@ -179,6 +179,7 @@ bool MBox::load( const QString &fileName )
         MBoxEntry entry;
         entry.d->mOffset = offs;
         entry.d->mSeparatorSize = prevSeparator.size();
+        entry.d->mMessageSize = msgSize - 1;
 
         // Don't add the separator size and the newline up to the message size.
         entry.d->mMessageSize -= prevSeparator.size() + 1;
