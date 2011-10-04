@@ -1,27 +1,26 @@
 /*
-    Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
-    Copyright (c) 2009 Bertjan Broeksema <broeksema@kde.org>
+  Copyright (c) 1996-1998 Stefan Taferner <taferner@kde.org>
+  Copyright (c) 2009 Bertjan Broeksema <broeksema@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 
-    NOTE: Most of the code inside here is an slightly adjusted version of
-          kdepim/kmail/kmfoldermbox.cpp. This is why I added a line for Stefan
-          Taferner.
+  NOTE: Most of the code inside here is an slightly adjusted version of
+  kdepim/kmail/kmfoldermbox.cpp. This is why I added a line for Stefan Taferner.
 
-          Bertjan Broeksema, april 2009
+  Bertjan Broeksema, april 2009
 */
 
 #include "mbox.h"
@@ -167,8 +166,9 @@ bool MBox::load( const QString &fileName )
          ( d->mMboxFile.atEnd() && ( prevSeparator.size() != 0 ) ) ) {
 
       // if we are the at the file end, update pos to not forget the last line
-      if ( d->mMboxFile.atEnd() )
+      if ( d->mMboxFile.atEnd() ) {
         pos = d->mMboxFile.pos();
+      }
 
       // Found the separator or at end of file, the message starts at offs
       quint64 msgSize = pos - offs;
@@ -446,8 +446,9 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     line = d->mMboxFile.readLine();
     while ( !d->isMBoxSeparator( line ) ) {
       message += line;
-      if ( d->mMboxFile.atEnd() )
+      if ( d->mMboxFile.atEnd() ) {
         break;
+      }
       line = d->mMboxFile.readLine();
     }
   } else {
