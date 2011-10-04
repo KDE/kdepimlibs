@@ -58,6 +58,7 @@ void SendmailConfigWidget::init()
 
   d->ui.setupUi( this );
   d->ui.kcfg_host->setMode( KFile::File|KFile::ExistingOnly|KFile::LocalOnly );
+  d->ui.kcfg_host->setFocus();
   d->manager->addWidget( this ); // otherwise it doesn't find out about these widgets
   d->manager->updateWidgets();
 
