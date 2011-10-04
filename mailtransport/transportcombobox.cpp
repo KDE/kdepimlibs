@@ -59,7 +59,7 @@ int TransportComboBox::currentTransportId() const
 
 void TransportComboBox::setCurrentTransport( int transportId )
 {
-  int i = d->transports.indexOf( transportId );
+  const int i = d->transports.indexOf( transportId );
   if ( i >= 0 && i < count() ) {
     setCurrentIndex( i );
   }
@@ -73,7 +73,7 @@ TransportBase::EnumType::type TransportComboBox::transportType() const
 
 void TransportComboBox::fillComboBox()
 {
-  int oldTransport = currentTransportId();
+  const int oldTransport = currentTransportId();
   clear();
   d->transports.clear();
 
