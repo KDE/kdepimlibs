@@ -261,6 +261,8 @@ void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged( const QString&,
 
   const Collection::Id collectionId = status.value( QLatin1String( "collectionId" ) ).toLongLong();
   const uint percent = status.value( QLatin1String( "percent" ) ).toUInt();
+  if ( m_collectionSyncProgress.value( collectionId ) == percent )
+    return;
   m_collectionSyncProgress.insert( collectionId, percent );
 
   const QModelIndex collectionIndex = indexForCollection( Collection( collectionId ) );
@@ -268,6 +270,8 @@ void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged( const QString&,
     return;
 
   Q_Q( EntityTreeModel );
+  // This is really slow (80 levels of method calls in proxy models...), and called
+  // very often during an imap sync...
   q->dataChanged( collectionIndex, collectionIndex );
 }
 
