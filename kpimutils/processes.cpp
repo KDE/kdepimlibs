@@ -37,7 +37,7 @@ using namespace KPIMUtils;
 #include <signal.h>
 #include <unistd.h>
 
-#ifdef _WIN32_WCE
+#ifdef Q_OS_WINCE
 #include <Tlhelp32.h>
 #endif
 
@@ -96,7 +96,7 @@ static QString fromWChar( const wchar_t *string, int size = -1 )
 void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &pids )
 {
   qDebug() << "KPIMUtils::getProcessesIdForName" << processName;
-#ifndef _WIN32_WCE
+#ifndef Q_OS_WINCE
   PPERF_OBJECT_TYPE perfObject;
   PPERF_INSTANCE_DEFINITION perfInstance;
   PPERF_COUNTER_DEFINITION perfCounter, curCounter;
