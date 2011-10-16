@@ -103,19 +103,19 @@ inline bool isEText( char ch )
   * Set the fallback charset to use when decoding RFC2047-encoded headers.
   *  If decoding according to the RFC fails, then the fallback encoding is
   *  used instead.
-  * 
+  *
   * @param fallbackCharEnc Name of fallback character encoding to use.
-  * 
+  *
   * @since 4.5
   */
 KMIME_EXPORT extern void setFallbackCharEncoding( const QString& fallbackCharEnc );
 
 /**
-  * Retreive the set fallback charset if there is one set.
+  * Retrieve the set fallback charset if there is one set.
   *
   * @return The name of the fallback encoding, if one was set, otherwise
   *           an empty QString.
-  * 
+  *
   * @since 4.5
   */
 KMIME_EXPORT extern QString fallbackCharEncoding();
@@ -125,7 +125,7 @@ KMIME_EXPORT extern QString fallbackCharEncoding();
   *  fails to properly adhere to the RFC2322 standard for parametrized header fields, and
   *  instead is only able to read and write attachment filenames encoded in RFC2047-style.
   *  This will create mails that are not standards-compliant!
-  * 
+  *
   * @param violateStandard      Whether or not to use outlook-compatible attachment
   *                              filename encodings.
   *
@@ -395,7 +395,7 @@ KMIME_EXPORT QString balanceBidiState( const QString &input );
 /**
  * Similar to the above function. Instead of trying to balance the Bidi chars, it outright
  * removes them from the string.
- * 
+ *
  * Reason: KHTML seems to ignore the PDF character, so adding them doesn't fix things :(
  */
 KMIME_EXPORT QString removeBidiControlChars( const QString &input );

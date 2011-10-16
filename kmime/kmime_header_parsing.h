@@ -42,8 +42,9 @@ namespace Headers {
 namespace Types {
 
 // for when we can't make up our mind what to use...
-// FIXME: Remove this thing, we should _always_ know wether we are handling a byte array or a string.
-//        In most places where this is used, it should simply be replaced by QByteArray
+// FIXME: Remove this thing, we should _always_ know whether we are handling a
+// byte array or a string.
+// In most places where this is used, it should simply be replaced by QByteArray
 struct KMIME_EXPORT QStringOrQPair {
   QStringOrQPair() : qstring(), qpair( 0, 0 ) {}
   QString qstring;
@@ -377,8 +378,8 @@ KMIME_EXPORT KMime::Headers::Base *extractFirstHeader( QByteArray &head );
 
 /**
  * Extract the header header and the body from a complete content.
- * Internally, it will simply look for the first newline and use that as a seperator between the
- * header and the body
+ * Internally, it will simply look for the first newline and use that as a
+ * separator between the header and the body.
  *
  * @param content the complete mail
  * @param header return value for the extracted header

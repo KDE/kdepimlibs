@@ -167,7 +167,7 @@ class KMIME_EXPORT Content
       parse() if you want to access individual headers, sub-Contents or the
       encapsulated message.
 
-      @param l is a line-splitted list of the raw Content data.
+      @param l is a list of the raw Content data, split by lines.
     */
     void setContent( const QList<QByteArray> &l );
 
