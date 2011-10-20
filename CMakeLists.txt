@@ -161,6 +161,7 @@ add_subdirectory(qgpgme)
 
 if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kabc)
+  add_subdirectory(kalarmcal)
   if (NOT KDEPIM_NO_KCAL)
     if (NOT WINCE)
     add_subdirectory(kblog)
