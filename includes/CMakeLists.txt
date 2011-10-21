@@ -8,6 +8,7 @@ endmacro(install_headers _dir)
 
 install_headers( Akonadi )
 install_headers( KHolidays )
+install_headers( KAlarmCal )
 install_headers( KABC )
 if (NOT KDEPIM_NO_KCAL)
   install_headers( KBlog )
