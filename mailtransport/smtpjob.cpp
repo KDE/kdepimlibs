@@ -123,7 +123,8 @@ void SmtpJob::doStart()
     return;
   }
 
-  if ( s_slavePool->slaves.contains( transport()->id() ) ||
+  if ( ( !s_slavePool->slaves.isEmpty() &&
+         s_slavePool->slaves.contains( transport()->id() ) ) ||
        transport()->precommand().isEmpty() ) {
     d->currentState = SmtpJobPrivate::Smtp;
     startSmtpJob();
