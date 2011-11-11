@@ -773,11 +773,9 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
   connect( resource, SIGNAL(resourceSaved(ResourceCalendar*)),
            SIGNAL(calendarSaved()) );
 
-  connect( resource, SIGNAL( resourceLoadError( ResourceCalendar *,
-                                                const QString & ) ),
+  connect( resource, SIGNAL(resourceLoadError(ResourceCalendar*,QString)),
            SLOT(slotLoadError(ResourceCalendar*,QString)) );
-  connect( resource, SIGNAL( resourceSaveError( ResourceCalendar *,
-                                                const QString & ) ),
+  connect( resource, SIGNAL(resourceSaveError(ResourceCalendar*,QString)),
            SLOT(slotSaveError(ResourceCalendar*,QString)) );
 }
 

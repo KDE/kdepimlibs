@@ -412,7 +412,7 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
     QByteArray chset = KGlobal::locale()->encoding();
     contentType()->setCharset( chset );
   }
-  
+
   QString s = codec->toUnicode( d_ptr->body.data(), d_ptr->body.length() );
 
   if ( trimText || removeTrailingNewlines ) {
@@ -563,10 +563,12 @@ void Content::addContent( Content *c, bool prepend )
 void Content::removeContent( Content *c, bool del )
 {
   Q_D( Content );
-  if( !d->multipartContents.contains( c ) )
+  if ( d->multipartContents.isEmpty() || !d->multipartContents.contains( c ) ) {
     return;
-  // This method makes no sense for encapsulated messages. Should be covered by the above
-  // assert already, though.
+  }
+
+  // This method makes no sense for encapsulated messages.
+  // Should be covered by the above assert already, though.
   Q_ASSERT( !bodyIsMessage() );
 
   d->multipartContents.removeAll( c );
@@ -902,26 +904,30 @@ bool Content::isTopLevel() const
   return d_ptr->parent == 0;
 }
 
-void Content::setParent( Content* parent )
+void Content::setParent( Content *parent )
 {
-  //make sure the Content is only in the contents list of one parent object
+  // Make sure the Content is only in the contents list of one parent object
   Content *oldParent = d_ptr->parent;
-  if ( oldParent && oldParent->contents().contains( this ) ) {
-    oldParent->removeContent( this );
+  if ( oldParent ) {
+    if ( !oldParent->contents().isEmpty() && oldParent->contents().contains( this ) ) {
+      oldParent->removeContent( this );
+    }
   }
 
   d_ptr->parent = parent;
-  if ( parent && !parent->contents().contains( this ) ) {
-    parent->addContent( this );
+  if ( parent ) {
+    if ( !parent->contents().isEmpty() && !parent->contents().contains( this ) ) {
+      parent->addContent( this );
+    }
   }
 }
 
-Content* Content::parent() const
+Content *Content::parent() const
 {
   return d_ptr->parent;
 }
 
-Content* Content::topLevel() const
+Content *Content::topLevel() const
 {
   Content *top = const_cast<Content*>(this);
   Content *c = parent();
