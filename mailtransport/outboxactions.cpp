@@ -47,6 +47,7 @@ ItemFetchScope SendQueuedAction::fetchScope() const
   ItemFetchScope scope;
   scope.fetchFullPayload( false );
   scope.fetchAttribute<DispatchModeAttribute>();
+  scope.fetchAttribute<ErrorAttribute>();
   scope.setCacheOnly( true );
   return scope;
 }
@@ -65,6 +66,10 @@ Job *SendQueuedAction::itemAction( const Item &item, FilterActionJob *parent ) c
 {
   Item cp = item;
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
+  if( cp.hasAttribute<ErrorAttribute>() ) {
+    cp.removeAttribute<ErrorAttribute>();
+    cp.clearFlag( Akonadi::MessageFlags::HasError );
+  }
   return new ItemModifyJob( cp, parent );
 }
 
