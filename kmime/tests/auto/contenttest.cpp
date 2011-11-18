@@ -317,6 +317,17 @@ void ContentTest::testEncodedContent()
 
 }
 
+void ContentTest::testDecodedContent()
+{
+  Content *c = new Content();
+  c->setBody( '\0' );
+  QVERIFY( c->decodedContent() == QByteArray() );
+  c->setBody( QByteArray() );
+  QVERIFY( c->decodedContent() == QByteArray() );
+  c->setBody( " " );
+  QVERIFY( c->decodedContent() == QByteArray( " " ) );
+}
+
 void ContentTest::testMultipleHeaderExtraction()
 {
   QByteArray data =
@@ -406,7 +417,7 @@ void ContentTest::testMultipartMixed()
     "--simple boundary--\n"
     "\n"
     "This is the epilogue.  It is also to be ignored.\n";
-    
+
   // What we expect KMime to assemble the above data into.
   QByteArray assembled =
     "From: Nathaniel Borenstein <nsb@bellcore.com>\n"
@@ -428,7 +439,7 @@ void ContentTest::testMultipartMixed()
     "It DOES end with a linebreak.\n"
     "\n"
     "--simple boundary--\n";
-    
+
   // test parsing
   Message *msg = new Message();
   msg->setContent( data );

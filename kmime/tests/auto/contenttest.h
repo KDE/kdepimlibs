@@ -32,6 +32,7 @@ class ContentTest : public QObject
     void testExplicitMultipartGeneration();
     void testSetContent();
     void testEncodedContent();
+    void testDecodedContent();
     void testMultipartMixed();
     void testMultipleHeaderExtraction();
     /**
