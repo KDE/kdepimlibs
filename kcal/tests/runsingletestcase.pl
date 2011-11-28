@@ -1,24 +1,24 @@
 #!/usr/bin/perl
 
-#    This file is part of the kcal library.
+# This file is part of the kcalcore library.
 #
-#    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
-#    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
+# Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+# Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 #
-#    This library is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU Library General Public
-#    License as published by the Free Software Foundation; either
-#    version 2 of the License, or (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
 #
-#    This library is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Library General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
 #
-#    You should have received a copy of the GNU Library General Public License
-#    along with this library; see the file COPYING.LIB.  If not, write to
-#    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-#    Boston, MA 02110-1301, USA.
+# You should have received a copy of the GNU Library General Public License
+# along with this library; see the file COPYING.LIB.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA 02110-1301, USA.
 
 # This little script runs a test program on a given (calendar) file and 
 # compares the output to a reference file. All discrepancies are shown 
@@ -68,7 +68,7 @@ sub checkfile()
   my $file = shift;
   my $outfile = shift;
 
-  $cmd = 'diff -u -w -B -I "^DTSTAMP:[0-9ZT]*" -I "^LAST-MODIFIED:[0-9ZT]*" -I "^CREATED:[0-9ZT]*" -I "^PRODID:.*" '."$file.$id.ref $outfile";
+  $cmd = 'diff -u -w -B -I "^DTSTAMP:[0-9ZT]*" -I "^LAST-MODIFIED:[0-9ZT]*" -I "^CREATED:[0-9ZT]*" -I "^DCREATED:[0-9ZT]*" -I "^X-KDE-KCALCORE-ENABLED:" -I "^PRODID:.*" -I "X-UID=[0-9]*" '."$file.$id.ref $outfile";
   if ( !open( DIFF, "$cmd|" ) ) {
     print STDERR "Unable to run diff command on the files $file.$id.ref and $outfile\n";
     exit 1;
@@ -78,10 +78,11 @@ sub checkfile()
   $errorstr = "";
   while ( <DIFF> ) {
     $line = $_;
-    next if ($line =~ m/^[+-](DTSTAMP|LAST-MODIFIED|CREATED|PRODID)/);
+    next if ($line =~ m/^[+-]\s*(DTSTAMP|LAST-MODIFIED|CREATED|DCREATED|X-KDE-KCALCORE-ENABLED|PRODID|X-UID)/);
     next if ($line =~ m/^[+-]\s*$/);
     next if ($line =~ m/No newline at end of file/);
-    next if ($outfile =~ m+/Compat/+ && $line =~ m/^[+-](SEQUENCE|PRIORITY|ORGANIZER:MAILTO):/);
+    # cannot compare outfile to "/Compat/" because of the quotemeta stuff.
+    next if ($outfile =~ m+/Compat\\/+ && $line =~ m/^[+-](SEQUENCE|PRIORITY|ORGANIZER:MAILTO):/);
     if ( $line =~ /^[+-][^+-]/ ) {
       # it's an added/deleted/modified line. Register it as an error
       $errors++;
