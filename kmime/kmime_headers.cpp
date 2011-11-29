@@ -206,17 +206,17 @@ const char *Base::type() const
 
 bool Base::is( const char *t ) const
 {
-  return strcasecmp( t, type() ) == 0;
+  return qstricmp( t, type() ) == 0;
 }
 
 bool Base::isMimeHeader() const
 {
-  return strncasecmp( type(), "Content-", 8 ) == 0;
+  return qstrnicmp( type(), "Content-", 8 ) == 0;
 }
 
 bool Base::isXHeader() const
 {
-  return strncmp( type(), "X-", 2 ) == 0;
+  return qstrncmp( type(), "X-", 2 ) == 0;
 }
 
 QByteArray Base::typeIntro() const
@@ -1767,7 +1767,7 @@ bool ContentType::isMediatype( const char *mediatype ) const
 {
   Q_D(const ContentType);
   const int len = strlen( mediatype );
-  return strncasecmp( d->mimeType.constData(), mediatype, len ) == 0 && (d->mimeType.at(len) == '/' || d->mimeType.size() == len);
+  return qstrnicmp( d->mimeType.constData(), mediatype, len ) == 0 && (d->mimeType.at(len) == '/' || d->mimeType.size() == len);
 }
 
 bool ContentType::isSubtype( const char *subtype ) const
@@ -1777,7 +1777,7 @@ bool ContentType::isSubtype( const char *subtype ) const
   if ( pos < 0 )
     return false;
   const int len = strlen( subtype );
-  return strncasecmp( d->mimeType.constData() + pos + 1, subtype, len ) == 0 && d->mimeType.size() == pos + len + 1;
+  return qstrnicmp( d->mimeType.constData() + pos + 1, subtype, len ) == 0 && d->mimeType.size() == pos + len + 1;
 }
 
 bool ContentType::isText() const
@@ -1787,12 +1787,12 @@ bool ContentType::isText() const
 
 bool ContentType::isPlainText() const
 {
-  return ( strcasecmp( d_func()->mimeType.constData(), "text/plain" ) == 0 || isEmpty() );
+  return ( qstricmp( d_func()->mimeType.constData(), "text/plain" ) == 0 || isEmpty() );
 }
 
 bool ContentType::isHTMLText() const
 {
-  return strcasecmp( d_func()->mimeType.constData(), "text/html" ) == 0;
+  return qstricmp( d_func()->mimeType.constData(), "text/html" ) == 0;
 }
 
 bool ContentType::isImage() const
@@ -1807,7 +1807,7 @@ bool ContentType::isMultipart() const
 
 bool ContentType::isPartial() const
 {
-  return strcasecmp( d_func()->mimeType.constData(), "message/partial" ) == 0;
+  return qstricmp( d_func()->mimeType.constData(), "message/partial" ) == 0;
 }
 
 QByteArray ContentType::charset() const
@@ -2119,7 +2119,7 @@ bool ContentTransferEncoding::parse( const char *& scursor,
 
   // TODO: error handling in case of an unknown encoding?
   for ( int i = 0; encTable[i].s != 0; ++i ) {
-    if ( strcasecmp( token().constData(), encTable[i].s ) == 0 ) {
+    if ( qstricmp( token().constData(), encTable[i].s ) == 0 ) {
       d->cte = ( contentEncoding )encTable[i].e;
       break;
     }
