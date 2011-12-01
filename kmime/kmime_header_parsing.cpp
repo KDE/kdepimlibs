@@ -113,7 +113,13 @@ bool AddrSpec::isEmpty() const
 
 QByteArray Mailbox::address() const
 {
-  return mAddrSpec.asString().toLatin1();
+  QByteArray result;
+  const QString asString = addr_spec_as_string( mAddrSpec, false );
+  if ( !asString.isEmpty() ) {
+    result = asString.toLatin1();
+  }
+  return result;
+  //return mAddrSpec.asString().toLatin1();
 }
 
 AddrSpec Mailbox::addrSpec() const
