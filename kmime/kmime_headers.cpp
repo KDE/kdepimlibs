@@ -983,11 +983,18 @@ QByteArray Ident::as7BitString( bool withHeaderType ) const
     rv = typeIntro();
   }
   foreach ( const Types::AddrSpec &addr, d->msgIdList ) {
-    rv += '<';
-    rv += addr.asString().toLatin1(); // FIXME: change parsing to use QByteArrays
-    rv += "> ";
+    if ( !addr.isEmpty() ) {
+      const QString asString = addr.asString();
+      rv += '<';
+      if ( !asString.isEmpty() ) {
+        rv += asString.toLatin1(); // FIXME: change parsing to use QByteArrays
+      }
+      rv += "> ";
+    }
   }
-  rv.resize( rv.length() - 1 );
+  if ( !rv.isEmpty() ) {
+    rv.resize( rv.length() - 1 );
+  }
   return rv;
 }
 
@@ -1051,7 +1058,12 @@ QList<QByteArray> Ident::identifiers() const
 {
   QList<QByteArray> rv;
   foreach ( const Types::AddrSpec &addr, d_func()->msgIdList ) {
-    rv.append( addr.asString().toLatin1() ); // FIXME change parsing to create QByteArrays
+    if ( !addr.isEmpty() ) {
+      const QString asString = addr.asString();
+      if ( !asString.isEmpty() ) {
+        rv.append( asString.toLatin1() ); // FIXME: change parsing to use QByteArrays
+      }
+    }
   }
   return rv;
 }
@@ -1092,7 +1104,12 @@ QByteArray SingleIdent::identifier() const
 
   if ( d_func()->cachedIdentifier.isEmpty() ) {
     const Types::AddrSpec &addr = d_func()->msgIdList.first();
-    d_func()->cachedIdentifier = addr.asString().toLatin1(); // FIXME change parsing to create QByteArrays
+    if ( !addr.isEmpty() ) {
+      const QString asString = addr.asString();
+      if ( !asString.isEmpty() ) {
+        d_func()->cachedIdentifier = asString.toLatin1();// FIXME: change parsing to use QByteArrays
+      }
+    }
   }
 
   return d_func()->cachedIdentifier;
