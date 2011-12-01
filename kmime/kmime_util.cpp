@@ -430,7 +430,7 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
   if ( str.isEmpty() )
     return QByteArray();
 
-  
+
   const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
   QByteArray latin;
   if ( charset == "us-ascii" )
@@ -487,11 +487,11 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   int p = str.indexOf('\'');
   if (p < 0) return KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS  ))->toUnicode( str );
 
-  
+
   QByteArray charset = str.left(p);
 
   QByteArray st = str.mid( str.lastIndexOf('\'') + 1 );
-  
+
   char ch, ch2;
   p = 0;
   while (p < (int)st.length())
@@ -564,6 +564,10 @@ QByteArray multiPartBoundary()
 QByteArray unfoldHeader( const QByteArray &header )
 {
   QByteArray result;
+  if ( header.isEmpty() ) {
+    return result;
+  }
+
   int pos = 0, foldBegin = 0, foldMid = 0, foldEnd = 0;
   while ( ( foldMid = header.indexOf( '\n', pos ) ) >= 0 ) {
     foldBegin = foldEnd = foldMid;
@@ -598,7 +602,10 @@ QByteArray unfoldHeader( const QByteArray &header )
       result += ' ';
     pos = foldEnd;
   }
-  result += header.mid( pos, header.length() - pos );
+  const int len = header.length();
+  if ( len > pos ) {
+    result += header.mid( pos, len - pos );
+  }
   return result;
 }
 
@@ -687,6 +694,7 @@ int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int 
     return begin;
 
   } else {
+    end = -1;
     dataBegin = -1;
     return -1; //header not found
   }
@@ -696,18 +704,23 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 {
   int begin, end;
   bool folded;
-  indexOfHeader( src, name, end, begin, &folded );
+  QByteArray result;
+
+  if ( src.isEmpty() || indexOfHeader( src, name, end, begin, &folded ) < 0 ) {
+    return result;
+  }
 
   if ( begin >= 0 ) {
     if ( !folded ) {
-      return src.mid( begin, end - begin );
+      result = src.mid( begin, end - begin );
     } else {
-      QByteArray hdrValue = src.mid( begin, end - begin );
-      return unfoldHeader( hdrValue );
+      if ( end > begin ) {
+        QByteArray hdrValue = src.mid( begin, end - begin );
+        result = unfoldHeader( hdrValue );
+      }
     }
-  } else {
-    return QByteArray(); //header not found
   }
+  return result;
 }
 
 QList<QByteArray> extractHeaders( const QByteArray &src, const QByteArray &name )
@@ -717,7 +730,10 @@ QList<QByteArray> extractHeaders( const QByteArray &src, const QByteArray &name 
   QList<QByteArray> result;
   QByteArray copySrc( src );
 
-  indexOfHeader( copySrc, name, end, begin, &folded );
+  if ( indexOfHeader( copySrc, name, end, begin, &folded ) < 0 ) {
+    return result;
+  }
+
   while ( begin >= 0 ) {
     if ( !folded ) {
       result.append( copySrc.mid( begin, end - begin ) );
@@ -728,7 +744,9 @@ QList<QByteArray> extractHeaders( const QByteArray &src, const QByteArray &name 
 
     // get the next one, a tiny bit ugly, but we don't want the previous to be found again...
     copySrc = copySrc.mid( end );
-    indexOfHeader( copySrc, name, end, begin, &folded );
+    if ( indexOfHeader( copySrc, name, end, begin, &folded ) < 0 ) {
+      break;
+    }
   }
 
   return result;
@@ -933,7 +951,7 @@ bool hasAttachment( Content* content )
         return true;
     }
   }
-  
+
   return false;
 }
 
@@ -965,7 +983,7 @@ bool isEncrypted( Message *message )
   const KMime::Headers::ContentType* const contentType = message->contentType();
   if ( contentType->isSubtype( "encrypted" ) ||
        contentType->isSubtype( "pgp-encrypted" ) ||
-       contentType->isSubtype( "pkcs7-mime" ) || 
+       contentType->isSubtype( "pkcs7-mime" ) ||
        message->mainBodyPart( "multipart/encrypted" ) ||
        message->mainBodyPart( "application/pgp-encrypted" ) ||
        message->mainBodyPart( "application/pkcs7-mime" ) ) {
