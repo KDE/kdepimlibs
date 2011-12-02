@@ -488,7 +488,7 @@ static QString displayViewFormatEvent( const QString &calStr, Event *event,
 
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td><b>" + i18n( "Location:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18nc( "@title:column event location", "Location:" ) + "</b></td>";
     tmpStr += "<td>" + event->richLocation() + "</td>";
     tmpStr += "</tr>";
   }
@@ -661,7 +661,7 @@ static QString displayViewFormatTodo( const QString &calStr, Todo *todo,
 
   if ( !todo->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td><b>" + i18n( "Location:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18nc( "@title:column to-do location", "Location:" ) + "</b></td>";
     tmpStr += "<td>" + todo->richLocation() + "</td>";
     tmpStr += "</tr>";
   }
@@ -1368,7 +1368,7 @@ static QString invitationDetailsEvent( Event *event, bool noHtmlMode, KDateTime:
     }
   }
 
-  QString sLocation = i18n( "Location unspecified" );
+  QString sLocation = i18nc( "event location", "Location unspecified" );
   if ( !event->location().isEmpty() ) {
     if ( !event->locationIsRich() ) {
       sLocation = Qt::escape( event->location() );
@@ -1452,7 +1452,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode, KDateTime::Sp
     }
   }
 
-  QString sLocation = i18n( "Location unspecified" );
+  QString sLocation = i18nc( "todo location", "Location unspecified" );
   if ( !todo->location().isEmpty() ) {
     if ( !todo->locationIsRich() ) {
       sLocation = Qt::escape( todo->location() );
@@ -2276,7 +2276,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
       }
 
       if ( oldInc->location() != newInc->location() ) {
-        mChanges += i18n( "The location has been changed to: \"%1\"",
+        mChanges += i18nc( "event/todo location", "The location has been changed to: \"%1\"",
                           newInc->richLocation() );
       }
 
@@ -3122,7 +3122,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence *incidenc
 
   if ( !incidence->location().isEmpty() ) {
     tmp += "<br>";
-    tmp += "<i>" + i18n( "Location:" ) + "</i>" + "&nbsp;";
+    tmp += "<i>" + i18nc( "event/todo location", "Location:" ) + "</i>" + "&nbsp;";
     tmp += incidence->richLocation();
   }
 
@@ -3236,7 +3236,7 @@ static QString mailBodyIncidence( Incidence *incidence )
     body += i18n( "Organizer: %1\n", incidence->organizer().fullName() );
   }
   if ( !incidence->location().isEmpty() ) {
-    body += i18n( "Location: %1\n", incidence->richLocation() );
+    body += i18nc( "event/todo location", "Location: %1\n", incidence->richLocation() );
   }
   return body;
 }
