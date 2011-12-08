@@ -308,7 +308,12 @@ void Transport::readPassword()
   // finally try to open the wallet and read the password
   KWallet::Wallet *wallet = TransportManager::self()->wallet();
   if ( wallet ) {
-    wallet->readPassword( QString::number( id() ), d->password );
+    QString pwd;
+    if ( wallet->readPassword( QString::number( id() ), pwd ) == 0 ) {
+      d->password = pwd;
+    } else {
+      d->passwordLoaded = false;
+    }
   }
 }
 
