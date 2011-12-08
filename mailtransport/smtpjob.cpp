@@ -28,6 +28,7 @@
 
 #include <QBuffer>
 #include <QHash>
+#include <QPointer>
 
 #include <KLocalizedString>
 #include <KUrl>
@@ -68,9 +69,11 @@ class SmtpJobPrivate
   public:
     SmtpJobPrivate( SmtpJob *parent ) : q( parent ) {}
 
-    void smtpSessionResult( SmtpSession * session )
+    void smtpSessionResult( SmtpSession *session )
     {
-#ifdef MAILTRANSPORT_INPROCESS_SMTP
+#ifndef MAILTRANSPORT_INPROCESS_SMTP
+      Q_UNUSED( session );
+#else
       if ( !session->errorMessage().isEmpty() ) {
         q->setError( KJob::UserDefinedError );
         q->setErrorText( session->errorMessage() );
@@ -166,37 +169,36 @@ void SmtpJob::startSmtpJob()
   }
 
   if ( transport()->requiresAuthentication() ) {
-    if( ( transport()->userName().isEmpty() || transport()->password().isEmpty() ) &&
-        transport()->authenticationType() != Transport::EnumAuthenticationType::GSSAPI ) {
-      QString user = transport()->userName();
-      QString passwd = transport()->password();
-      int result;
+    QString user = transport()->userName();
+    QString passwd = transport()->password();
+    if ( ( user.isEmpty() || passwd.isEmpty() ) &&
+         transport()->authenticationType() != Transport::EnumAuthenticationType::GSSAPI ) {
 
-      bool keep = transport()->storePassword();
+      QPointer<KPasswordDialog> dlg =
+        new KPasswordDialog( 0,
+                             KPasswordDialog::ShowUsernameLine |
+                             KPasswordDialog::ShowKeepPassword );
+      dlg->setPrompt( i18n( "You need to supply a username and a password "
+                            "to use this SMTP server." ) );
+      dlg->setKeepPassword( transport()->storePassword() );
+      dlg->addCommentLine( QString(), transport()->name() );
+      dlg->setUsername( user );
+      dlg->setPassword( passwd );
 
-      KPasswordDialog dlg( 0,
-                           KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-      dlg.setPrompt( i18n( "You need to supply a username and a password "
-                           "to use this SMTP server." ) );
-      dlg.setKeepPassword( keep );
-      dlg.addCommentLine( QString(), transport()->name() );
-      dlg.setUsername( user );
-      dlg.setPassword( passwd );
-
-      result = dlg.exec();
-
-      if ( result != QDialog::Accepted ) {
+      if ( dlg->exec() != QDialog::Accepted ) {
         setError( KilledJobError );
         emitResult();
+        delete dlg;
         return;
       }
-      transport()->setUserName( dlg.username() );
-      transport()->setPassword( dlg.password() );
-      transport()->setStorePassword( dlg.keepPassword() );
+      transport()->setUserName( dlg->username() );
+      transport()->setPassword( dlg->password() );
+      transport()->setStorePassword( dlg->keepPassword() );
       transport()->writeConfig();
+      delete dlg;
     }
-    destination.setUser( transport()->userName() );
-    destination.setPass( transport()->password() );
+    destination.setUser( user );
+    destination.setPass( passwd );
   }
 
   // dotstuffing is now done by the slave (see setting of metadata)
