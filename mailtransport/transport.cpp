@@ -312,6 +312,7 @@ void Transport::readPassword()
     if ( wallet->readPassword( QString::number( id() ), pwd ) == 0 ) {
       d->password = pwd;
     } else {
+      d->password.clear();
       d->passwordLoaded = false;
     }
   }
