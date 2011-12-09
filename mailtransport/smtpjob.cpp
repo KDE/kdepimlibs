@@ -197,8 +197,8 @@ void SmtpJob::startSmtpJob()
       transport()->writeConfig();
       delete dlg;
     }
-    destination.setUser( user );
-    destination.setPass( passwd );
+    destination.setUser( transport()->userName() );
+    destination.setPass( transport()->password() );
   }
 
   // dotstuffing is now done by the slave (see setting of metadata)
