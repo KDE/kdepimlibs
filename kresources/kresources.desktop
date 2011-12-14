@@ -112,6 +112,7 @@ Comment[zh_CN]=配置 KDE 资源
 Comment[zh_TW]=設定 KDE 資源
 
 X-KDE-Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
+X-KDE-Keywords[de]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 X-KDE-Keywords[es]=recursos, recurso de conector, recurso de contacto, recurso de calendario, recurso de notas, recurso de alarma, imap
 X-KDE-Keywords[ia]=ressources,ressource de connector, ressource de contacto, ressource de calendario, ressource de notas, ressource de alarma, imap
 X-KDE-Keywords[kk]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
