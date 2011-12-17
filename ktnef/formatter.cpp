@@ -406,6 +406,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           //        so we always set 'DISPLAY' (no sounds, no images...)
           event->addAlarm( alarm );
         }
+        //ensure we have a uid for this event
+        if ( event->uid().isEmpty() ) {
+          event->setUid( CalFormat::createUniqueId() );
+        }
         cal->addEvent( event );
         bOk = true;
         // we finished composing a vCal
