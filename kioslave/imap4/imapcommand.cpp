@@ -231,7 +231,12 @@ CommandPtr
 imapCommand::clientAppend (const QString & box, const QString & flags,
                            ulong size)
 {
-  QString tmp = QString(flags.isEmpty() ? QString("") : QString(('(' + flags + ") ")) + '{' + QString::number(size) + '}'); 
+  QString tmp;
+  if ( !flags.isEmpty() ) {
+    tmp = '(' + flags + ") ";
+  }
+  tmp += '{' + QString::number( size ) + '}';
+
   return CommandPtr( new imapCommand ("APPEND",
                           "\"" + KIMAP::encodeImapFolderName (box) + "\" " + tmp));
 }
