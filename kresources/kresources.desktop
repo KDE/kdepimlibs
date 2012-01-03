@@ -112,9 +112,11 @@ Comment[zh_CN]=配置 KDE 资源
 Comment[zh_TW]=設定 KDE 資源
 
 X-KDE-Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
+X-KDE-Keywords[da]=ressourcer,konnector-ressource,kontakt-ressource,kalender-ressource,note-ressource,alarm-ressource,imap
 X-KDE-Keywords[de]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 X-KDE-Keywords[es]=recursos, recurso de conector, recurso de contacto, recurso de calendario, recurso de notas, recurso de alarma, imap
 X-KDE-Keywords[et]=ressursid,konnektor,ressurss,kontaktiressurss,kalendriressurss,märkmeressurss,häireressurss,imap
+X-KDE-Keywords[ga]=acmhainní,acmhainn konnector,acmhainn teagmhála,acmhainn fhéilire,acmhainn nótaí,acmhainn aláraim,imap
 X-KDE-Keywords[hu]=erőforrások, összekötő erőforrás, névjegy erőforrás,naptár erőforrás,jegyzet erőforrás, figyelmeztetés erőforrás,imap
 X-KDE-Keywords[ia]=ressources,ressource de connector, ressource de contacto, ressource de calendario, ressource de notas, ressource de alarma, imap
 X-KDE-Keywords[it]=risorse,risorse di konnector,risorse dei contatti,risorse del calendario,note risorse,risorse sveglia,imap
