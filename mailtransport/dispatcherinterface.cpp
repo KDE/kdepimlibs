@@ -65,7 +65,7 @@ void DispatcherInterface::dispatchManually()
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
-    kError() << "Could not access Outbox.";
+//    kError() << "Could not access Outbox.";
     return;
   }
 
@@ -78,7 +78,7 @@ void DispatcherInterface::retryDispatching()
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
-    kError() << "Could not access Outbox.";
+//    kError() << "Could not access Outbox.";
     return;
   }
 
@@ -91,7 +91,7 @@ void DispatcherInterface::dispatchManualTransport( int transportId )
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
   if( !outbox.isValid() ) {
-    kError() << "Could not access Outbox.";
+//    kError() << "Could not access Outbox.";
     return;
   }
 

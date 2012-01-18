@@ -369,6 +369,11 @@ void SessionPrivate::socketDisconnected()
   clearJobQueue();
 }
 
+void SessionPrivate::socketActivity()
+{
+  restartSocketTimer();
+}
+
 void SessionPrivate::socketError()
 {
   if (socketTimer.isActive()) {
@@ -479,6 +484,7 @@ void SessionPrivate::restartSocketTimer()
 
 void SessionPrivate::onSocketTimeout()
 {
+  kDebug() << "Socket timeout!";
   thread->closeSocket();
 }
 

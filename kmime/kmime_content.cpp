@@ -158,6 +158,27 @@ void Content::setBody( const QByteArray &body )
   d_ptr->body = body;
 }
 
+QByteArray Content::preamble() const
+{
+  return d_ptr->preamble;
+}
+
+void Content::setPreamble( const QByteArray &preamble )
+{
+  d_ptr->preamble = preamble;
+}
+
+
+QByteArray Content::epilogue() const
+{
+  return d_ptr->epilogue;
+}
+
+void Content::setEpilogue( const QByteArray &epilogue )
+{
+  d_ptr->epilogue = epilogue;
+}
+
 void Content::parse()
 {
   Q_D( Content );

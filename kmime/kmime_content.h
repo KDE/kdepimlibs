@@ -467,6 +467,45 @@ class KMIME_EXPORT Content
     void setBody( const QByteArray &body );
 
     /**
+      Returns the MIME preamble.
+
+      @return a QByteArray containing the MIME preamble.
+
+      @since 4.9
+     */
+    QByteArray preamble() const;
+
+    /**
+      Sets the MIME preamble.
+
+      @param preamble a QByteArray containing what will be used as the
+      MIME preamble.
+
+      @since 4.9
+     */
+
+    void setPreamble( const QByteArray &preamble );
+
+    /**
+      Returns the MIME preamble.
+
+      @return a QByteArray containing the MIME epilogue.
+
+      @since 4.9
+     */
+    QByteArray epilogue() const;
+
+    /**
+      Sets the MIME preamble.
+
+      @param epilogue a QByteArray containing what will be used as the
+      MIME epilogue.
+
+      @since 4.9
+     */
+    void setEpilogue( const QByteArray &epilogue );
+
+    /**
       Returns a QByteArray containing the encoded Content, including the
       Content header and all sub-Contents.
 
