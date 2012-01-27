@@ -738,7 +738,8 @@ int Content::size()
   int ret = d_ptr->body.length();
 
   if ( contentTransferEncoding()->encoding() == Headers::CEbase64 ) {
-    return ret * 3 / 4; //base64 => 6 bit per byte
+    KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
+    return codec->maxEncodedSizeFor(ret);
   }
 
   // Not handling quoted-printable here since that requires actually
