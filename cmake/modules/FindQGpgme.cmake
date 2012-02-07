@@ -18,7 +18,7 @@ if(GPGME_FOUND)
    else ( WIN32 )
       find_library(_QGPGME_EXTRA_LIBRARY gpgme++-pthread
                    HINTS ${GPGME_LIBRARY_DIR})
-   endif ( WIN32 )
+   endif()
 
    find_library(QGPGME_LIBRARY qgpgme
                 HINTS ${GPGME_LIBRARY_DIR})
@@ -29,15 +29,15 @@ if(GPGME_FOUND)
       get_filename_component(_QGPGME_PREFIX "${_QGPGME_PREFIX}" PATH)
       find_path(QGPGME_INCLUDE_DIR qgpgme/qgpgme_export.h 
                 HINTS "${_QGPGME_PREFIX}/include" )
-   endif (QGPGME_LIBRARY)
+   endif()
 
    if ( WIN32 )
       set(QGPGME_LIBRARIES ${QGPGME_LIBRARY} ${_QGPGME_EXTRA_LIBRARY} ${GPGME_VANILLA_LIBRARIES} ${GPGME_QT_LIBRARIES})
    else ( WIN32 )
       set(QGPGME_LIBRARIES ${QGPGME_LIBRARY} ${_QGPGME_EXTRA_LIBRARY} ${GPGME_PTHREAD_LIBRARIES})
-   endif ( WIN32 )
+   endif()
 
-endif(GPGME_FOUND)
+endif()
 
 
 include(FindPackageHandleStandardArgs)

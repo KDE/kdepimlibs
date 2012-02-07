@@ -29,9 +29,9 @@ kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
 if (KDEPIM_NO_KCAL)
   target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
-else (KDEPIM_NO_KCAL)
+else()
   target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
-endif (KDEPIM_NO_KCAL)
+endif()
 
 set_target_properties(ktnef PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS ktnef EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

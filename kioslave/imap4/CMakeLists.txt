@@ -7,9 +7,9 @@ if (SASL2_FOUND)
    set(imap4_optional_includes ${imap4_optional_includes} ${SASL2_INCLUDE_DIR})
    set(imap4_optional_libs     ${imap4_optional_libs}     ${SASL2_LIBRARIES})
    set(HAVE_LIBSASL2 1)
-else (SASL2_FOUND)
+else()
    set(HAVE_LIBSASL2 0)
-endif (SASL2_FOUND)
+endif()
 
 configure_file(imap4-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/imap4-config.h)
 
@@ -34,7 +34,7 @@ kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 target_link_libraries(kio_imap4 kmime kimap ${KDE4_KIO_LIBS})
 if (SASL2_FOUND)
 	target_link_libraries(kio_imap4 ${SASL2_LIBRARIES} )
-endif(SASL2_FOUND)
+endif()
 
 install(TARGETS kio_imap4  DESTINATION ${PLUGIN_INSTALL_DIR})
 

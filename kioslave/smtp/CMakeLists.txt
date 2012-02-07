@@ -10,7 +10,7 @@ set(smtp_optional_libs)
 if (SASL2_FOUND)
    set(smtp_optional_includes ${smtp_optional_includes} ${SASL2_INCLUDE_DIR})
    set(smtp_optional_libs     ${smtp_optional_libs}     ${SASL2_LIBRARIES})
-endif (SASL2_FOUND)
+endif()
 
 include_directories(  ${smtp_optional_includes}  )
 

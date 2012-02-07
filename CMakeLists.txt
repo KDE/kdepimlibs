@@ -16,7 +16,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 # cmake would not find kde for xcompile if that is not set 
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
-endif(WINCE)
+endif()
 
 set (QT_MIN_VERSION "4.7.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
@@ -30,9 +30,9 @@ include(KDEPlatformProfile)
 
 if (KDE_PLATFORM_PROFILE STREQUAL "Mobile")
   set(_default_mobile_ui TRUE)
-else ()
+else()
   set(_default_mobile_ui FALSE)
-endif ()
+endif()
 
 
 ############### Build Options ###############
@@ -64,9 +64,9 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCu
 set(Boost_MINIMUM_VERSION "1.34.0")
 if (WIN32)
   find_package(Boost ${Boost_MINIMUM_VERSION}) # (jstaniek) temp. fix unless we have graph library, not just headers
-else (WIN32)
+else()
   find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
-endif (WIN32)
+endif()
 macro_log_feature(Boost_FOUND "Boost C++ Libraries" "Required by core components" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "Boost must include the boost-graph library")
 
 
@@ -76,7 +76,7 @@ find_package(Gpgme REQUIRED)
 # configure macros
 if (GPGME_FOUND)
   include (gpgme++/ConfigureChecks.cmake)
-endif (GPGME_FOUND)
+endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
@@ -101,25 +101,25 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(Soprano)
   if (NOT WINCE)
     macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "")
-  else(NOT WINCE)
+  else()
     macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" FALSE "${SOPRANO_MIN_VERSION}" "")
-  endif (NOT WINCE)
+  endif()
   if (Soprano_FOUND AND NOT WINCE)
   include(SopranoAddOntology)
-  endif (Soprano_FOUND AND NOT WINCE)
+  endif()
 
   find_package(Nepomuk)
   if (WINCE)
     macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "Nepomuk is part of kdelibs")
-  else(WINCE)
+  else()
     macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "Nepomuk is part of kdelibs")
-  endif (WINCE)
+  endif()
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)
   macro_log_feature(LIBICAL_FOUND "libical" "Calendar support" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Needed by the kcal and kcalcore libraries")
 
-endif (NOT KDEPIM_ONLY_KLEO)
+endif()
 
 ############### Needed commands before building anything ###############
 
@@ -128,29 +128,29 @@ add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 if (KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
-endif (KDEPIM_MOBILE_UI)
+endif()
 
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
 
 if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
-endif (KDEPIM_NO_KRESOURCES)
+endif()
 if (KDEPIM_NO_KCAL)
   add_definitions(-DKDEPIM_NO_KCAL)
-endif (KDEPIM_NO_KCAL)
+endif()
 
 if(WINCE)
   set(STATIC_LIBRARY ON)
   add_definitions(-DKDELIBS_STATIC_LIBS)
-endif(WINCE)
+endif()
 
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   add_definitions(-DKDEPIM_STATIC_LIBS)
   message(STATUS "Building kdepimlibs as static libraries")
-else(STATIC_LIBRARY)
+else()
   set(LIBRARY_TYPE SHARED)
-endif(STATIC_LIBRARY)
+endif()
 
 
 ############### Now, we add the KDEPIMLibs components ###############
@@ -165,9 +165,9 @@ if (NOT KDEPIM_ONLY_KLEO)
   if (NOT KDEPIM_NO_KCAL)
     if (NOT WINCE)
     add_subdirectory(kblog)
-    endif(NOT WINCE)
+    endif()
     add_subdirectory(kcal)
-  endif (NOT KDEPIM_NO_KCAL)
+  endif()
   add_subdirectory(kcalcore)
   add_subdirectory(kcalutils)
   add_subdirectory(akonadi) # depends on kabc is build
@@ -176,7 +176,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kioslave)
   add_subdirectory(kldap)
   add_subdirectory(kmbox)
-endif (NOT KDEPIM_ONLY_KLEO)
+endif()
   add_subdirectory(kmime)
 if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kpimidentities)
@@ -184,7 +184,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kpimtextedit)
   if (NOT KDEPIM_NO_KRESOURCES)
     add_subdirectory(kresources)
-  endif (NOT KDEPIM_NO_KRESOURCES)
+  endif()
   add_subdirectory(ktnef)
   add_subdirectory(kxmlrpcclient)
   add_subdirectory(mailtransport)
@@ -192,10 +192,10 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(syndication)
   if (NOT WINCE)
   add_subdirectory(kontactinterface)
-  endif (NOT WINCE)
+  endif()
   # Build the CamelCase headers
   add_subdirectory(includes)
-endif (NOT KDEPIM_ONLY_KLEO)
+endif()
 
 
 # doc must be a subdir of kdepimlibs
@@ -210,7 +210,7 @@ macro_display_feature_log()
 if (NOT KDEPIM_ONLY_KLEO)
   install(FILES kdepimlibs-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-endif (NOT KDEPIM_ONLY_KLEO)
+endif()
 
 
 # now create the KdepimLibsConfig.cmake file, which will be loaded by
@@ -223,9 +223,9 @@ endif (NOT KDEPIM_ONLY_KLEO)
 macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
    if (IS_ABSOLUTE "${in}")    # IS_ABSOLUTE is new since cmake 2.4.8
       set(${out} "${in}")
-   else (IS_ABSOLUTE "${in}")
+   else()
       set(${out} "\${KDEPIMLIBS_INSTALL_DIR}/${in}")
-   endif (IS_ABSOLUTE "${in}")
+   endif()
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 # all the following variables are put into KdepimLibsConfig.cmake, so
@@ -274,7 +274,7 @@ set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/KdepimLibs/cmake)
 # option to have kdepimlibs install its Config file there. Alex
 if(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
    set(_KdepimLibsConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/KdepimLibs)
-endif(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+endif()
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfigVersion.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/KdepimLibsConfig.cmake
