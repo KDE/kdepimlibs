@@ -1,6 +1,8 @@
 project(kblog)
 
-include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}")
+include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}"
+  ${kcalcore_BINARY_DIR}
+)
 
 add_subdirectory( tests )
 

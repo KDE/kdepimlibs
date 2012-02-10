@@ -9,6 +9,7 @@ add_subdirectory(tests)
 include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
+  ${kcalcore_BINARY_DIR}
 )
 
 set(ktnef_LIB_SRCS
