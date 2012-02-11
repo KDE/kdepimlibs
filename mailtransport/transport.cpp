@@ -295,12 +295,17 @@ void Transport::readPassword()
     kDebug() << "migrating password from kmail wallet";
     KWallet::Wallet *wallet = TransportManager::self()->wallet();
     if ( wallet ) {
+      QString pwd;
       wallet->setFolder( KMAIL_WALLET_FOLDER );
-      wallet->readPassword( QString::fromLatin1( "transport-%1" ).arg( id() ), d->password );
+      if ( wallet->readPassword( QString::fromLatin1( "transport-%1" ).arg( id() ), pwd ) == 0 ) {
+        setPassword( pwd );
+        writeConfig();
+      } else {
+        d->password.clear();
+        d->passwordLoaded = false;
+      }
       wallet->removeEntry( QString::fromLatin1( "transport-%1" ).arg( id() ) );
       wallet->setFolder( WALLET_FOLDER );
-      d->passwordDirty = true;
-      writeConfig();
     }
     return;
   }
@@ -310,7 +315,7 @@ void Transport::readPassword()
   if ( wallet ) {
     QString pwd;
     if ( wallet->readPassword( QString::number( id() ), pwd ) == 0 ) {
-      d->password = pwd;
+      setPassword( pwd );
     } else {
       d->password.clear();
       d->passwordLoaded = false;

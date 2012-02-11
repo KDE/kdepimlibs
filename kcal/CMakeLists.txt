@@ -15,7 +15,7 @@ include (ConfigureChecks.cmake)
 
 if(KDE4_BUILD_TESTS)
   add_definitions(-DCOMPILING_TESTS)
-endif(KDE4_BUILD_TESTS)
+endif()
 
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
@@ -84,7 +84,7 @@ if (NOT WINCE)
     #disabled due to no QTreeWidget
     confirmsavedialog.cpp
   )
-endif (NOT WINCE)
+endif()
 
 
 if (NOT KDEPIM_NO_KRESOURCES)
@@ -99,7 +99,7 @@ if (NOT KDEPIM_NO_KRESOURCES)
     resourcecachedconfig.cpp
     calendarresources.cpp
   )
-endif (NOT KDEPIM_NO_KRESOURCES)
+endif()
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
@@ -110,7 +110,7 @@ target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kabc)
 if (NOT KDEPIM_NO_KRESOURCES)
   target_link_libraries(kcal kresources)
   target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kresources)
-endif (NOT KDEPIM_NO_KRESOURCES)
+endif()
 
 set_target_properties(kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kcal EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -140,7 +140,7 @@ kde4_add_plugin(kcal_localdir ${kcal_localdir_PART_SRCS})
 target_link_libraries(kcal_localdir ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} kcal kresources)
 
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
-endif (NOT KDEPIM_NO_KRESOURCES)
+endif()
 
 add_subdirectory( tests )
 
@@ -209,4 +209,4 @@ if (NOT KDEPIM_NO_KRESOURCES)
         resourcelocal.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/kcal COMPONENT Devel)
   install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
-endif (NOT KDEPIM_NO_KRESOURCES)
+endif()

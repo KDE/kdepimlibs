@@ -25,7 +25,7 @@ include( "${KDECTESTNIGHTLY_DIR}/KDECTestNightly.cmake"  OPTIONAL  RESULT_VARIAB
 
 if(NOT fileIncluded)
    message(FATAL_ERROR "Did not find file ${KDECTESTNIGHTLY_DIR}/KDECTestNightly.cmake . Set the environment variable KDECTESTNIGHTLY_DIR  to the directory where this file is located. In KDE svn it is in kdesdk/cmake/modules/ ")
-endif(NOT fileIncluded)
+endif()
 
 # set up binary dir, source dir, etc.
 kde_ctest_setup("${CMAKE_CURRENT_LIST_FILE}")
@@ -53,4 +53,4 @@ ctest_submit()
 # (e.g. kdepimlibs could use this kdelibs install)
 if(DO_INSTALL)
    kde_ctest_install("${CTEST_BINARY_DIRECTORY}" )
-endif(DO_INSTALL)
+endif()

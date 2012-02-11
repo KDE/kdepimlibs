@@ -30,7 +30,7 @@
 # AKONADI_MIN_VERSION did exist before KDE 4.3. Let's keep this option
 if ( NOT Akonadi_FIND_VERSION AND AKONADI_MIN_VERSION )
   set ( Akonadi_FIND_VERSION ${AKONADI_MIN_VERSION} )
-endif ( NOT Akonadi_FIND_VERSION AND AKONADI_MIN_VERSION )
+endif()
 
 set( _Akonadi_FIND_QUIETLY  ${Akonadi_FIND_QUIETLY} )
 find_package( Akonadi ${Akonadi_FIND_VERSION} QUIET NO_MODULE PATHS ${LIB_INSTALL_DIR}/Akonadi/cmake )

@@ -779,6 +779,7 @@ quint16 readMAPIValue( QDataStream &stream, MAPI_value &mapi )
         value = formatTime( lowB, highB );
       }
       break;
+    case MAPI_TYPE_USTRING:
     case MAPI_TYPE_STRING8:
       // in case of a vector'ed value, the number of elements
       // has already been read in the upper for-loop
@@ -789,11 +790,8 @@ quint16 readMAPIValue( QDataStream &stream, MAPI_value &mapi )
       }
       for ( uint i=0; i<d; i++ ) {
         value.clear();
-        value.setValue( readMAPIString( stream ) );
+        value.setValue( readMAPIString( stream,( mapi.type & 0x0FFF ) == MAPI_TYPE_USTRING ) );
       }
-      break;
-    case MAPI_TYPE_USTRING:
-      mapi.type = MAPI_TYPE_NONE;
       break;
     case MAPI_TYPE_OBJECT:
     case MAPI_TYPE_BINARY:

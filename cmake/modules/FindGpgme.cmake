@@ -107,7 +107,7 @@ if ( WIN32 )
           ${CMAKE_LIBRARY_PATH}
           ${CMAKE_INSTALL_PREFIX}/lib
       )
-    endif (NOT WINCE)
+    endif()
 
     find_library( _gpgme_glib_library    NAMES gpgme-glib libgpgme-glib gpgme-glib-11 libgpgme-glib-11
       PATHS 

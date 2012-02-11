@@ -13,7 +13,7 @@ if ( WIN32 AND GPGME_VANILLA_FOUND )
    set( _qgpgme_libgpgme gpgmepp )
    #set( _qgpgme_extra_src eventloopinteractor_win.cpp )
 
-endif ( WIN32 AND GPGME_VANILLA_FOUND )
+endif()
 
 if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
 
@@ -26,7 +26,7 @@ if ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
    set( _qgpgme_extra_src eventloopinteractor.cpp eventloopinteractor_unix.cpp )
    set( _qgpgme_extra_headers eventloopinteractor.h )
 
-endif ( NOT WIN32 AND GPGME_PTHREAD_FOUND )
+endif()
 
 # build / install only if any useable gpgme was found:
 
@@ -46,7 +46,7 @@ if ( _any_gpgme_found )
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
    if(WINCE)
    target_link_libraries(qgpgme ${WCECOMPAT_LIBRARIES})
-   endif(WINCE)
+   endif()
 
    set_target_properties( qgpgme PROPERTIES
      VERSION ${_qgpgme_version}
@@ -61,4 +61,4 @@ if ( _any_gpgme_found )
      dataprovider.h 
      DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme COMPONENT Devel )
 
-endif ( _any_gpgme_found )
+endif()

@@ -22,7 +22,7 @@ IF (NOT HAVE_TIMEZONE)
 int main() { const char *p = timezone(0,0); return 0;}
 " 
     HAVE_BSD_TIMEZONE)
-ENDIF(NOT HAVE_TIMEZONE)
+endif()
 
 CHECK_CXX_SOURCE_COMPILES("
 #include <stdlib.h>

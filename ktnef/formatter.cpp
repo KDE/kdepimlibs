@@ -287,7 +287,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           }
         }
 
-        QString s( tnefMsg->findProp( 0x0e04 ) );
+        QString s( tnefMsg->findProp( 0x8189 ) );
         const QStringList attendees = s.split( ';' );
         if ( attendees.count() ) {
           for ( QStringList::const_iterator it = attendees.begin();
@@ -338,7 +338,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
             event->addAttendee( attendee );
           }
         }
-        s = tnefMsg->findProp( 0x0c1f ); // look for organizer property
+        s = tnefMsg->findProp( 0x3ff8 ); // look for organizer property
         if ( s.isEmpty() && !bIsReply ) {
           s = sSenderSearchKeyEmail;
         }
@@ -347,15 +347,14 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           event->setOrganizer( s );
         }
 
-        s = tnefMsg->findProp( 0x8516 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
+        s = tnefMsg->findProp( 0x819b ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
         event->setDtStart( KDateTime::fromString( s ) ); // ## Format??
 
-        s = tnefMsg->findProp( 0x8517 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
+        s = tnefMsg->findProp( 0x819c ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
         event->setDtEnd( KDateTime::fromString( s ) );
 
-        s = tnefMsg->findProp( 0x8208 );
+        s = tnefMsg->findProp( 0x810d );
         event->setLocation( s );
-
         // is it OK to set this to OPAQUE always ??
         //vPart += "TRANSP:OPAQUE\n"; ###FIXME, portme!
         //vPart += "SEQUENCE:0\n";
@@ -382,7 +381,6 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
 
         s = tnefMsg->findProp( 0x0026 );
         event->setPriority( s.toInt() );
-
         // is reminder flag set ?
         if ( !tnefMsg->findProp( 0x8503 ).isEmpty() ) {
           Alarm::Ptr alarm( new Alarm( event.data() ) ); // KDAB_TODO, fix when KCalCore::Alarm is fixed

@@ -2167,7 +2167,7 @@ Headers::Base *extractFirstHeader( QByteArray &head )
     }
     if( !header ) {
       //kWarning() << "Returning Generic header of type" << rawType;
-      header = new Headers::Generic( rawType );
+      header = new Headers::Generic( rawType.constData() );
     }
     header->from7BitString( rawFieldBody );
 

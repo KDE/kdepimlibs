@@ -5,7 +5,7 @@ if(HAVE_GETOPT_H)
     kde4_add_executable(test_kmime_header_parsing TEST ${test_kmime_header_parsing_SRCS})
 
     target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
-endif(HAVE_GETOPT_H)
+endif()
 
 ########### next target ###############
 
@@ -25,7 +25,7 @@ if(HAVE_GETOPT_H)
     kde4_add_executable(test_mdn TEST ${test_mdn_SRCS})
 
     target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
-endif(HAVE_GETOPT_H)
+endif()
 
 ########### next target ###############
 
