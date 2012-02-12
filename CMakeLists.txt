@@ -130,7 +130,7 @@ if (KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
 endif()
 
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
+include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/kalarmcal ${KDE4_INCLUDES} ${Boost_INCLUDE_DIR})
 
 if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
