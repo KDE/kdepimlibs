@@ -1,6 +1,6 @@
 project(kblog)
 
-include_directories(${Boost_INCLUDE_DIR})
+include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}")
 
 add_subdirectory( tests )
 
@@ -30,5 +30,5 @@ install(TARGETS kblog EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_
 
 ########### install files ##############
 
-install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h 
+install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h
          DESTINATION ${INCLUDE_INSTALL_DIR}/kblog COMPONENT Devel)
