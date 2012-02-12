@@ -27,6 +27,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kabc
   ${CMAKE_SOURCE_DIR}/kcalutils
   ${CMAKE_BINARY_DIR}/kcal
+  ${CMAKE_BINARY_DIR}/kalarmcal
   ${Boost_INCLUDE_DIR}
 )
 
