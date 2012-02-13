@@ -26,8 +26,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
   ${CMAKE_SOURCE_DIR}/kcalutils
+<<<<<<< HEAD
   ${CMAKE_BINARY_DIR}/kcal
   ${CMAKE_BINARY_DIR}/kalarmcal
+=======
+>>>>>>> Remove kcal
   ${Boost_INCLUDE_DIR}
 )
 
@@ -38,7 +41,6 @@ add_includes( KCalCore )
 add_includes( KCalUtils )
 if (NOT KDEPIM_NO_KCAL)
   add_includes( KBlog )
-  add_includes( KCal )
 endif()
 add_includes( KHolidays )
 add_includes( KIMAP )
@@ -60,7 +62,6 @@ kde4_add_executable( headertest header_compile.cpp )
 target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
 add_dependencies( headertest akonadi-calendar ) # ensure calendarsettings.h is generated in parallel builds
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
-add_dependencies( headertest kcal )
 add_dependencies( headertest mailtransport ) # ensure transportbase.h is generated in parallel builds
 
 endif()

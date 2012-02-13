@@ -19,11 +19,6 @@
  * - <a href="kblog/html/index.html"><b>kblog</b></a>.
  *   <i>An API for weblogging access.</i>
  *
- * - <a href="kcal/html/index.html"><b>kcal</b></a>.
- *   <i>(Deprecated, use <a href="kcalcore/html/index.html">kcalcore</a> 
- *   or <a href="kcalutils/html/index.html">kcalutils</a> instead)
- *   An API for the iCalendar and vCalendar formats.</i>
- *
  * - <a href="kcalcore/html/index.html"><b>kcalcore</b></a>.
  *   <i>An API for the iCalendar and vCalendar formats.</i>
  *
