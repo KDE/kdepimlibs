@@ -27,7 +27,6 @@
 
 #include <KDateTime>
 #include <KUrl>
-#include <kcal/journal.h>
 
 #include <QStringList>
 
@@ -68,22 +67,23 @@ BlogPost::BlogPost( const QString &postId )
   d_ptr->mStatus = New;
 }
 
-BlogPost::BlogPost( const KCal::Journal &journal )
+BlogPost::BlogPost( const KCalCore::Journal::Ptr &journal )
   : d_ptr( new BlogPostPrivate )
 {
+  Q_ASSERT( journal );
   d_ptr->q_ptr = this;
   d_ptr->mPrivate = false;
-  d_ptr->mPostId = journal.customProperty( "KBLOG", "ID" );
-  d_ptr->mJournalId = journal.uid();
+  d_ptr->mPostId = journal->customProperty( "KBLOG", "ID" );
+  d_ptr->mJournalId = journal->uid();
   d_ptr->mStatus = New;
-  d_ptr->mTitle = journal.summary();
-  if ( journal.descriptionIsRich() ) {
-    d_ptr->mContent = d_ptr->cleanRichText( journal.description() );
+  d_ptr->mTitle = journal->summary();
+  if ( journal->descriptionIsRich() ) {
+    d_ptr->mContent = d_ptr->cleanRichText( journal->description() );
   } else {
-    d_ptr->mContent = journal.description();
+    d_ptr->mContent = journal->description();
   }
-  d_ptr->mCategories = journal.categories();
-  d_ptr->mCreationDateTime = journal.dtStart();
+  d_ptr->mCategories = journal->categories();
+  d_ptr->mCreationDateTime = journal->dtStart();
 }
 
 // BlogPost::BlogPost( const KCal::Journal &journal, BlogPostPrivate &dd )
@@ -105,7 +105,7 @@ BlogPost::~BlogPost()
   delete d_ptr;
 }
 
-KCal::Journal *BlogPost::journal( const Blog &blog ) const
+KCalCore::Journal::Ptr BlogPost::journal( const Blog &blog ) const
 {
   QString url = blog.url().url();
   QString username = blog.username();
@@ -113,7 +113,7 @@ KCal::Journal *BlogPost::journal( const Blog &blog ) const
   // Generate unique ID. Should be unique enough...
   QString id = "kblog-" + url + '-' + blogId  + '-' + username +
       '-' + d_ptr->mPostId;
-  KCal::Journal *journal = new KCal::Journal();
+  KCalCore::Journal::Ptr journal( new KCalCore::Journal() );
   journal->setUid( id );
   journal->setSummary( d_ptr->mTitle );
   journal->setCategories( d_ptr->mCategories );

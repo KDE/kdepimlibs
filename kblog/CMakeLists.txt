@@ -22,7 +22,7 @@ set(kblog_LIB_SRCS
 
 kde4_add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
 
-target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
+target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcalcore )
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
