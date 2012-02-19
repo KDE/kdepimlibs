@@ -2,7 +2,7 @@
  *  kaevent.h  -  represents calendar events
  *  This file is part of kalarmcal library, which provides access to KAlarm
  *  calendar data.
- *  Copyright © 2001-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
  *
  *  This library is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Library General Public License as published
@@ -304,7 +304,7 @@ class KALARMCAL_EXPORT KAEvent
             DISPLAY_TRIGGER    //!< next trigger time for display purposes (i.e. excluding reminders)
         };
 
-        //!< Command execution error type for last time the alarm was triggered. */
+        /** Command execution error type for last time the alarm was triggered. */
         enum CmdErrType
         {
             CMD_NO_ERROR   = 0,      //!< no error
@@ -459,6 +459,19 @@ class KALARMCAL_EXPORT KAEvent
         int revision() const;
 
 #ifndef KALARMCAL_USE_KRESOURCES
+        /** Set the ID of the Akonadi Collection which contains the event. */
+        void setCollectionId(Akonadi::Collection::Id id);
+        /** Set the ID of the Akonadi Collection which contains the event.
+         *  \warning This is a const method, which means that any other instance
+         *           which references the same shared data will also be
+         *           updated. It is designed to be used when a KAEvent is
+         *           being created from an Akonadi Item, to avoid unnecessary
+         *           copying. Use with caution!
+         */
+        void setCollectionId_const(Akonadi::Collection::Id id) const;
+        /** Return the ID of the Akonadi Collection which contains the event. */
+        Akonadi::Collection::Id  collectionId() const;
+
         /** Set the ID of the Akonadi Item which contains the event. */
         void setItemId(Akonadi::Item::Id id);
         /** Return the ID of the Akonadi Item which contains the event. */
@@ -1187,12 +1200,18 @@ class KALARMCAL_EXPORT KAEvent
          *  the alarm message in case of a crash, or to reinstate it should the user
          *  choose to defer the alarm. Note that even repeat-at-login alarms need to be
          *  saved in case their end time expires before the next login.
+         *  @param event      the event to copy
+         *  @param type       the alarm type (main, reminder, deferred etc.)
+         *  @param colId      the ID of the collection which originally contained the event
+         *  @param repeatAtLoginTime repeat-at-login time if @p type == AT_LOGIN_ALARM, else ignored
+         *  @param showEdit   whether the Edit button was displayed
+         *  @param showDefer  whether the Defer button was displayed
          *  @return @c true if successful, @c false if alarm was not copied.
          */
 #ifndef KALARMCAL_USE_KRESOURCES
-        bool setDisplaying(const KAEvent& e, KAAlarm::Type t, Akonadi::Collection::Id colId, const KDateTime& dt, bool showEdit, bool showDefer);
+        bool setDisplaying(const KAEvent& event, KAAlarm::Type type, Akonadi::Collection::Id colId, const KDateTime& repeatAtLoginTime, bool showEdit, bool showDefer);
 #else
-        bool setDisplaying(const KAEvent& e, KAAlarm::Type t, const QString& resourceID, const KDateTime& dt, bool showEdit, bool showDefer);
+        bool setDisplaying(const KAEvent& event, KAAlarm::Type type, const QString& resourceID, const KDateTime& repeatAtLoginTime, bool showEdit, bool showDefer);
 #endif
 
 #ifndef KALARMCAL_USE_KRESOURCES
@@ -1200,6 +1219,10 @@ class KALARMCAL_EXPORT KAEvent
          *  This instance is initialised from the supplied displaying @p event,
          *  and appropriate adjustments are made to convert it back to the
          *  original pre-displaying state.
+         *  @param event      the displaying event
+         *  @param colId      updated to the ID of the collection which originally contained the event
+         *  @param showEdit   updated to true if Edit button was displayed, else false
+         *  @param showDefer  updated to true if Defer button was displayed, else false
          */
         void reinstateFromDisplaying(const KCalCore::Event::Ptr& event, Akonadi::Collection::Id& colId, bool& showEdit, bool& showDefer);
 #else
