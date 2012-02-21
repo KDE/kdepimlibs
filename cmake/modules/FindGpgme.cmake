@@ -42,6 +42,18 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
+#HACK: local copy...
+MACRO(MACRO_BOOL_TO_01 FOUND_VAR )
+   FOREACH (_current_VAR ${ARGN})
+      IF(${FOUND_VAR})
+         SET(${_current_VAR} 1)
+      ELSE(${FOUND_VAR})
+         SET(${_current_VAR} 0)
+      ENDIF(${FOUND_VAR})
+   ENDFOREACH(_current_VAR)
+ENDMACRO(MACRO_BOOL_TO_01)
+
+
 if ( WIN32 )
 
   # On Windows, we don't have a gpgme-config script, so we need to
@@ -202,11 +214,8 @@ else() # not WIN32
       exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION )
 
       set( _GPGME_MIN_VERSION "1.1.7" )
-      if( ${GPGME_VERSION} VERSION_GREATER ${_GPGME_MIN_VERSION} )
-        set( _GPGME_INSTALLED_VERSION_OK TRUE )
-      endif()
 
-      if ( NOT _GPGME_INSTALLED_VERSION_OK )
+      if ( ${GPGME_VERSION} VERSION_LESS ${_GPGME_MIN_VERSION} )
 
         message( STATUS "The installed version of gpgme is too old: ${GPGME_VERSION} (required: >= ${_GPGME_MIN_VERSION})" )
 
