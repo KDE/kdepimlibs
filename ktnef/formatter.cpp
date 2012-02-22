@@ -41,11 +41,6 @@
 #include <kabc/phonenumber.h>
 #include <kabc/vcardconverter.h>
 
-#ifndef KDEPIM_NO_KCAL
-#include <kcal/incidenceformatter.h>
-#include <kcal/calendar.h>
-#endif
-
 #include <kcalcore/calendar.h>
 #include <kcalcore/icalformat.h>
 #include <kcalutils/incidenceformatter.h>
@@ -532,21 +527,6 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
   KABC::VCardConverter converter;
   return QString::fromUtf8( converter.createVCard( addressee ) );
 }
-
-#ifndef KDEPIM_NO_KCAL
-QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
-                                     KCal::Calendar *cal,
-                                     KCal::InvitationFormatterHelper *h )
-{
-  QString vPart = msTNEFToVPart( tnef );
-  QString iCal = KCal::IncidenceFormatter::formatICalInvitation( vPart, cal, h );
-  if ( !iCal.isEmpty() ) {
-    return iCal;
-  } else {
-    return vPart;
-  }
-}
-#endif
 
 QString KTnef::formatTNEFInvitation( const QByteArray &tnef,
                                      const MemoryCalendar::Ptr &cal,

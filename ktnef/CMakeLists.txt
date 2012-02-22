@@ -9,7 +9,6 @@ add_subdirectory(tests)
 include_directories(
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
-  ${CMAKE_SOURCE_DIR}/kcal
 )
 
 set(ktnef_LIB_SRCS
@@ -26,11 +25,7 @@ set(ktnef_LIB_SRCS
 
 kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
-if(KDEPIM_NO_KCAL)
-  target_link_libraries(ktnef ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
-else()
-  target_link_libraries(ktnef ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
-endif()
+target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
 
 set_target_properties(ktnef PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}
