@@ -46,7 +46,6 @@ endif()
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" TRUE)
 cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" OFF "_default_mobile_ui" ON)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 #option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
@@ -152,8 +151,37 @@ else()
 endif()
 
 
-############### Now, we add the KDEPIMLibs components ###############
-# These targets will always be built
+include_directories (
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_BINARY_DIR}
+  ${KDE4_INCLUDES}
+  ${Boost_INCLUDE_DIR}
+  ${kcalcore_BINARY_DIR}
+)
+
+#FindGpgme.cmake already handles the log message but we must ensure it is required.
+find_package(Gpgme)
+set_package_properties(Gpgme PROPERTIES
+                       URL "http://www.gnupg.org/related_software/gpgme/"
+                       DESCRIPTION "The GnuPG Made Easy (GPGME) library)"
+                       TYPE REQUIRED
+)
+
+# configure macros
+include (gpgme++/ConfigureChecks.cmake)
+
+include (ConfigureChecks.cmake)
+
+
+############### Needed commands before building anything ###############
+
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+
+if (KDEPIM_MOBILE_UI)
+  add_definitions( -DKDEPIM_MOBILE_UI )
+endif()
+
 add_subdirectory(cmake)
 add_subdirectory(gpgme++)
 add_subdirectory(qgpgme)
@@ -178,9 +206,6 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kpimidentities)
   add_subdirectory(kpimutils)
   add_subdirectory(kpimtextedit)
-  if (NOT KDEPIM_NO_KRESOURCES)
-    add_subdirectory(kresources)
-  endif()
   add_subdirectory(ktnef)
   add_subdirectory(kxmlrpcclient)
   add_subdirectory(mailtransport)
