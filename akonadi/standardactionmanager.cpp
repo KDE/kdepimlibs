@@ -464,7 +464,8 @@ class StandardActionManager::Private
       }
 
       mActionStateManager.updateState( selectedCollectionsList, selectedItems );
-
+      if( favoritesModel)
+        enableAction( StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
       emit q->actionStateUpdated();
     }
 
