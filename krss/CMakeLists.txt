@@ -34,7 +34,7 @@ target_link_libraries(krss
 )
 
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS krss ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS krss EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
