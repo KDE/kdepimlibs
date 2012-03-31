@@ -23,6 +23,7 @@ configure_file(kdepimlibs-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepimlibs
 add_subdirectory( kabc )
 add_subdirectory( kcal )
 add_subdirectory( kmime )
+add_subdirectory( krss )
 add_subdirectory( contact )
 add_subdirectory( calendar )
 add_subdirectory( notes )

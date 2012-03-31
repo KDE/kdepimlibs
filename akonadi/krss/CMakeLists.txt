@@ -26,12 +26,11 @@ set(krss_LIB_HDRS
 kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
 
 target_link_libraries(krss
+                      akonadi-kde
+                      syndication
                       ${KDE4_KDECORE_LIBS}
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KIO_LIBS}
-                      ${KDEPIMLIBS_AKONADI_LIBS}
-                      ${KDEPIMLIBS_SYNDICATION_LIBS}
-                      ${KRSS_EXTRA_LIBS}
 )
 
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
