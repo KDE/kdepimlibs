@@ -25,7 +25,7 @@
 #include "enclosure.h"
 #include "person.h"
 
-#include <Syndication/Tools>
+#include <syndication/tools.h>
 
 #include <KDateTime>
 

@@ -26,7 +26,7 @@
 #include "item.h"
 #include "rssitem.h"
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
 namespace KRss {
 

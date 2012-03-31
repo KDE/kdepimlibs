@@ -20,7 +20,7 @@
 
 #include "krss_export.h"
 
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 
 namespace KRss {
 

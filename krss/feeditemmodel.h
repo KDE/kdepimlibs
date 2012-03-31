@@ -20,7 +20,7 @@
 
 #include "krss_export.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/entitytreemodel.h>
 
 #include "item.h"
 

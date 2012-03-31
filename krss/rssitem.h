@@ -27,7 +27,7 @@
 
 #include "item.h"
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
 #include <QtCore/QSharedDataPointer>
 

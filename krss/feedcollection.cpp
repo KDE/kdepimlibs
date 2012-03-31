@@ -17,10 +17,10 @@
 
 #include "feedcollection.h"
 #include "feedpropertiescollectionattribute.h"
-#include <Akonadi/EntityDisplayAttribute>
-#include <akonadi/cachepolicy.h>
-#include <Akonadi/AttributeFactory>
 
+#include <akonadi/attributefactory.h>
+#include <akonadi/cachepolicy.h>
+#include <akonadi/entitydisplayattribute.h>
 using namespace Akonadi;
 using namespace KRss;
 
