@@ -42,6 +42,8 @@ install( FILES
    krss_export.h
    item.h
    enclosure.h
+   feedcollection.h
+   feedpropertiescollectionattribute.h
    person.h
    category.h
    feeditemmodel.h
