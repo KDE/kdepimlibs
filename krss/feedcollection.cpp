@@ -144,3 +144,31 @@ void FeedCollection::setFetchInterval( int interval )
     policy.setIntervalCheckTime( interval );
     setCachePolicy( policy );
 }
+
+bool FeedCollection::fetchError() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->fetchError();
+    else
+        return false;
+}
+
+void FeedCollection::setFetchError( bool hasError )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setFetchError( hasError );
+}
+
+QString FeedCollection::fetchErrorString() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->fetchErrorString();
+    else
+        return QString();
+}
+
+void FeedCollection::setFetchErrorString( const QString& errorString )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setFetchErrorString( errorString );
+}

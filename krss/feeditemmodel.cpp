@@ -31,11 +31,15 @@ using namespace KRss;
 class KRss::FeedItemModelPrivate {
     FeedItemModel* const q;
 public:
-    explicit FeedItemModelPrivate( FeedItemModel* qq ) : q( qq ), importantIcon( KIcon( QLatin1String("mail-mark-important") ) ) {
-
+    explicit FeedItemModelPrivate( FeedItemModel* qq )
+        : q( qq )
+        , importantIcon( KIcon( QLatin1String("mail-mark-important") ) )
+        , errorIcon( KIcon( QLatin1String("dialog-error") ) )
+    {
     }
 
     KIcon importantIcon;
+    KIcon errorIcon;
 };
 
 
@@ -125,12 +129,34 @@ QVariant FeedItemModel::entityData( const Collection &collection, int column, in
         {
             return EntityTreeModel::entityData( collection, column, EntityTreeModel::UnreadCountRole );
         }
-        case IsFolderRole:
-            return FeedCollection( collection ).isFolder();
         default:
             break;
         }
     }
+
+    switch ( role ) {
+    case Qt::DecorationRole:
+    {
+        const FeedCollection fc( collection );
+        if ( fc.fetchError() )
+            return d->errorIcon;
+        break;
+    }
+    case Qt::ToolTipRole:
+    {
+        const FeedCollection fc( collection );
+        if ( fc.fetchError() )
+            return i18n( "Could not fetch feed: %1", fc.fetchErrorString() );
+        break;
+    }
+    case HasFetchErrorRole:
+        return FeedCollection( collection ).fetchError();
+    case FetchErrorStringRole:
+        return FeedCollection( collection ).fetchErrorString();
+    case IsFolderRole:
+        return FeedCollection( collection ).isFolder();
+    }
+
     return EntityTreeModel::entityData( collection, column, role );
 }
 

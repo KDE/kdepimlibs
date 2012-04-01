@@ -47,6 +47,10 @@ public:
         void setDescription( const QString &description );
         bool preferItemLinkForDisplay() const;
         void setPreferItemLinkForDisplay( bool b );
+        bool fetchError() const;
+        void setFetchError( bool error );
+        QString fetchErrorString() const;
+        void setFetchErrorString( const QString& fetchErrorString );
 
 private:
         QHash<QString,QString> m_properties;

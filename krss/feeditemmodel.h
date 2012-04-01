@@ -51,6 +51,11 @@ public:
         FeedColumnCount=1 //PENDING(frank) multiple columns crash KSelectionProxyModel, review
     };
 
+    enum FeedRoles {
+        HasFetchErrorRole=EntityTreeModel::UserRole,
+        FetchErrorStringRole
+    };
+
     enum ItemRoles {
         SortRole=EntityTreeModel::UserRole,
         IsUnreadRole,

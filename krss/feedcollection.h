@@ -48,6 +48,12 @@ public:
     QString feedType() const;
     void setFeedType( const QString &feedType );
 
+    bool fetchError() const;
+    void setFetchError( bool hasError );
+
+    QString fetchErrorString() const;
+    void setFetchErrorString( const QString& errorString );
+
     int fetchInterval() const;
     void setFetchInterval( int interval );
 

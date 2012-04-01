@@ -96,3 +96,23 @@ void FeedPropertiesCollectionAttribute::setDescription( const QString &descripti
 {
     m_properties.insert( QLatin1String("Description" ), description );
 }
+
+bool FeedPropertiesCollectionAttribute::fetchError() const
+{
+    return !m_properties.value("FetchError").isEmpty();
+}
+
+void FeedPropertiesCollectionAttribute::setFetchError( bool error )
+{
+    m_properties.insert( QLatin1String("FetchError"), QLatin1String( error ? "true" : "" ) );
+}
+
+QString FeedPropertiesCollectionAttribute::fetchErrorString() const
+{
+    return m_properties.value( QLatin1String("FetchErrorString") );
+}
+
+void FeedPropertiesCollectionAttribute::setFetchErrorString( const QString& fetchErrorString )
+{
+    m_properties.insert( QLatin1String("FetchErrorString"), fetchErrorString );
+}
