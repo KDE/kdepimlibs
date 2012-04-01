@@ -47,7 +47,15 @@ Akonadi::Collection FeedCollection::findFolder( const Akonadi::Collection& c ) {
 
 bool FeedCollection::isFolder() const
 {
-    return contentMimeTypes() == QStringList( Akonadi::Collection::mimeType() );
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->isFolder();
+    return false;
+}
+
+void FeedCollection::setIsFolder( bool isFolder )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setIsFolder( isFolder );
 }
 
 QString FeedCollection::xmlUrl() const

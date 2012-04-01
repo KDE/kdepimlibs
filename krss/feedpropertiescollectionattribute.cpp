@@ -47,6 +47,16 @@ void FeedPropertiesCollectionAttribute::deserialize( const QByteArray &data )
     m_properties = decodeProperties( data );
 }
 
+void FeedPropertiesCollectionAttribute::setIsFolder( bool isFolder )
+{
+    m_properties.insert( QLatin1String("IsFolder"), isFolder ? QLatin1String("true") : QString() );
+}
+
+bool FeedPropertiesCollectionAttribute::isFolder() const
+{
+    return !m_properties.value( QLatin1String("IsFolder") ).isEmpty();
+}
+
 bool FeedPropertiesCollectionAttribute::preferItemLinkForDisplay() const
 {
     return m_properties.value( QLatin1String("PreferItemLinkForDisplay") ) == QLatin1String( "true" );

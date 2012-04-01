@@ -34,6 +34,7 @@ public:
 
     static Akonadi::Collection findFolder( const Akonadi::Collection& c );
 
+    void setIsFolder( bool isFolder );
     bool isFolder() const;
 
     QString title() const;

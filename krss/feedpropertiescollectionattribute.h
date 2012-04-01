@@ -37,6 +37,8 @@ public:
         QByteArray serialized() const;
         void deserialize( const QByteArray &data );
 
+        bool isFolder() const;
+        void setIsFolder( bool isFolder );
         QString xmlUrl() const;
         void setXmlUrl( const QString &xmlUrl );
         QString htmlUrl() const;
