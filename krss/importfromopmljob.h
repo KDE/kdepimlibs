@@ -3,7 +3,7 @@
 
 #include "krss_export.h"
 
-#include <Akonadi/Collection>
+#include "akonadi/collection.h"
 #include <KJob>
 
 namespace KRss {
