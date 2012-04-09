@@ -18,7 +18,7 @@
 #ifndef OPMLPARSER_H
 #define OPMLPARSER_H
 
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QHash>

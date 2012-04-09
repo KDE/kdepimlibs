@@ -27,8 +27,8 @@
 #include <KLocalizedString>
 #include <KSaveFile>
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 
 #include <boost/shared_ptr.hpp>
 

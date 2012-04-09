@@ -24,7 +24,7 @@
 #include "opmlparser.h"
 #include "feedcollection.h"
 
-#include <Akonadi/EntityDisplayAttribute>
+#include <akonadi/entitydisplayattribute.h>
 
 #include <KLocalizedString>
 #include <KRandom>
