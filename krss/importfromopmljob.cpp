@@ -25,11 +25,13 @@
 #include "feedcollection.h"
 
 #include <akonadi/entitydisplayattribute.h>
+#include <akonadi/session.h>
 
 #include <KLocalizedString>
 #include <KRandom>
 
 #include <QFile>
+#include <QPointer>
 
 using namespace Akonadi;
 using namespace boost;
@@ -43,7 +45,7 @@ static QString mimeType()
 class KRss::ImportFromOpmlJob::Private {
     ImportFromOpmlJob* const q;
 public:
-    explicit Private( ImportFromOpmlJob* qq ) : q( qq ) {}
+    explicit Private( ImportFromOpmlJob* qq ) : q( qq ), session( 0 ) {}
 
     void doStart();
 
@@ -51,6 +53,7 @@ public:
     Collection parentFolder;
     QString opmlTitle;
     Collection::List collections;
+    QPointer<Session> session;
 };
 
 ImportFromOpmlJob::ImportFromOpmlJob( QObject* parent )
@@ -61,6 +64,14 @@ ImportFromOpmlJob::ImportFromOpmlJob( QObject* parent )
 
 ImportFromOpmlJob::~ImportFromOpmlJob() {
     delete d;
+}
+
+Session* ImportFromOpmlJob::session() const {
+    return d->session;
+}
+
+void ImportFromOpmlJob::setSession( Akonadi::Session* session ) {
+    d->session = session;
 }
 
 void ImportFromOpmlJob::start() {

@@ -28,6 +28,9 @@
 #include "akonadi/collection.h"
 #include <KJob>
 
+namespace Akonadi {
+    class Session;
+}
 namespace KRss {
   
 class KRSS_EXPORT ImportFromOpmlJob : public KJob {
@@ -47,6 +50,9 @@ public:
 
     Akonadi::Collection parentFolder() const;
     void setParentFolder( const Akonadi::Collection& parentFolder );
+
+    Akonadi::Session* session() const;
+    void setSession( Akonadi::Session* session );
 
 private:
     class Private;
