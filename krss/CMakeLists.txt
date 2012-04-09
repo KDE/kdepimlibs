@@ -1,5 +1,7 @@
 add_subdirectory(tests)
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 set(krss_LIB_SRCS
    item.cpp
    enclosure.cpp
@@ -10,6 +12,9 @@ set(krss_LIB_SRCS
    feedcollection.cpp
    helper.cpp
    feeditemmodel.cpp
+   importfromopmljob.cpp
+   exporttoopmljob.cpp
+   opmlparser.cpp
 )
 
 set(krss_LIB_HDRS
@@ -36,6 +41,7 @@ target_link_libraries(krss
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS krss EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+
 ########### install files ###############
 
 install( FILES
@@ -47,5 +53,7 @@ install( FILES
    person.h
    category.h
    feeditemmodel.h
+   exporttoopmljob.h
+   importfromopmljob.h
    rssitem.h  #TODO review if rssitem.h should be private
    DESTINATION ${INCLUDE_INSTALL_DIR}/krss COMPONENT Devel)
