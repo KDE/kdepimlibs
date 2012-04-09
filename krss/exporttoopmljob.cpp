@@ -50,7 +50,7 @@ static QList< shared_ptr< const ParsedNode > > parsedDescendants( const Collecti
                 if (parent == Collection::root())
                     return children;
                 shared_ptr<ParsedFolder> parsedFolder( new ParsedFolder );
-                parsedFolder->setTitle( feedCollection.name() );
+                parsedFolder->setTitle( feedCollection.title() );
                 parsedFolder->setChildren( children );
                 node = parsedFolder;
             } else {
