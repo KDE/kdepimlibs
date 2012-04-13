@@ -1,11 +1,10 @@
 project(kpimutils)
 
-add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5321 )
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5321)
 
-add_subdirectory( tests )
+add_subdirectory(tests)
 
-
-include_directories( ../kmime )
+include_directories(../kmime)
 
 set(kpimutils_LIB_SRCS
   email.cpp
@@ -31,7 +30,7 @@ if(WINCE)
   target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} ${KDE4_SOLID_LIBS} toolhelp)
 endif()
 
-set_target_properties(kpimutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(kpimutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
@@ -46,4 +45,4 @@ install(FILES
   supertrait.h
   processes.h
   networkaccesshelper.h
-DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils  COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils COMPONENT Devel)

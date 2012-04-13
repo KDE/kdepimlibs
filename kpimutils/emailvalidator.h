@@ -31,7 +31,7 @@ namespace KPIMUtils {
   A validator that enforces correct email addresses.
   @see KPIMUtils::isValidSimpleAddress
 */
-class KPIMUTILS_EXPORT EmailValidator : public QValidator
+class KPIMUTILS_EXPORT EmailValidator : public QValidator //krazy:exclude=dpointer
 {
   public:
     EmailValidator( QObject *parent );
