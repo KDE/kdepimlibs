@@ -383,7 +383,7 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         event->setPriority( s.toInt() );
         // is reminder flag set ?
         if ( !tnefMsg->findProp( 0x8503 ).isEmpty() ) {
-          Alarm::Ptr alarm( new Alarm( event.data() ) ); // KDAB_TODO, fix when KCalCore::Alarm is fixed
+          Alarm::Ptr alarm( new Alarm( event.data() ) ); // TODO: fix when KCalCore::Alarm is fixed
           KDateTime highNoonTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 ).
                                      remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
