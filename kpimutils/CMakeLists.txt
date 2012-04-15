@@ -30,7 +30,11 @@ if(WINCE)
   target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} ${KDE4_SOLID_LIBS} toolhelp)
 endif()
 
-set_target_properties(kpimutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kpimutils PROPERTIES
+ VERSION ${GENERIC_LIB_VERSION}
+ SOVERSION ${GENERIC_LIB_SOVERSION
+})
+
 install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
