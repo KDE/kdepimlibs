@@ -52,7 +52,6 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <kglobal.h>
 #include <kcharsets.h>
 
 #include <assert.h>

@@ -30,7 +30,6 @@
 #include "kmime_dateformatter.h"
 #include "kmime_warning.h"
 
-#include <kglobal.h>
 #include <kcharsets.h>
 
 #include <QtCore/QTextCodec>

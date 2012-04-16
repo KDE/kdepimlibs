@@ -41,7 +41,6 @@
 
 #include <kascii.h>
 #include <kdebug.h>
-#include <kglobal.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>

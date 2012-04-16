@@ -39,7 +39,6 @@ extern "C" {
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 #include <kurl.h>
-#include <kglobal.h>
 #include <kmessagebox.h>
 
 #include <sys/stat.h>
