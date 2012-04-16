@@ -432,7 +432,7 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
 
   bool ok = true;
   QTextCodec *codec =
-    KGlobal::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
+    KCharsets::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
   if ( !ok  || codec == NULL ) { // no suitable codec found => try local settings and hope the best ;-)
     codec = KGlobal::locale()->codecForEncoding();
     QByteArray chset = KGlobal::locale()->encoding();
@@ -469,7 +469,7 @@ void Content::fromUnicodeString( const QString &s )
 {
   bool ok = true;
   QTextCodec *codec =
-    KGlobal::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
+    KCharsets::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
 
   if ( !ok ) { // no suitable codec found => try local settings and hope the best ;-)
     codec = KGlobal::locale()->codecForEncoding();

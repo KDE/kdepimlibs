@@ -368,12 +368,12 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   bool matchOK = false;
   QTextCodec *textCodec = 0;
   if ( forceCS || maybeCharset.isEmpty() ) {
-    textCodec = KGlobal::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
+    textCodec = KCharsets::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
     usedCS = cachedCharset( defaultCS );
   } else {
-    textCodec = KGlobal::charsets()->codecForName( QLatin1String( maybeCharset ), matchOK );
+    textCodec = KCharsets::charsets()->codecForName( QLatin1String( maybeCharset ), matchOK );
     if ( !matchOK ) {  //no suitable codec found => use default charset
-      textCodec = KGlobal::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
+      textCodec = KCharsets::charsets()->codecForName( QLatin1String( defaultCS ), matchOK );
       usedCS = cachedCharset( defaultCS );
     } else {
       usedCS = cachedCharset( maybeCharset );
@@ -1595,7 +1595,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
     //
 
     bool matchOK = false;
-    textcodec = KGlobal::charsets()->codecForName( QLatin1String( charset ), matchOK );
+    textcodec = KCharsets::charsets()->codecForName( QLatin1String( charset ), matchOK );
     if ( !matchOK ) {
       textcodec = 0;
       KMIME_WARN_UNKNOWN( Charset, charset );

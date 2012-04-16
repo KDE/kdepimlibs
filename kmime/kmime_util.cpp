@@ -251,7 +251,7 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   //  use the fallback charset if it exists
   const QString tryUtf8 = QString::fromUtf8( result );
   if ( tryUtf8.contains( 0xFFFD ) && !f_allbackCharEnc.isEmpty() ) {
-    QTextCodec* codec = KGlobal::charsets()->codecForName( f_allbackCharEnc );
+    QTextCodec* codec = KCharsets::charsets()->codecForName( f_allbackCharEnc );
     return codec->toUnicode( result );
   } else {
     return tryUtf8;
@@ -274,13 +274,13 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
   bool nonAscii=false, ok=true, useQEncoding=false;
 
   // fromLatin1() is safe here, codecForName() uses toLatin1() internally
-  const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ), ok );
+  const QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( charset ), ok );
 
   QByteArray usedCS;
   if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
     usedCS = KGlobal::locale()->encoding();
-    codec = KGlobal::charsets()->codecForName( QString::fromLatin1( usedCS ), ok );
+    codec = KCharsets::charsets()->codecForName( QString::fromLatin1( usedCS ), ok );
   } else {
     Q_ASSERT( codec );
     if ( charset.isEmpty() ) {
@@ -432,7 +432,7 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
     return QByteArray();
   }
 
-  const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
+  const QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( charset ) );
   QByteArray latin;
   if ( charset == "us-ascii" ) {
     latin = str.toLatin1();
@@ -491,11 +491,8 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
 QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QByteArray &defaultCS,
   bool forceCS )
 {
-  int p = str.indexOf( '\'' );
-  if ( p < 0 ) {
-    return KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS ) )->toUnicode( str );
-  }
-
+  int p = str.indexOf('\'');
+  if (p < 0) return KCharsets::charsets()->codecForName( QString::fromLatin1( defaultCS  ))->toUnicode( str );
 
   QByteArray charset = str.left( p );
 
@@ -524,10 +521,9 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   }
   kDebug() << "Got pre-decoded:" << st;
   QString result;
-  const QTextCodec * charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
-  if ( !charsetcodec || forceCS ) {
-    charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS ) );
-  }
+  const QTextCodec * charsetcodec = KCharsets::charsets()->codecForName( QString::fromLatin1( charset ) );
+  if ( !charsetcodec || forceCS )
+    charsetcodec = KCharsets::charsets()->codecForName( QString::fromLatin1( defaultCS ) );
 
   usedCS = charsetcodec->name();
   return charsetcodec->toUnicode( st );
