@@ -52,23 +52,24 @@ One of these resources is marked as the standard resource.</para>
 </row>
 <row>
 <entry>Alarms</entry>
-<entry><simplelist><member>&kalarm;</member></simplelist></entry>
-<entry><ulink url="help:/kalarm/index.html#resources">&kalarm; resources</ulink></entry>
+<entry><simplelist type="inline"><member>&kalarm;</member></simplelist></entry>
+<!--this is a dead link and there's no longer appears to be any relevant documentation in KAlarm-->
+<entry><!--<ulink url="help:/kalarm/index.html#resources">&kalarm; resources</ulink>--></entry>
 </row>
 <row>
 <entry>Calendar</entry>
-<entry><simplelist><member>&korganizer;</member> 
+<entry><simplelist type="inline"><member>&korganizer;</member> 
 <member>iCal invitation plugin in &kmail;</member></simplelist></entry>
-<entry><ulink url="help:/korganizer/index.html#managing-resources">&korganizer; resources</ulink></entry>
+<entry><ulink url="help:/korganizer/managing-data.html#managing-resources">&korganizer; resources</ulink></entry>
 </row>
 <row>
 <entry>Notes</entry>
-<entry><simplelist><member>&knotes;</member></simplelist></entry>
-<entry><ulink url="help:/knotes/index.html#configure-resources">&knotes; resources</ulink></entry>
+<entry><simplelist type="inline"><member>&knotes;</member></simplelist></entry>
+<entry><ulink url="help:/knotes/configure-resources.html">&knotes; resources</ulink></entry>
 </row>
 <row>
 <entry>Contacts</entry>
-<entry><simplelist>
+<entry><simplelist type="inline">
 <member>&kaddressbook;</member> 
 <member>Address completion in &kmail;, &knode; and &korganizer;</member>
 <member>Addressbook integration in &kopete;</member>
