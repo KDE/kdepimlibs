@@ -141,9 +141,11 @@ void AddTransportDialog::accept()
   if( TransportManager::self()->configureTransport( transport, this ) ) {
     // The user clicked OK and the transport settings were saved.
     TransportManager::self()->addTransport( transport );
+#ifndef KDEPIM_MOBILE_UI
     if( d->ui.setDefault->isChecked() ) {
       TransportManager::self()->setDefaultTransport( transport->id() );
     }
+#endif
     KDialog::accept();
   }
 }

@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 8)
-set(KDEPIMLIBS_VERSION_PATCH 41)
+set(KDEPIMLIBS_VERSION_PATCH 43)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -67,7 +67,7 @@ if (WIN32)
 else()
   find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
 endif()
-macro_log_feature(Boost_FOUND "Boost C++ Libraries" "Required by core components" "http://www.boost.org" TRUE ${Boost_MINIMUM_VERSION} "Boost must include the boost-graph library")
+macro_log_feature(Boost_FOUND "Boost C++ Libraries" "Required by core components" "http://www.boost.org" TRUE "${Boost_MINIMUM_VERSION}" "Boost must include the boost-graph library")
 
 
 
@@ -110,9 +110,9 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Nepomuk)
   if (WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "Nepomuk is part of kdelibs")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "STRONGLY RECOMMENDED: Nepomuk is part of kdelibs")
   else()
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "Nepomuk is part of kdelibs")
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "STRONGLY RECOMMENDED: Nepomuk is part of kdelibs")
   endif()
 
   set(LIBICAL_MIN_VERSION "0.42")
