@@ -2,6 +2,7 @@
  * This file is part of the kpimutils library.
  *
  * Copyright (C) 2008 Jarosław Staniek <staniek@kde.org>
+ * Copyright (C) 2012 Andre Heinecke <aheinecke@intevation.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +33,7 @@ using namespace KPIMUtils;
 #ifdef Q_WS_WIN
 
 #include <windows.h>
-#include <winperf.h>
+#include <tlhelp32.h>
 #include <psapi.h>
 #include <signal.h>
 #include <unistd.h>
@@ -44,121 +45,59 @@ using namespace KPIMUtils;
 #include <QtCore/QList>
 #include <QtCore/QtDebug>
 
-static PPERF_OBJECT_TYPE FirstObject( PPERF_DATA_BLOCK PerfData )
+#include <KDebug>
+
+// Copy from kdelibs/kinit/kinit_win.cpp
+PSID copySid(PSID from)
 {
-  return (PPERF_OBJECT_TYPE)( (PBYTE)PerfData + PerfData->HeaderLength );
+    if (!from)
+        return 0;
+    int sidLength = GetLengthSid(from);
+    PSID to = (PSID) malloc(sidLength);
+    CopySid(sidLength, to, from);
+    return to;
 }
 
-static PPERF_INSTANCE_DEFINITION FirstInstance( PPERF_OBJECT_TYPE PerfObj )
+// Copy from kdelibs/kinit/kinit_win.cpp
+static PSID getProcessOwner(HANDLE hProcess)
 {
-  return (PPERF_INSTANCE_DEFINITION)( (PBYTE)PerfObj + PerfObj->DefinitionLength );
+#ifndef _WIN32_WCE
+    HANDLE hToken = NULL;
+    PSID sid;
+
+    OpenProcessToken(hProcess, TOKEN_READ, &hToken);
+    if(hToken)
+    {
+        DWORD size;
+        PTOKEN_USER userStruct;
+
+        // check how much space is needed
+        GetTokenInformation(hToken, TokenUser, NULL, 0, &size);
+        if( ERROR_INSUFFICIENT_BUFFER == GetLastError() )
+        {
+            userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
+            GetTokenInformation(hToken, TokenUser, userStruct, size, &size);
+
+            sid = copySid(userStruct->User.Sid);
+            CloseHandle(hToken);
+            delete [] userStruct;
+            return sid;
+        }
+    }
+#endif
+    return 0;
 }
 
-static PPERF_OBJECT_TYPE NextObject( PPERF_OBJECT_TYPE PerfObj )
+// Copy from kdelibs/kinit/kinit_win.cpp
+static HANDLE getProcessHandle(int processID)
 {
-  return (PPERF_OBJECT_TYPE)( (PBYTE)PerfObj + PerfObj->TotalByteLength );
-}
-
-static PPERF_COUNTER_DEFINITION FirstCounter( PPERF_OBJECT_TYPE PerfObj )
-{
-  return (PPERF_COUNTER_DEFINITION) ( (PBYTE)PerfObj + PerfObj->HeaderLength );
-}
-
-static PPERF_INSTANCE_DEFINITION NextInstance( PPERF_INSTANCE_DEFINITION PerfInst )
-{
-  PPERF_COUNTER_BLOCK PerfCntrBlk =
-    (PPERF_COUNTER_BLOCK)( (PBYTE)PerfInst + PerfInst->ByteLength );
-  return (PPERF_INSTANCE_DEFINITION)( (PBYTE)PerfCntrBlk + PerfCntrBlk->ByteLength );
-}
-
-static PPERF_COUNTER_DEFINITION NextCounter( PPERF_COUNTER_DEFINITION PerfCntr )
-{
-  return (PPERF_COUNTER_DEFINITION)( (PBYTE)PerfCntr + PerfCntr->ByteLength );
-}
-
-static PPERF_COUNTER_BLOCK CounterBlock( PPERF_INSTANCE_DEFINITION PerfInst )
-{
-  return (PPERF_COUNTER_BLOCK) ( (LPBYTE) PerfInst + PerfInst->ByteLength );
-}
-
-#define GETPID_TOTAL 64 * 1024
-#define GETPID_BYTEINCREMENT 1024
-#define GETPID_PROCESS_OBJECT_INDEX 230
-#define GETPID_PROC_ID_COUNTER 784
-
-static QString fromWChar( const wchar_t *string, int size = -1 )
-{
-  return ( sizeof(wchar_t) == sizeof(QChar) ) ?
-    QString::fromUtf16( (ushort *)string, size )
-    : QString::fromUcs4( (uint *)string, size );
+    return OpenProcess( SYNCHRONIZE|PROCESS_QUERY_INFORMATION |
+                        PROCESS_VM_READ | PROCESS_TERMINATE,
+                        false, processID );
 }
 
 void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &pids )
 {
-  qDebug() << "KPIMUtils::getProcessesIdForName" << processName;
-#ifndef Q_OS_WINCE
-  PPERF_OBJECT_TYPE perfObject;
-  PPERF_INSTANCE_DEFINITION perfInstance;
-  PPERF_COUNTER_DEFINITION perfCounter, curCounter;
-  PPERF_COUNTER_BLOCK counterPtr;
-  DWORD bufSize = GETPID_TOTAL;
-  PPERF_DATA_BLOCK perfData = (PPERF_DATA_BLOCK) malloc( bufSize );
-
-  char key[64];
-  sprintf( key,"%d %d", GETPID_PROCESS_OBJECT_INDEX, GETPID_PROC_ID_COUNTER );
-  LONG lRes;
-  while ( ( lRes = RegQueryValueExA( HKEY_PERFORMANCE_DATA,
-                                     key,
-                                     0,
-                                     0,
-                                     (LPBYTE) perfData,
-                                     &bufSize ) ) == ERROR_MORE_DATA ) {
-    // get a buffer that is big enough
-    bufSize += GETPID_BYTEINCREMENT;
-    perfData = (PPERF_DATA_BLOCK) realloc( perfData, bufSize );
-  }
-
-  // Get the first object type.
-  perfObject = FirstObject( perfData );
-  if ( !perfObject ) {
-    return;
-  }
-
-  // Process all objects.
-  for ( uint i = 0; i < perfData->NumObjectTypes; i++ ) {
-    if ( perfObject->ObjectNameTitleIndex != GETPID_PROCESS_OBJECT_INDEX ) {
-      perfObject = NextObject( perfObject );
-      continue;
-    }
-    pids.clear();
-    perfCounter = FirstCounter( perfObject );
-    perfInstance = FirstInstance( perfObject );
-    // retrieve the instances
-    qDebug() << "INSTANCES: " << perfObject->NumInstances;
-    for ( int instance = 0; instance < perfObject->NumInstances; instance++ ) {
-      curCounter = perfCounter;
-      const QString foundProcessName(
-        fromWChar( ( wchar_t * )( (PBYTE)perfInstance + perfInstance->NameOffset ) ) );
-      qDebug() << "foundProcessName: " << foundProcessName;
-      if ( foundProcessName == processName ) {
-        // retrieve the counters
-        for ( uint counter = 0; counter < perfObject->NumCounters; counter++ ) {
-          if ( curCounter->CounterNameTitleIndex == GETPID_PROC_ID_COUNTER ) {
-            counterPtr = CounterBlock( perfInstance );
-            DWORD *value = (DWORD*)( (LPBYTE) counterPtr + curCounter->CounterOffset );
-            pids.append( int( *value ) );
-            qDebug() << "found PID: " << int( *value );
-            break;
-          }
-          curCounter = NextCounter( curCounter );
-        }
-      }
-      perfInstance = NextInstance( perfInstance );
-    }
-  }
-  free( perfData );
-  RegCloseKey( HKEY_PERFORMANCE_DATA );
-#else
   HANDLE h;
   PROCESSENTRY32 pe32;
 
@@ -166,20 +105,39 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
   if ( h == INVALID_HANDLE_VALUE ) {
     return;
   }
-  pe32.dwSize = sizeof(PROCESSENTRY32);
+
+  pe32.dwSize = sizeof(PROCESSENTRY32); // Necessary according to MSDN
   if ( !Process32First( h, &pe32 ) ) {
     return;
   }
-  pids.clear();
-  do
-  {
-    if ( QString::fromWCharArray( pe32.szExeFile ) == processName ) {
-      pids.append( (int)pe32.th32ProcessID );
-      qDebug() << "found PID: " << (int)pe32.th32ProcessID;
-    }
 
+  pids.clear();
+
+  do {
+    if ( QString::fromWCharArray( pe32.szExeFile ) == processName ) {
+      PSID user_sid = getProcessOwner( GetCurrentProcess() );
+      if ( user_sid ) {
+        // Also check that we are the Owner of that process
+        HANDLE hProcess = getProcessHandle( pe32.th32ProcessID );
+        if (!hProcess) {
+          continue;
+        }
+
+        PSID sid = getProcessOwner( hProcess );
+        PSID userSid = getProcessOwner( GetCurrentProcess() );
+        if (!sid || userSid && !EqualSid( userSid, sid )) {
+          free ( sid );
+          continue;
+        }
+      }
+      pids.append( (int)pe32.th32ProcessID );
+      kDebug() << "found PID: " << (int)pe32.th32ProcessID;
+    }
   } while( Process32Next( h, &pe32 ) );
-  CloseToolhelp32Snapshot(h);
+#ifndef _WIN32_WCE
+    CloseHandle(h);
+#else
+    CloseToolhelp32Snapshot(h);
 #endif
 }
 
@@ -253,7 +211,7 @@ void KPIMUtils::activateWindowForProcess( const QString &executableName )
   int foundPid = 0;
   foreach ( int pid, pids ) {
     if ( myPid != pid ) {
-      qDebug() << "activateWindowForProcess(): PID to activate:" << pid;
+      kDebug() << "activateWindowForProcess(): PID to activate:" << pid;
       foundPid = pid;
       break;
     }
