@@ -93,7 +93,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   macro_log_feature(SHARED_MIME_INFO_FOUND "shared-mime-info" "Information about filetypes" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "")
 
   set(SDO_MIN_VERSION 0.10)
-  set(SOPRANO_MIN_VERSION 2.3.70)
+  set(SOPRANO_MIN_VERSION 2.7.56)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
   macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Ontology information for use with Nepomuk" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "")
