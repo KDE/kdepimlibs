@@ -6,8 +6,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
-set(KDEPIMLIBS_VERSION_MINOR 8)
-set(KDEPIMLIBS_VERSION_PATCH 90)
+set(KDEPIMLIBS_VERSION_MINOR 9)
+set(KDEPIMLIBS_VERSION_PATCH 50)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -80,7 +80,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.5.52")
+  set(Akonadi_MIN_VERSION "1.7.90")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
 
@@ -92,8 +92,8 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(SharedMimeInfo)
   macro_log_feature(SHARED_MIME_INFO_FOUND "shared-mime-info" "Information about filetypes" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "")
 
-  set(SDO_MIN_VERSION 0.2)
-  set(SOPRANO_MIN_VERSION 2.3.70)
+  set(SDO_MIN_VERSION 0.10)
+  set(SOPRANO_MIN_VERSION 2.7.56)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
   macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Ontology information for use with Nepomuk" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "")

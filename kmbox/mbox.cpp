@@ -122,6 +122,11 @@ MBoxEntry MBox::appendMessage( const KMime::Message::Ptr &entry )
 
 MBoxEntry::List MBox::entries( const MBoxEntry::List &deletedEntries ) const
 {
+  if ( deletedEntries.isEmpty() ) {
+    // fast path
+    return d->mEntries;
+  }
+
   MBoxEntry::List result;
 
   foreach ( const MBoxEntry &entry, d->mEntries ) {
