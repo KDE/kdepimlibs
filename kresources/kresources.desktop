@@ -5,7 +5,7 @@ X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kcm_kresources
 X-KDE-FactoryName=kcm_kresources
-X-KDE-System-Settings-Parent-Category=personal-information
+X-KDE-ParentApp=kcontrol
 X-DocPath=kcontrol/kresources/index.html
 
 Name=KDE Resources
@@ -139,6 +139,7 @@ X-KDE-Keywords[sr@ijekavian]=resources,konnector resource,contact resource,calen
 X-KDE-Keywords[sr@ijekavianlatin]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,resursi,resurs konektora,resurs kontakata,resurs kalendara,resurs beleški,resurs alarma,IMAP
 X-KDE-Keywords[sr@latin]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,resursi,resurs konektora,resurs kontakata,resurs kalendara,resurs beleški,resurs alarma,IMAP
 X-KDE-Keywords[sv]=resurser,konnector resurs,kontaktresurs,kalenderresurs,anteckningsresurs,alarmresurs,imap
+X-KDE-Keywords[tr]=kaynaklar,bağlantı kaynakları,kişi kaynağı,takvim kaynağı,not kaynağı,alarm kaynağı,imap
 X-KDE-Keywords[uk]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,ресурси,контакт,календар,ресурс,нотатка,нотатки,нагадування
 X-KDE-Keywords[x-test]=xxresources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imapxx
 X-KDE-Keywords[zh_CN]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,资源,联系人资源,日历资源,便笺资源,定时资源
