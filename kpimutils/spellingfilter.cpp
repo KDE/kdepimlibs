@@ -73,7 +73,8 @@ SpellingFilter::SpellingFilter( const QString &text,
   }
 
   QStringList::const_iterator iter = filterStrings.begin();
-  while ( iter != filterStrings.end() ) {
+  QStringList::const_iterator endIter = filterStrings.end();
+  while ( iter != endIter ) {
     c.censorString( *iter );
     ++iter;
   }
@@ -230,7 +231,7 @@ void SpellingFilter::TextCensor::findQuotation( const QString &quotePrefix )
 
 void SpellingFilter::TextCensor::findEmailAddress()
 {
-  while ( mPos < mText.length() && mText[mPos] != '@' ) {
+  while ( mPos < mText.length() && mText[mPos] != QLatin1Char('@') ) {
     ++mPos;
   }
 }
