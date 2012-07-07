@@ -203,19 +203,19 @@ bool LinkLocator::atUrl() const
 bool LinkLocator::isEmptyUrl( const QString &url ) const
 {
   return url.isEmpty() ||
-    url == "http://" ||
-    url == "https://" ||
-    url == "fish://" ||
-    url == "ftp://" ||
-    url == "ftps://" ||
-    url == "sftp://" ||
-    url == "smb://" ||
-    url == "vnc://" ||
-    url == "mailto" ||
-    url == "www" ||
-    url == "ftp" ||
-    url == "news" ||
-    url == "news://";
+    url == QLatin1String("http://") ||
+    url == QLatin1String("https://") ||
+    url == QLatin1String("fish://") ||
+    url == QLatin1String("ftp://") ||
+    url == QLatin1String("ftps://") ||
+    url == QLatin1String("sftp://") ||
+    url == QLatin1String("smb://") ||
+    url == QLatin1String("vnc://") ||
+    url == QLatin1String("mailto") ||
+    url == QLatin1String("www") ||
+    url == QLatin1String("ftp") ||
+    url == QLatin1String("news") ||
+    url == QLatin1String("news://");
 }
 
 QString LinkLocator::getEmailAddress()
