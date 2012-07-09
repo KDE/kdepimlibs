@@ -231,7 +231,7 @@ void SpellingFilter::TextCensor::findQuotation( const QString &quotePrefix )
 
 void SpellingFilter::TextCensor::findEmailAddress()
 {
-  while ( mPos < mText.length() && mText[mPos] != QLatin1Char('@') ) {
+  while ( mPos < mText.length() && mText[mPos] != QLatin1Char( '@' ) ) {
     ++mPos;
   }
 }

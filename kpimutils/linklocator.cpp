@@ -185,37 +185,37 @@ bool LinkLocator::atUrl() const
 
   QChar ch = mText[mPos];
   return
-    ( ch == 'h' && ( mText.mid( mPos, 7 ) == QLatin1String("http://") ||
-                     mText.mid( mPos, 8 ) == QLatin1String("https://") ) ) ||
-    ( ch == 'v' && mText.mid( mPos, 6 ) == QLatin1String("vnc://") ) ||
-    ( ch == 'f' && ( mText.mid( mPos, 7 ) == QLatin1String("fish://") ||
-                     mText.mid( mPos, 6 ) == QLatin1String("ftp://") ||
-                     mText.mid( mPos, 7 ) == QLatin1String("ftps://") ) ) ||
-    ( ch == 's' && ( mText.mid( mPos, 7 ) == QLatin1String("sftp://") ||
-                     mText.mid( mPos, 6 ) == QLatin1String("smb://") ) ) ||
-    ( ch == 'm' && mText.mid( mPos, 7 ) == QLatin1String("mailto:") ) ||
-    ( ch == 'w' && mText.mid( mPos, 4 ) == QLatin1String("www.") ) ||
-    ( ch == 'f' && ( mText.mid( mPos, 4 ) == QLatin1String("ftp.") ||
-                     mText.mid( mPos, 7 ) == QLatin1String("file://" ) ) )||
-    ( ch == 'n' && mText.mid( mPos, 5 ) == QLatin1String("news:") );
+    ( ch == 'h' && ( mText.mid( mPos, 7 ) == QLatin1String( "http://" ) ||
+                     mText.mid( mPos, 8 ) == QLatin1String( "https://" ) ) ) ||
+    ( ch == 'v' && mText.mid( mPos, 6 ) == QLatin1String( "vnc://" ) ) ||
+    ( ch == 'f' && ( mText.mid( mPos, 7 ) == QLatin1String( "fish://" ) ||
+                     mText.mid( mPos, 6 ) == QLatin1String( "ftp://" ) ||
+                     mText.mid( mPos, 7 ) == QLatin1String( "ftps://" ) ) ) ||
+    ( ch == 's' && ( mText.mid( mPos, 7 ) == QLatin1String( "sftp://" ) ||
+                     mText.mid( mPos, 6 ) == QLatin1String( "smb://" ) ) ) ||
+    ( ch == 'm' && mText.mid( mPos, 7 ) == QLatin1String( "mailto:" ) ) ||
+    ( ch == 'w' && mText.mid( mPos, 4 ) == QLatin1String( "www." ) ) ||
+    ( ch == 'f' && ( mText.mid( mPos, 4 ) == QLatin1String( "ftp." ) ||
+                     mText.mid( mPos, 7 ) == QLatin1String( "file://" ) ) )||
+    ( ch == 'n' && mText.mid( mPos, 5 ) == QLatin1String( "news:" ) );
 }
 
 bool LinkLocator::isEmptyUrl( const QString &url ) const
 {
   return url.isEmpty() ||
-    url == QLatin1String("http://") ||
-    url == QLatin1String("https://") ||
-    url == QLatin1String("fish://") ||
-    url == QLatin1String("ftp://") ||
-    url == QLatin1String("ftps://") ||
-    url == QLatin1String("sftp://") ||
-    url == QLatin1String("smb://") ||
-    url == QLatin1String("vnc://") ||
-    url == QLatin1String("mailto") ||
-    url == QLatin1String("www") ||
-    url == QLatin1String("ftp") ||
-    url == QLatin1String("news") ||
-    url == QLatin1String("news://");
+    url == QLatin1String( "http://" ) ||
+    url == QLatin1String( "https://" ) ||
+    url == QLatin1String( "fish://" ) ||
+    url == QLatin1String( "ftp://" ) ||
+    url == QLatin1String( "ftps://" ) ||
+    url == QLatin1String( "sftp://" ) ||
+    url == QLatin1String( "smb://" ) ||
+    url == QLatin1String( "vnc://" ) ||
+    url == QLatin1String( "mailto" ) ||
+    url == QLatin1String( "www" ) ||
+    url == QLatin1String( "ftp" ) ||
+    url == QLatin1String( "news" ) ||
+    url == QLatin1String( "news://" );
 }
 
 QString LinkLocator::getEmailAddress()

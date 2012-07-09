@@ -20,8 +20,8 @@
 #ifndef KPIMUTILS_SUPERTRAIT_H
 #define KPIMUTILS_SUPERTRAIT_H
 
-namespace KPIMUtils
-{
+namespace KPIMUtils {
+
   /**
     @internal
     @see super_class
