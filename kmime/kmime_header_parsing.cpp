@@ -1880,6 +1880,15 @@ static bool parseAlphaNumericTimeZone( const char* &scursor,
                                        long int &secsEastOfGMT,
                                        bool &timeZoneKnown )
 {
+  // allow the timezone to be wrapped in quotes; bug 260761
+  if ( *scursor == '"' ) {
+    scursor++;
+
+    if ( scursor == send ) {
+      return false;
+    }
+  }
+
   QPair<const char*,int> maybeTimeZone( 0, 0 );
   if ( !parseToken( scursor, send, maybeTimeZone, false /*no 8bit*/ ) ) {
     return false;
@@ -1890,6 +1899,11 @@ static bool parseAlphaNumericTimeZone( const char* &scursor,
       scursor += maybeTimeZone.second;
       secsEastOfGMT = timeZones[i].secsEastOfGMT;
       timeZoneKnown = true;
+
+      if ( *scursor == '"' ) {
+        scursor++;
+      }
+
       return true;
     }
   }
@@ -1994,7 +2008,8 @@ bool parseTime( const char* &scursor, const char * send,
   }
 
   eatCFWS( scursor, send, isCRLF );
-  if ( scursor == send ) {
+  // there might be no timezone but a year following
+  if ( ( scursor == send ) || isdigit( *scursor ) ) {
     timeZoneKnown = false;
     secsEastOfGMT = 0;
     return true; // allow missing timezone
@@ -2061,6 +2076,15 @@ bool parseDateTime( const char* &scursor, const char * const send,
     }
   }
 
+  int maybeMonth = -1;
+  bool asctimeFormat = false;
+
+  // ANSI-C asctime() format is: Wed Jun 30 21:49:08 1993
+  if ( !isdigit( *scursor ) && parseMonthName( scursor, send, maybeMonth ) ) {
+    asctimeFormat = true;
+    eatCFWS( scursor, send, isCRLF );
+  }
+
   //
   // 1*2DIGIT representing "day" (of month):
   //
@@ -2074,11 +2098,15 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
+  // ignore ","; bug 54098
+  if ( *scursor == ',' ) {
+    scursor++;
+  }
+
   //
   // month-name:
   //
-  int maybeMonth = 0;
-  if ( !parseMonthName( scursor, send, maybeMonth ) ) {
+  if ( !asctimeFormat && !parseMonthName( scursor, send, maybeMonth ) ) {
     return false;
   }
   if ( scursor == send ) {
@@ -2092,30 +2120,25 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
+  // check for "year HH:MM:SS" or only "HH:MM:SS" (or "H:MM:SS")
+  bool timeAfterYear = true;
+  if ( ( send - scursor > 3 ) && ( ( scursor[1] == ':' ) || ( scursor[2] == ':' ) ) ) {
+    timeAfterYear = false;  // first read time, then year
+  }
+
   //
   // 2*DIGIT representing "year":
   //
-  int maybeYear;
-  if ( !parseDigits( scursor, send, maybeYear ) ) {
+  int maybeYear = 0;
+
+  if ( timeAfterYear && !parseDigits( scursor, send, maybeYear ) ) {
     return false;
-  }
-  // RFC 2822 4.3 processing:
-  if ( maybeYear < 50 ) {
-    maybeYear += 2000;
-  } else if ( maybeYear < 1000 ) {
-    maybeYear += 1900;
-  }
-  // else keep as is
-  if ( maybeYear < 1900 ) {
-    return false; // rfc2822, 3.3
   }
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) {
     return false;
   }
-
-  maybeDateTime.setDate( QDate( maybeYear, maybeMonth, maybeDay ) );
 
   //
   // time
@@ -2130,7 +2153,32 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
+  // in asctime() the year follows the time
+  if ( !timeAfterYear ) {
+    eatCFWS( scursor, send, isCRLF );
+    if ( scursor == send ) {
+      return false;
+    }
+
+    if ( !parseDigits( scursor, send, maybeYear ) ) {
+      return false;
+    }
+  }
+
+  // RFC 2822 4.3 processing:
+  if ( maybeYear < 50 ) {
+    maybeYear += 2000;
+  } else if ( maybeYear < 1000 ) {
+    maybeYear += 1900;
+  }
+  // else keep as is
+  if ( maybeYear < 1900 ) {
+    return false; // rfc2822, 3.3
+  }
+
+  maybeDateTime.setDate( QDate( maybeYear, maybeMonth, maybeDay ) );
   maybeDateTime.setTime( QTime( maybeHour, maybeMinute, maybeSecond ) );
+
   if ( !maybeDateTime.isValid() )
     return false;
 
