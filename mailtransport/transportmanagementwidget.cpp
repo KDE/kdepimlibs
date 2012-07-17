@@ -25,6 +25,8 @@
 #include "transportmanager.h"
 #include "transport.h"
 
+#include <KMessageBox>
+
 using namespace MailTransport;
 
 class TransportManagementWidget::Private
@@ -122,6 +124,15 @@ void TransportManagementWidget::Private::renameClicked()
 void TransportManagementWidget::Private::removeClicked()
 {
   if( !ui.transportList->currentItem() ) {
+    return;
+  }
+  const int rc =
+    KMessageBox::questionYesNo(
+      q,
+      i18n( "Do you want to remove outgoing account '%1'?",
+            ui.transportList->currentItem()->text( 0 ) ),
+      i18n( "Remove outgoing account?" ) );
+  if ( rc == KMessageBox::No ) {
     return;
   }
 

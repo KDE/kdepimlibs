@@ -22,6 +22,8 @@
 #include "textedit.h"
 
 #include "emailquotehighlighter.h"
+#include "emoticontexteditaction.h"
+#include "inserthtmldialog.h"
 
 #include <kmime/kmime_codecs.h>
 
@@ -54,8 +56,11 @@ class TextEditPrivate
     TextEditPrivate( TextEdit *parent )
       : actionAddImage( 0 ),
         actionDeleteLine( 0 ),
+        actionInsertHtml( 0 ),
         q( parent ),
-        imageSupportEnabled( false )
+        imageSupportEnabled( false ),
+        emoticonSupportEnabled( false ),
+        insertHtmlSupportEnabled( false )
     {
     }
 
@@ -93,17 +98,27 @@ class TextEditPrivate
 
     void _k_slotDeleteLine();
 
+    void _k_slotAddEmoticon(const QString&);
+
+    void _k_slotInsertHtml();
+
     /// The action that triggers _k_slotAddImage()
     KAction *actionAddImage;
 
     /// The action that triggers _k_slotDeleteLine()
     KAction *actionDeleteLine;
 
+    EmoticonTextEditAction *actionAddEmoticon;
+    KAction *actionInsertHtml;
     /// The parent class
     TextEdit *q;
 
     /// Whether or not adding or pasting images is supported
     bool imageSupportEnabled;
+
+    bool emoticonSupportEnabled;
+
+    bool insertHtmlSupportEnabled;
 
     /**
      * The names of embedded images.
@@ -295,7 +310,8 @@ int KPIMTextEdit::TextEdit::quoteLength( const QString &line ) const
 {
   bool quoteFound = false;
   int startOfText = -1;
-  for ( int i = 0; i < line.length(); i++ ) {
+  const int lineLength(line.length());
+  for ( int i = 0; i < lineLength; ++i ) {
     if ( line[i] == QLatin1Char( '>' ) || line[i] == QLatin1Char( '|' ) ) {
       quoteFound = true;
     } else if ( line[i] != QLatin1Char( ' ' ) ) {
@@ -346,7 +362,7 @@ QString TextEdit::toWrappedPlainText() const
   while ( block.isValid() ) {
     QTextLayout *layout = block.layout();
     const int numberOfLine( layout->lineCount() );
-    for ( int i = 0; i < numberOfLine; i++ ) {
+    for ( int i = 0; i < numberOfLine; ++i ) {
       QTextLine line = layout->lineAt( i );
       temp += block.text().mid( line.textStart(), line.textLength() ) + QLatin1Char( '\n' );
     }
@@ -379,6 +395,18 @@ void TextEdit::createActions( KActionCollection *actionCollection )
     actionCollection->addAction( QLatin1String( "add_image" ), d->actionAddImage );
     connect( d->actionAddImage, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
   }
+  if ( d->emoticonSupportEnabled ) {
+    d->actionAddEmoticon = new EmoticonTextEditAction( this );
+    actionCollection->addAction( QLatin1String( "add_emoticon" ), d->actionAddEmoticon );
+    connect( d->actionAddEmoticon, SIGNAL(emoticonActivated(QString)), SLOT(_k_slotAddEmoticon(QString)) );
+  }
+
+  if ( d->insertHtmlSupportEnabled ) {
+    d->actionInsertHtml = new KAction( i18n( "Insert HTML" ), this );
+    actionCollection->addAction( QLatin1String( "insert_html" ), d->actionInsertHtml );
+    connect( d->actionInsertHtml, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
+  }
+
 
   d->actionDeleteLine = new KAction( i18n( "Delete Line" ), this );
   d->actionDeleteLine->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_K ) );
@@ -415,7 +443,7 @@ void TextEdit::loadImage ( const QImage &image, const QString &matchName,
         QTextImageFormat imageFormat = fragment.charFormat().toImageFormat();
         if ( imageFormat.isValid() && imageFormat.name() == matchName ) {
           int pos = fragment.position();
-          if ( !cursorPositionsToSkip.contains( pos ) ) {
+          if ( !cursorPositionsToSkip.contains( pos )  ) {
             QTextCursor cursor( document() );
             cursor.setPosition( pos );
             cursor.setPosition( pos + 1, QTextCursor::KeepAnchor );
@@ -533,6 +561,28 @@ QList<QTextImageFormat> TextEditPrivate::embeddedImageFormats() const
   return retList;
 }
 
+void TextEditPrivate::_k_slotAddEmoticon( const QString& text)
+{
+  QTextCursor cursor = q->textCursor();
+  cursor.insertText( text );
+}
+
+void TextEditPrivate::_k_slotInsertHtml()
+{
+  if(q->textMode() == KRichTextEdit::Rich ) {
+    InsertHtmlDialog *dialog = new InsertHtmlDialog(q);
+    if(dialog->exec()) {
+      const QString str = dialog->html();
+      if(!str.isEmpty()) {
+        QTextCursor cursor = q->textCursor();
+        cursor.insertHtml( str );
+      }
+    }
+    delete dialog;
+  }
+}
+
+
 void TextEditPrivate::_k_slotAddImage()
 {
   QPointer<KFileDialog> fdlg = new KFileDialog( QString(), QString(), q );
@@ -540,14 +590,11 @@ void TextEditPrivate::_k_slotAddImage()
   fdlg->setCaption( i18n( "Add Image" ) );
   fdlg->okButton()->setGuiItem( KGuiItem( i18n( "&Add" ), QLatin1String( "document-open" ) ) );
   fdlg->setMode( KFile::Files );
-  if ( fdlg->exec() != KDialog::Accepted ) {
-    delete fdlg;
-    return;
-  }
-
-  const KUrl::List files = fdlg->selectedUrls();
-  foreach ( const KUrl &url, files ) {
-    q->addImage( url );
+  if ( fdlg->exec() == KDialog::Accepted && fdlg ) {
+    const KUrl::List files = fdlg->selectedUrls();
+    foreach ( const KUrl &url, files ) {
+      q->addImage( url );
+    }
   }
   delete fdlg;
 }
@@ -561,6 +608,27 @@ bool KPIMTextEdit::TextEdit::isEnableImageActions() const
 {
   return d->imageSupportEnabled;
 }
+
+void KPIMTextEdit::TextEdit::enableEmoticonActions()
+{
+  d->emoticonSupportEnabled = true;
+}
+
+bool KPIMTextEdit::TextEdit::isEnableEmoticonActions() const
+{
+  return d->emoticonSupportEnabled;
+}
+
+void KPIMTextEdit::TextEdit::enableInsertHtmlActions()
+{
+  d->insertHtmlSupportEnabled = true;
+}
+
+bool KPIMTextEdit::TextEdit::isEnableInsertHtmlActions() const
+{
+  return d->insertHtmlSupportEnabled;
+}
+
 
 QByteArray KPIMTextEdit::TextEdit::imageNamesToContentIds(
   const QByteArray &htmlBody, const KPIMTextEdit::ImageList &imageList )

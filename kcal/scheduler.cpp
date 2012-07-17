@@ -398,9 +398,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     //        resource selection dialog. However, we don't have any UI methods
     //        in the calendar, only in the CalendarResources::DestinationPolicy
     //        So we need to type-cast it and extract it from the CalendarResources
-    QWidget *tmpparent = 0;
     if ( stdcal ) {
-      tmpparent = stdcal->dialogParentWidget();
       stdcal->setDialogParentWidget( 0 );
     }
 #endif

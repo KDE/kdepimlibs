@@ -85,7 +85,10 @@ if(MAILTRANSPORT_INPROCESS_SMTP)
   target_link_libraries(mailtransport ${SASL2_LIBRARIES} kpimutils)
 endif()
 
-set_target_properties(mailtransport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(mailtransport PROPERTIES
+  VERSION ${GENERIC_LIB_VERSION}
+  SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})

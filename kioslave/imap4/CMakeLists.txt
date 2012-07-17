@@ -41,4 +41,4 @@ install(TARGETS kio_imap4  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install(FILES imap4.protocol imaps.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES imap.protocol imaps.protocol  DESTINATION ${SERVICES_INSTALL_DIR})

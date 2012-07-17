@@ -36,7 +36,9 @@
 #include "ktnefpropertyset.h"
 #include "ktnef_export.h"
 
-namespace KTnef { class KTNEFAttach; }
+namespace KTnef {
+  class KTNEFAttach;
+}
 
 namespace KTnef {
 

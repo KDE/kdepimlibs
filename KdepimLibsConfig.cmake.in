@@ -49,6 +49,7 @@ set(KDEPIMLIBS_TARGET_PREFIX @KDEPIMLIBS_TARGET_PREFIX@)
 
 set(KDEPIMLIBS_NO_KRESOURCES @KDEPIM_NO_KRESOURCES@)
 set(KDEPIMLIBS_NO_KCAL @KDEPIM_NO_KCAL@)
+set(KALARM_USE_KRESOURCES @KALARM_USE_KRESOURCES@)
 
 # Make sure to load the exported targets only once
 # For the rest of this script it doesn't matter that much

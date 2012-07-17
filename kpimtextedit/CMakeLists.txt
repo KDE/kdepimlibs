@@ -8,6 +8,9 @@ set(kpimtextedit_lib_srcs
   emailquotehighlighter.cpp
   textedit.cpp
   textutils.cpp
+  emoticontexteditaction.cpp
+  emoticontexteditselector.cpp
+  inserthtmldialog.cpp
 )
 
 kde4_add_library(kpimtextedit ${LIBRARY_TYPE} ${kpimtextedit_lib_srcs})
@@ -15,6 +18,7 @@ kde4_add_library(kpimtextedit ${LIBRARY_TYPE} ${kpimtextedit_lib_srcs})
 target_link_libraries(kpimtextedit
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+  ${KDE4_KEMOTICONS_LIBS}
   kmime
 )
 
