@@ -760,12 +760,51 @@ void HeaderTest::testDateHeader()
   QCOMPARE( h->dateTime().utcOffset(), 0 );
   delete h;
 
+  // Test for bug 111633, year < 1970
+  h = new Date( 0, "Mon, 27 Aug 1956 21:31:46 +0200" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 1956, 8, 27 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 21, 31, 46 ) );
+  QCOMPARE( h->dateTime().utcOffset(), +2 * 3600 );
+  delete h;
+
   // Test for bug 207766
   h = new Date( 0, "Fri, 18 Sep 2009 04:44:55 -0400" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->dateTime().date(), QDate( 2009, 9, 18 ) );
   QCOMPARE( h->dateTime().time(), QTime( 4, 44, 55 ) );
   QCOMPARE( h->dateTime().utcOffset(), -4 * 3600 );
+  delete h;
+
+  // Test for bug 260761
+  h = new Date( 0, "Sat, 18 Dec 2010 14:01:21 \"GMT\"" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2010, 12, 18 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 14, 1, 21 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 0 );
+  delete h;
+
+  // old asctime()-like formatted date; regression to KDE3; see bug 117848
+  h = new Date( 0, "Thu Mar 30 18:36:28 CEST 2006" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2006, 3, 30 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 18, 36, 28 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 2 * 3600 );
+  delete h;
+
+  h = new Date( 0, "Thu Mar 30 18:36:28 2006" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2006, 3, 30 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 18, 36, 28 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 0 );
+  delete h;
+
+  // regression to KDE3; see bug 54098
+  h = new Date( 0, "Tue, Feb 04, 2003 00:01:20 +0000" );
+  QVERIFY( !h->isEmpty() );
+  QCOMPARE( h->dateTime().date(), QDate( 2003, 2, 4 ) );
+  QCOMPARE( h->dateTime().time(), QTime( 0, 1, 20 ) );
+  QCOMPARE( h->dateTime().utcOffset(), 0 );
   delete h;
 }
 

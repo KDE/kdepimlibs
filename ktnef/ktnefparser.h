@@ -36,9 +36,11 @@
 #include <QtCore/QIODevice>
 #include "ktnef_export.h"
 
-namespace KTnef { class KTNEFAttach; }
-namespace KTnef { class KTNEFMessage; }
-namespace KTnef { class KTNEFProperty; }
+namespace KTnef {
+  class KTNEFAttach;
+  class KTNEFMessage;
+  class KTNEFProperty;
+}
 
 namespace KTnef {
 

@@ -22,10 +22,12 @@
 /**
   @file
   This file is part of the KDEPIM Utilities library and provides
-  static methods for process handling.
+  static methods for process handling (Windows only at this time).
 
   @author Jarosław Staniek \<staniek@kde.org\>
 */
+
+//krazy:excludeall=captruefalse,null
 
 #include "processes.h"
 using namespace KPIMUtils;
@@ -48,52 +50,54 @@ using namespace KPIMUtils;
 #include <KDebug>
 
 // Copy from kdelibs/kinit/kinit_win.cpp
-PSID copySid(PSID from)
+PSID copySid( PSID from )
 {
-    if (!from)
-        return 0;
-    int sidLength = GetLengthSid(from);
-    PSID to = (PSID) malloc(sidLength);
-    CopySid(sidLength, to, from);
-    return to;
+  if ( !from ) {
+    return 0;
+  }
+
+  int sidLength = GetLengthSid( from );
+  PSID to = (PSID) malloc( sidLength );
+  CopySid( sidLength, to, from );
+  return to;
 }
 
 // Copy from kdelibs/kinit/kinit_win.cpp
-static PSID getProcessOwner(HANDLE hProcess)
+static PSID getProcessOwner( HANDLE hProcess )
 {
 #ifndef _WIN32_WCE
-    HANDLE hToken = NULL;
-    PSID sid;
+  HANDLE hToken = NULL;
+  PSID sid;
 
-    OpenProcessToken(hProcess, TOKEN_READ, &hToken);
-    if(hToken)
-    {
-        DWORD size;
-        PTOKEN_USER userStruct;
+  OpenProcessToken( hProcess, TOKEN_READ, &hToken );
+  if ( hToken ) {
+    DWORD size;
+    PTOKEN_USER userStruct;
 
-        // check how much space is needed
-        GetTokenInformation(hToken, TokenUser, NULL, 0, &size);
-        if( ERROR_INSUFFICIENT_BUFFER == GetLastError() )
-        {
-            userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
-            GetTokenInformation(hToken, TokenUser, userStruct, size, &size);
+    // check how much space is needed
+    GetTokenInformation( hToken, TokenUser, NULL, 0, &size );
+    if( ERROR_INSUFFICIENT_BUFFER == GetLastError() ) {
+      userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
+      GetTokenInformation( hToken, TokenUser, userStruct, size, &size );
 
-            sid = copySid(userStruct->User.Sid);
-            CloseHandle(hToken);
-            delete [] userStruct;
-            return sid;
-        }
+      sid = copySid( userStruct->User.Sid );
+      CloseHandle( hToken );
+      delete [] userStruct;
+      return sid;
     }
+  }
 #endif
-    return 0;
+  return 0;
 }
 
 // Copy from kdelibs/kinit/kinit_win.cpp
-static HANDLE getProcessHandle(int processID)
+static HANDLE getProcessHandle( int processID )
 {
-    return OpenProcess( SYNCHRONIZE|PROCESS_QUERY_INFORMATION |
-                        PROCESS_VM_READ | PROCESS_TERMINATE,
-                        false, processID );
+  return OpenProcess( SYNCHRONIZE |
+                      PROCESS_QUERY_INFORMATION |
+                      PROCESS_VM_READ |
+                      PROCESS_TERMINATE,
+                      false, processID );
 }
 
 void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &pids )
@@ -119,13 +123,13 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
       if ( user_sid ) {
         // Also check that we are the Owner of that process
         HANDLE hProcess = getProcessHandle( pe32.th32ProcessID );
-        if (!hProcess) {
+        if ( !hProcess ) {
           continue;
         }
 
         PSID sid = getProcessOwner( hProcess );
         PSID userSid = getProcessOwner( GetCurrentProcess() );
-        if (!sid || userSid && !EqualSid( userSid, sid )) {
+        if ( !sid || userSid && !EqualSid( userSid, sid ) ) {
           free ( sid );
           continue;
         }
@@ -135,9 +139,9 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
     }
   } while( Process32Next( h, &pe32 ) );
 #ifndef _WIN32_WCE
-    CloseHandle(h);
+  CloseHandle( h );
 #else
-    CloseToolhelp32Snapshot(h);
+  CloseToolhelp32Snapshot( h );
 #endif
 }
 
@@ -197,10 +201,10 @@ BOOL CALLBACK EnumWindowsProc( HWND hwnd, LPARAM lParam )
     GetWindowThreadProcessId( hwnd, &pidwin );
     if ( pidwin == ( (EnumWindowsStruct *)lParam )->pid ) {
       ( (EnumWindowsStruct *)lParam )->windowId = hwnd;
-      return FALSE; //krazy:exclude=captruefalse
+      return FALSE;
     }
   }
-  return TRUE; //krazy:exclude=captruefalse
+  return TRUE;
 }
 
 void KPIMUtils::activateWindowForProcess( const QString &executableName )

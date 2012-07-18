@@ -44,7 +44,9 @@ class Calendar;
 class InvitationFormatterHelper;
 }
 
-namespace KCalUtils{ class InvitationFormatterHelper; }
+namespace KCalUtils {
+  class InvitationFormatterHelper;
+}
 
 namespace KTnef {
 
