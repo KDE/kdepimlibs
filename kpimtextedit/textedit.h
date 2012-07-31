@@ -127,6 +127,8 @@ class KPIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
     void enableEmoticonActions();
 
     void enableInsertHtmlActions();
+
+    void enableInsertTableActions();
     /**
      * Destructor
      */
@@ -149,7 +151,19 @@ class KPIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
      *
      * @param url The URL of the file which contains the image
      */
-    void addImage( const KUrl &url );
+    void addImage(const KUrl &url);
+
+    /**
+     * Adds an image. The image is loaded from file and then pasted to the current
+     * cursor position with the given @p width and @p height.
+     *
+     * @param url The URL of the file which contains the image
+     * @param width The width the inserted image will have.
+     * @param height The height the inserted image will have.
+     *
+     * @since 4.10
+     */
+    void addImage(const KUrl &url, int width, int height);
 
     /**
      * Loads an image into the textedit. The difference to addImage() is that this
@@ -290,6 +304,11 @@ class KPIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
      */
     bool isEnableInsertHtmlActions() const;
 
+    /**
+     * @since 4.10
+     */
+    bool isEnableInsertTableActions() const;
+
   protected:
 
     /**
@@ -340,6 +359,7 @@ class KPIMTEXTEDIT_EXPORT TextEdit : public KRichTextWidget,
     virtual void createHighlighter();
 
   private:
+    void addImageHelper(const KUrl &url, int width = -1, int height = -1);
     std::auto_ptr<TextEditPrivate> const d;
     friend class TextEditPrivate;
     Q_PRIVATE_SLOT( d, void _k_slotAddImage() )
