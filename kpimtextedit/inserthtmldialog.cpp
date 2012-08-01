@@ -21,16 +21,16 @@
 #include <KTextEdit>
 #include <QVBoxLayout>
 #include <QLabel>
-using namespace KPIMTextEdit;
+namespace KPIMTextEdit {
 
-class InsertHtmlDialog::InsertHtmlDialogPrivate
+class InsertHtmlDialogPrivate
 {
 public:
   InsertHtmlDialogPrivate(InsertHtmlDialog *qq)
     :q(qq)
   {
     q->setCaption( i18n("Insert HTML") );
-    q->setButtons( Ok|Cancel );
+    q->setButtons( KDialog::Ok|KDialog::Cancel );
     q->setButtonText(KDialog::Ok,i18n("Insert"));
     QWidget *page = new QWidget(q );
     q->setMainWidget( page );
@@ -41,12 +41,25 @@ public:
     editor->setAcceptRichText(false);
     lay->addWidget(editor);
     label = new QLabel(i18n("Example: <i> Hello word </i>"));
+    QFont font = label->font();
+    font.setBold(true);
+    label->setFont(font);
     label->setTextFormat(Qt::PlainText);
     lay->addWidget(label);
+    q->connect(editor,SIGNAL(textChanged()),q,SLOT(_k_slotTextChanged()));
+    q->enableButtonOk(false);
   }
+
+  void _k_slotTextChanged();
+
   KTextEdit *editor;
   InsertHtmlDialog *q;
 };
+
+void InsertHtmlDialogPrivate::_k_slotTextChanged()
+{
+  q->enableButtonOk(!editor->toPlainText().isEmpty());
+}
 
 InsertHtmlDialog::InsertHtmlDialog(QWidget *parent)
   : KDialog(parent), d(new InsertHtmlDialogPrivate(this))
@@ -61,6 +74,7 @@ InsertHtmlDialog::~InsertHtmlDialog()
 QString InsertHtmlDialog::html() const
 {
   return d->editor->toPlainText();
+}
 }
 
 #include "inserthtmldialog.moc"

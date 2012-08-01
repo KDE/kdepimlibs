@@ -15,28 +15,44 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INSERTHTMLDIALOG_H
-#define INSERTHTMLDIALOG_H
-
+#ifndef TABLEFORMATDIALOG_H
+#define TABLEFORMATDIALOG_H
 #include <KDialog>
-namespace KPIMTextEdit {
-class InsertHtmlDialogPrivate;
+#include <QTextLength>
 
-class InsertHtmlDialog : public KDialog
+namespace KPIMTextEdit {
+
+class TableFormatDialog : public KDialog
 {
-  Q_OBJECT
 public:
-  explicit InsertHtmlDialog(QWidget *parent = 0);
-  ~InsertHtmlDialog();
-  QString html() const;
+  explicit TableFormatDialog(QWidget *parent);
+  ~TableFormatDialog();
+
+  int columns() const;
+  int rows() const;
+  int border() const;
+
+  void setColumns(int);
+  void setRows(int);
+  void setBorder(int);
+
+  int padding() const;
+  void setPadding(int);
+
+  int spacing() const;
+  void setSpacing(int);
+
+
+  void setAlignment(Qt::Alignment alignment);
+  Qt::Alignment alignment() const;
+
+  QTextLength::Type typeOfLength() const;
+  int length() const;
+
 
 private:
-  friend class InsertHtmlDialogPrivate;
-  InsertHtmlDialogPrivate *d;
-  Q_PRIVATE_SLOT( d, void _k_slotTextChanged() )
-
+  class TableFormatDialogPrivate;
+  TableFormatDialogPrivate *d;
 };
-
 }
-
-#endif // INSERTHTMLDIALOG_H
+#endif // TABLEFORMATDIALOG_H

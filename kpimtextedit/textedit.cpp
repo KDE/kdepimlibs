@@ -2,7 +2,7 @@
   Copyright (c) 2009 Thomas McGuire <mcguire@kde.org>
 
   Based on KMail and libkdepim code by:
-  Copyright 2007 Laurent Montel <montel@kde.org>
+  Copyright 2007 - 2012 Laurent Montel <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -24,6 +24,8 @@
 #include "emailquotehighlighter.h"
 #include "emoticontexteditaction.h"
 #include "inserthtmldialog.h"
+#include "tableactionmenu.h"
+#include "insertimagedialog.h"
 
 #include <kmime/kmime_codecs.h>
 
@@ -35,6 +37,7 @@
 #include <KDE/KMessageBox>
 #include <KDE/KPushButton>
 #include <KDE/KUrl>
+#include <KDE/KImageIO>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDateTime>
@@ -57,10 +60,12 @@ class TextEditPrivate
       : actionAddImage( 0 ),
         actionDeleteLine( 0 ),
         actionInsertHtml( 0 ),
+        actionTable( 0 ),
         q( parent ),
         imageSupportEnabled( false ),
         emoticonSupportEnabled( false ),
-        insertHtmlSupportEnabled( false )
+        insertHtmlSupportEnabled( false ),
+        insertTableSupportEnabled( false )
     {
     }
 
@@ -72,7 +77,7 @@ class TextEditPrivate
      *                  be appended to it
      * @param image the actual image to add
      */
-    void addImageHelper( const QString &imageName, const QImage &image );
+    void addImageHelper(const QString &imageName, const QImage &image, int width = -1, int height = -1);
 
     /**
      * Helper function to get the list of all QTextImageFormats in the document.
@@ -102,6 +107,8 @@ class TextEditPrivate
 
     void _k_slotInsertHtml();
 
+
+
     /// The action that triggers _k_slotAddImage()
     KAction *actionAddImage;
 
@@ -109,7 +116,11 @@ class TextEditPrivate
     KAction *actionDeleteLine;
 
     EmoticonTextEditAction *actionAddEmoticon;
+
     KAction *actionInsertHtml;
+
+    TableActionMenu *actionTable;
+
     /// The parent class
     TextEdit *q;
 
@@ -120,6 +131,7 @@ class TextEditPrivate
 
     bool insertHtmlSupportEnabled;
 
+    bool insertTableSupportEnabled;
     /**
      * The names of embedded images.
      * Used to easily obtain the names of the images.
@@ -407,6 +419,14 @@ void TextEdit::createActions( KActionCollection *actionCollection )
     connect( d->actionInsertHtml, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
   }
 
+  if ( d->insertTableSupportEnabled ) {
+    d->actionTable = new TableActionMenu(actionCollection,this);
+    d->actionTable->setIcon(KIcon(QLatin1String("table")));
+    d->actionTable->setText(i18n("Table"));
+    d->actionTable->setDelayed(false);
+    actionCollection->addAction( QLatin1String( "insert_table" ), d->actionTable );
+  }
+
 
   d->actionDeleteLine = new KAction( i18n( "Delete Line" ), this );
   d->actionDeleteLine->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_K ) );
@@ -414,7 +434,17 @@ void TextEdit::createActions( KActionCollection *actionCollection )
   connect( d->actionDeleteLine, SIGNAL(triggered(bool)), SLOT(_k_slotDeleteLine()) );
 }
 
-void TextEdit::addImage( const KUrl &url )
+void TextEdit::addImage(const KUrl &url, int width, int height)
+{
+  addImageHelper(url, width, height);
+}
+
+void TextEdit::addImage( const KUrl &url)
+{
+  addImageHelper(url);
+}
+
+void TextEdit::addImageHelper(const KUrl &url, int width, int height)
 {
   QImage image;
   if ( !image.load( url.path() ) ) {
@@ -427,7 +457,7 @@ void TextEdit::addImage( const KUrl &url )
   QFileInfo fi( url.path() );
   QString imageName = fi.baseName().isEmpty() ? QLatin1String( "image.png" )
                                               : QString( fi.baseName() + QLatin1String( ".png" ) );
-  d->addImageHelper( imageName, image );
+  d->addImageHelper( imageName, image, width, height );
 }
 
 void TextEdit::loadImage ( const QImage &image, const QString &matchName,
@@ -465,7 +495,7 @@ void TextEdit::loadImage ( const QImage &image, const QString &matchName,
   }
 }
 
-void TextEditPrivate::addImageHelper( const QString &imageName, const QImage &image )
+void TextEditPrivate::addImageHelper( const QString &imageName, const QImage &image,int width, int height )
 {
   QString imageNameToAdd = imageName;
   QTextDocument *document = q->document();
@@ -491,7 +521,15 @@ void TextEditPrivate::addImageHelper( const QString &imageName, const QImage &im
     document->addResource( QTextDocument::ImageResource, QUrl( imageNameToAdd ), image );
     mImageNames << imageNameToAdd;
   }
-  q->textCursor().insertImage( imageNameToAdd );
+  if(width != -1 && height != -1) {
+      QTextImageFormat format;
+      format.setName(imageNameToAdd);
+      format.setWidth(width);
+      format.setHeight(height);
+      q->textCursor().insertImage( format );
+  } else {
+      q->textCursor().insertImage( imageNameToAdd );
+  }
   q->enableRichTextMode();
 }
 
@@ -585,18 +623,18 @@ void TextEditPrivate::_k_slotInsertHtml()
 
 void TextEditPrivate::_k_slotAddImage()
 {
-  QPointer<KFileDialog> fdlg = new KFileDialog( QString(), QString(), q );
-  fdlg->setOperationMode( KFileDialog::Other );
-  fdlg->setCaption( i18n( "Add Image" ) );
-  fdlg->okButton()->setGuiItem( KGuiItem( i18n( "&Add" ), QLatin1String( "document-open" ) ) );
-  fdlg->setMode( KFile::Files );
-  if ( fdlg->exec() == KDialog::Accepted && fdlg ) {
-    const KUrl::List files = fdlg->selectedUrls();
-    foreach ( const KUrl &url, files ) {
-      q->addImage( url );
+  QPointer<InsertImageDialog> dlg = new InsertImageDialog(q);
+  if ( dlg->exec() == KDialog::Accepted && dlg ) {
+    const KUrl url = dlg->imageUrl();
+    int imageWidth = -1;
+    int imageHeight = -1;
+    if(!dlg->keepOriginalSize()) {
+        imageWidth = dlg->imageWidth();
+        imageHeight = dlg->imageHeight();
     }
+    q->addImage( url, imageWidth, imageHeight );
   }
-  delete fdlg;
+  delete dlg;
 }
 
 void KPIMTextEdit::TextEdit::enableImageActions()
@@ -627,6 +665,16 @@ void KPIMTextEdit::TextEdit::enableInsertHtmlActions()
 bool KPIMTextEdit::TextEdit::isEnableInsertHtmlActions() const
 {
   return d->insertHtmlSupportEnabled;
+}
+
+bool KPIMTextEdit::TextEdit::isEnableInsertTableActions() const
+{
+  return d->insertTableSupportEnabled;
+}
+
+void KPIMTextEdit::TextEdit::enableInsertTableActions()
+{
+  d->insertTableSupportEnabled = true;
 }
 
 
@@ -749,7 +797,7 @@ void TextEdit::deleteCurrentLine()
       return;
     }
   }
-
 }
+
 
 #include "textedit.moc"
