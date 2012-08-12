@@ -42,6 +42,7 @@ option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." ${KDE_PLAT
 option(KDEPIM_NO_KCAL "Build without legacy KCal." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
+option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
 
 ############### Load the CTest options ###############
 # Setting DART_TESTING_TIMEOUT has no effect on the tests timeout,
