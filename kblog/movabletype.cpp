@@ -92,7 +92,8 @@ void MovableType::fetchPost( BlogPost *post )
   Q_D( MovableType );
   kDebug();
   d->loadCategories();
-  if ( d->mCategoriesList.isEmpty() && post->categories( ).count() ) {
+  if ( d->mCategoriesList.isEmpty() &&
+       post->categories( ).count() ) {
     d->mFetchPostCache << post;
     if ( d->mFetchPostCache.count() ) {
       // we are already trying to fetch another post, so we don't need to start
@@ -100,8 +101,8 @@ void MovableType::fetchPost( BlogPost *post )
       return;
     }
 
-    connect( this, SIGNAL(listedCategories(QList<QMap<QString,QString> >))
-        , this, SLOT(slotTriggerFetchPost()) );
+    connect( this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+             this, SLOT(slotTriggerFetchPost()) );
     listCategories();
   } else {
     MetaWeblog::fetchPost( post );
@@ -118,20 +119,21 @@ void MovableType::createPost( BlogPost *post )
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
-  if(d->mCategoriesList.isEmpty()&&!post->categories().isEmpty()){
+  if ( d->mCategoriesList.isEmpty() &&
+       !post->categories().isEmpty() ) {
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
-    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-            this,SLOT(slotTriggerCreatePost()));
+    connect( this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+             this, SLOT(slotTriggerCreatePost()) );
     listCategories();
   }
   else {
     bool publish = post->isPrivate();
     // If we do setPostCategories() later than we disable publishing first.
-    if( !post->categories().isEmpty() ){
+    if ( !post->categories().isEmpty() ) {
       post->setPrivate( true );
       if ( d->mSilentCreationList.contains( post ) ) {
-        kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
+        kDebug() << "Post already in mSilentCreationList, this *should* never happen!";
       } else {
         d->mSilentCreationList << post;
       }
@@ -139,7 +141,7 @@ void MovableType::createPost( BlogPost *post )
     MetaWeblog::createPost( post );
     // HACK: uuh this a bit ugly now... reenable the original publish argument,
     // since createPost should have parsed now
-    post->setPrivate(publish);
+    post->setPrivate( publish );
   }
 }
 
@@ -153,11 +155,12 @@ void MovableType::modifyPost( BlogPost *post )
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
-  if(d->mCategoriesList.isEmpty() && !post->categories().isEmpty()){
+  if ( d->mCategoriesList.isEmpty() &&
+       !post->categories().isEmpty() ) {
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
-    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-            this,SLOT(slotTriggerModifyPost()));
+    connect( this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+             this, SLOT(slotTriggerModifyPost()) );
     listCategories();
   }
   else {
@@ -170,12 +173,12 @@ void MovableTypePrivate::slotTriggerCreatePost()
   kDebug();
   Q_Q( MovableType );
 
-  q->disconnect(q,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-          q,SLOT(slotTriggerCreatePost()));
+  q->disconnect( q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+                 q, SLOT(slotTriggerCreatePost()) );
   // now we can recall createPost with the posts from the cache
   QList<BlogPost*>::Iterator it = mCreatePostCache.begin();
   QList<BlogPost*>::Iterator end = mCreatePostCache.end();
-  for ( ; it!=end; it++ ) {
+  for ( ; it != end; it++ ) {
     q->createPost( *it );
   }
   mCreatePostCache.clear();
@@ -186,12 +189,12 @@ void MovableTypePrivate::slotTriggerModifyPost()
   kDebug();
   Q_Q( MovableType );
 
-  q->disconnect(q,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-          q,SLOT(slotTriggerModifyPost()));
+  q->disconnect( q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+                 q, SLOT(slotTriggerModifyPost()) );
   // now we can recall createPost with the posts from the cache
   QList<BlogPost*>::Iterator it = mModifyPostCache.begin();
   QList<BlogPost*>::Iterator end = mModifyPostCache.end();
-  for ( ; it!=end; it++ ) {
+  for ( ; it != end; it++ ) {
     q->modifyPost( *it );
   }
   mModifyPostCache.clear();
@@ -202,11 +205,11 @@ void MovableTypePrivate::slotTriggerFetchPost()
   kDebug();
   Q_Q( MovableType );
 
-  q->disconnect( q,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-      q,SLOT(slotTriggerFetchPost()) );
+  q->disconnect( q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+                 q, SLOT(slotTriggerFetchPost()) );
   QList<BlogPost*>::Iterator it = mFetchPostCache.begin();
   QList<BlogPost*>::Iterator end = mFetchPostCache.end();
-  for ( ; it!=end; it++ ) {
+  for ( ; it != end; it++ ) {
     q->fetchPost( *it );
   }
   mFetchPostCache.clear();
@@ -235,7 +238,8 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   kDebug () << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::String && result[0].type() != QVariant::Int ) {
+  if ( result[0].type() != QVariant::String &&
+       result[0].type() != QVariant::Int ) {
     kError() << "Could not read the postId, not a string or an integer.";
     emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the postId, not a string or an integer." ),
@@ -274,7 +278,8 @@ void MovableTypePrivate::slotFetchPost( const QList<QVariant> &result, const QVa
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   kDebug () << "TOP:" << result[0].typeName();
-  if ( result[0].type() == QVariant::Map && readPostFromMap( post, result[0].toMap() ) ) {
+  if ( result[0].type() == QVariant::Map &&
+       readPostFromMap( post, result[0].toMap() ) ) {
   } else {
     kError() << "Could not fetch post out of the result from the server.";
     post->setError( i18n( "Could not fetch post out of the result from the server." ) );
@@ -309,7 +314,8 @@ void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QV
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
   kDebug() << "TOP:" << result[0].typeName();
-  if ( result[0].type() != QVariant::Bool && result[0].type() != QVariant::Int ) {
+  if ( result[0].type() != QVariant::Bool &&
+       result[0].type() != QVariant::Int ) {
     kError() << "Could not read the result, not a boolean.";
     emit q->errorPost( Blogger1::ParsingError,
                           i18n( "Could not read the result, not a boolean." ),
@@ -321,7 +327,7 @@ void MovableTypePrivate::slotModifyPost( const QList<QVariant> &result, const QV
     mSilentCreationList.removeOne( post );
     emit q->createdPost( post );
   } else {
-    if( !post->categories().isEmpty() ){
+    if ( !post->categories().isEmpty() ) {
       setPostCategories( post, false );
     }
   }
@@ -340,23 +346,23 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
 
   // map the categoryId of the server to the name
   QStringList categories = post->categories();
-  for( int j=0; j<categories.count(); j++ ){
-     for( int k=0; k<mCategoriesList.count(); k++ ){
-       if(mCategoriesList[k]["name"]==categories[j]){
+  for ( int j = 0; j < categories.count(); j++ ) {
+     for ( int k = 0; k < mCategoriesList.count(); k++ ) {
+       if ( mCategoriesList[k]["name"] == categories[j] ) {
          kDebug() << "Matched category with name: " << categories[ j ] << " and id: " << mCategoriesList[ k ][ "categoryId" ];
          QMap<QString,QVariant> category;
          //the first in the QStringList of post->categories()
          // is the primary category
-         category["categoryId"]=mCategoriesList[k]["categoryId"].toInt();
-         catList<<QVariant( category );
+         category["categoryId"] = mCategoriesList[k]["categoryId"].toInt();
+         catList << QVariant( category );
          break;
        }
-       if(k==mCategoriesList.count()){
+       if ( k == mCategoriesList.count() ) {
          kDebug() << "Couldn't find categoryId for: " << categories[j];
        }
      }
   }
-  args<<QVariant( catList );
+  args << QVariant( catList );
 
   mXmlRpcClient->call(
     "mt.setPostCategories", args,
@@ -372,7 +378,7 @@ void MovableTypePrivate::slotGetPostCategories(const QList<QVariant>& result,con
 
   int i = id.toInt();
   BlogPost* post = mCallMap[ i ];
-  mCallMap.remove(i);
+  mCallMap.remove( i );
 
   if ( result[ 0 ].type() != QVariant::List ) {
     kError() << "Could not read the result, not a list. Category fetching failed! We will still emit fetched post now.";
@@ -386,10 +392,10 @@ void MovableTypePrivate::slotGetPostCategories(const QList<QVariant>& result,con
     QList<QString> newCatList;
     QList<QVariant>::ConstIterator it = categoryList.constBegin();
     QList<QVariant>::ConstIterator end = categoryList.constEnd();
-    for ( ;it!=end;it++ ) {
+    for ( ; it != end; it++ ) {
       newCatList << ( *it ).toMap()[ "categoryName" ].toString();
     }
-    kDebug()<< "categories list: " << newCatList;
+    kDebug() << "categories list: " << newCatList;
     post->setCategories( newCatList );
     post->setStatus( KBlog::BlogPost::Fetched );
     emit q->fetchedPost( post );
@@ -404,8 +410,8 @@ void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,con
   int i = id.toInt();
   BlogPost* post = mCallMap[ i ];
   bool publish = mPublishAfterCategories[ i ];
-  mCallMap.remove(i);
-  mPublishAfterCategories.remove(i);
+  mCallMap.remove( i );
+  mPublishAfterCategories.remove( i );
 
   if ( result[0].type() != QVariant::Bool ) {
     kError() << "Could not read the result, not a boolean. Category setting failed! We will still publish if now if necessary. ";
@@ -416,7 +422,7 @@ void MovableTypePrivate::slotSetPostCategories(const QList<QVariant>& result,con
   // Finally publish now, if the post was meant to be published in the beginning.
   // The first boolean is necessary to only publish if the post is created, not
   // modified.
-  if( publish && !post->isPrivate() ){
+  if ( publish && !post->isPrivate() ) {
     q->modifyPost( post );
   }
 
@@ -441,7 +447,7 @@ QList<QVariant> MovableTypePrivate::defaultArgs( const QString &id )
 {
   Q_Q( MovableType );
   QList<QVariant> args;
-  if( !id.isEmpty() ) {
+  if ( !id.isEmpty() ) {
     args << QVariant( id );
   }
   args << QVariant( q->username() )
@@ -482,13 +488,13 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   QStringList categories;
   // since the metaweblog definition is ambigious, we try different
   // category mappings
-  for ( int i=0; i<categoryIdList.count(); i++ ) {
-    for ( int k=0; k<mCategoriesList.count(); k++ ) {
-      if ( mCategoriesList[ k ][ "name" ]==categoryIdList[ i ] ){
+  for ( int i = 0; i < categoryIdList.count(); i++ ) {
+    for ( int k = 0; k < mCategoriesList.count(); k++ ) {
+      if ( mCategoriesList[ k ][ "name" ] == categoryIdList[ i ] ) {
         categories << mCategoriesList[ k ][ "name" ];
-      } else if ( mCategoriesList[ k ][ "categoryId" ]==categoryIdList[ i ]) {
+      } else if ( mCategoriesList[ k ][ "categoryId" ] == categoryIdList[ i ]) {
         categories << mCategoriesList[ k ][ "name" ];
-      } 
+      }
     }
   }
 
@@ -505,15 +511,16 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   post->setLink( postInfo["link"].toString() );
   post->setPermaLink( postInfo["permaLink"].toString() );
   QString postStatus = postInfo["post_status"].toString();
-  if( postStatus != "publish" && !postStatus.isEmpty() ){
+  if ( postStatus != "publish" &&
+       !postStatus.isEmpty() ) {
     /**
      * Maybe this field wasn't set by server! so, on that situation, we will assume it as non-Private,
      * The postStatus.isEmpty() check is for that!
      * I found this field on Wordpress output! it's value can be: publish, private, draft (as i see)
     */
-    post->setPrivate(true);
+    post->setPrivate( true );
   }
-  if ( !categories.isEmpty() ){
+  if ( !categories.isEmpty() ) {
     kDebug() << "Categories:" << categories;
     post->setCategories( categories );
   }
@@ -563,14 +570,15 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   QMap<QString, QVariant> map;
   map["categories"] = post.categories();
   map["description"] = post.content();
-  if( !post.additionalContent().isEmpty() )
+  if ( !post.additionalContent().isEmpty() ) {
     map["mt_text_more"] = post.additionalContent();
+  }
   map["title"] = post.title();
   map["dateCreated"] = post.creationDateTime().dateTime().toUTC();
   map["mt_allow_comments"] = (int)post.isCommentAllowed();
   map["mt_allow_pings"] = (int)post.isTrackBackAllowed();
   map["mt_excerpt"] = post.summary();
-  map["mt_keywords"] = post.tags().join(",");
+  map["mt_keywords"] = post.tags().join( "," );
   //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
   *args << map;
   *args << QVariant( !post.isPrivate() );

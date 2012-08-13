@@ -387,4 +387,4 @@ void TestBlogger1::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestBlogger1)
+QTEST_KDEMAIN_CORE( TestBlogger1 )

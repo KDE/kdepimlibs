@@ -438,4 +438,4 @@ void TestMovableType::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestMovableType)
+QTEST_KDEMAIN_CORE( TestMovableType )

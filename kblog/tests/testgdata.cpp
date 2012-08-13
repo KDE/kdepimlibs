@@ -102,7 +102,7 @@ void TestGData::dumpPost( const BlogPost *post )
   qDebug() << "# categories: " << post->categories().join( " " );
   qDebug() << "# error: " << post->error();
   qDebug() << "# journalId: " << post->journalId();
-  switch ( post->status() ){
+  switch ( post->status() ) {
   case BlogPost::New:
     qDebug() << "# status: New";
     break;
@@ -139,7 +139,7 @@ void TestGData::dumpComment( const BlogComment *comment )
   qDebug() << "# email: " << comment->email();
   qDebug() << "# url: " << comment->url().url();
   qDebug() << "# error: " << comment->error();
-  switch ( comment->status() ){
+  switch ( comment->status() ) {
   case BlogComment::New:
     qDebug() << "# status: New";
     break;
@@ -302,7 +302,7 @@ void TestGData::error( KBlog::Blog::ErrorType type, const QString &errStr,
                        KBlog::BlogPost *post )
 {
   qDebug() << "############ error #############";
-  switch ( type ){
+  switch ( type ) {
   case Blog::Atom:
     qDebug() << "type: Atom";
     break;
@@ -483,4 +483,4 @@ void TestGData::testNetwork()
   delete c;
 }
 
-QTEST_KDEMAIN_CORE(TestGData)
+QTEST_KDEMAIN_CORE( TestGData )

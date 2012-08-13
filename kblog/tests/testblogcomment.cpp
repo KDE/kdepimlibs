@@ -106,4 +106,4 @@ void testBlogComment::testValidity()
 
 }
 
-QTEST_KDEMAIN_CORE(testBlogComment)
+QTEST_KDEMAIN_CORE( testBlogComment )
