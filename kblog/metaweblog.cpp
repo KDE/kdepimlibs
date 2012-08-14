@@ -80,7 +80,7 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
   }
   unsigned int i = d->mCallMediaCounter++;
   d->mCallMediaMap[ i ] = media;
-  kDebug() << "MetaWeblog::createMedia: name="<< media->name();
+  kDebug() << "MetaWeblog::createMedia: name=" << media->name();
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
   QList<QVariant> list;
@@ -112,7 +112,7 @@ QList<QVariant> MetaWeblogPrivate::defaultArgs( const QString &id )
 {
   Q_Q( MetaWeblog );
   QList<QVariant> args;
-  if( !id.isEmpty() ) {
+  if ( !id.isEmpty() ) {
     args << QVariant( id );
   }
   args << QVariant( q->username() )
@@ -296,7 +296,7 @@ bool MetaWeblogPrivate::readPostFromMap( BlogPost *post,
 
   post->setTitle( title );
   post->setContent( description );
-  if ( !categories.isEmpty() ){
+  if ( !categories.isEmpty() ) {
     kDebug() << "Categories:" << categories;
     post->setCategories( categories );
   }

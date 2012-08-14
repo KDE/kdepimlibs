@@ -368,4 +368,4 @@ void TestLiveJournal::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestLiveJournal)
+QTEST_KDEMAIN_CORE( TestLiveJournal )

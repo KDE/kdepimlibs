@@ -427,4 +427,4 @@ void TestMetaWeblog::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestMetaWeblog)
+QTEST_KDEMAIN_CORE( TestMetaWeblog )

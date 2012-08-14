@@ -85,4 +85,4 @@ void testBlogMedia::testValidity()
 
 }
 
-QTEST_KDEMAIN_CORE(testBlogMedia)
+QTEST_KDEMAIN_CORE( testBlogMedia )
