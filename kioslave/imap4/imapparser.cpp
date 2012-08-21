@@ -591,7 +591,6 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
         if (parseOneNumber (rest, value))
           selectInfo.setUidNext (value);
       }
-      else
       break;
 
     }
