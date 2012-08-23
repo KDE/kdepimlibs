@@ -80,57 +80,50 @@ CommandPtr
 imapParser::doCommand (CommandPtr aCmd)
 {
   int pl = 0;
-  sendCommand (aCmd);
-  while (pl != -1 && !aCmd->isComplete ()) {
-    while ((pl = parseLoop ()) == 0)
-     ;
+  sendCommand( aCmd );
+  while ( pl != -1 && !aCmd->isComplete() ) {
+    while ( ( pl = parseLoop() ) == 0 ) {
+      ;
+    }
   }
-
   return aCmd;
 }
 
 CommandPtr
 imapParser::sendCommand (CommandPtr aCmd)
 {
-  aCmd->setId (QString::number(commandCounter++));
-  sentQueue.append (aCmd);
+  aCmd->setId( QString::number( commandCounter++ ) );
+  sentQueue.append( aCmd );
 
-  continuation.resize(0);
+  continuation.resize( 0 );
   const QString& command = aCmd->command();
 
-  if (command == "SELECT" || command == "EXAMINE")
-  {
+  if ( command == "SELECT" || command == "EXAMINE" ) {
      // we need to know which box we are selecting
     parseString p;
-    p.fromString(aCmd->parameter());
-    currentBox = parseOneWord(p);
-    kDebug(7116) <<"imapParser::sendCommand - setting current box to" << currentBox;
-  }
-  else if (command == "CLOSE")
-  {
+    p.fromString( aCmd->parameter() );
+    currentBox = parseOneWord( p );
+    kDebug( 7116 ) << "imapParser::sendCommand - setting current box to" << currentBox;
+  } else if ( command == "CLOSE" ) {
      // we no longer have a box open
     currentBox.clear();
+  } else if ( command.contains( "SEARCH" ) ||
+              command == "GETACL" ||
+              command == "LISTRIGHTS" ||
+              command == "MYRIGHTS" ||
+              command == "GETANNOTATION" ||
+              command == "NAMESPACE" ||
+              command == "GETQUOTAROOT" ||
+              command == "GETQUOTA" ||
+              command == "X-GET-OTHER-USERS" ||
+              command == "X-GET-DELEGATES" ||
+              command == "X-GET-OUT-OF-OFFICE" ) {
+    lastResults.clear();
+  } else if ( command == "LIST" ||
+              command == "LSUB" ) {
+    listResponses.clear();
   }
-  else if (command.contains("SEARCH")
-           || command == "GETACL"
-           || command == "LISTRIGHTS"
-           || command == "MYRIGHTS"
-           || command == "GETANNOTATION"
-           || command == "NAMESPACE"
-           || command == "GETQUOTAROOT"
-           || command == "GETQUOTA"
-           || command == "X-GET-OTHER-USERS"
-           || command == "X-GET-DELEGATES"
-           || command == "X-GET-OUT-OF-OFFICE")
-  {
-    lastResults.clear ();
-  }
-  else if (command == "LIST"
-           || command == "LSUB")
-  {
-    listResponses.clear ();
-  }
-  parseWriteLine (aCmd->getStr ());
+  parseWriteLine( aCmd->getStr() );
   return aCmd;
 }
 
@@ -141,24 +134,21 @@ imapParser::clientLogin (const QString & aUser, const QString & aPass,
   CommandPtr cmd;
   bool retVal = false;
 
-  cmd =
-    doCommand ( CommandPtr( new
-                            imapCommand ("LOGIN", "\"" + KIMAP::quoteIMAP(aUser)
-                                         + "\" \"" + KIMAP::quoteIMAP(aPass) + "\"")) );
+  cmd = doCommand( CommandPtr( new imapCommand( "LOGIN", "\"" + KIMAP::quoteIMAP( aUser ) +
+                                                "\" \"" + KIMAP::quoteIMAP( aPass ) + "\"" ) ) );
 
-  if (cmd->result () == "OK")
-  {
+  if ( cmd->result() == "OK" ) {
     currentState = ISTATE_LOGIN;
     retVal = true;
   }
   resultInfo = cmd->resultInfo();
-  completeQueue.removeAll (cmd);
+  completeQueue.removeAll( cmd );
   return retVal;
 }
 
 static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
 {
-  kDebug(7116) <<"sasl_interact";
+  kDebug( 7116 ) << "sasl_interact";
   sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
   //some mechanisms do not require username && pass, so it doesn't need a popup
@@ -168,25 +158,26 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
          interact->id == SASL_CB_PASS ) {
 
       if ( ai.username.isEmpty() || ai.password.isEmpty() ) {
-        if (!slave->openPasswordDialog(ai))
+        if ( !slave->openPasswordDialog( ai ) ) {
           return false;
+        }
       }
       break;
     }
   }
 
   interact = ( sasl_interact_t * ) in;
-  while( interact->id != SASL_CB_LIST_END ) {
-    kDebug(7116) <<"SASL_INTERACT id:" << interact->id;
-    switch( interact->id ) {
+  while ( interact->id != SASL_CB_LIST_END ) {
+    kDebug( 7116 ) << "SASL_INTERACT id:" << interact->id;
+    switch ( interact->id ) {
       case SASL_CB_USER:
       case SASL_CB_AUTHNAME:
-        kDebug(7116) <<"SASL_CB_[USER|AUTHNAME]: '" << ai.username <<"'";
+        kDebug( 7116 ) << "SASL_CB_[USER|AUTHNAME]: '" << ai.username << "'";
         interact->result = strdup( ai.username.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       case SASL_CB_PASS:
-        kDebug(7116) <<"SASL_CB_PASS: [hidden]";
+        kDebug( 7116 ) << "SASL_CB_PASS: [hidden]";
         interact->result = strdup( ai.password.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
@@ -213,27 +204,28 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   const char *mechusing = 0;
   QByteArray tmp, challenge;
 
-  kDebug(7116) <<"aAuth:" << aAuth <<" FQDN:" << aFQDN <<" isSSL:" << isSSL;
+  kDebug( 7116 ) << "aAuth:" << aAuth << " FQDN:" << aFQDN << " isSSL:" << isSSL;
 
   // see if server supports this authenticator
-  if (!hasCapability ("AUTH=" + aAuth))
+  if ( !hasCapability( "AUTH=" + aAuth ) ) {
     return false;
+  }
 
 //  result = sasl_client_new( isSSL ? "imaps" : "imap",
   result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri
                                        must be 'imap'. I don't know if it's good or bad. */
-                       aFQDN.toLatin1(),
-                       0, 0, callbacks, 0, &conn );
+                            aFQDN.toLatin1(),
+                            0, 0, callbacks, 0, &conn );
 
   if ( result != SASL_OK ) {
-    kDebug(7116) <<"sasl_client_new failed with:" << result;
+    kDebug( 7116 ) << "sasl_client_new failed with:" << result;
     resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
     return false;
   }
 
   do {
-    result = sasl_client_start(conn, aAuth.toLatin1(), &client_interact,
-                       hasCapability("SASL-IR") ? &out : 0, &outlen, &mechusing);
+    result = sasl_client_start( conn, aAuth.toLatin1(), &client_interact,
+                                hasCapability( "SASL-IR" ) ? &out : 0, &outlen, &mechusing );
 
     if ( result == SASL_INTERACT ) {
       if ( !sasl_interact( slave, ai, client_interact ) ) {
@@ -244,7 +236,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   } while ( result == SASL_INTERACT );
 
   if ( result != SASL_CONTINUE && result != SASL_OK ) {
-    kDebug(7116) <<"sasl_client_start failed with:" << result;
+    kDebug( 7116 ) << "sasl_client_start failed with:" << result;
     resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
     sasl_dispose( &conn );
     return false;
@@ -260,32 +252,31 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     firstCommand += ' ';
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
   }
-  cmd = sendCommand (CommandPtr(new imapCommand ("AUTHENTICATE", firstCommand.toLatin1())));
+  cmd = sendCommand( CommandPtr( new imapCommand( "AUTHENTICATE", firstCommand.toLatin1() ) ) );
 
   int pl = 0;
-  while ( pl != -1 && !cmd->isComplete () ) {
+  while ( pl != -1 && !cmd->isComplete() ) {
     //read the next line
-    while ( ( pl = parseLoop() ) == 0) {
+    while ( ( pl = parseLoop() ) == 0 ) {
       ;
     }
 
-    if (!continuation.isEmpty())
-    {
-//      kDebug(7116) <<"S:" << QCString(continuation.data(),continuation.size()+1);
+    if ( !continuation.isEmpty() ) {
+//      kDebug( 7116 ) << "S:" << QCString( continuation.data(), continuation.size() + 1 );
       if ( continuation.size() > 4 ) {
         tmp = QByteArray::fromRawData( continuation.data() + 2, continuation.size() - 4 );
         challenge = QByteArray::fromBase64( tmp );
-//        kDebug(7116) <<"S-1:" << QCString(challenge.data(),challenge.size()+1);
+//        kDebug( 7116 ) << "S-1:" << QCString( challenge.data(), challenge.size() + 1 );
         tmp.clear();
       }
 
       do {
-        result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
-                                  challenge.size(),
-                                  &client_interact,
-                                  &out, &outlen);
+        result = sasl_client_step( conn, challenge.isEmpty() ? 0 : challenge.data(),
+                                   challenge.size(),
+                                   &client_interact,
+                                   &out, &outlen );
 
-        if (result == SASL_INTERACT) {
+        if ( result == SASL_INTERACT ) {
           if ( !sasl_interact( slave, ai, client_interact ) ) {
             sasl_dispose( &conn );
             return false;
@@ -294,29 +285,28 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
       } while ( result == SASL_INTERACT );
 
       if ( result != SASL_CONTINUE && result != SASL_OK ) {
-        kDebug(7116) <<"sasl_client_step failed with:" << result;
+        kDebug( 7116 ) << "sasl_client_step failed with:" << result;
         resultInfo = QString::fromUtf8( sasl_errdetail( conn ) );
         sasl_dispose( &conn );
         return false;
       }
 
       tmp = QByteArray::fromRawData( out, outlen );
-//      kDebug(7116) <<"C-1:" << QCString(tmp.data(),tmp.size()+1);
+//      kDebug( 7116 ) << "C-1:" << QCString( tmp.data(), tmp.size() + 1 );
       challenge = tmp.toBase64();
       tmp.clear();
-//      kDebug(7116) <<"C:" << QCString(challenge.data(),challenge.size()+1);
-      parseWriteLine (challenge);
-      continuation.resize(0);
+//      kDebug( 7116 ) << "C:" << QCString( challenge.data(), challenge.size() + 1 );
+      parseWriteLine( challenge );
+      continuation.resize( 0 );
     }
   }
 
-  if (cmd->result () == "OK")
-  {
+  if ( cmd->result() == "OK" ) {
     currentState = ISTATE_LOGIN;
     retVal = true;
   }
   resultInfo = cmd->resultInfo();
-  completeQueue.removeAll (cmd);
+  completeQueue.removeAll( cmd );
 
   sasl_dispose( &conn ); //we don't use sasl_en/decode(), so it's safe to dispose the connection.
   return retVal;
@@ -325,130 +315,104 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 void
 imapParser::parseUntagged (parseString & result)
 {
-  //kDebug(7116) <<"imapParser::parseUntagged - '" << result.cstr() <<"'";
+  //kDebug( 7116 ) << "imapParser::parseUntagged - '" << result.cstr() << "'";
 
-  parseOneWord(result);        // *
-  QByteArray what = parseLiteral (result); // see whats coming next
+  parseOneWord( result );        // *
+  QByteArray what = parseLiteral( result ); // see whats coming next
 
-  switch (what[0])
-  {
+  switch ( what[0] ) {
     //the status responses
   case 'B':                    // BAD or BYE
-    if (qstrncmp(what, "BAD", what.size()) == 0)
-    {
-      parseResult (what, result);
-    }
-    else if (qstrncmp(what, "BYE", what.size()) == 0)
-    {
-      parseResult (what, result);
+    if ( qstrncmp( what, "BAD", what.size() ) == 0 ) {
+      parseResult( what, result );
+    } else if ( qstrncmp( what, "BYE", what.size() ) == 0 ) {
+      parseResult( what, result );
       if ( sentQueue.count() ) {
         // BYE that interrupts a command -> copy the reason for it
-        CommandPtr current = sentQueue.at (0);
-        current->setResultInfo(result.cstr());
+        CommandPtr current = sentQueue.at( 0 );
+        current->setResultInfo( result.cstr() );
       }
       currentState = ISTATE_NO;
     }
     break;
 
   case 'N':                    // NO
-    if (what[1] == 'O' && what.size() == 2)
-    {
-      parseResult (what, result);
-    }
-    else if (qstrncmp(what, "NAMESPACE", what.size()) == 0)
-    {
-      parseNamespace (result);
+    if ( what[1] == 'O' && what.size() == 2 ) {
+      parseResult( what, result );
+    } else if ( qstrncmp( what, "NAMESPACE", what.size() ) == 0 ) {
+      parseNamespace( result );
     }
     break;
 
   case 'O':                    // OK
-    if (what[1] == 'K' && what.size() == 2)
-    {
-      parseResult (what, result);
-    } else if (qstrncmp(what, "OTHER-USER", 10) == 0) { // X-GET-OTHER-USER
-      parseOtherUser (result);
-    } else if (qstrncmp(what, "OUT-OF-OFFICE", 13) == 0) { // X-GET-OUT-OF-OFFICE
-      parseOutOfOffice (result);
+    if ( what[1] == 'K' && what.size() == 2 ) {
+      parseResult( what, result );
+    } else if ( qstrncmp( what, "OTHER-USER", 10 ) == 0 ) { // X-GET-OTHER-USER
+      parseOtherUser( result );
+    } else if ( qstrncmp( what, "OUT-OF-OFFICE", 13 ) == 0 ) { // X-GET-OUT-OF-OFFICE
+      parseOutOfOffice( result );
     }
     break;
   case 'D':
-    if (qstrncmp(what, "DELEGATE", 8) == 0) { // X-GET-DELEGATES
-      parseDelegate (result);
+    if ( qstrncmp( what, "DELEGATE", 8 ) == 0 ) { // X-GET-DELEGATES
+      parseDelegate( result );
     }
     break;
 
   case 'P':                    // PREAUTH
-    if (qstrncmp(what, "PREAUTH", what.size()) == 0)
-    {
-      parseResult (what, result);
+    if ( qstrncmp( what, "PREAUTH", what.size() ) == 0 ) {
+      parseResult( what, result );
       currentState = ISTATE_LOGIN;
     }
     break;
 
     // parse the other responses
   case 'C':                    // CAPABILITY
-    if (qstrncmp(what, "CAPABILITY", what.size()) == 0)
-    {
-      parseCapability (result);
+    if ( qstrncmp( what, "CAPABILITY", what.size() ) == 0 ) {
+      parseCapability( result );
     }
     break;
 
   case 'F':                    // FLAGS
-    if (qstrncmp(what, "FLAGS", what.size()) == 0)
-    {
-      parseFlags (result);
+    if ( qstrncmp( what, "FLAGS", what.size() ) == 0 ) {
+      parseFlags( result );
     }
     break;
 
   case 'L':                    // LIST or LSUB or LISTRIGHTS
-    if (qstrncmp(what, "LIST", what.size()) == 0)
-    {
-      parseList (result);
-    }
-    else if (qstrncmp(what, "LSUB", what.size()) == 0)
-    {
-      parseLsub (result);
-    }
-    else if (qstrncmp(what, "LISTRIGHTS", what.size()) == 0)
-    {
-      parseListRights (result);
+    if ( qstrncmp( what, "LIST", what.size() ) == 0 ) {
+      parseList( result );
+    } else if ( qstrncmp( what, "LSUB", what.size() ) == 0 ) {
+      parseLsub( result );
+    } else if ( qstrncmp( what, "LISTRIGHTS", what.size() ) == 0 ) {
+      parseListRights( result );
     }
     break;
 
   case 'M': // MYRIGHTS
-    if (qstrncmp(what, "MYRIGHTS", what.size()) == 0)
-    {
-      parseMyRights (result);
+    if ( qstrncmp( what, "MYRIGHTS", what.size() ) == 0 ) {
+      parseMyRights( result );
     }
     break;
   case 'S':                    // SEARCH or STATUS
-    if (qstrncmp(what, "SEARCH", what.size()) == 0)
-    {
-      parseSearch (result);
-    }
-    else if (qstrncmp(what, "STATUS", what.size()) == 0)
-    {
-      parseStatus (result);
+    if ( qstrncmp( what, "SEARCH", what.size() ) == 0 ) {
+      parseSearch( result );
+    } else if ( qstrncmp( what, "STATUS", what.size() ) == 0 ) {
+      parseStatus( result );
     }
     break;
 
   case 'A': // ACL or ANNOTATION
-    if (qstrncmp(what, "ACL", what.size()) == 0)
-    {
-      parseAcl (result);
-    }
-    else if (qstrncmp(what, "ANNOTATION", what.size()) == 0)
-    {
-      parseAnnotation (result);
+    if ( qstrncmp( what, "ACL", what.size() ) == 0 ) {
+      parseAcl( result );
+    } else if ( qstrncmp( what, "ANNOTATION", what.size() ) == 0 ) {
+      parseAnnotation( result );
     }
     break;
   case 'Q': // QUOTA or QUOTAROOT
-    if ( what.size() > 5 && qstrncmp(what, "QUOTAROOT", what.size()) == 0)
-    {
+    if ( what.size() > 5 && qstrncmp( what, "QUOTAROOT", what.size() ) == 0 ) {
       parseQuotaRoot( result );
-    }
-    else if (qstrncmp(what, "QUOTA", what.size()) == 0)
-    {
+    } else if ( qstrncmp( what, "QUOTA", what.size() ) == 0 ) {
       parseQuota( result );
     }
     break;
@@ -463,43 +427,35 @@ imapParser::parseUntagged (parseString & result)
       ulong number;
       bool valid;
 
-      number = what.toUInt(&valid);
-      if (valid)
-      {
-        what = parseLiteral (result);
-        switch (what[0])
-        {
+      number = what.toUInt( &valid );
+      if ( valid ) {
+        what = parseLiteral( result );
+        switch ( what[0] ) {
         case 'E':
-          if (qstrncmp(what, "EXISTS", what.size()) == 0)
-          {
-            parseExists (number, result);
-          }
-          else if (qstrncmp(what, "EXPUNGE", what.size()) == 0)
-          {
-            parseExpunge (number, result);
+          if ( qstrncmp( what, "EXISTS", what.size() ) == 0 ) {
+            parseExists( number, result );
+          } else if ( qstrncmp( what, "EXPUNGE", what.size() ) == 0 ) {
+            parseExpunge( number, result );
           }
           break;
 
         case 'F':
-          if (qstrncmp(what, "FETCH", what.size()) == 0)
-          {
+          if ( qstrncmp( what, "FETCH", what.size() ) == 0 ) {
             seenUid.clear();
-            parseFetch (number, result);
+            parseFetch( number, result );
           }
           break;
 
         case 'S':
-          if (qstrncmp(what, "STORE", what.size()) == 0)  // deprecated store
-          {
+          if ( qstrncmp( what, "STORE", what.size() ) == 0 ) {  // deprecated store
             seenUid.clear();
-            parseFetch (number, result);
+            parseFetch( number, result );
           }
           break;
 
         case 'R':
-          if (qstrncmp(what, "RECENT", what.size()) == 0)
-          {
-            parseRecent (number, result);
+          if ( qstrncmp( what, "RECENT", what.size() ) == 0 ) {
+            parseRecent( number, result );
           }
           break;
         default:
@@ -511,25 +467,22 @@ imapParser::parseUntagged (parseString & result)
   }                             //switch
 }                               //func
 
-
 void
 imapParser::parseResult (QByteArray & result, parseString & rest,
   const QString & command)
 {
-  if (command == "SELECT")
-    selectInfo.setReadWrite(true);
+  if ( command == "SELECT" ) {
+    selectInfo.setReadWrite( true );
+  }
 
-  if (rest[0] == '[')
-  {
+  if ( rest[0] == '[' ) {
     rest.pos++;
-    QByteArray option = parseOneWord(rest, true);
+    QByteArray option = parseOneWord( rest, true );
 
-    switch (option[0])
-    {
+    switch ( option[0] ) {
     case 'A':                  // ALERT
-      if (option == "ALERT")
-      {
-        rest.pos = rest.data.indexOf(']', rest.pos) + 1;
+      if ( option == "ALERT" ) {
+        rest.pos = rest.data.indexOf( ']', rest.pos ) + 1;
         // The alert text is after [ALERT].
         // Is this correct or do we need to care about litterals?
         selectInfo.setAlert( rest.cstr() );
@@ -537,206 +490,200 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
       break;
 
     case 'N':                  // NEWNAME
-      if (option == "NEWNAME")
-      {
+      if ( option == "NEWNAME" ) {
       }
       break;
 
     case 'P':                  //PARSE or PERMANENTFLAGS
-      if (option == "PARSE")
-      {
-      }
-      else if (option == "PERMANENTFLAGS")
-      {
-        uint end = rest.data.indexOf(']', rest.pos);
-        QByteArray flags(rest.data.data() + rest.pos, end - rest.pos);
-        selectInfo.setPermanentFlags (flags);
+      if ( option == "PARSE" ) {
+      } else if ( option == "PERMANENTFLAGS" ) {
+        uint end = rest.data.indexOf( ']', rest.pos );
+        QByteArray flags( rest.data.data() + rest.pos, end - rest.pos );
+        selectInfo.setPermanentFlags( flags );
         rest.pos = end;
       }
       break;
 
     case 'R':                  //READ-ONLY or READ-WRITE
-      if (option == "READ-ONLY")
-      {
-        selectInfo.setReadWrite (false);
-      }
-      else if (option == "READ-WRITE")
-      {
-        selectInfo.setReadWrite (true);
+      if ( option == "READ-ONLY" ) {
+        selectInfo.setReadWrite( false );
+      } else if ( option == "READ-WRITE" ) {
+        selectInfo.setReadWrite( true );
       }
       break;
 
     case 'T':                  //TRYCREATE
-      if (option == "TRYCREATE")
-      {
+      if ( option == "TRYCREATE" ) {
       }
       break;
 
     case 'U':                  //UIDVALIDITY or UNSEEN
-      if (option == "UIDVALIDITY")
-      {
+      if ( option == "UIDVALIDITY" ) {
         ulong value;
-        if (parseOneNumber (rest, value))
-          selectInfo.setUidValidity (value);
-      }
-      else if (option == "UNSEEN")
-      {
+        if ( parseOneNumber( rest, value ) ) {
+          selectInfo.setUidValidity( value );
+        }
+      } else if ( option == "UNSEEN" ) {
         ulong value;
-        if (parseOneNumber (rest, value))
-          selectInfo.setUnseen (value);
-      }
-      else if (option == "UIDNEXT")
-      {
+        if ( parseOneNumber( rest, value ) ) {
+          selectInfo.setUnseen( value );
+        }
+      } else if ( option == "UIDNEXT" ) {
         ulong value;
-        if (parseOneNumber (rest, value))
-          selectInfo.setUidNext (value);
+        if ( parseOneNumber( rest, value ) ) {
+          selectInfo.setUidNext( value );
+        }
       }
       break;
 
     }
-    if (rest[0] == ']')
+    if ( rest[0] == ']' ) {
       rest.pos++; //tie off ]
-    skipWS (rest);
+    }
+    skipWS( rest );
   }
 
-  if (command.isEmpty())
-  {
+  if ( command.isEmpty() ) {
     // This happens when parsing an intermediate result line (those that start with '*').
     // No state change involved, so we can stop here.
     return;
   }
 
-  switch (command[0].toLatin1 ())
-  {
+  switch ( command[0].toLatin1() ) {
   case 'A':
-    if (command == "AUTHENTICATE")
-      if (qstrncmp(result, "OK", result.size()) == 0)
+    if ( command == "AUTHENTICATE" ) {
+      if ( qstrncmp( result, "OK", result.size() ) == 0 ) {
         currentState = ISTATE_LOGIN;
+      }
+    }
     break;
 
   case 'L':
-    if (command == "LOGIN")
-      if (qstrncmp(result, "OK", result.size()) == 0)
+    if ( command == "LOGIN" ) {
+      if ( qstrncmp( result, "OK", result.size() ) == 0 ) {
         currentState = ISTATE_LOGIN;
+      }
+    }
     break;
 
   case 'E':
-    if (command == "EXAMINE")
-    {
-      if (qstrncmp(result, "OK", result.size()) == 0)
+    if ( command == "EXAMINE" ) {
+      if ( qstrncmp( result, "OK", result.size() ) == 0 ) {
         currentState = ISTATE_SELECT;
-      else
-      {
-        if (currentState == ISTATE_SELECT)
+      } else {
+        if ( currentState == ISTATE_SELECT ) {
           currentState = ISTATE_LOGIN;
+        }
         currentBox.clear();
       }
-      kDebug(7116) <<"imapParser::parseResult - current box is now" << currentBox;
+      kDebug( 7116 ) << "imapParser::parseResult - current box is now" << currentBox;
     }
     break;
 
   case 'S':
-    if (command == "SELECT")
-    {
-      if (qstrncmp(result, "OK", result.size()) == 0)
+    if ( command == "SELECT" ) {
+      if ( qstrncmp( result, "OK", result.size() ) == 0 ) {
         currentState = ISTATE_SELECT;
-      else
-      {
-        if (currentState == ISTATE_SELECT)
+      } else {
+        if ( currentState == ISTATE_SELECT ) {
           currentState = ISTATE_LOGIN;
+        }
         currentBox.clear();
       }
-      kDebug(7116) <<"imapParser::parseResult - current box is now" << currentBox;
+      kDebug( 7116 ) << "imapParser::parseResult - current box is now" << currentBox;
     }
     break;
 
   default:
     break;
   }
-
 }
 
 void imapParser::parseCapability (parseString & result)
 {
   QByteArray data = result.cstr();
   kAsciiToLower( data.data() );
-  imapCapabilities = QString::fromLatin1(data).split ( ' ', QString::SkipEmptyParts );
+  imapCapabilities = QString::fromLatin1( data ).split( ' ', QString::SkipEmptyParts );
 }
 
 void imapParser::parseFlags (parseString & result)
 {
-  selectInfo.setFlags(result.cstr());
+  selectInfo.setFlags( result.cstr() );
 }
 
 void imapParser::parseList (parseString & result)
 {
   imapList this_one;
 
-  if (result[0] != '(')
+  if ( result[0] != '(' ) {
     return;                     //not proper format for us
+  }
 
   result.pos++; // tie off (
 
   this_one.parseAttributes( result );
 
   result.pos++; // tie off )
-  skipWS (result);
+  skipWS( result );
 
-  this_one.setHierarchyDelimiter(parseLiteral(result));
-  this_one.setName(QString::fromUtf8(KIMAP::decodeImapFolderName( parseLiteral(result))));  // decode modified UTF7
+  this_one.setHierarchyDelimiter( parseLiteral( result ) );
+  this_one.setName( QString::fromUtf8( KIMAP::decodeImapFolderName( parseLiteral( result ) ) ) );  // decode modified UTF7
 
-  listResponses.append (this_one);
+  listResponses.append( this_one );
 }
 
 void imapParser::parseLsub (parseString & result)
 {
-  imapList this_one (result.cstr(), *this);
-  listResponses.append (this_one);
+  imapList this_one( result.cstr(), *this );
+  listResponses.append( this_one );
 }
 
 void imapParser::parseListRights (parseString & result)
 {
-  parseOneWord (result); // skip mailbox name
-  parseOneWord (result); // skip user id
+  parseOneWord( result ); // skip mailbox name
+  parseOneWord( result ); // skip user id
   while ( true ) {
-    const QByteArray word = parseOneWord (result);
-    if ( word.isEmpty() )
+    const QByteArray word = parseOneWord( result );
+    if ( word.isEmpty() ) {
       break;
-    lastResults.append (word);
+    }
+    lastResults.append( word );
   }
 }
 
 void imapParser::parseAcl (parseString & result)
 {
-  parseOneWord (result); // skip mailbox name
+  parseOneWord( result ); // skip mailbox name
   // The result is user1 perm1 user2 perm2 etc. The caller will sort it out.
   while ( !result.isEmpty() ) {
-    const QByteArray word = parseLiteral(result);
-    if ( word.isEmpty() )
+    const QByteArray word = parseLiteral( result );
+    if ( word.isEmpty() ) {
       break;
-    lastResults.append (word);
+    }
+    lastResults.append( word );
   }
 }
 
 void imapParser::parseAnnotation (parseString & result)
 {
-  parseOneWord (result); // skip mailbox name
-  skipWS (result);
-  parseOneWord (result); // skip entry name (we know it since we don't allow wildcards in it)
-  skipWS (result);
-  if (result.isEmpty() || result[0] != '(')
+  parseOneWord( result ); // skip mailbox name
+  skipWS( result );
+  parseOneWord( result ); // skip entry name (we know it since we don't allow wildcards in it)
+  skipWS( result );
+  if ( result.isEmpty() || result[0] != '(' ) {
     return;
+  }
   result.pos++;
-  skipWS (result);
+  skipWS( result );
   // The result is name1 value1 name2 value2 etc. The caller will sort it out.
   while ( !result.isEmpty() && result[0] != ')' ) {
-    const QByteArray word = parseLiteral (result);
-    if ( word.isEmpty() )
+    const QByteArray word = parseLiteral( result );
+    if ( word.isEmpty() ) {
       break;
-    lastResults.append (word);
+    }
+    lastResults.append( word );
   }
 }
-
 
 void imapParser::parseQuota (parseString & result)
 {
@@ -749,56 +696,60 @@ void imapParser::parseQuota (parseString & result)
   } else {
     lastResults.append( root );
   }
-  if (result.isEmpty() || result[0] != '(')
+  if ( result.isEmpty() || result[0] != '(' ) {
     return;
+  }
   result.pos++;
-  skipWS (result);
+  skipWS( result );
   QStringList triplet;
   while ( !result.isEmpty() && result[0] != ')' ) {
-    const QByteArray word = parseLiteral(result);
-    if ( word.isEmpty() )
+    const QByteArray word = parseLiteral( result );
+    if ( word.isEmpty() ) {
       break;
-    triplet.append(word);
+    }
+    triplet.append( word );
   }
-  lastResults.append( triplet.join(" ") );
+  lastResults.append( triplet.join( " " ) );
 }
 
 void imapParser::parseQuotaRoot (parseString & result)
 {
   //    quotaroot_response
   //         ::= "QUOTAROOT" SP astring *(SP astring)
-  parseOneWord (result); // skip mailbox name
-  skipWS (result);
-  if ( result.isEmpty() )
+  parseOneWord( result ); // skip mailbox name
+  skipWS( result );
+  if ( result.isEmpty() ) {
     return;
+  }
   QStringList roots;
   while ( !result.isEmpty() ) {
-    const QByteArray word = parseLiteral (result);
-    if ( word.isEmpty() )
+    const QByteArray word = parseLiteral( result );
+    if ( word.isEmpty() ) {
       break;
-    roots.append (word);
+    }
+    roots.append( word );
   }
   lastResults.append( roots.isEmpty() ? "" : roots.join( " " ) );
 }
 
 void imapParser::parseCustom (parseString & result)
 {
-  QByteArray word = parseLiteral (result, false, false);
+  QByteArray word = parseLiteral( result, false, false );
   lastResults.append( word );
 }
 
 void imapParser::parseOtherUser (parseString & result)
 {
-  lastResults.append( parseOneWord ( result ) );
+  lastResults.append( parseOneWord( result ) );
 }
 
 void imapParser::parseDelegate (parseString & result)
 {
-  const QString email = parseOneWord ( result );
+  const QString email = parseOneWord( result );
 
   QStringList rights;
   while ( !result.isEmpty() ) {
-    QByteArray word = parseLiteral ( result, false, false );
+    QByteArray word = parseLiteral( result, false, false );
     rights.append( word );
   }
 
@@ -807,123 +758,121 @@ void imapParser::parseDelegate (parseString & result)
 
 void imapParser::parseOutOfOffice (parseString & result)
 {
-  const QString state = parseOneWord (result);
-  parseOneWord (result); // skip encoding
+  const QString state = parseOneWord( result );
+  parseOneWord( result ); // skip encoding
 
-  QByteArray msg = parseLiteral (result, false, false);
+  QByteArray msg = parseLiteral( result, false, false );
 
   lastResults.append( state + '^' + QString::fromUtf8( msg ) );
 }
 
 void imapParser::parseMyRights (parseString & result)
 {
-  parseOneWord (result); // skip mailbox name
+  parseOneWord( result ); // skip mailbox name
   Q_ASSERT( lastResults.isEmpty() ); // we can only be called once
-  lastResults.append (parseOneWord (result) );
+  lastResults.append( parseOneWord( result )  );
 }
 
 void imapParser::parseSearch (parseString & result)
 {
   ulong value;
 
-  while (parseOneNumber (result, value))
-  {
-    lastResults.append (QString::number(value));
+  while ( parseOneNumber( result, value ) ) {
+    lastResults.append( QString::number( value ) );
   }
 }
 
 void imapParser::parseStatus (parseString & inWords)
 {
-  lastStatus = imapInfo ();
+  lastStatus = imapInfo();
 
-  parseLiteral(inWords);       // swallow the box
-  if (inWords[0] != '(')
+  parseLiteral( inWords );       // swallow the box
+  if ( inWords[0] != '(' ) {
     return;
+  }
 
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
-  while (!inWords.isEmpty() && inWords[0] != ')')
-  {
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
     ulong value;
 
-    QByteArray label = parseOneWord(inWords);
-    if (parseOneNumber (inWords, value))
-    {
-      if (label == "MESSAGES")
-        lastStatus.setCount (value);
-      else if (label == "RECENT")
-        lastStatus.setRecent (value);
-      else if (label == "UIDVALIDITY")
-        lastStatus.setUidValidity (value);
-      else if (label == "UNSEEN")
-        lastStatus.setUnseen (value);
-      else if (label == "UIDNEXT")
-        lastStatus.setUidNext (value);
+    QByteArray label = parseOneWord( inWords );
+    if ( parseOneNumber( inWords, value ) ) {
+      if ( label == "MESSAGES" ) {
+        lastStatus.setCount( value );
+      } else if ( label == "RECENT" ) {
+        lastStatus.setRecent( value );
+      } else if ( label == "UIDVALIDITY" ) {
+        lastStatus.setUidValidity( value );
+      } else if ( label == "UNSEEN" ) {
+        lastStatus.setUnseen( value );
+      } else if ( label == "UIDNEXT" ) {
+        lastStatus.setUidNext( value );
+      }
     }
   }
 
-  if (inWords[0] == ')')
+  if ( inWords[0] == ')' ) {
     inWords.pos++;
-  skipWS (inWords);
+  }
+  skipWS( inWords );
 }
 
 void imapParser::parseExists (ulong value, parseString & result)
 {
-  selectInfo.setCount (value);
+  selectInfo.setCount( value );
   result.pos = result.data.size();
 }
 
 void imapParser::parseExpunge (ulong value, parseString & result)
 {
-  Q_UNUSED(value);
-  Q_UNUSED(result);
+  Q_UNUSED( value );
+  Q_UNUSED( result );
 }
 
 void imapParser::parseAddressList (parseString & inWords, QList<mailAddress *>& list)
 {
-  if ( inWords.isEmpty() )
+  if ( inWords.isEmpty() ) {
     return;
-  if (inWords[0] != '(')
-  {
-    parseOneWord (inWords);     // parse NIL
   }
-  else
-  {
+  if ( inWords[0] != '(' ) {
+    parseOneWord( inWords );     // parse NIL
+  } else {
     inWords.pos++;
-    skipWS (inWords);
+    skipWS( inWords );
 
-    while (!inWords.isEmpty () && inWords[0] != ')')
-    {
-      if (inWords[0] == '(') {
+    while ( !inWords.isEmpty() && inWords[0] != ')' ) {
+      if ( inWords[0] == '(' ) {
         mailAddress *addr = new mailAddress;
-        parseAddress(inWords, *addr);
-        list.append(addr);
+        parseAddress( inWords, *addr );
+        list.append( addr );
       } else {
         break;
       }
     }
 
-    if (!inWords.isEmpty() && inWords[0] == ')')
+    if ( !inWords.isEmpty() && inWords[0] == ')' ) {
       inWords.pos++;
-    skipWS (inWords);
+    }
+    skipWS( inWords );
   }
 }
 
 const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress& retVal)
 {
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
-  retVal.setFullName(parseLiteral(inWords));
-  retVal.setCommentRaw(parseLiteral(inWords));
-  retVal.setUser(parseLiteral(inWords));
-  retVal.setHost(parseLiteral(inWords));
+  retVal.setFullName( parseLiteral( inWords ) );
+  retVal.setCommentRaw( parseLiteral( inWords ) );
+  retVal.setUser( parseLiteral( inWords ) );
+  retVal.setHost( parseLiteral( inWords ) );
 
-  if (!inWords.isEmpty() && inWords[0] == ')')
+  if ( !inWords.isEmpty() && inWords[0] == ')' ) {
     inWords.pos++;
-  skipWS (inWords);
-
+  }
+  skipWS( inWords );
   return retVal;
 }
 
@@ -931,71 +880,72 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
 {
   mailHeader *envelope = 0;
 
-  if (inWords[0] != '(')
+  if ( inWords[0] != '(' ) {
     return envelope;
+  }
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
   envelope = new mailHeader;
 
   //date
-  envelope->setDate(parseLiteral(inWords));
+  envelope->setDate( parseLiteral( inWords ) );
 
   //subject
-  envelope->setSubject(parseLiteral(inWords));
+  envelope->setSubject( parseLiteral( inWords ) );
 
   QList<mailAddress *> list;
 
   //from
-  parseAddressList(inWords, list);
-  if (!list.isEmpty()) {
-	  envelope->setFrom(*list.last());
-	  list.clear();
+  parseAddressList( inWords, list );
+  if ( !list.isEmpty() ) {
+    envelope->setFrom( *list.last() );
+    list.clear();
   }
 
   //sender
   parseAddressList(inWords, list);
-  if (!list.isEmpty()) {
-	  envelope->setSender(*list.last());
-	  list.clear();
+  if ( !list.isEmpty() ) {
+    envelope->setSender( *list.last() );
+    list.clear();
   }
 
   //reply-to
-  parseAddressList(inWords, list);
-  if (!list.isEmpty()) {
-	  envelope->setReplyTo(*list.last());
-	  list.clear();
+  parseAddressList( inWords, list );
+  if ( !list.isEmpty() ) {
+    envelope->setReplyTo( *list.last() );
+    list.clear();
   }
 
   //to
-  parseAddressList (inWords, envelope->to());
+  parseAddressList( inWords, envelope->to() );
 
   //cc
-  parseAddressList (inWords, envelope->cc());
+  parseAddressList( inWords, envelope->cc() );
 
   //bcc
-  parseAddressList (inWords, envelope->bcc());
+  parseAddressList( inWords, envelope->bcc() );
 
   //in-reply-to
-  envelope->setInReplyTo(parseLiteral(inWords));
+  envelope->setInReplyTo( parseLiteral( inWords ) );
 
   //message-id
-  envelope->setMessageId(parseLiteral(inWords));
+  envelope->setMessageId( parseLiteral( inWords ) );
 
   // see if we have more to come
-  while (!inWords.isEmpty () && inWords[0] != ')')
-  {
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
     //eat the extensions to this part
-    if (inWords[0] == '(')
-      parseSentence (inWords);
-    else
-      parseLiteral (inWords);
+    if ( inWords[0] == '(' ) {
+      parseSentence( inWords );
+    } else {
+      parseLiteral( inWords );
+    }
   }
 
-  if (!inWords.isEmpty() && inWords[0] == ')')
+  if ( !inWords.isEmpty() && inWords[0] == ')' ) {
     inWords.pos++;
-  skipWS (inWords);
-
+  }
+  skipWS( inWords );
   return envelope;
 }
 
@@ -1006,31 +956,27 @@ QHash < QByteArray, QString > imapParser::parseDisposition (parseString & inWord
   QByteArray disposition;
   QHash < QByteArray, QString > retVal;
 
-  if (inWords[0] != '(')
-  {
+  if ( inWords[0] != '(' ) {
     //disposition only
-    disposition = parseOneWord (inWords);
-  }
-  else
-  {
+    disposition = parseOneWord( inWords );
+  } else {
     inWords.pos++;
-    skipWS (inWords);
+    skipWS( inWords );
 
     //disposition
-    disposition = parseOneWord (inWords);
+    disposition = parseOneWord( inWords );
 
-    retVal = parseParameters (inWords);
-    if (inWords[0] != ')')
+    retVal = parseParameters( inWords );
+    if ( inWords[0] != ')' ) {
       return retVal;
+    }
     inWords.pos++;
-    skipWS (inWords);
+    skipWS( inWords );
   }
 
-  if (!disposition.isEmpty ())
-  {
-    retVal.insert ("content-disposition", QString(disposition));
+  if ( !disposition.isEmpty() ) {
+    retVal.insert( "content-disposition", QString( disposition ) );
   }
-
   return retVal;
 }
 
@@ -1040,29 +986,25 @@ QHash < QByteArray, QString > imapParser::parseParameters (parseString & inWords
 {
   QHash < QByteArray, QString > retVal;
 
-  if (inWords[0] != '(')
-  {
+  if ( inWords[0] != '(' ) {
     //better be NIL
-    parseOneWord (inWords);
-  }
-  else
-  {
+    parseOneWord( inWords );
+  } else {
     inWords.pos++;
-    skipWS (inWords);
+    skipWS( inWords );
 
-    while (!inWords.isEmpty () && inWords[0] != ')')
-    {
-      const QByteArray l1 = parseLiteral(inWords);
-      const QByteArray l2 = parseLiteral(inWords);
-      retVal.insert (l1.toLower(), QString(l2));
+    while ( !inWords.isEmpty() && inWords[0] != ')' ) {
+      const QByteArray l1 = parseLiteral( inWords );
+      const QByteArray l2 = parseLiteral( inWords );
+      retVal.insert( l1.toLower(), QString( l2 ) );
     }
 
-    if (inWords[0] != ')')
+    if ( inWords[0] != ')' ) {
       return retVal;
+    }
     inWords.pos++;
-    skipWS (inWords);
+    skipWS( inWords );
   }
-
   return retVal;
 }
 
@@ -1074,111 +1016,108 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   QHash < QByteArray, QString > parameters;
   ulong size;
 
-  if (inWords[0] != '(')
+  if ( inWords[0] != '(' ) {
     return 0;
+  }
 
-  if (!localPart)
+  if ( !localPart ) {
     localPart = new mimeHeader;
+  }
 
-  localPart->setPartSpecifier (inSection);
+  localPart->setPartSpecifier( inSection );
 
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
   //body type
-  typeStr = parseLiteral(inWords);
+  typeStr = parseLiteral( inWords );
 
   //body subtype
-  subtype = parseLiteral(inWords);
+  subtype = parseLiteral( inWords );
 
-  localPart->setType (typeStr + '/' + subtype);
+  localPart->setType( typeStr + '/' + subtype );
 
   //body parameter parenthesized list
-  parameters = parseParameters (inWords);
+  parameters = parseParameters( inWords );
   {
-    QHashIterator < QByteArray, QString > it (parameters);
+    QHashIterator < QByteArray, QString > it( parameters );
 
-    while (it.hasNext ())
-    {
+    while ( it.hasNext() ) {
       it.next();
-      localPart->setTypeParm (it.key (), it.value ());
+      localPart->setTypeParm( it.key(), it.value() );
     }
-    parameters.clear ();
+    parameters.clear();
   }
 
   //body id
-  localPart->setID (parseLiteral(inWords));
+  localPart->setID( parseLiteral( inWords ) );
 
   //body description
-  localPart->setDescription (parseLiteral(inWords));
+  localPart->setDescription( parseLiteral( inWords ) );
 
   //body encoding
-  localPart->setEncoding (parseLiteral(inWords));
+  localPart->setEncoding( parseLiteral( inWords ) );
 
   //body size
-  if (parseOneNumber (inWords, size))
-    localPart->setLength (size);
+  if ( parseOneNumber( inWords, size ) ) {
+    localPart->setLength( size );
+  }
 
   // type specific extensions
-  if (localPart->getType().toUpper() == "MESSAGE/RFC822")
-  {
+  if ( localPart->getType().toUpper() == "MESSAGE/RFC822" ) {
     //envelope structure
-    mailHeader *envelope = parseEnvelope (inWords);
+    mailHeader *envelope = parseEnvelope( inWords );
 
     //body structure
-    parseBodyStructure (inWords, inSection, envelope);
+    parseBodyStructure( inWords, inSection, envelope );
 
-    localPart->setNestedMessage (envelope);
+    localPart->setNestedMessage( envelope );
 
     //text lines
     ulong lines;
-    parseOneNumber (inWords, lines);
-  }
-  else
-  {
-    if (typeStr ==  "TEXT")
-    {
+    parseOneNumber( inWords, lines );
+  } else {
+    if ( typeStr ==  "TEXT" ) {
       //text lines
       ulong lines;
-      parseOneNumber (inWords, lines);
+      parseOneNumber( inWords, lines );
     }
 
     // md5
-    parseLiteral(inWords);
+    parseLiteral( inWords );
 
     // body disposition
-    parameters = parseDisposition (inWords);
+    parameters = parseDisposition( inWords );
     {
       QString disposition = parameters["content-disposition"];
 
-      localPart->setDisposition (disposition.toAscii ());
-      QHashIterator < QByteArray, QString > it (parameters);
-      while (it.hasNext ())
-      {
+      localPart->setDisposition( disposition.toAscii() );
+      QHashIterator < QByteArray, QString > it( parameters );
+      while ( it.hasNext() ) {
         it.next();
-        localPart->setDispositionParm (it.key (), it.value ());
+        localPart->setDispositionParm( it.key(), it.value() );
       }
-      parameters.clear ();
+      parameters.clear();
     }
 
     // body language
-    parseSentence (inWords);
+    parseSentence( inWords );
   }
 
   // see if we have more to come
-  while (!inWords.isEmpty () && inWords[0] != ')')
-  {
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
     //eat the extensions to this part
-    if (inWords[0] == '(')
-      parseSentence (inWords);
-    else
-      parseLiteral(inWords);
+    if ( inWords[0] == '(' ) {
+      parseSentence( inWords );
+    } else {
+      parseLiteral( inWords );
+    }
   }
 
-  if (inWords[0] == ')')
+  if ( inWords[0] == ')' ) {
     inWords.pos++;
-  skipWS (inWords);
-
+  }
+  skipWS( inWords );
   return localPart;
 }
 
@@ -1186,8 +1125,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
   QString & inSection, mimeHeader * localPart)
 {
   bool init = false;
-  if (inSection.isEmpty())
-  {
+  if ( inSection.isEmpty() ) {
     // first run
     init = true;
     // assume one part
@@ -1195,406 +1133,372 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
   }
   int section = 0;
 
-  if (inWords[0] != '(')
-  {
+  if ( inWords[0] != '(' ) {
     // skip ""
-    parseOneWord (inWords);
+    parseOneWord( inWords );
     return 0;
   }
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
-  if (inWords[0] == '(')
-  {
+  if ( inWords[0] == '(' ) {
     QByteArray subtype;
     QHash< QByteArray, QString > parameters;
     QString outSection;
 
-    if (!localPart)
+    if ( !localPart ) {
       localPart = new mimeHeader;
-    else
-    {
+    } else {
       // might be filled from an earlier run
-      localPart->clearNestedParts ();
-      localPart->clearTypeParameters ();
-      localPart->clearDispositionParameters ();
+      localPart->clearNestedParts();
+      localPart->clearTypeParameters();
+      localPart->clearDispositionParameters();
       // an envelope was passed in so this is the multipart header
       outSection = inSection + ".HEADER";
     }
-    if (inWords[0] == '(' && init)
+    if ( inWords[0] == '(' && init ) {
       inSection = '0';
+    }
 
     // set the section
     if ( !outSection.isEmpty() ) {
-      localPart->setPartSpecifier(outSection);
+      localPart->setPartSpecifier( outSection );
     } else {
-      localPart->setPartSpecifier(inSection);
+      localPart->setPartSpecifier( inSection );
     }
 
     // is multipart (otherwise it is a simplepart and handled later)
-    while (inWords[0] == '(')
-    {
-      outSection = QString::number(++section);
-      if (!init)
+    while ( inWords[0] == '(' ) {
+      outSection = QString::number( ++section );
+      if ( !init ) {
         outSection = inSection + '.' + outSection;
-      mimeHeader *subpart = parseBodyStructure (inWords, outSection, 0);
-      localPart->addNestedPart (subpart);
+      }
+      mimeHeader *subpart = parseBodyStructure( inWords, outSection, 0 );
+      localPart->addNestedPart( subpart );
     }
 
     // fetch subtype
-    subtype = parseOneWord (inWords);
+    subtype = parseOneWord( inWords );
 
-    localPart->setType ("MULTIPART/" + subtype);
+    localPart->setType( "MULTIPART/" + subtype );
 
     // fetch parameters
-    parameters = parseParameters (inWords);
+    parameters = parseParameters( inWords );
     {
-      QHashIterator < QByteArray, QString > it (parameters);
+      QHashIterator < QByteArray, QString > it( parameters );
 
-      while (it.hasNext ())
-      {
+      while ( it.hasNext() ) {
         it.next();
-        localPart->setTypeParm (it.key (), it.value ());
+        localPart->setTypeParm( it.key(), it.value() );
       }
-      parameters.clear ();
+      parameters.clear();
     }
 
     // body disposition
-    parameters = parseDisposition (inWords);
+    parameters = parseDisposition( inWords );
     {
       QString disposition = parameters["content-disposition"];
 
-      localPart->setDisposition (disposition.toAscii ());
-      QHashIterator < QByteArray, QString > it (parameters);
-      while (it.hasNext ())
-      {
+      localPart->setDisposition( disposition.toAscii() );
+      QHashIterator < QByteArray, QString > it( parameters );
+      while ( it.hasNext() ) {
         it.next();
-        localPart->setDispositionParm (it.key (), it.value ());
+        localPart->setDispositionParm( it.key(), it.value() );
       }
-      parameters.clear ();
+      parameters.clear();
     }
 
     // body language
-    parseSentence (inWords);
+    parseSentence( inWords );
 
-  }
-  else
-  {
+  } else {
     // is simple part
     inWords.pos--;
     inWords.data[inWords.pos] = '('; //fake a sentence
-    if ( localPart )
+    if ( localPart ) {
       inSection = inSection + ".1";
-    localPart = parseSimplePart (inWords, inSection, localPart);
+    }
+    localPart = parseSimplePart( inWords, inSection, localPart );
     inWords.pos--;
     inWords.data[inWords.pos] = ')'; //remove fake
   }
 
   // see if we have more to come
-  while (!inWords.isEmpty () && inWords[0] != ')')
-  {
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
     //eat the extensions to this part
-    if (inWords[0] == '(')
-      parseSentence (inWords);
-    else
-      parseLiteral(inWords);
+    if ( inWords[0] == '(' ) {
+      parseSentence( inWords );
+    } else {
+      parseLiteral( inWords );
+    }
   }
 
-  if (inWords[0] == ')')
+  if ( inWords[0] == ')' ) {
     inWords.pos++;
-  skipWS (inWords);
-
+  }
+  skipWS( inWords );
   return localPart;
 }
 
 void imapParser::parseBody (parseString & inWords)
 {
   // see if we got a part specifier
-  if (inWords[0] == '[')
-  {
+  if ( inWords[0] == '[' ) {
     QByteArray specifier;
     QByteArray label;
     inWords.pos++;
 
-    specifier = parseOneWord (inWords, true);
+    specifier = parseOneWord( inWords, true );
 
-    if (inWords[0] == '(')
-    {
+    if ( inWords[0] == '(' ) {
       inWords.pos++;
 
-      while (!inWords.isEmpty () && inWords[0] != ')')
-      {
-        label = parseOneWord (inWords);
+      while ( !inWords.isEmpty() && inWords[0] != ')' ) {
+        label = parseOneWord( inWords );
       }
 
-      if (inWords[0] == ')')
+      if ( inWords[0] == ')' ) {
         inWords.pos++;
+      }
     }
-    if (inWords[0] == ']')
+    if ( inWords[0] == ']' ) {
       inWords.pos++;
-    skipWS (inWords);
+    }
+    skipWS( inWords );
 
     // parse the header
-    if (qstrncmp(specifier, "0", specifier.size()) == 0)
-    {
+    if ( qstrncmp( specifier, "0", specifier.size() ) == 0 ) {
       mailHeader *envelope = 0;
-      if (lastHandled)
-        envelope = lastHandled->getHeader ();
+      if ( lastHandled ) {
+        envelope = lastHandled->getHeader();
+      }
 
-      if (!envelope || seenUid.isEmpty ())
-      {
-        kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
+      if ( !envelope || seenUid.isEmpty() ) {
+        kDebug( 7116 ) << "imapParser::parseBody - discarding" << envelope << seenUid.toAscii();
         // don't know where to put it, throw it away
-        parseLiteral(inWords, true);
-      }
-      else
-      {
-        kDebug(7116) <<"imapParser::parseBody - reading" << envelope << seenUid.toAscii ();
+        parseLiteral( inWords, true );
+      } else {
+        kDebug( 7116 ) << "imapParser::parseBody - reading" << envelope << seenUid.toAscii();
         // fill it up with data
-        QString theHeader = parseLiteral(inWords, true);
+        QString theHeader = parseLiteral( inWords, true );
         mimeIOQString myIO;
 
-        myIO.setString (theHeader);
-        envelope->parseHeader (myIO);
-
+        myIO.setString( theHeader );
+        envelope->parseHeader( myIO );
       }
-    }
-    else if (qstrncmp(specifier, "HEADER.FIELDS", specifier.size()) == 0)
-    {
-      // BODY[HEADER.FIELDS (References)] {n}
-      //kDebug(7116) <<"imapParser::parseBody - HEADER.FIELDS:"
+    } else if ( qstrncmp( specifier, "HEADER.FIELDS", specifier.size() ) == 0 ) {
+      // BODY[HEADER.FIELDS(References)] {n}
+      //kDebug( 7116 ) << "imapParser::parseBody - HEADER.FIELDS:"
       // << QCString(label.data(), label.size()+1);
-      if (qstrncmp(label, "REFERENCES", label.size()) == 0)
-      {
+      if ( qstrncmp( label, "REFERENCES", label.size() ) == 0 ) {
        mailHeader *envelope = 0;
-       if (lastHandled)
-         envelope = lastHandled->getHeader ();
+       if ( lastHandled ) {
+         envelope = lastHandled->getHeader();
+       }
 
-       if (!envelope || seenUid.isEmpty ())
-       {
-         kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
+       if ( !envelope || seenUid.isEmpty() ) {
+         kDebug( 7116 ) << "imapParser::parseBody - discarding" << envelope << seenUid.toAscii();
          // don't know where to put it, throw it away
-         parseLiteral (inWords, true);
+         parseLiteral( inWords, true );
+       } else {
+         QByteArray references = parseLiteral( inWords, true );
+         int start = references.indexOf( '<' );
+         int end = references.lastIndexOf( '>' );
+         if ( start < end ) {
+           references = references.mid( start, end - start + 1 );
+         }
+         envelope->setReferences( references.simplified() );
        }
-       else
-       {
-         QByteArray references = parseLiteral(inWords, true);
-         int start = references.indexOf ('<');
-         int end = references.lastIndexOf ('>');
-         if (start < end)
-           references = references.mid (start, end - start + 1);
-         envelope->setReferences(references.simplified());
-       }
+      } else { // not a header we care about throw it away
+        parseLiteral( inWords, true );
       }
-      else
-      { // not a header we care about throw it away
-        parseLiteral(inWords, true);
-      }
-    }
-    else
-    {
-      if (specifier.contains(".MIME") )
-      {
+    } else {
+      if ( specifier.contains( ".MIME" )  ) {
         mailHeader *envelope = new mailHeader;
-        QString theHeader = parseLiteral(inWords, false);
+        QString theHeader = parseLiteral( inWords, false );
         mimeIOQString myIO;
-        myIO.setString (theHeader);
-        envelope->parseHeader (myIO);
-        if (lastHandled)
-          lastHandled->setHeader (envelope);
+        myIO.setString( theHeader );
+        envelope->parseHeader( myIO );
+        if ( lastHandled ) {
+          lastHandled->setHeader( envelope );
+        }
         return;
       }
       // throw it away
-      kDebug(7116) <<"imapParser::parseBody - discarding" << seenUid.toAscii ();
-      parseLiteral(inWords, true);
+      kDebug( 7116 ) << "imapParser::parseBody - discarding" << seenUid.toAscii();
+      parseLiteral( inWords, true );
     }
-
-  }
-  else // no part specifier
-  {
+  } else { // no part specifier
     mailHeader *envelope = 0;
-    if (lastHandled)
-      envelope = lastHandled->getHeader ();
-
-    if (!envelope || seenUid.isEmpty ())
-    {
-      kDebug(7116) <<"imapParser::parseBody - discarding" << envelope << seenUid.toAscii ();
-      // don't know where to put it, throw it away
-      parseSentence (inWords);
+    if ( lastHandled ) {
+      envelope = lastHandled->getHeader();
     }
-    else
-    {
-      kDebug(7116) <<"imapParser::parseBody - reading" << envelope << seenUid.toAscii ();
+
+    if ( !envelope || seenUid.isEmpty() ) {
+      kDebug( 7116 ) << "imapParser::parseBody - discarding" << envelope << seenUid.toAscii();
+      // don't know where to put it, throw it away
+      parseSentence( inWords );
+    } else {
+      kDebug( 7116 ) << "imapParser::parseBody - reading" << envelope << seenUid.toAscii();
       // fill it up with data
       QString section;
-      mimeHeader *body = parseBodyStructure (inWords, section, envelope);
-      if (body != envelope)
+      mimeHeader *body = parseBodyStructure( inWords, section, envelope );
+      if ( body != envelope ) {
         delete body;
+      }
     }
   }
 }
 
 void imapParser::parseFetch (ulong /* value */, parseString & inWords)
 {
-  if (inWords[0] != '(')
+  if ( inWords[0] != '(' ) {
     return;
+  }
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 
   delete lastHandled;
   lastHandled = 0;
 
-  while (!inWords.isEmpty () && inWords[0] != ')')
-  {
-    if (inWords[0] == '(')
-      parseSentence (inWords);
-    else
-    {
-      const QByteArray word = parseLiteral(inWords, false, true);
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
+    if ( inWords[0] == '(' ) {
+      parseSentence( inWords );
+    } else {
+      const QByteArray word = parseLiteral( inWords, false, true );
 
-      switch (word[0])
-      {
+      switch ( word[0] ) {
       case 'E':
-        if (word == "ENVELOPE")
-        {
+        if ( word == "ENVELOPE" ) {
           mailHeader *envelope = 0;
 
-          if (lastHandled)
-            envelope = lastHandled->getHeader ();
-          else
+          if ( lastHandled ) {
+            envelope = lastHandled->getHeader();
+          } else {
             lastHandled = new imapCache();
+          }
 
-          if (envelope && !envelope->getMessageId ().isEmpty ())
-          {
+          if ( envelope && !envelope->getMessageId().isEmpty() ) {
             // we have seen this one already
             // or don't know where to put it
-            parseSentence (inWords);
-          }
-          else
-          {
-            envelope = parseEnvelope (inWords);
-            if (envelope)
-            {
-              envelope->setPartSpecifier (seenUid + ".0");
-              lastHandled->setHeader (envelope);
-              lastHandled->setUid (seenUid.toULong ());
+            parseSentence( inWords );
+          } else {
+            envelope = parseEnvelope( inWords );
+            if ( envelope ) {
+              envelope->setPartSpecifier( seenUid + ".0" );
+              lastHandled->setHeader( envelope );
+              lastHandled->setUid( seenUid.toULong() );
             }
           }
         }
         break;
 
       case 'B':
-        if (word == "BODY")
-        {
-          parseBody (inWords);
-        }
-        else if (word == "BODY[]" )
-        {
+        if ( word == "BODY" ) {
+          parseBody( inWords );
+        } else if ( word == "BODY[]"  ) {
           // Do the same as with "RFC822"
-          parseLiteral(inWords, true);
-        }
-        else if (word == "BODYSTRUCTURE")
-        {
+          parseLiteral( inWords, true );
+        } else if ( word == "BODYSTRUCTURE" ) {
           mailHeader *envelope = 0;
 
-          if (lastHandled)
-            envelope = lastHandled->getHeader ();
+          if ( lastHandled ) {
+            envelope = lastHandled->getHeader();
+          }
 
           // fill it up with data
           QString section;
-          mimeHeader *body =
-            parseBodyStructure (inWords, section, envelope);
+          mimeHeader *body = parseBodyStructure( inWords, section, envelope );
           QByteArray data;
           QDataStream stream( &data, QIODevice::WriteOnly );
-          if ( body )
-            body->serialize(stream);
-          parseRelay(data);
-
+          if ( body ) {
+            body->serialize( stream );
+          }
+          parseRelay( data );
           delete body;
         }
         break;
 
       case 'U':
-        if (word == "UID")
-        {
-          seenUid = parseOneWord(inWords);
+        if ( word == "UID" ) {
+          seenUid = parseOneWord( inWords );
           mailHeader *envelope = 0;
-          if (lastHandled)
-            envelope = lastHandled->getHeader ();
-          else
+          if ( lastHandled ) {
+            envelope = lastHandled->getHeader();
+          } else {
             lastHandled = new imapCache();
+          }
 
-          if (seenUid.isEmpty ())
-          {
+          if ( seenUid.isEmpty() ) {
             // unknown what to do
-            kDebug(7116) <<"imapParser::parseFetch - UID empty";
+            kDebug( 7116 ) << "imapParser::parseFetch - UID empty";
+          } else {
+            lastHandled->setUid( seenUid.toULong() );
           }
-          else
-          {
-            lastHandled->setUid (seenUid.toULong ());
+          if ( envelope ) {
+            envelope->setPartSpecifier( seenUid );
           }
-          if (envelope)
-            envelope->setPartSpecifier (seenUid);
         }
         break;
 
       case 'R':
-        if (word == "RFC822.SIZE")
-        {
+        if ( word == "RFC822.SIZE" ) {
           ulong size;
-          parseOneNumber (inWords, size);
+          parseOneNumber( inWords, size );
 
-          if (!lastHandled) lastHandled = new imapCache();
-          lastHandled->setSize (size);
-        }
-        else if (word.startsWith("RFC822")) //krazy:exclude=strings
-        {
+          if ( !lastHandled ) {
+            lastHandled = new imapCache();
+          }
+          lastHandled->setSize( size );
+        } else if ( word.startsWith( "RFC822" ) ) { //krazy:exclude=strings
           // might be RFC822 RFC822.TEXT RFC822.HEADER
-          parseLiteral(inWords, true);
+          parseLiteral( inWords, true );
         }
         break;
 
       case 'I':
-        if (word == "INTERNALDATE")
-        {
-          const QByteArray date = parseOneWord(inWords);
-          if (!lastHandled) lastHandled = new imapCache();
-          lastHandled->setDate(date);
+        if ( word == "INTERNALDATE" ) {
+          const QByteArray date = parseOneWord( inWords );
+          if ( !lastHandled ) {
+            lastHandled = new imapCache();
+          }
+          lastHandled->setDate( date );
         }
         break;
 
       case 'F':
-        if (word == "FLAGS")
-        {
-	  //kDebug(7116) <<"GOT FLAGS" << inWords.cstr();
-          if (!lastHandled) lastHandled = new imapCache();
-          lastHandled->setFlags (imapInfo::_flags (inWords.cstr()));
+        if ( word == "FLAGS" ) {
+          //kDebug( 7116 ) << "GOT FLAGS" << inWords.cstr();
+          if ( !lastHandled ) {
+            lastHandled = new imapCache();
+          }
+          lastHandled->setFlags( imapInfo::_flags( inWords.cstr() ) );
         }
         break;
 
       default:
-        parseLiteral(inWords);
+        parseLiteral( inWords );
         break;
       }
     }
   }
 
   // see if we have more to come
-  while (!inWords.isEmpty () && inWords[0] != ')')
-  {
+  while ( !inWords.isEmpty() && inWords[0] != ')' ) {
     //eat the extensions to this part
-    if (inWords[0] == '(')
-      parseSentence (inWords);
-    else
-      parseLiteral(inWords);
+    if ( inWords[0] == '(' ) {
+      parseSentence( inWords );
+    } else {
+      parseLiteral( inWords );
+    }
   }
 
-  if (inWords.isEmpty() || inWords[0] != ')')
+  if ( inWords.isEmpty() || inWords[0] != ')' ) {
     return;
+  }
   inWords.pos++;
-  skipWS (inWords);
+  skipWS( inWords );
 }
-
 
 // default parser
 void imapParser::parseSentence (parseString & inWords)
@@ -1604,14 +1508,12 @@ void imapParser::parseSentence (parseString & inWords)
 
   //find the first nesting parentheses
 
-  while (!inWords.isEmpty () && (stack != 0 || first))
-  {
+  while ( !inWords.isEmpty() && ( stack != 0 || first ) ) {
     first = false;
-    skipWS (inWords);
+    skipWS( inWords );
 
     unsigned char ch = inWords[0];
-    switch (ch)
-    {
+    switch ( ch ) {
     case '(':
       inWords.pos++;
       ++stack;
@@ -1629,28 +1531,30 @@ void imapParser::parseSentence (parseString & inWords)
       --stack;
       break;
     default:
-      parseLiteral(inWords);
-      skipWS (inWords);
+      parseLiteral( inWords );
+      skipWS( inWords );
       break;
     }
   }
-  skipWS (inWords);
+  skipWS( inWords );
 }
 
 void imapParser::parseRecent (ulong value, parseString & result)
 {
-  selectInfo.setRecent (value);
+  selectInfo.setRecent( value );
   result.pos = result.data.size();
 }
 
 void imapParser::parseNamespace (parseString & result)
 {
-  if ( result[0] != '(' )
+  if ( result[0] != '(' ) {
     return;
+  }
 
   QString delimEmpty;
-  if ( namespaceToDelimiter.contains( QString() ) )
+  if ( namespaceToDelimiter.contains( QString() ) ) {
     delimEmpty = namespaceToDelimiter[QString()];
+  }
 
   namespaceToDelimiter.clear();
   imapNamespaces.clear();
@@ -1658,13 +1562,10 @@ void imapParser::parseNamespace (parseString & result)
   // remember what section we're in (user, other users, shared)
   int ns = -1;
   bool personalAvailable = false;
-  while ( !result.isEmpty() )
-  {
-    if ( result[0] == '(' )
-    {
+  while ( !result.isEmpty() ) {
+    if ( result[0] == '(' ) {
       result.pos++; // tie off (
-      if ( result[0] == '(' )
-      {
+      if ( result[0] == '(' ) {
         // new namespace section
         result.pos++; // tie off (
         ++ns;
@@ -1673,9 +1574,8 @@ void imapParser::parseNamespace (parseString & result)
       QString prefix = QString::fromLatin1( parseOneWord( result ) );
       // delimiter
       QString delim = QString::fromLatin1( parseOneWord( result ) );
-      kDebug(7116) <<"imapParser::parseNamespace ns='" << prefix <<"',delim='" << delim <<"'";
-      if ( ns == 0 )
-      {
+      kDebug( 7116 ) << "imapParser::parseNamespace ns='" << prefix << "',delim='" << delim << "'";
+      if ( ns == 0 ) {
         // at least one personal ns
         personalAvailable = true;
       }
@@ -1689,12 +1589,10 @@ void imapParser::parseNamespace (parseString & result)
 
       result.pos++; // tie off )
       skipWS( result );
-    } else if ( result[0] == ')' )
-    {
+    } else if ( result[0] == ')' ) {
       result.pos++; // tie off )
       skipWS( result );
-    } else if ( result[0] == 'N' )
-    {
+    } else if ( result[0] == 'N' ) {
       // drop NIL
       ++ns;
       parseOneWord( result );
@@ -1706,10 +1604,9 @@ void imapParser::parseNamespace (parseString & result)
   if ( !delimEmpty.isEmpty() ) {
     // remember default delimiter
     namespaceToDelimiter[QString()] = delimEmpty;
-    if ( !personalAvailable )
-    {
+    if ( !personalAvailable ) {
       // at least one personal ns would be nice
-      kDebug(7116) <<"imapParser::parseNamespace - registering own personal ns";
+      kDebug( 7116 ) << "imapParser::parseNamespace - registering own personal ns";
       QString nsentry = "0==" + delimEmpty;
       imapNamespaces.append( nsentry );
     }
@@ -1720,103 +1617,94 @@ int imapParser::parseLoop ()
 {
   parseString result;
 
-  if (!parseReadLine(result.data)) return -1;
-
-  //kDebug(7116) << result.cstr(); // includes \n
-
-  if (result.data.isEmpty())
-    return 0;
-  if (!sentQueue.count ())
-  {
-    // maybe greeting or BYE everything else SHOULD not happen, use NOOP or IDLE
-    kDebug(7116) <<"imapParser::parseLoop - unhandledResponse:" << result.cstr();
-    unhandled << result.cstr();
+  if ( !parseReadLine( result.data ) ) {
+    return -1;
   }
-  else
-  {
-    CommandPtr current = sentQueue.at (0);
-    switch (result[0])
-    {
+
+  //kDebug( 7116 ) << result.cstr(); // includes \n
+
+  if ( result.data.isEmpty() ) {
+    return 0;
+  }
+  if ( !sentQueue.count() ) {
+    // maybe greeting or BYE everything else SHOULD not happen, use NOOP or IDLE
+    kDebug( 7116 ) << "imapParser::parseLoop - unhandledResponse:" << result.cstr();
+    unhandled << result.cstr();
+  } else {
+    CommandPtr current = sentQueue.at( 0 );
+    switch ( result[0] ) {
     case '*':
-      result.data.resize(result.data.size() - 2);  // tie off CRLF
-      parseUntagged (result);
+      result.data.resize( result.data.size() - 2 );  // tie off CRLF
+      parseUntagged( result );
       break;
     case '+':
       continuation = result.data;
       break;
     default:
       {
-        QByteArray tag = parseLiteral(result);
-        if (current->id() == tag.data())
-        {
-          result.data.resize(result.data.size() - 2);  // tie off CRLF
-          QByteArray resultCode = parseLiteral (result); //the result
-          current->setResult (resultCode);
-          current->setResultInfo(result.cstr());
-          current->setComplete ();
+        QByteArray tag = parseLiteral( result );
+        if ( current->id() == tag.data() ) {
+          result.data.resize( result.data.size() - 2 );  // tie off CRLF
+          QByteArray resultCode = parseLiteral( result ); //the result
+          current->setResult( resultCode );
+          current->setResultInfo( result.cstr() );
+          current->setComplete();
 
-          sentQueue.removeAll (current);
-          completeQueue.append (current);
-          if (result.length())
-            parseResult (resultCode, result, current->command());
-        }
-        else
-        {
-          kDebug(7116) <<"imapParser::parseLoop - unknown tag '" << tag <<"'";
+          sentQueue.removeAll( current );
+          completeQueue.append( current );
+          if ( result.length() ) {
+            parseResult( resultCode, result, current->command() );
+          }
+        } else {
+          kDebug( 7116 ) << "imapParser::parseLoop - unknown tag '" << tag << "'";
           QByteArray cstr = tag + ' ' + result.cstr();
           result.data = cstr;
           result.pos = 0;
-          result.data.resize(cstr.length());
+          result.data.resize( cstr.length() );
         }
       }
       break;
     }
   }
-
   return 1;
 }
 
 void
 imapParser::parseRelay (const QByteArray & buffer)
 {
-  Q_UNUSED(buffer);
-  qWarning
-    ("imapParser::parseRelay - virtual function not reimplemented - data lost");
+  Q_UNUSED( buffer );
+  qWarning( "imapParser::parseRelay - virtual function not reimplemented - data lost" );
 }
 
 void
 imapParser::parseRelay (ulong len)
 {
-  Q_UNUSED(len);
-  qWarning
-    ("imapParser::parseRelay - virtual function not reimplemented - announcement lost");
+  Q_UNUSED( len );
+  qWarning( "imapParser::parseRelay - virtual function not reimplemented - announcement lost" );
 }
 
 bool imapParser::parseRead (QByteArray & buffer, long len, long relay)
 {
-  Q_UNUSED(buffer);
-  Q_UNUSED(len);
-  Q_UNUSED(relay);
-  qWarning
-    ("imapParser::parseRead - virtual function not reimplemented - no data read");
+  Q_UNUSED( buffer );
+  Q_UNUSED( len );
+  Q_UNUSED( relay );
+  qWarning( "imapParser::parseRead - virtual function not reimplemented - no data read" );
   return false;
 }
 
 bool imapParser::parseReadLine (QByteArray & buffer, long relay)
 {
-  Q_UNUSED(buffer);
-  Q_UNUSED(relay);
-  qWarning
-    ("imapParser::parseReadLine - virtual function not reimplemented - no data read");
+  Q_UNUSED( buffer );
+  Q_UNUSED( relay );
+  qWarning( "imapParser::parseReadLine - virtual function not reimplemented - no data read" );
   return false;
 }
 
 void
 imapParser::parseWriteLine (const QString & str)
 {
-  Q_UNUSED(str);
-  qWarning
-    ("imapParser::parseWriteLine - virtual function not reimplemented - no data written");
+  Q_UNUSED( str );
+  qWarning( "imapParser::parseWriteLine - virtual function not reimplemented - no data written" );
 }
 
 void
@@ -1825,128 +1713,123 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
 {
   QStringList parameters;
 
-  _box = _url.path ();
-  kDebug(7116) <<"imapParser::parseURL" << _box;
-  int paramStart = _box.indexOf("/;");
-  if ( paramStart > -1 )
-  {
-    QString paramString = _box.right( _box.length() - paramStart-2 );
-    parameters = paramString.split (';', QString::SkipEmptyParts);  //split parameters
+  _box = _url.path();
+  kDebug( 7116 ) << "imapParser::parseURL" << _box;
+  int paramStart = _box.indexOf( "/;" );
+  if ( paramStart > -1 ) {
+    QString paramString = _box.right( _box.length() - paramStart - 2 );
+    parameters = paramString.split( ';', QString::SkipEmptyParts );  //split parameters
     _box.truncate( paramStart ); // strip parameters
   }
   // extract parameters
-  for (QStringList::ConstIterator it (parameters.constBegin ());
-       it != parameters.constEnd (); ++it)
-  {
-    QString temp = (*it);
+  for ( QStringList::ConstIterator it( parameters.constBegin() );
+       it != parameters.constEnd(); ++it ) {
+    QString temp = ( *it );
 
     // if we have a '/' separator we'll just nuke it
-    int pt = temp.indexOf ('/');
-    if (pt > 0)
-      temp.truncate(pt);
-    if (temp.startsWith(QLatin1String("section="), Qt::CaseInsensitive))
-      _section = temp.right (temp.length () - 8);
-    else if (temp.startsWith(QLatin1String("type="), Qt::CaseInsensitive))
-      _type = temp.right (temp.length () - 5);
-    else if (temp.startsWith(QLatin1String("uid="), Qt::CaseInsensitive))
-      _uid = temp.right (temp.length () - 4);
-    else if (temp.startsWith(QLatin1String("uidvalidity="), Qt::CaseInsensitive))
-      _validity = temp.right (temp.length () - 12);
-    else if (temp.startsWith(QLatin1String("info="), Qt::CaseInsensitive))
-      _info = temp.right (temp.length () - 5);
+    int pt = temp.indexOf( '/' );
+    if ( pt > 0 ) {
+      temp.truncate( pt );
+    }
+    if ( temp.startsWith( QLatin1String( "section=" ), Qt::CaseInsensitive ) ) {
+      _section = temp.right( temp.length() - 8 );
+    } else if ( temp.startsWith( QLatin1String( "type=" ), Qt::CaseInsensitive ) ) {
+      _type = temp.right( temp.length() - 5 );
+    } else if ( temp.startsWith( QLatin1String( "uid=" ), Qt::CaseInsensitive ) ) {
+      _uid = temp.right( temp.length() - 4 );
+    } else if ( temp.startsWith( QLatin1String( "uidvalidity=" ), Qt::CaseInsensitive ) ) {
+      _validity = temp.right( temp.length() - 12 );
+    } else if ( temp.startsWith( QLatin1String( "info=" ), Qt::CaseInsensitive ) ) {
+      _info = temp.right( temp.length() - 5 );
+    }
   }
-//  kDebug(7116) <<"URL: section=" << _section <<", type=" << _type <<", uid=" << _uid;
-//  kDebug(7116) <<"URL: user()" << _url.user();
-//  kDebug(7116) <<"URL: path()" << _url.path();
-//  kDebug(7116) <<"URL: encodedPathAndQuery()" << _url.encodedPathAndQuery();
+//  kDebug( 7116 ) << "URL: section=" << _section << ", type=" << _type << ", uid=" << _uid;
+//  kDebug( 7116 ) << "URL: user()" << _url.user();
+//  kDebug( 7116 ) << "URL: path()" << _url.path();
+//  kDebug( 7116 ) << "URL: encodedPathAndQuery()" << _url.encodedPathAndQuery();
 
-  if (!_box.isEmpty ())
-  {
+  if ( !_box.isEmpty() ) {
     // strip /
-    if (_box[0] == '/')
-      _box = _box.right (_box.length () - 1);
-    if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
-      _box.truncate(_box.length() - 1);
+    if ( _box[0] == '/' ) {
+      _box = _box.right( _box.length() - 1 );
+    }
+    if ( !_box.isEmpty() && _box[_box.length() - 1] == '/' ) {
+      _box.truncate( _box.length() - 1 );
+    }
   }
-  kDebug(7116) <<"URL: box=" << _box <<", section=" << _section <<", type="
-    << _type << ", uid=" << _uid << ", validity=" << _validity << ", info=" << _info;
+  kDebug( 7116 ) << "URL: box=" << _box << ", section=" << _section << ", type="
+                 << _type << ", uid=" << _uid << ", validity=" << _validity
+                 << ", info=" << _info;
 }
 
 
 QByteArray imapParser::parseLiteral(parseString & inWords, bool relay, bool stopAtBracket) {
 
-  if (!inWords.isEmpty() && inWords[0] == '{')
-  {
+  if ( !inWords.isEmpty() && inWords[0] == '{' ) {
     QByteArray retVal;
-    int runLen = inWords.find ('}', 1);
-    if (runLen > 0)
-    {
+    int runLen = inWords.find('}', 1);
+    if ( runLen > 0 ) {
       bool proper;
       long runLenSave = runLen + 1;
-      QByteArray tmpstr(runLen, '\0');
-      inWords.takeMidNoResize(tmpstr, 1, runLen - 1);
-      runLen = tmpstr.toULong (&proper);
+      QByteArray tmpstr( runLen, '\0' );
+      inWords.takeMidNoResize( tmpstr, 1, runLen - 1 );
+      runLen = tmpstr.toULong( &proper );
       inWords.pos += runLenSave;
-      if (proper)
-      {
+      if ( proper ) {
         //now get the literal from the server
-        if (relay)
-          parseRelay (runLen);
+        if ( relay ) {
+          parseRelay( runLen );
+        }
         QByteArray rv;
-        parseRead (rv, runLen, relay ? runLen : 0);
-        rv.resize(qMax(runLen, rv.size())); // what's the point?
+        parseRead( rv, runLen, relay ? runLen : 0 );
+        rv.resize( qMax( runLen, rv.size() ) ); // what's the point?
         retVal = rv;
         inWords.clear();
-        parseReadLine (inWords.data); // must get more
+        parseReadLine( inWords.data ); // must get more
 
         // no duplicate data transfers
         relay = false;
+      } else {
+        kDebug( 7116 ) << "imapParser::parseLiteral - error parsing {} -" /*<< strLen*/;
       }
-      else
-      {
-        kDebug(7116) <<"imapParser::parseLiteral - error parsing {} -" /*<< strLen*/;
-      }
-    }
-    else
-    {
+    } else {
       inWords.clear();
-      kDebug(7116) <<"imapParser::parseLiteral - error parsing unmatched {";
+      kDebug( 7116 ) << "imapParser::parseLiteral - error parsing unmatched {";
     }
-    skipWS (inWords);
+    skipWS( inWords );
     return retVal;
   }
-
-  return parseOneWord(inWords, stopAtBracket);
+  return parseOneWord( inWords, stopAtBracket );
 }
 
 // does not know about literals ( {7} literal )
 QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket)
 {
   uint len = inWords.length();
-  if (len == 0) {
+  if ( len == 0 ) {
     return QByteArray();
   }
 
-  if (len > 0 && inWords[0] == '"')
-  {
+  if ( len > 0 && inWords[0] == '"' ) {
     unsigned int i = 1;
     bool quote = false;
-    while (i < len && (inWords[i] != '"' || quote))
-    {
-      if (inWords[i] == '\\') quote = !quote;
-      else quote = false;
+    while ( i < len && ( inWords[i] != '"' || quote ) ) {
+      if ( inWords[i] == '\\' ) {
+        quote = !quote;
+      } else {
+        quote = false;
+      }
       i++;
     }
-    if (i < len)
-    {
+    if ( i < len ) {
       QByteArray retVal;
-      retVal.resize(i);
+      retVal.resize( i );
       inWords.pos++;
-      inWords.takeLeftNoResize(retVal, i - 1);
+      inWords.takeLeftNoResize( retVal, i - 1 );
       len = i - 1;
       int offset = 0;
-      for (unsigned int j = 0; j < len; j++) {
-        if (retVal[j] == '\\') {
+      for ( unsigned int j = 0; j < len; j++ ) {
+        if ( retVal[j] == '\\' ) {
           offset++;
           j++;
         }
@@ -1954,38 +1837,35 @@ QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket)
       }
       retVal.resize( len - offset );
       inWords.pos += i;
-      skipWS (inWords);
+      skipWS( inWords );
       return retVal;
-    }
-    else
-    {
-      kDebug(7116) <<"imapParser::parseOneWord - error parsing unmatched \"";
+    } else {
+      kDebug( 7116 ) << "imapParser::parseOneWord - error parsing unmatched \"";
       QByteArray retVal = inWords.cstr();
       inWords.clear();
       return retVal;
     }
-  }
-  else
-  {
+  } else {
     // not quoted
     unsigned int i;
     // search for end
-    for (i = 0; i < len; ++i) {
-        char ch = inWords[i];
-        if (ch <= ' ' || ch == '(' || ch == ')' ||
-            (stopAtBracket && (ch == '[' || ch == ']')))
-            break;
+    for ( i = 0; i < len; ++i ) {
+      char ch = inWords[i];
+      if ( ch <= ' ' || ch == '(' || ch == ')' ||
+           ( stopAtBracket && ( ch == '[' || ch == ']' ) ) ) {
+        break;
+      }
     }
 
     QByteArray retVal;
-    retVal.resize(i);
-    inWords.takeLeftNoResize(retVal, i);
+    retVal.resize( i );
+    inWords.takeLeftNoResize( retVal, i );
     inWords.pos += i;
 
-    if (retVal == "NIL") {
-      retVal.truncate(0);
+    if ( retVal == "NIL" ) {
+      retVal.truncate( 0 );
     }
-    skipWS (inWords);
+    skipWS( inWords );
     return retVal;
   }
 }
@@ -1993,20 +1873,18 @@ QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket)
 bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
 {
   bool valid;
-  num = parseOneWord(inWords, true).toULong(&valid);
+  num = parseOneWord( inWords, true ).toULong( &valid );
   return valid;
 }
 
 bool imapParser::hasCapability (const QString & cap)
 {
   QString c = cap.toLower();
-//  kDebug(7116) <<"imapParser::hasCapability - Looking for '" << cap <<"'";
-  for (QStringList::ConstIterator it = imapCapabilities.constBegin ();
-       it != imapCapabilities.constEnd (); ++it)
-  {
-//    kDebug(7116) <<"imapParser::hasCapability - Examining '" << (*it) <<"'";
-    if ( !(kasciistricmp(c.toAscii(), (*it).toAscii())) )
-    {
+//  kDebug( 7116 ) << "imapParser::hasCapability - Looking for '" << cap << "'";
+  for ( QStringList::ConstIterator it = imapCapabilities.constBegin();
+       it != imapCapabilities.constEnd(); ++it ) {
+//    kDebug( 7116 ) << "imapParser::hasCapability - Examining '" << ( *it ) << "'";
+    if ( !( kasciistricmp( c.toAscii(), ( *it ).toAscii() ) ) ) {
       return true;
     }
   }
@@ -2015,23 +1893,21 @@ bool imapParser::hasCapability (const QString & cap)
 
 void imapParser::removeCapability (const QString & cap)
 {
-  imapCapabilities.removeAll(cap.toLower());
+  imapCapabilities.removeAll( cap.toLower() );
 }
 
 QString imapParser::namespaceForBox( const QString & box )
 {
-  kDebug(7116) <<"imapParse::namespaceForBox" << box;
+  kDebug( 7116 ) << "imapParse::namespaceForBox" << box;
   QString myNamespace;
-  if ( !box.isEmpty() )
-  {
+  if ( !box.isEmpty() ) {
     const QList<QString> list = namespaceToDelimiter.keys();
     QString cleanPrefix;
-    for ( QList<QString>::ConstIterator it = list.begin(); it != list.end(); ++it )
-    {
-      if ( !(*it).isEmpty() && box.contains( *it ) )
-        return (*it);
+    for ( QList<QString>::ConstIterator it = list.begin(); it != list.end(); ++it ) {
+      if ( !( *it ).isEmpty() && box.contains( *it ) ) {
+        return ( *it );
+      }
     }
   }
   return myNamespace;
 }
-

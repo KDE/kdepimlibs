@@ -174,31 +174,32 @@ public:
   }
   void setNestedMessage (mimeHeader * inPart, bool destroy = true)
   {
-    if (nestedMessage && destroy)
+    if ( nestedMessage && destroy ) {
       delete nestedMessage;
+    }
     nestedMessage = inPart;
   }
 
 //  mimeHeader *getNestedPart() { return nestedPart; };
   void addNestedPart (mimeHeader * inPart)
   {
-    nestedParts.append (inPart);
+    nestedParts.append( inPart );
   }
   QListIterator < mimeHeader *> getNestedIterator ()
   {
-    return QListIterator < mimeHeader *> (nestedParts);
+    return QListIterator < mimeHeader *> ( nestedParts );
   }
 
   // clears all parts and deletes them from memory
   void clearNestedParts ()
   {
-    nestedParts.clear ();
+    nestedParts.clear();
   }
 
   // clear all parameters to content-type
   void clearTypeParameters ()
   {
-    typeList.clear ();
+    typeList.clear();
   }
 
   // clear all parameters to content-disposition
@@ -217,54 +218,53 @@ public:
   }
   uint numBodyParts ()
   {
-    return nestedParts.count ();
+    return nestedParts.count();
   }
   mimeHeader *bodyPart (int which, mimeHeader ** ret = NULL)
   {
-    if (ret)
-      (*ret) = nestedParts.at (which);
-    return nestedParts.at (which);
+    if ( ret ) {
+      ( *ret ) = nestedParts.at( which );
+    }
+    return nestedParts.at( which );
   }
   void write (const QString &)
   {
   }
   QString typeStr ()
   {
-    return QString (contentType.left (contentType.find ('/')));
+    return QString( contentType.left( contentType.find( '/' ) ) );
   }
   void setTypeStr (const QString & _str)
   {
-    contentType = QByteArray (_str.toLatin1 ()) + "/" + subtypeStr ().toLatin1 ();
+    contentType = QByteArray( _str.toLatin1() ) + "/" + subtypeStr().toLatin1();
   }
   QString subtypeStr ()
   {
-    return QString (contentType.
-                    right (contentType.length () - contentType.find ('/') -
-                           1));
+    return QString( contentType.right( contentType.length() - contentType.find( '/' ) - 1 ) );
   }
   void setSubtypeStr (const QString & _str)
   {
-    contentType = QByteArray (typeStr ().toLatin1 ()) + "/" + _str.toLatin1 ();
+    contentType = QByteArray( typeStr().toLatin1() ) + "/" + _str.toLatin1();
   }
   QString cteStr ()
   {
-    return QString (getEncoding ());
+    return QString( getEncoding() );
   }
   void setCteStr (const QString & _str)
   {
-    setEncoding (_str.toLatin1 ());
+    setEncoding( _str.toLatin1() );
   }
   QString contentDisposition ()
   {
-    return QString (_contentDisposition);
+    return QString( _contentDisposition );
   }
   QString body ()
   {
-    return QString (postMultipartBody);
+    return QString( postMultipartBody );
   }
   QString charset ()
   {
-    return getTypeParm ("charset");
+    return getTypeParm( "charset" );
   }
   QString bodyDecoded ();
   void setBodyEncoded (const QByteArray &);
@@ -272,27 +272,27 @@ public:
   QByteArray bodyDecodedBinary ();
   QString name ()
   {
-    return QString (getTypeParm ("name"));
+    return QString( getTypeParm( "name" ) );
   }
   void setName (const QString & _str)
   {
-    setTypeParm ("name", _str);
+    setTypeParm( "name", _str );
   }
   QString fileName ()
   {
-    return QString (getDispositionParm ("filename"));
+    return QString( getDispositionParm( "filename" ) );
   }
   QString contentDescription ()
   {
-    return QString (RfcCodecs::decodeRFC2047String (_contentDescription));
+    return QString( RfcCodecs::decodeRFC2047String( _contentDescription ) );
   }
   void setContentDescription (const QString & _str)
   {
-    _contentDescription = RfcCodecs::encodeRFC2047String (_str).toLatin1 ();
+    _contentDescription = RfcCodecs::encodeRFC2047String( _str ).toLatin1();
   }
   QString msgIdMD5 ()
   {
-    return QString (contentMD5);
+    return QString( contentMD5 );
   }
   QString iconName ();
   QString magicSetType (bool aAutoDecode = true);
@@ -306,7 +306,7 @@ public:
   }
   void setContentDisposition (const QString & _str)
   {
-    setDisposition (_str.toLatin1 ());
+    setDisposition( _str.toLatin1() );
   }
 #endif
 

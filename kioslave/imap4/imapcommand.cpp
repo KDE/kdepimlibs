@@ -113,8 +113,9 @@ imapCommand::command ()
 void
 imapCommand::setId (const QString & id)
 {
-  if (mId.isEmpty ())
+  if ( mId.isEmpty() ) {
     mId = id;
+  }
 }
 
 void
@@ -150,81 +151,82 @@ imapCommand::setParameter (const QString & parameter)
 const QString
 imapCommand::getStr ()
 {
-  if (parameter().isEmpty())
+  if ( parameter().isEmpty() ) {
     return id() + ' ' + command() + "\r\n";
-  else
+  } else {
     return id() + ' ' + command() + ' ' + parameter() + "\r\n";
+  }
 }
 
 CommandPtr
 imapCommand::clientNoop ()
 {
-  return CommandPtr( new imapCommand ("NOOP", "") );
+  return CommandPtr( new imapCommand( "NOOP", "" ) );
 }
 
 CommandPtr
 imapCommand::clientFetch (ulong uid, const QString & fields, bool nouid)
 {
-  return CommandPtr( clientFetch (uid, uid, fields, nouid) );
+  return CommandPtr( clientFetch( uid, uid, fields, nouid ) );
 }
 
 CommandPtr
 imapCommand::clientFetch (ulong fromUid, ulong toUid, const QString & fields,
                           bool nouid)
 {
-  QString uid = QString::number(fromUid);
+  QString uid = QString::number( fromUid );
 
-  if (fromUid != toUid)
-  {
+  if ( fromUid != toUid ) {
     uid += ':';
-    if (toUid < fromUid)
+    if ( toUid < fromUid ) {
       uid += '*';
-    else
-      uid += QString::number(toUid);
+    } else {
+      uid += QString::number( toUid );
+    }
   }
-  return clientFetch (uid, fields, nouid);
+  return clientFetch( uid, fields, nouid );
 }
 
 CommandPtr
 imapCommand::clientFetch (const QString & sequence, const QString & fields,
                           bool nouid)
 {
-  return CommandPtr( new imapCommand (nouid ? "FETCH" : "UID FETCH",
-                                      sequence + " (" + fields + ')') );
+  return CommandPtr( new imapCommand( nouid ? "FETCH" : "UID FETCH",
+                                      sequence + " (" + fields + ')' ) );
 }
 
 CommandPtr
 imapCommand::clientList (const QString & reference, const QString & path,
                          bool lsub)
 {
-  return CommandPtr( new imapCommand (lsub ? "LSUB" : "LIST",
-                          QString ("\"") + KIMAP::encodeImapFolderName (reference) +
-                          "\" \"" + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr( new imapCommand( lsub ? "LSUB" : "LIST",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( reference ) +
+                          "\" \"" + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientSelect (const QString & path, bool examine)
 {
-  Q_UNUSED(examine);
+  Q_UNUSED( examine );
   /** @note We use always SELECT, because UW-IMAP doesn't check for new mail, when
      used with the "mbox driver" and the folder is opened with EXAMINE
      and Courier can't append to a mailbox that is in EXAMINE state */
-  return CommandPtr( new imapCommand ("SELECT",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr( new imapCommand( "SELECT",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientClose()
 {
-  return CommandPtr( new imapCommand("CLOSE", "") );
+  return CommandPtr( new imapCommand( "CLOSE", "" ) );
 }
 
 CommandPtr
 imapCommand::clientCopy (const QString & box, const QString & sequence,
                          bool nouid)
 {
-  return CommandPtr( new imapCommand (nouid ? "COPY" : "UID COPY",
-                          sequence + " \"" + KIMAP::encodeImapFolderName (box) + "\"") );
+  return CommandPtr( new imapCommand( nouid ? "COPY" : "UID COPY",
+                          sequence + " \"" + KIMAP::encodeImapFolderName( box ) + "\"" ) );
 }
 
 CommandPtr
@@ -237,178 +239,177 @@ imapCommand::clientAppend (const QString & box, const QString & flags,
   }
   tmp += '{' + QString::number( size ) + '}';
 
-  return CommandPtr( new imapCommand ("APPEND",
-                          "\"" + KIMAP::encodeImapFolderName (box) + "\" " + tmp));
+  return CommandPtr( new imapCommand( "APPEND",
+                          "\"" + KIMAP::encodeImapFolderName( box ) + "\" " + tmp ) );
 }
 
 CommandPtr
 imapCommand::clientStatus (const QString & path, const QString & parameters)
 {
-  return CommandPtr( new imapCommand ("STATUS",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) +
-                          "\" (" + parameters + ")") );
+  return CommandPtr( new imapCommand( "STATUS",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) +
+                          "\" (" + parameters + ")" ) );
 }
 
 CommandPtr
 imapCommand::clientCreate (const QString & path)
 {
-  return CommandPtr( new imapCommand ("CREATE",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr( new imapCommand( "CREATE",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientDelete (const QString & path)
 {
-  return CommandPtr( new imapCommand ("DELETE",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr( new imapCommand( "DELETE",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientSubscribe (const QString & path)
 {
-  return CommandPtr( new imapCommand ("SUBSCRIBE",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr( new imapCommand( "SUBSCRIBE",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientUnsubscribe (const QString & path)
 {
-  return CommandPtr(  new imapCommand ("UNSUBSCRIBE",
-                          QString ("\"") + KIMAP::encodeImapFolderName (path) + "\"") );
+  return CommandPtr(  new imapCommand( "UNSUBSCRIBE",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( path ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientExpunge ()
 {
-  return CommandPtr( new imapCommand ("EXPUNGE", QString ("")) );
+  return CommandPtr( new imapCommand( "EXPUNGE", QString( "" ) ) );
 }
 
 CommandPtr
 imapCommand::clientRename (const QString & src, const QString & dest)
 {
-  return CommandPtr( new imapCommand ("RENAME",
-                          QString ("\"") + KIMAP::encodeImapFolderName (src) +
-                          "\" \"" + KIMAP::encodeImapFolderName (dest) + "\"") );
+  return CommandPtr( new imapCommand( "RENAME",
+                          QString( "\"" ) + KIMAP::encodeImapFolderName( src ) +
+                          "\" \"" + KIMAP::encodeImapFolderName( dest ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientSearch (const QString & search, bool nouid)
 {
-  return CommandPtr( new imapCommand (nouid ? "SEARCH" : "UID SEARCH", search) );
+  return CommandPtr( new imapCommand( nouid ? "SEARCH" : "UID SEARCH", search ) );
 }
 
 CommandPtr
 imapCommand::clientStore (const QString & set, const QString & item,
                           const QString & data, bool nouid)
 {
-  return CommandPtr( new imapCommand (nouid ? "STORE" : "UID STORE",
-                          set + ' ' + item + " (" + data + ')') );
+  return CommandPtr( new imapCommand( nouid ? "STORE" : "UID STORE",
+                          set + ' ' + item + " (" + data + ')' ) );
 }
 
 CommandPtr
 imapCommand::clientLogout ()
 {
-  return CommandPtr( new imapCommand ("LOGOUT", "") );
+  return CommandPtr( new imapCommand( "LOGOUT", "" ) );
 }
 
 CommandPtr
 imapCommand::clientStartTLS ()
 {
-  return CommandPtr( new imapCommand ("STARTTLS", "") );
+  return CommandPtr( new imapCommand( "STARTTLS", "" ) );
 }
 
 CommandPtr
 imapCommand::clientSetACL( const QString& box, const QString& user, const QString& acl )
 {
-  return CommandPtr( new imapCommand ("SETACL", QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\" \"" + KIMAP::encodeImapFolderName (user)
-                          + "\" \"" + KIMAP::encodeImapFolderName (acl) + "\"") );
+  return CommandPtr( new imapCommand( "SETACL", QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\" \"" + KIMAP::encodeImapFolderName( user )
+                          + "\" \"" + KIMAP::encodeImapFolderName( acl ) + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientDeleteACL( const QString& box, const QString& user )
 {
-  return CommandPtr( new imapCommand ("DELETEACL", QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\" \"" + KIMAP::encodeImapFolderName (user)
-                          + "\"") );
+  return CommandPtr( new imapCommand( "DELETEACL", QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\" \"" + KIMAP::encodeImapFolderName( user )
+                          + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientGetACL( const QString& box )
 {
-  return CommandPtr( new imapCommand ("GETACL", QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\"") );
+  return CommandPtr( new imapCommand( "GETACL", QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientListRights( const QString& box, const QString& user )
 {
-  return CommandPtr( new imapCommand ("LISTRIGHTS", QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\" \"" + KIMAP::encodeImapFolderName (user)
-                          + "\"") );
+  return CommandPtr( new imapCommand( "LISTRIGHTS", QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\" \"" + KIMAP::encodeImapFolderName( user )
+                          + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientMyRights( const QString& box )
 {
-  return CommandPtr( new imapCommand ("MYRIGHTS", QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\"") );
+  return CommandPtr( new imapCommand( "MYRIGHTS", QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\"" ) );
 }
 
 CommandPtr
 imapCommand::clientSetAnnotation( const QString& box, const QString& entry, const QMap<QString, QString>& attributes )
 {
-  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box)
-                      + "\" \"" + KIMAP::encodeImapFolderName (entry)
+  QString parameter = QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                      + "\" \"" + KIMAP::encodeImapFolderName( entry )
                       + "\" (";
-  for( QMap<QString,QString>::ConstIterator it = attributes.begin(); it != attributes.end(); ++it ) {
+  for ( QMap<QString, QString>::ConstIterator it = attributes.begin(); it != attributes.end(); ++it ) {
     parameter += "\"";
-    parameter += KIMAP::encodeImapFolderName (it.key());
+    parameter += KIMAP::encodeImapFolderName( it.key() );
     parameter += "\" \"";
-    parameter += KIMAP::encodeImapFolderName (it.value());
+    parameter += KIMAP::encodeImapFolderName( it.value() );
     parameter += "\" ";
   }
   // Turn last space into a ')'
-  parameter[parameter.length()-1] = ')';
+  parameter[parameter.length() - 1] = ')';
 
-  return CommandPtr( new imapCommand ("SETANNOTATION", parameter) );
+  return CommandPtr( new imapCommand( "SETANNOTATION", parameter ) );
 }
 
 CommandPtr
 imapCommand::clientGetAnnotation( const QString& box, const QString& entry, const QStringList& attributeNames )
 {
-  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box)
-                          + "\" \"" + KIMAP::encodeImapFolderName (entry)
+  QString parameter = QString( "\"" ) + KIMAP::encodeImapFolderName( box )
+                          + "\" \"" + KIMAP::encodeImapFolderName( entry )
                           + "\" ";
-  if ( attributeNames.count() == 1 )
-    parameter += "\"" + KIMAP::encodeImapFolderName (attributeNames.first()) + '"';
-  else {
+  if ( attributeNames.count() == 1 ) {
+    parameter += "\"" + KIMAP::encodeImapFolderName( attributeNames.first() ) + '"';
+  } else {
     parameter += '(';
-    for( QStringList::ConstIterator it = attributeNames.begin(); it != attributeNames.end(); ++it ) {
-      parameter += "\"" + KIMAP::encodeImapFolderName (*it) + "\" ";
+    for ( QStringList::ConstIterator it = attributeNames.begin(); it != attributeNames.end(); ++it ) {
+      parameter += "\"" + KIMAP::encodeImapFolderName( *it ) + "\" ";
     }
     // Turn last space into a ')'
-    parameter[parameter.length()-1] = ')';
+    parameter[parameter.length() - 1] = ')';
   }
-  return CommandPtr( new imapCommand ("GETANNOTATION", parameter) );
+  return CommandPtr( new imapCommand( "GETANNOTATION", parameter ) );
 }
 
 CommandPtr
 imapCommand::clientNamespace()
 {
-  return CommandPtr( new imapCommand("NAMESPACE", "") );
+  return CommandPtr( new imapCommand( "NAMESPACE", "" ) );
 }
 
 CommandPtr
 imapCommand::clientGetQuotaroot( const QString& box )
 {
-  QString parameter = QString("\"") + KIMAP::encodeImapFolderName (box) + '"';
-  return CommandPtr( new imapCommand ("GETQUOTAROOT", parameter) );
+  QString parameter = QString( "\"" ) + KIMAP::encodeImapFolderName( box ) + '"';
+  return CommandPtr( new imapCommand( "GETQUOTAROOT", parameter ) );
 }
 
 CommandPtr
 imapCommand::clientCustom( const QString& command, const QString& arguments )
 {
-  return CommandPtr( new imapCommand (command, arguments) );
+  return CommandPtr( new imapCommand( command, arguments ) );
 }
-

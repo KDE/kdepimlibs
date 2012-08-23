@@ -65,8 +65,9 @@ attributes_ (lr.attributes_)
 imapList & imapList::operator = (const imapList & lr)
 {
   // Avoid a = a.
-  if (this == &lr)
+  if ( this == &lr ) {
     return *this;
+  }
 
   parser_ = lr.parser_;
   hierarchyDelimiter_ = lr.hierarchyDelimiter_;
@@ -92,44 +93,45 @@ hasNoChildren_ (false)
   parseString s;
   s.data = inStr.toLatin1();
 
-  if (s[0] != '(')
+  if ( s[0] != '(' ) {
     return;                     //not proper format for us
+  }
 
   s.pos++;  // tie off (
 
   parseAttributes( s );
 
   s.pos++;  // tie off )
-  parser_->skipWS (s);
+  parser_->skipWS( s );
 
-  hierarchyDelimiter_ = QString::fromLatin1 (parser_->parseOneWord(s));
-  if (hierarchyDelimiter_ == "NIL")
+  hierarchyDelimiter_ = QString::fromLatin1( parser_->parseOneWord( s ) );
+  if ( hierarchyDelimiter_ == "NIL" ) {
     hierarchyDelimiter_.clear();
-  name_ = QString::fromUtf8 (KIMAP::decodeImapFolderName (parser_->parseLiteral (s)));  // decode modified UTF7
+  }
+  name_ = QString::fromUtf8( KIMAP::decodeImapFolderName( parser_->parseLiteral( s ) ) );  // decode modified UTF7
 }
 
 void imapList::parseAttributes( parseString & str )
 {
 
-  while ( !str.isEmpty () && str[0] != ')' )
-  {
-    QString orig = QString::fromLatin1( parser_->parseOneWord(str) );
+  while ( !str.isEmpty() && str[0] != ')' ) {
+    QString orig = QString::fromLatin1( parser_->parseOneWord( str ) );
     attributes_ << orig;
     QString attribute = orig.toLower();
-    if ( attribute.contains ("\\noinferiors"))
+    if ( attribute.contains( "\\noinferiors" ) ) {
       noInferiors_ = true;
-    else if ( attribute.contains ("\\noselect"))
+    } else if ( attribute.contains( "\\noselect" ) ) {
       noSelect_ = true;
-    else if ( attribute.contains ("\\marked"))
+    } else if ( attribute.contains( "\\marked" ) ) {
       marked_ = true;
-    else if ( attribute.contains ("\\unmarked"))
+    } else if ( attribute.contains( "\\unmarked" ) ) {
       unmarked_ = true;
-    else if ( attribute.contains ("\\haschildren"))
+    } else if ( attribute.contains( "\\haschildren" ) ) {
       hasChildren_ = true;
-    else if ( attribute.contains ("\\hasnochildren"))
+    } else if ( attribute.contains( "\\hasnochildren" ) ) {
       hasNoChildren_ = true;
-    else
-      kDebug(7116) <<"imapList::imapList: bogus attribute" << attribute;
+    } else {
+      kDebug( 7116 ) << "imapList::imapList: bogus attribute" << attribute;
+    }
   }
 }
-
