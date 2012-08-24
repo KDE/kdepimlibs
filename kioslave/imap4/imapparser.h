@@ -56,27 +56,29 @@ public:
   bool isEmpty() const { return pos >= data.size(); }
   QByteArray cstr() const
   {
-    if (pos >= data.size()) return QByteArray();
-    return QByteArray(data.data() + pos, data.size() - pos);
+    if ( pos >= data.size() ) {
+      return QByteArray();
+    }
+    return QByteArray( data.data() + pos, data.size() - pos );
   }
   int find(char c, int index = 0) const
   {
-    int res = data.indexOf(c, index + pos);
-    return (res == -1) ? res : (res - pos);
+    int res = data.indexOf( c, index + pos );
+    return ( res == -1 ) ? res : ( res - pos );
   }
   // Warning: does not check for going past end of "data"
   void takeLeftNoResize(QByteArray& dest, uint len) const
   {
-    memmove(dest.data(), data.data() + pos, len);
+    memmove( dest.data(), data.data() + pos, len );
   }
   // Warning: does not check for going past end of "data"
   void takeMidNoResize(QByteArray& dest, uint start, uint len) const
   {
-    memmove(dest.data(), data.data() + pos + start, len);
+    memmove( dest.data(), data.data() + pos + start, len );
   }
   void clear()
   {
-    data.resize(0);
+    data.resize( 0 );
     pos = 0;
   }
   uint length()
@@ -177,8 +179,7 @@ class imapParser
 public:
 
   /** the different states the client can be in */
-  enum IMAP_STATE
-  {
+  enum IMAP_STATE {
     ISTATE_NO,       /**< Not connected */
     ISTATE_CONNECT,  /**< Connected but not logged in */
     ISTATE_LOGIN,    /**< Logged in */
@@ -197,7 +198,7 @@ public:
   /* @brief return the currently selected mailbox */
   const QString getCurrentBox ()
   {
-    return KIMAP::decodeImapFolderName(currentBox);
+    return KIMAP::decodeImapFolderName( currentBox );
   }
 
   /**
@@ -403,9 +404,8 @@ public:
   static inline void skipWS (parseString & inWords)
   {
     char c;
-    while (!inWords.isEmpty() &&
-      ((c = inWords[0]) == ' ' || c == '\t' || c == '\r' || c == '\n'))
-    {
+    while ( !inWords.isEmpty() &&
+            ( ( c = inWords[0] ) == ' ' || c == '\t' || c == '\r' || c == '\n' ) ) {
       inWords.pos++;
     }
   }

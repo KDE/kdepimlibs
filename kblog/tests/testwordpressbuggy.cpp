@@ -438,4 +438,4 @@ void TestWordpressBuggy::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE(TestWordpressBuggy)
+QTEST_KDEMAIN_CORE( TestWordpressBuggy )

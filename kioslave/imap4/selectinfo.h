@@ -78,7 +78,7 @@ public:
   void setFlags (const QString & inFlag)
   {
     flagsAvailable_ = true;
-    flags_ = _flags (inFlag);
+    flags_ = _flags( inFlag );
   }
 
   void setPermanentFlags (ulong l)
@@ -90,7 +90,7 @@ public:
   void setPermanentFlags (const QString & inFlag)
   {
     permanentFlagsAvailable_ = true;
-    permanentFlags_ = _flags (inFlag);
+    permanentFlags_ = _flags( inFlag );
   }
 
   void setReadWrite (bool b)

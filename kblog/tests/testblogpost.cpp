@@ -149,4 +149,4 @@ void testBlogPost::testValidity()
     QCOMPARE( p.error(), error );
 }
 
-QTEST_KDEMAIN_CORE(testBlogPost)
+QTEST_KDEMAIN_CORE( testBlogPost )

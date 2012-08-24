@@ -41,15 +41,15 @@ public:
 
   void addTo (const mailAddress & _adr)
   {
-    toAdr.append (new mailAddress (_adr));
+    toAdr.append( new mailAddress( _adr ) );
   }
   void addCC (const mailAddress & _adr)
   {
-    ccAdr.append (new mailAddress (_adr));
+    ccAdr.append( new mailAddress( _adr ) );
   }
   void addBCC (const mailAddress & _adr)
   {
-    bccAdr.append (new mailAddress (_adr));
+    bccAdr.append( new mailAddress( _adr ) );
   }
 
   void setFrom (const mailAddress & _adr)
@@ -101,7 +101,7 @@ public:
    */
   void setSubject (const QString & _str)
   {
-    _subject = KIMAP::encodeRFC2047String(_str).toLatin1();
+    _subject = KIMAP::encodeRFC2047String( _str ).toLatin1();
   }
   /**
    * set a encoded subject
@@ -116,7 +116,7 @@ public:
    */
   const QString getSubject ()
   {
-    return KIMAP::decodeRFC2047String(_subject);
+    return KIMAP::decodeRFC2047String( _subject );
   }
   /**
    * get the encoded subject

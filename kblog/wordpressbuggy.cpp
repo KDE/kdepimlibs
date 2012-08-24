@@ -63,11 +63,11 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
-  if(d->mCategoriesList.isEmpty()){
+  if ( d->mCategoriesList.isEmpty() ) {
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
-    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-            this,SLOT(slotTriggerCreatePost()));
+    connect( this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+             this,SLOT(slotTriggerCreatePost()) );
     listCategories();
   }
   else {
@@ -81,10 +81,10 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
 
     bool publish = post->isPrivate();
     // If we do setPostCategories() later than we disable publishing first.
-    if( !post->categories().isEmpty() ){
+    if ( !post->categories().isEmpty() ) {
       post->setPrivate( true );
       if ( d->mSilentCreationList.contains( post ) ) {
-        kDebug()<< "Post already in mSilentCreationList, this *should* never happen!";
+        kDebug() << "Post already in mSilentCreationList, this *should* never happen!";
       } else {
         d->mSilentCreationList << post;
       }
@@ -108,7 +108,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     xmlMarkup += "<name>title</name>";
     xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
     xmlMarkup += "</member><member>";
-  
+
     xmlMarkup += "<name>dateCreated</name>";
     xmlMarkup += "<value><dateTime.iso8601>" +
                  post->creationDateTime().dateTime().toUTC().toString( "yyyyMMddThh:mm:ss" ) +
@@ -120,7 +120,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     xmlMarkup += "<name>mt_allow_pings</name>";
     xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
     xmlMarkup += "</member><member>";
-    if( !post->additionalContent().isEmpty() ) {
+    if ( !post->additionalContent().isEmpty() ) {
       xmlMarkup += "<name>mt_text_more</name>";
       xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
       xmlMarkup += "</member><member>";
@@ -138,31 +138,31 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
                  QString( "%1" ).arg( (int)(!post->isPrivate() ) ) +
                  "</boolean></value></param>";
     xmlMarkup += "</params></methodCall>";
-  
+
     QByteArray postData;
     QDataStream stream( &postData, QIODevice::WriteOnly );
     stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
-  
+
     KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
-  
+
     d->mCreatePostMap[ job ] = post;
-  
+
     if ( !job ) {
       kWarning() << "Failed to create job for: " << url().url();
     }
-  
+
     job->addMetaData(
       "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
       "you took another 4 hours of my life to work around the stupid dateTime bug." );
     job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
     job->addMetaData( "ConnectTimeout", "50" );
     job->addMetaData( "UserAgent", userAgent() );
-  
+
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotCreatePost(KJob*)) );
     // HACK: uuh this a bit ugly now... reenable the original publish argument,
     // since createPost should have parsed now
-    post->setPrivate(publish);
+    post->setPrivate( publish );
   }
 }
 
@@ -176,11 +176,11 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
-  if(d->mCategoriesList.isEmpty()){
+  if ( d->mCategoriesList.isEmpty() ) {
     kDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
-    connect(this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-            this,SLOT(slotTriggerModifyPost()));
+    connect( this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+             this,SLOT(slotTriggerModifyPost()) );
     listCategories();
   }
   else {
@@ -189,9 +189,9 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
       emit error ( Other, i18n( "Post is a null pointer." ) );
       return;
     }
-  
+
     kDebug() << "Uploading Post with postId" << post->postId();
-  
+
     QString xmlMarkup = "<?xml version=\"1.0\"?>";
     xmlMarkup += "<methodCall>";
     xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
@@ -210,7 +210,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     xmlMarkup += "<name>title</name>";
     xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
     xmlMarkup += "</member><member>";
-  
+
     xmlMarkup += "<name>lastModified</name>";
     xmlMarkup += "<value><dateTime.iso8601>" +
                  post->modificationDateTime().dateTime().toUTC().toString( "yyyyMMddThh:mm:ss" ) +
@@ -227,7 +227,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     xmlMarkup += "<name>mt_allow_pings</name>";
     xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
     xmlMarkup += "</member><member>";
-    if( !post->additionalContent().isEmpty() ) {
+    if ( !post->additionalContent().isEmpty() ) {
         xmlMarkup += "<name>mt_text_more</name>";
         xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
         xmlMarkup += "</member><member>";
@@ -245,26 +245,26 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
                  QString( "%1" ).arg( (int)( !post->isPrivate() ) ) +
                  "</boolean></value></param>";
     xmlMarkup += "</params></methodCall>";
-  
+
     QByteArray postData;
     QDataStream stream( &postData, QIODevice::WriteOnly );
     stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
-  
+
     KIO::StoredTransferJob *job = KIO::storedHttpPost( postData, url(), KIO::HideProgressInfo );
-  
+
     d->mModifyPostMap[ job ] = post;
-  
+
     if ( !job ) {
       kWarning() << "Failed to create job for: " << url().url();
     }
-  
+
     job->addMetaData(
       "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
       "you took another 4 hours of my life to work around the stupid dateTime bug." );
     job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
     job->addMetaData( "ConnectTimeout", "50" );
     job->addMetaData( "UserAgent", userAgent() );
-  
+
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotModifyPost(KJob*)) );
   }
@@ -300,7 +300,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 {
   kDebug();
 
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( WordpressBuggy );
@@ -315,18 +315,18 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
   }
 
   QRegExp rxError( "faultString" );
-  if ( rxError.indexIn( data ) != -1 ){
+  if ( rxError.indexIn( data ) != -1 ) {
     rxError = QRegExp( "<string>(.+)</string>" );
     if ( rxError.indexIn( data ) != -1 ) {
       kDebug() << "RegExp of faultString failed.";
     }
-    kDebug() << rxError.cap(1);
-    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap(1), post );
+    kDebug() << rxError.cap( 1 );
+    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap( 1 ), post );
     return;
   }
 
   QRegExp rxId( "<string>(.+)</string>" );
-  if ( rxId.indexIn( data ) == -1 ){
+  if ( rxId.indexIn( data ) == -1 ) {
     kError() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( WordpressBuggy::XmlRpc,
                        i18n( "Could not regexp the id out of the result." ), post );
@@ -351,7 +351,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 {
   kDebug();
 
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mModifyPostMap[ job ];
@@ -364,13 +364,13 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   }
 
   QRegExp rxError( "faultString" );
-  if ( rxError.indexIn( data ) != -1 ){
+  if ( rxError.indexIn( data ) != -1 ) {
     rxError = QRegExp( "<string>(.+)</string>" );
     if ( rxError.indexIn( data ) != -1 ) {
       kDebug() << "RegExp of faultString failed.";
     }
-    kDebug() << rxError.cap(1);
-    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap(1), post );
+    kDebug() << rxError.cap( 1 );
+    emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap( 1 ), post );
     return;
   }
 
@@ -390,7 +390,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
       emit q->createdPost( post );
       mSilentCreationList.removeOne( post );
     } else {
-      if( !post->categories().isEmpty() ){
+      if ( !post->categories().isEmpty() ) {
         setPostCategories( post, false );
       }
     }

@@ -125,15 +125,15 @@ void GData::listRecentPosts( const QStringList &labels, int number,
     url.addQueryItem( "updated-min", upMinTime.toString() );
   }
 
-  if( !upMaxTime.isNull() ) {
+  if ( !upMaxTime.isNull() ) {
     url.addQueryItem( "updated-max", upMaxTime.toString() );
   }
 
-  if( !pubMinTime.isNull() ) {
+  if ( !pubMinTime.isNull() ) {
     url.addQueryItem( "published-min", pubMinTime.toString() );
   }
 
-  if( !pubMaxTime.isNull() ) {
+  if ( !pubMaxTime.isNull() ) {
     url.addQueryItem( "published-max", pubMaxTime.toString() );
   }
 
@@ -209,7 +209,7 @@ void GData::modifyPost( KBlog::BlogPost *post )
     return;
   }
 
-  if ( !d->authenticate() ){
+  if ( !d->authenticate() ) {
     kError() << "Authentication failed.";
     emit errorPost( Atom, i18n( "Authentication failed." ), post );
     return;
@@ -221,7 +221,7 @@ void GData::modifyPost( KBlog::BlogPost *post )
   atomMarkup += "<published>" + post->creationDateTime().toString() + "</published>";
   atomMarkup += "<updated>" + post->modificationDateTime().toString() + "</updated>";
   atomMarkup += "<title type='text'>" + post->title() + "</title>";
-  if( post->isPrivate() ) {
+  if ( post->isPrivate() ) {
     atomMarkup += "<app:control xmlns:app='http://purl.org/atom/app#'>";
     atomMarkup += "<app:draft>yes</app:draft></app:control>";
   }
@@ -231,7 +231,7 @@ void GData::modifyPost( KBlog::BlogPost *post )
   atomMarkup += "</div></content>";
   QList<QString>::ConstIterator it = post->tags().constBegin();
   QList<QString>::ConstIterator end = post->tags().constEnd();
-  for( ; it != end; ++it ){
+  for ( ; it != end; ++it ) {
     atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
   }
   atomMarkup += "<author>";
@@ -274,7 +274,7 @@ void GData::createPost( KBlog::BlogPost *post )
     return;
   }
 
-  if ( !d->authenticate() ){
+  if ( !d->authenticate() ) {
     kError() << "Authentication failed.";
     emit errorPost( Atom, i18n( "Authentication failed." ), post );
     return;
@@ -292,7 +292,7 @@ void GData::createPost( KBlog::BlogPost *post )
   atomMarkup += "</div></content>";
   QList<QString>::ConstIterator it = post->tags().constBegin();
   QList<QString>::ConstIterator end = post->tags().constEnd();
-  for( ; it != end; ++it ){
+  for ( ; it != end; ++it ) {
     atomMarkup += "<category scheme='http://www.blogger.com/atom/ns#' term='" + ( *it ) + "' />";
   }
   atomMarkup += "<author>";
@@ -334,7 +334,7 @@ void GData::removePost( KBlog::BlogPost *post )
     return;
   }
 
-  if ( !d->authenticate() ){
+  if ( !d->authenticate() ) {
     kError() << "Authentication failed.";
     emit errorPost( Atom, i18n( "Authentication failed." ), post );
     return;
@@ -378,7 +378,7 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
   }
 
   Q_D( GData );
-  if ( !d->authenticate() ){
+  if ( !d->authenticate() ) {
     kError() << "Authentication failed.";
     emit errorComment( Atom, i18n( "Authentication failed." ), post, comment );
     return;
@@ -433,7 +433,7 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     return;
   }
 
-  if ( !d->authenticate() ){
+  if ( !d->authenticate() ) {
     kError() << "Authentication failed.";
     emit errorComment( Atom, i18n( "Authentication failed." ), post, comment );
     return;
@@ -489,8 +489,8 @@ bool GDataPrivate::authenticate()
     if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &authGateway ) ) {
       QRegExp rx( "Auth=(.+)" );
       if ( rx.indexIn( data ) != -1 ) {
-        kDebug() << "RegExp got authentication string:" << rx.cap(1);
-        mAuthenticationString = rx.cap(1);
+        kDebug() << "RegExp got authentication string:" << rx.cap( 1 );
+        mAuthenticationString = rx.cap( 1 );
         mAuthenticationTime = QDateTime::currentDateTime();
         return true;
       }
@@ -503,19 +503,19 @@ bool GDataPrivate::authenticate()
 void GDataPrivate::slotFetchProfileId( KJob *job )
 {
   kDebug();
-  if( !job ){
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
   Q_Q( GData );
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
   if ( !job->error() ) {
     QRegExp pid( "http://www.blogger.com/profile/(\\d+)" );
     if ( pid.indexIn( data ) != -1 ) {
-      q->setProfileId( pid.cap(1) );
-      kDebug() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches" << pid.cap(1);
-      emit q->fetchedProfileId( pid.cap(1) );
+      q->setProfileId( pid.cap( 1 ) );
+      kDebug() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches" << pid.cap( 1 );
+      emit q->fetchedProfileId( pid.cap( 1 ) );
     } else {
       kError() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' "
                    << " could not regexp the Profile ID";
@@ -523,7 +523,7 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
       emit q->fetchedProfileId( QString() );
     }
   } else {
-    kError() << "Job Error: "<<job->errorString();
+    kError() << "Job Error: " << job->errorString();
     emit q->error( GData::Other, job->errorString() );
     emit q->fetchedProfileId( QString() );
   }
@@ -534,7 +534,7 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
                                   Syndication::ErrorCode status ) {
   kDebug();
   Q_Q( GData );
-  if( !loader ) {
+  if ( !loader ) {
     kError() << "loader is a null pointer.";
     return;
   }
@@ -552,8 +552,8 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
     QRegExp rx( "blog-(\\d+)" );
     QMap<QString,QString> blogInfo;
     if ( rx.indexIn( ( *it )->id() ) != -1 ) {
-      kDebug() << "QRegExp rx( 'blog-(\\d+)' matches" << rx.cap(1);
-      blogInfo["id"] = rx.cap(1);
+      kDebug() << "QRegExp rx( 'blog-(\\d+)' matches" << rx.cap( 1 );
+      blogInfo["id"] = rx.cap( 1 );
       blogInfo["title"] = ( *it )->title();
       blogInfo["url"] = ( *it )->link();
       blogInfo["summary"] = ( *it )->description(); //TODO fix/add more
@@ -574,7 +574,7 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
 {
   kDebug();
   Q_Q( GData );
-  if( !loader ) {
+  if ( !loader ) {
     kError() << "loader is a null pointer.";
     return;
   }
@@ -595,12 +595,12 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
-      kError() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap(1);
+      kError() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the comment id path." ) );
     } else {
-      comment.setCommentId( rx.cap(1) );
+      comment.setCommentId( rx.cap( 1 ) );
     }
-    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
+    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
     comment.setTitle( ( *it )->title() );
     comment.setContent( ( *it )->content() );
 //  FIXME: assuming UTC for now
@@ -622,7 +622,7 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
 {
   kDebug();
   Q_Q( GData );
-  if( !loader ) {
+  if ( !loader ) {
     kError() << "loader is a null pointer.";
     return;
   }
@@ -641,13 +641,13 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
     BlogComment comment;
     QRegExp rx( "post-(\\d+)" );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
-      kError() << "QRegExp rx( 'post-(\\d+)' does not match"<< rx.cap(1);
+      kError() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the comment id path." ) );
     } else {
-      comment.setCommentId( rx.cap(1) );
+      comment.setCommentId( rx.cap( 1 ) );
     }
 
-    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
+    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
     comment.setTitle( ( *it )->title() );
     comment.setContent( ( *it )->content() );
 //  FIXME: assuming UTC for now
@@ -668,7 +668,7 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
                                         Syndication::ErrorCode status ) {
   kDebug();
   Q_Q( GData );
-  if( !loader ) {
+  if ( !loader ) {
     kError() << "loader is a null pointer.";
     return;
   }
@@ -693,27 +693,27 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
     BlogPost post;
     QRegExp rx( "post-(\\d+)" );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
-      kError() << "QRegExp rx( 'post-(\\d+)' does not match"<< rx.cap(1);
+      kError() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the post id path." ) );
     } else {
-      post.setPostId( rx.cap(1) );
+      post.setPostId( rx.cap( 1 ) );
     }
 
-    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
+    kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
     post.setTitle( ( *it )->title() );
     post.setContent( ( *it )->content() );
     post.setLink( ( *it )->link() );
     QStringList labels;
     int catCount = ( *it )->categories().count();
     QList< Syndication::CategoryPtr > cats = ( *it )->categories();
-    for(int i=0; i < catCount; ++i) {
-        if(cats[i].get()->label().isEmpty()){
-            labels.append(cats[i].get()->term());
+    for ( int i=0; i < catCount; ++i ) {
+        if ( cats[i].get()->label().isEmpty() ) {
+            labels.append( cats[i].get()->term() );
         } else {
-            labels.append(cats[i].get()->label());
+            labels.append( cats[i].get()->label() );
         }
     }
-    post.setTags(labels);
+    post.setTags( labels );
 //  FIXME: assuming UTC for now
     post.setCreationDateTime(
       KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
@@ -737,7 +737,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 {
   kDebug();
   Q_Q( GData );
-  if( !loader ) {
+  if ( !loader ) {
     kError() << "loader is a null pointer.";
     return;
   }
@@ -759,9 +759,10 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     QRegExp rx( "post-(\\d+)" );
-    if ( rx.indexIn( ( *it )->id() ) != -1 && rx.cap(1) == postId ){
-      kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap(1);
-      post->setPostId( rx.cap(1) );
+    if ( rx.indexIn( ( *it )->id() ) != -1 &&
+         rx.cap( 1 ) == postId ) {
+      kDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
+      post->setPostId( rx.cap( 1 ) );
       post->setTitle( ( *it )->title() );
       post->setContent( ( *it )->content() );
       post->setStatus( BlogPost::Fetched );
@@ -788,11 +789,11 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
 void GDataPrivate::slotCreatePost( KJob *job )
 {
   kDebug();
-  if( !job ) {
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( GData );
@@ -813,7 +814,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
                        i18n( "Could not regexp the id out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
+  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
   QRegExp rxPub( "<published>(.+)</published>" );
   if ( rxPub.indexIn( data ) == -1 ) {
@@ -822,7 +823,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
                        i18n( "Could not regexp the published time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
+  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if ( rxUp.indexIn( data ) == -1 ) {
@@ -831,11 +832,11 @@ void GDataPrivate::slotCreatePost( KJob *job )
                        i18n( "Could not regexp the update time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
+  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap( 1 );
 
-  post->setPostId( rxId.cap(1) );
-  post->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ).toLocalZone() );
-  post->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
+  post->setPostId( rxId.cap( 1 ) );
+  post->setCreationDateTime( KDateTime().fromString( rxPub.cap( 1 ) ).toLocalZone() );
+  post->setModificationDateTime( KDateTime().fromString( rxUp.cap( 1 ) ) );
   post->setStatus( BlogPost::Created );
   kDebug() << "Emitting createdPost()";
   emit q->createdPost( post );
@@ -844,11 +845,11 @@ void GDataPrivate::slotCreatePost( KJob *job )
 void GDataPrivate::slotModifyPost( KJob *job )
 {
   kDebug();
-  if( !job ) {
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mModifyPostMap[ job ];
@@ -867,7 +868,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
                        i18n( "Could not regexp the id out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
+  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
   QRegExp rxPub( "<published>(.+)</published>" );
   if ( rxPub.indexIn( data ) == -1 ) {
@@ -876,7 +877,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
                        i18n( "Could not regexp the published time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
+  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if ( rxUp.indexIn( data ) == -1 ) {
@@ -885,10 +886,10 @@ void GDataPrivate::slotModifyPost( KJob *job )
                        i18n( "Could not regexp the update time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
-  post->setPostId( rxId.cap(1) );
-  post->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
-  post->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
+  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap( 1 );
+  post->setPostId( rxId.cap( 1 ) );
+  post->setCreationDateTime( KDateTime().fromString( rxPub.cap( 1 ) ) );
+  post->setModificationDateTime( KDateTime().fromString( rxUp.cap( 1 ) ) );
   post->setStatus( BlogPost::Modified );
   emit q->modifiedPost( post );
 }
@@ -896,11 +897,11 @@ void GDataPrivate::slotModifyPost( KJob *job )
 void GDataPrivate::slotRemovePost( KJob *job )
 {
   kDebug();
-  if( !job ) {
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   KBlog::BlogPost *post = mRemovePostMap[ job ];
@@ -920,11 +921,11 @@ void GDataPrivate::slotRemovePost( KJob *job )
 void GDataPrivate::slotCreateComment( KJob *job )
 {
   kDebug();
-  if( !job ) {
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
   kDebug() << "Dump data: " << data;
 
@@ -948,7 +949,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
                        i18n( "Could not regexp the id out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap(1);
+  kDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
   QRegExp rxPub( "<published>(.+)</published>" );
   if ( rxPub.indexIn( data ) == -1 ) {
@@ -957,7 +958,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
                        i18n( "Could not regexp the published time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap(1);
+  kDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
   QRegExp rxUp( "<updated>(.+)</updated>" );
   if ( rxUp.indexIn( data ) == -1 ) {
@@ -966,10 +967,10 @@ void GDataPrivate::slotCreateComment( KJob *job )
                        i18n( "Could not regexp the update time out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap(1);
-  comment->setCommentId( rxId.cap(1) );
-  comment->setCreationDateTime( KDateTime().fromString( rxPub.cap(1) ) );
-  comment->setModificationDateTime( KDateTime().fromString( rxUp.cap(1) ) );
+  kDebug() << "QRegExp rx( '<updated>(.+)</updated>' ) matches" << rxUp.cap( 1 );
+  comment->setCommentId( rxId.cap( 1 ) );
+  comment->setCreationDateTime( KDateTime().fromString( rxPub.cap( 1 ) ) );
+  comment->setModificationDateTime( KDateTime().fromString( rxUp.cap( 1 ) ) );
   comment->setStatus( BlogComment::Created );
   kDebug() << "Emitting createdComment()";
   emit q->createdComment( post, comment );
@@ -978,11 +979,11 @@ void GDataPrivate::slotCreateComment( KJob *job )
 void GDataPrivate::slotRemoveComment( KJob *job )
 {
   kDebug();
-  if( !job ) {
+  if ( !job ) {
     kError() << "job is a null pointer.";
     return;
   }
-  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>(job);
+  KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
 
   Q_Q( GData );

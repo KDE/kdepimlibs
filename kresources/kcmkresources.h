@@ -25,7 +25,9 @@
 #include <kresources_export.h>
 #include <kcmodule.h>
 
-namespace KRES { class ConfigPage; }
+namespace KRES {
+  class ConfigPage;
+}
 
 class KCM_KRESOURCES_EXPORT_DEPRECATED KCMKResources : public KCModule
 {

@@ -36,8 +36,7 @@
 #define IMAP_BUFFER 8192
 
 /** @brief type of object the url refers too */
-enum IMAP_TYPE
-{
+enum IMAP_TYPE {
   ITYPE_UNKNOWN, /*< unknown type */
   ITYPE_DIR,     /*< Object is a directory. i.e. does not contain message, just mailboxes */
   ITYPE_BOX,     /*< Object is a mailbox. i.e. contains mails */
@@ -155,7 +154,7 @@ protected:
 
   void outputLineStr (const QString & _str)
   {
-    outputLine (_str.toLatin1 (), _str.length());
+    outputLine( _str.toLatin1 (), _str.length() );
   }
   void doListEntry (const KUrl & _url, int stretch, imapCache * cache = NULL,
     bool withFlags = false, bool withSubject = false);
