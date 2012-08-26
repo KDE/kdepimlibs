@@ -175,9 +175,10 @@ void SmtpJob::startSmtpJob()
          transport()->authenticationType() != Transport::EnumAuthenticationType::GSSAPI ) {
 
       QPointer<KPasswordDialog> dlg =
-        new KPasswordDialog( 0,
-                             KPasswordDialog::ShowUsernameLine |
-                             KPasswordDialog::ShowKeepPassword );
+        new KPasswordDialog(
+          0,
+          KPasswordDialog::ShowUsernameLine |
+          KPasswordDialog::ShowKeepPassword );
       dlg->setPrompt( i18n( "You need to supply a username and a password "
                             "to use this SMTP server." ) );
       dlg->setKeepPassword( transport()->storePassword() );
@@ -185,17 +186,21 @@ void SmtpJob::startSmtpJob()
       dlg->setUsername( user );
       dlg->setPassword( passwd );
 
-      if ( dlg->exec() != QDialog::Accepted ) {
+      bool gotIt = false;
+      if ( dlg->exec() ) {
+        transport()->setUserName( dlg->username() );
+        transport()->setPassword( dlg->password() );
+        transport()->setStorePassword( dlg->keepPassword() );
+        transport()->writeConfig();
+        gotIt = true;
+      }
+      delete dlg;
+
+      if ( !gotIt ) {
         setError( KilledJobError );
         emitResult();
-        delete dlg;
         return;
       }
-      transport()->setUserName( dlg->username() );
-      transport()->setPassword( dlg->password() );
-      transport()->setStorePassword( dlg->keepPassword() );
-      transport()->writeConfig();
-      delete dlg;
     }
     destination.setUser( transport()->userName() );
     destination.setPass( transport()->password() );
