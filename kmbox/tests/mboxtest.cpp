@@ -58,13 +58,13 @@ void MboxTest::initTestCase()
 {
   mTempDir = new KTempDir( KStandardDirs::locateLocal( "tmp" , QLatin1String( testDir ) ) );
 
-  QDir temp(mTempDir->name());
-  QVERIFY(temp.exists());
+  QDir temp( mTempDir->name() );
+  QVERIFY( temp.exists() );
 
   QFile mboxfile( fileName() );
   mboxfile.open( QIODevice::WriteOnly );
   mboxfile.close();
-  QVERIFY(mboxfile.exists());
+  QVERIFY( mboxfile.exists() );
 
   mMail1 = KMime::Message::Ptr( new KMime::Message );
   mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
@@ -73,7 +73,6 @@ void MboxTest::initTestCase()
   mMail2 = KMime::Message::Ptr( new KMime::Message );
   mMail2->setContent( KMime::CRLFtoLF( sEntry2 ) );
   mMail2->parse();
-
 }
 
 void MboxTest::testSetLockMethod()
@@ -81,7 +80,7 @@ void MboxTest::testSetLockMethod()
   MBox mbox1;
 
   if ( !KStandardDirs::findExe( QLatin1String( "lockfile" ) ).isEmpty() ) {
-    QVERIFY( mbox1.setLockType(MBox::ProcmailLockfile) );
+    QVERIFY( mbox1.setLockType( MBox::ProcmailLockfile ) );
   } else {
     QVERIFY( !mbox1.setLockType( MBox::ProcmailLockfile ) );
   }
@@ -187,7 +186,7 @@ void MboxTest::testAppend()
     QCOMPARE( message->to()->as7BitString(), headers->to()->as7BitString() );
     QCOMPARE( message->from()->as7BitString(), headers->from()->as7BitString() );
 
-    if ( msgInfo.messageOffset() == 0 ){
+    if ( msgInfo.messageOffset() == 0 ) {
       QCOMPARE( message->messageID()->identifier(), mMail1->messageID()->identifier() );
       QCOMPARE( message->subject()->as7BitString(), mMail1->subject()->as7BitString() );
       QCOMPARE( message->to()->as7BitString(), mMail1->to()->as7BitString() );
@@ -225,9 +224,9 @@ void MboxTest::testSaveAndLoad()
   QCOMPARE( infos2.size(), 2 );
 
   for ( int i = 0; i < 2; ++i ) {
-    QCOMPARE( infos1.at(i).messageOffset(), infos2.at(i).messageOffset() );
-    QCOMPARE( infos1.at(i).separatorSize(), infos2.at(i).separatorSize() );
-    QCOMPARE( infos1.at(i).messageSize(), infos2.at(i).messageSize() );
+    QCOMPARE( infos1.at( i ).messageOffset(), infos2.at( i ).messageOffset() );
+    QCOMPARE( infos1.at( i ).separatorSize(), infos2.at( i ).separatorSize() );
+    QCOMPARE( infos1.at( i ).messageSize(), infos2.at( i ).messageSize() );
   }
 
   MBox mbox2;
@@ -238,16 +237,16 @@ void MboxTest::testSaveAndLoad()
   QCOMPARE( infos3.size(), 2 );
 
   for ( int i = 0; i < 2; ++i ) {
-    QCOMPARE( infos3.at(i), infos2.at(i) );
+    QCOMPARE( infos3.at( i ), infos2.at( i ) );
 
-    QCOMPARE( infos3.at(i).messageOffset(), infos1.at(i).messageOffset() );
-    QCOMPARE( infos3.at(i).separatorSize(), infos1.at(i).separatorSize() );
-    QCOMPARE( infos3.at(i).messageSize(), infos1.at(i).messageSize() );
-    
-    quint64 minSize = infos2.at(i).messageSize();
-    quint64 maxSize = infos2.at(i).messageSize() + 1;
-    QVERIFY( infos3.at(i).messageSize() >= minSize  );
-    QVERIFY( infos3.at(i).messageSize() <= maxSize  );
+    QCOMPARE( infos3.at( i ).messageOffset(), infos1.at( i ).messageOffset() );
+    QCOMPARE( infos3.at( i ).separatorSize(), infos1.at( i ).separatorSize() );
+    QCOMPARE( infos3.at( i ).messageSize(), infos1.at( i ).messageSize() );
+
+    quint64 minSize = infos2.at( i ).messageSize();
+    quint64 maxSize = infos2.at( i ).messageSize() + 1;
+    QVERIFY( infos3.at( i ).messageSize() >= minSize  );
+    QVERIFY( infos3.at( i ).messageSize() <= maxSize  );
   }
 }
 
@@ -385,16 +384,16 @@ void MboxTest::testPurge()
 void MboxTest::testLockTimeout()
 {
   MBox mbox;
-  mbox.load(fileName());
-  mbox.setLockType(MBox::None);
-  mbox.setUnlockTimeout(1000);
+  mbox.load( fileName() );
+  mbox.setLockType( MBox::None );
+  mbox.setUnlockTimeout( 1000 );
 
-  QVERIFY(!mbox.locked());
+  QVERIFY( !mbox.locked() );
   mbox.lock();
-  QVERIFY(mbox.locked());
+  QVERIFY( mbox.locked() );
 
-  QTest::qWait(1010);
-  QVERIFY(!mbox.locked());
+  QTest::qWait( 1010 );
+  QVERIFY( !mbox.locked() );
 }
 
 void MboxTest::testHeaders()

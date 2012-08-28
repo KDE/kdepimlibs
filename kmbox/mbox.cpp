@@ -178,7 +178,7 @@ bool MBox::load( const QString &fileName )
       // Found the separator or at end of file, the message starts at offs
       quint64 msgSize = pos - offs;
 
-      if( pos > 0 ) {
+      if ( pos > 0 ) {
         // This is not the separator of the first mail in the file. If pos == 0
         // than we matched the separator of the first mail in the file.
         MBoxEntry entry;
@@ -231,7 +231,7 @@ bool MBox::lock()
   QStringList args;
   int rc = 0;
 
-  switch( d->mLockType ) {
+  switch ( d->mLockType ) {
   case ProcmailLockfile:
     args << QLatin1String( "-l20" ) << QLatin1String( "-r5" );
     if ( !d->mLockFileName.isEmpty() ) {
@@ -244,7 +244,7 @@ bool MBox::lock()
     rc = QProcess::execute( QLatin1String( "lockfile" ), args );
     if ( rc != 0 ) {
       kDebug() << "lockfile -l20 -r5 " << d->mMboxFile.fileName()
-               << ": Failed ("<< rc << ") switching to read only mode";
+               << ": Failed (" << rc << ") switching to read only mode";
       d->mReadOnly = true; // In case the MBox object was created read/write we
       // set it to read only when locking failed.
     } else {
@@ -465,7 +465,7 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
       return QByteArray();
     }
 
-    QBuffer buffer( &(d->mAppendedEntries) );
+    QBuffer buffer( &( d->mAppendedEntries ) );
     buffer.open( QIODevice::ReadOnly );
     buffer.seek( offset );
 
@@ -541,7 +541,7 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
       line = d->mMboxFile.readLine();
     }
   } else {
-    QBuffer buffer( &(d->mAppendedEntries) );
+    QBuffer buffer( &( d->mAppendedEntries ) );
     buffer.open( QIODevice::ReadOnly );
     buffer.seek( offset - d->mInitialMboxFileSize );
     QByteArray line = buffer.readLine();
@@ -652,7 +652,7 @@ bool MBox::unlock()
   int rc = 0;
   QStringList args;
 
-  switch( d->mLockType ) {
+  switch ( d->mLockType ) {
     case ProcmailLockfile:
       // QFile::remove returns true on succes so negate the result.
       if ( !d->mLockFileName.isEmpty() ) {
