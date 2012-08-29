@@ -770,7 +770,7 @@ void imapParser::parseMyRights (parseString & result)
 {
   parseOneWord( result ); // skip mailbox name
   Q_ASSERT( lastResults.isEmpty() ); // we can only be called once
-  lastResults.append( parseOneWord( result )  );
+  lastResults.append( parseOneWord( result ) );
 }
 
 void imapParser::parseSearch (parseString & result)
@@ -1313,7 +1313,7 @@ void imapParser::parseBody (parseString & inWords)
         parseLiteral( inWords, true );
       }
     } else {
-      if ( specifier.contains( ".MIME" )  ) {
+      if ( specifier.contains( ".MIME" ) ) {
         mailHeader *envelope = new mailHeader;
         QString theHeader = parseLiteral( inWords, false );
         mimeIOQString myIO;
@@ -1396,7 +1396,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'B':
         if ( word == "BODY" ) {
           parseBody( inWords );
-        } else if ( word == "BODY[]"  ) {
+        } else if ( word == "BODY[]" ) {
           // Do the same as with "RFC822"
           parseLiteral( inWords, true );
         } else if ( word == "BODYSTRUCTURE" ) {
