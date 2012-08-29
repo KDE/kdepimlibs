@@ -145,6 +145,17 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   item.addAttribute( sentActionAttribute.clone() );
   item.addAttribute( transportAttribute.clone() );
 
+  // update status flags
+  if ( KMime::isSigned( message.get() ) )
+    item.setFlag( Akonadi::MessageFlags::Signed );
+  if ( KMime::isEncrypted( message.get() ) )
+    item.setFlag( Akonadi::MessageFlags::Encrypted );
+  if ( KMime::isInvitation( message.get() ) )
+    item.setFlag( Akonadi::MessageFlags::HasInvitation );
+  if ( KMime::hasAttachment( message.get() ) )
+    item.setFlag( Akonadi::MessageFlags::HasAttachment );
+
+
   // Set flags.
   item.setFlag( Akonadi::MessageFlags::Queued );
 
