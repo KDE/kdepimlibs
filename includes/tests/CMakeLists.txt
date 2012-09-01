@@ -23,6 +23,8 @@ macro(add_includes _dir)
 endmacro(add_includes)
 
 include_directories(
+  # HACK: akonadi/calendar has a generated header. We need to go up 3 directories level
+  ${CMAKE_BINARY_DIR}/akonadi/calendar/tests
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
   ${CMAKE_SOURCE_DIR}/kcalutils
@@ -58,6 +60,7 @@ add_includes( Syndication )
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_STRICT_ITERATORS )
 kde4_add_executable( headertest header_compile.cpp )
 target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
+add_dependencies( headertest akonadi ) # ensure calendarsettings.h is generated in parallel builds
 add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
 add_dependencies( headertest kcal )
 add_dependencies( headertest mailtransport ) # ensure transportbase.h is generated in parallel builds
