@@ -84,8 +84,9 @@ readWriteAvailable_ (mi.readWriteAvailable_)
 imapInfo & imapInfo::operator = (const imapInfo & mi)
 {
   // Avoid a = a.
-  if (this == &mi)
+  if ( this == &mi ) {
     return *this;
+  }
 
   count_ = mi.count_;
   recent_ = mi.recent_;
@@ -123,72 +124,56 @@ uidNextAvailable_ (false),
 flagsAvailable_ (false),
 permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 {
-  for (QStringList::ConstIterator it (list.begin ()); it != list.end (); ++it)
-  {
-    QString line (*it);
+  for ( QStringList::ConstIterator it( list.begin() ); it != list.end(); ++it ) {
+    QString line( *it );
 
-    line.truncate(line.length() - 2);
-    QStringList tokens(line.split (' ', QString::SkipEmptyParts));
+    line.truncate( line.length() - 2 );
+    QStringList tokens( line.split( ' ', QString::SkipEmptyParts ) );
 
-    kDebug(7116) <<"Processing:" << line;
-    if (tokens[0] != "*")
+    kDebug( 7116 ) << "Processing:" << line;
+    if ( tokens[0] != "*" ) {
       continue;
-
-    if (tokens[1] == "OK")
-    {
-      if (tokens[2] == "[UNSEEN")
-        setUnseen (tokens[3].left (tokens[3].length () - 1).toULong ());
-
-      else if (tokens[2] == "[UIDVALIDITY")
-        setUidValidity (tokens[3].left (tokens[3].length () - 1).toULong ());
-
-      else if (tokens[2] == "[UIDNEXT")
-        setUidNext (tokens[3].left (tokens[3].length () - 1).toULong ());
-
-      else if (tokens[2] == "[PERMANENTFLAGS")
-      {
-        int flagsStart = line.indexOf('(');
-        int flagsEnd = line.indexOf(')');
-
-        kDebug(7116) <<"Checking permFlags from" << flagsStart <<" to" << flagsEnd;
-        if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-          setPermanentFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1()));
-
-      }
-      else if (tokens[2] == "[READ-WRITE")
-      {
-        setReadWrite (true);
-      }
-      else if (tokens[2] == "[READ-ONLY")
-      {
-        setReadWrite (false);
-      }
-      else
-      {
-        kDebug(7116) <<"unknown token2:" << tokens[2];
-      }
     }
-    else if (tokens[1] == "FLAGS")
-    {
-      int flagsStart = line.indexOf ('(');
-      int flagsEnd = line.indexOf (')');
 
-      if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-        setFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1() ));
-    }
-    else
-    {
-      if (tokens[2] == "EXISTS")
-        setCount (tokens[1].toULong ());
+    if ( tokens[1] == "OK" ) {
+      if ( tokens[2] == "[UNSEEN" ) {
+        setUnseen( tokens[3].left( tokens[3].length() - 1 ).toULong() );
+      } else if ( tokens[2] == "[UIDVALIDITY" ) {
+        setUidValidity( tokens[3].left( tokens[3].length() - 1 ).toULong() );
+      } else if ( tokens[2] == "[UIDNEXT" ) {
+        setUidNext( tokens[3].left( tokens[3].length() - 1 ).toULong() );
+      } else if ( tokens[2] == "[PERMANENTFLAGS" ) {
+        int flagsStart = line.indexOf( '(' );
+        int flagsEnd = line.indexOf( ')' );
 
-      else if (tokens[2] == "RECENT")
-        setRecent (tokens[1].toULong ());
+        kDebug( 7116 ) << "Checking permFlags from" << flagsStart << " to" << flagsEnd;
+        if ( ( -1 != flagsStart ) && ( -1 != flagsEnd ) && flagsStart < flagsEnd ) {
+          setPermanentFlags( _flags( line.mid( flagsStart, flagsEnd ).toLatin1() ) );
+        }
+      } else if ( tokens[2] == "[READ-WRITE" ) {
+        setReadWrite( true );
+      } else if ( tokens[2] == "[READ-ONLY" ) {
+        setReadWrite( false );
+      } else {
+        kDebug( 7116 ) << "unknown token2:" << tokens[2];
+      }
+    } else if ( tokens[1] == "FLAGS" ) {
+      int flagsStart = line.indexOf( '(' );
+      int flagsEnd = line.indexOf( ')' );
 
-      else
-        kDebug(7116) <<"unknown token1/2:" << tokens[1] << tokens[2];
+      if ( ( -1 != flagsStart ) && ( -1 != flagsEnd ) && flagsStart < flagsEnd ) {
+        setFlags( _flags( line.mid( flagsStart, flagsEnd ).toLatin1() ) );
+      }
+    } else {
+      if ( tokens[2] == "EXISTS" ) {
+        setCount( tokens[1].toULong() );
+      } else if ( tokens[2] == "RECENT" ) {
+        setRecent( tokens[1].toULong() );
+      } else {
+        kDebug( 7116 ) << "unknown token1/2:" << tokens[1] << tokens[2];
+      }
     }
   }
-
 }
 
 ulong imapInfo::_flags( const QByteArray &inFlags )
@@ -204,36 +189,36 @@ ulong imapInfo::_flags( const QByteArray &inFlags )
     flagsString.pos++;
   }
 
-  while( !flagsString.isEmpty () && flagsString[0] != ')' ) {
-    QByteArray entry = imapParser::parseOneWord(flagsString).toUpper();
+  while ( !flagsString.isEmpty() && flagsString[0] != ')' ) {
+    QByteArray entry = imapParser::parseOneWord( flagsString ).toUpper();
 
-    if (entry.isEmpty ())
+    if ( entry.isEmpty() ) {
       flagsString.clear();
-    else if (0 != entry.contains ("\\SEEN"))
+    } else if ( 0 != entry.contains( "\\SEEN" ) ) {
       flags ^= Seen;
-    else if (0 != entry.contains ("\\ANSWERED"))
+    } else if ( 0 != entry.contains( "\\ANSWERED" ) ) {
       flags ^= Answered;
-    else if (0 != entry.contains ("\\FLAGGED"))
+    } else if ( 0 != entry.contains( "\\FLAGGED" ) ) {
       flags ^= Flagged;
-    else if (0 != entry.contains ("\\DELETED"))
+    } else if ( 0 != entry.contains( "\\DELETED" ) ) {
       flags ^= Deleted;
-    else if (0 != entry.contains ("\\DRAFT"))
+    } else if ( 0 != entry.contains( "\\DRAFT" ) ) {
       flags ^= Draft;
-    else if (0 != entry.contains ("\\RECENT"))
+    } else if ( 0 != entry.contains( "\\RECENT" ) ) {
       flags ^= Recent;
-    else if (0 != entry.contains ("\\*"))
+    } else if ( 0 != entry.contains( "\\*" ) ) {
       flags ^= User;
 
     // non standard kmail flags
-    else if ( entry.contains( "KMAILFORWARDED" ) || entry.contains( "$FORWARDED" ) )
+    } else if ( entry.contains( "KMAILFORWARDED" ) || entry.contains( "$FORWARDED" ) ) {
       flags = flags | Forwarded;
-    else if ( entry.contains( "KMAILTODO" ) || entry.contains( "$TODO" ) )
+    } else if ( entry.contains( "KMAILTODO" ) || entry.contains( "$TODO" ) ) {
       flags = flags | Todo;
-    else if ( entry.contains( "KMAILWATCHED" ) || entry.contains( "$WATCHED" ) )
+    } else if ( entry.contains( "KMAILWATCHED" ) || entry.contains( "$WATCHED" ) ) {
       flags = flags | Watched;
-    else if ( entry.contains( "KMAILIGNORED" ) || entry.contains( "$IGNORED" ) )
+    } else if ( entry.contains( "KMAILIGNORED" ) || entry.contains( "$IGNORED" ) ) {
       flags = flags | Ignored;
+    }
   }
-
   return flags;
 }

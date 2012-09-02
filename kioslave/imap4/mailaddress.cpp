@@ -45,21 +45,19 @@ rawComment (lr.rawComment)
 mailAddress & mailAddress::operator = (const mailAddress & lr)
 {
   // Avoid a = a.
-  if (this == &lr)
+  if ( this == &lr ) {
     return *this;
+  }
 
   user = lr.user;
   host = lr.host;
   rawFullName = lr.rawFullName;
   rawComment = lr.rawComment;
 
-//  kDebug(7116) <<"mailAddress::operator= -" << getStr();
+//  kDebug(7116) << "mailAddress::operator= -" << getStr();
 
   return *this;
 }
-
-
-
 
 mailAddress::~mailAddress ()
 {
@@ -67,7 +65,7 @@ mailAddress::~mailAddress ()
 
 mailAddress::mailAddress (char *aCStr)
 {
-  parseAddress (aCStr);
+  parseAddress( aCStr );
 }
 
 int mailAddress::parseAddress (const char *aCStr)
@@ -77,121 +75,103 @@ int mailAddress::parseAddress (const char *aCStr)
   uint len;
   int pt;
 
-  if (aCStr)
-  {
+  if ( aCStr ) {
     //skip leading white space
-    skip = mimeHdrLine::skipWS (aCStr);
-    if (skip > 0)
-    {
+    skip = mimeHdrLine::skipWS( aCStr );
+    if ( skip > 0 ) {
       aCStr += skip;
       retVal += skip;
     }
-    while (*aCStr)
-    {
+    while ( *aCStr ) {
       int advance;
 
-      switch (*aCStr)
-      {
+      switch ( *aCStr ) {
       case '"':
-        advance = mimeHdrLine::parseQuoted ('"', '"', aCStr);
-        rawFullName += QByteArray (aCStr, advance);
+        advance = mimeHdrLine::parseQuoted( '"', '"', aCStr );
+        rawFullName += QByteArray( aCStr, advance );
         break;
       case '(':
-        advance = mimeHdrLine::parseQuoted ('(', ')', aCStr);
-        rawComment += QByteArray (aCStr, advance);
+        advance = mimeHdrLine::parseQuoted( '(', ')', aCStr );
+        rawComment += QByteArray( aCStr, advance );
         break;
       case '<':
-        advance = mimeHdrLine::parseQuoted ('<', '>', aCStr);
-        user = QByteArray (aCStr, advance); // copy it
+        advance = mimeHdrLine::parseQuoted( '<', '>', aCStr );
+        user = QByteArray( aCStr, advance ); // copy it
         len = advance;
-        user = user.mid (1, len - 2);  // strip <>
+        user = user.mid ( 1, len - 2 );  // strip <>
         len -= 2;
-        pt = user.indexOf('@');
-        host = user.right (len - pt - 1); // split it into host
-        user.truncate(pt); // and user
+        pt = user.indexOf( '@' );
+        host = user.right( len - pt - 1 ); // split it into host
+        user.truncate( pt ); // and user
         break;
       default:
-        advance = mimeHdrLine::parseWord (aCStr);
+        advance = mimeHdrLine::parseWord( aCStr );
         //if we've seen a FQ mailname the rest must be quoted or is just junk
-        if (user.isEmpty ())
-        {
-          if (*aCStr != ',')
-          {
+        if ( user.isEmpty() ) {
+          if ( *aCStr != ',' ) {
             rawFullName += aCStr;
-            if (mimeHdrLine::skipWS (aCStr+advance) > 0)
-            {
+            if ( mimeHdrLine::skipWS( aCStr+advance ) > 0 ) {
               rawFullName += ' ';
             }
           }
         }
         break;
       }
-      if (advance)
-      {
+      if ( advance ) {
         retVal += advance;
         aCStr += advance;
-      }
-      else
+      } else {
         break;
-      advance = mimeHdrLine::skipWS (aCStr);
-      if (advance > 0)
-      {
+      }
+      advance = mimeHdrLine::skipWS( aCStr );
+      if ( advance > 0 ) {
         retVal += advance;
         aCStr += advance;
       }
       //reached end of current address
-      if (*aCStr == ',')
-      {
+      if ( *aCStr == ',' ) {
         advance++;
         break;
       }
     }
     //let's see what we've got
-    if (rawFullName.isEmpty ())
-    {
-      if (user.isEmpty ())
+    if ( rawFullName.isEmpty() ) {
+      if ( user.isEmpty() ) {
         retVal = 0;
-      else
-      {
-        if (host.isEmpty ())
-        {
+      } else {
+        if ( host.isEmpty() ) {
           rawFullName = user;
-          user.truncate(0);
+          user.truncate( 0 );
         }
       }
-    }
-    else if (user.isEmpty ())
-    {
-      pt = rawFullName.indexOf ('@');
-      if (pt >= 0)
-      {
+    } else if ( user.isEmpty() ) {
+      pt = rawFullName.indexOf( '@' );
+      if ( pt >= 0 ) {
         user = rawFullName;
-        host = user.right (user.length () - pt - 1);
-        user.truncate(pt);
-        rawFullName.truncate(0);
+        host = user.right( user.length() - pt - 1 );
+        user.truncate( pt );
+        rawFullName.truncate( 0 );
       }
     }
-    
+
 #if 0
 // dead
-    if (!rawFullName.isEmpty ())
-    {
-//      if(fullName[0] == '"')
-//        fullName = fullName.mid(1,fullName.length()-2);
+    if ( !rawFullName.isEmpty() ) {
+//      if( fullName[0] == '"' ) {
+//        fullName = fullName.mid( 1, fullName.length() - 2 );
+//      }
 //      fullName = fullName.simplified().trimmed();
-//      fullName = KIMAP::decodeRFC2047String(fullName.ascii());
+//      fullName = KIMAP::decodeRFC2047String( fullName.ascii() );
     }
 #endif
-    if (!rawComment.isEmpty ())
-    {
-      if (rawComment[0] == '(')
-        rawComment = rawComment.mid (1, rawComment.length () - 2);
-      rawComment = rawComment.trimmed ();
-//      comment = KIMAP::decodeRFC2047String(comment.ascii());
+    if ( !rawComment.isEmpty() ) {
+      if ( rawComment[0] == '(' ) {
+        rawComment = rawComment.mid( 1, rawComment.length() - 2 );
+      }
+      rawComment = rawComment.trimmed();
+//      comment = KIMAP::decodeRFC2047String( comment.ascii() );
     }
-  }
-  else
-  {
+  } else {
     //debug();
   }
   return retVal;
@@ -200,26 +180,23 @@ int mailAddress::parseAddress (const char *aCStr)
 const QByteArray mailAddress::getStr () const
 {
   QByteArray retVal;
-  retVal.reserve(128); // Should be generally big enough
+  retVal.reserve( 128 ); // Should be generally big enough
 
-  if (!rawFullName.isEmpty ())
-  {
+  if ( !rawFullName.isEmpty() ) {
     QByteArray tmpName( rawFullName );
     KMime::addQuotes( tmpName, false );
     retVal = tmpName + ' ';
   }
-  if (!user.isEmpty ())
-  {
+  if ( !user.isEmpty() ) {
     retVal += '<';
     retVal += user;
-    if (!host.isEmpty ()) {
+    if ( !host.isEmpty() ) {
       retVal += '@';
       retVal += host;
     }
     retVal += '>';
   }
-  if (!rawComment.isEmpty ())
-  {
+  if ( !rawComment.isEmpty() ) {
     retVal += " (" + rawComment + ')';
   }
   //kDebug() << retVal;
@@ -228,17 +205,17 @@ const QByteArray mailAddress::getStr () const
 
 bool mailAddress::isEmpty () const
 {
-  return user.isEmpty ();
+  return user.isEmpty();
 }
 
 void mailAddress::setFullName (const QString & _str)
 {
-  rawFullName = KIMAP::encodeRFC2047String (_str).toLatin1 ();
+  rawFullName = KIMAP::encodeRFC2047String( _str ).toLatin1();
 }
 
 const QString mailAddress::getFullName () const
 {
-  return KIMAP::decodeRFC2047String (rawFullName);
+  return KIMAP::decodeRFC2047String( rawFullName );
 }
 
 void mailAddress::setCommentRaw (const QByteArray & _str)
@@ -248,12 +225,12 @@ void mailAddress::setCommentRaw (const QByteArray & _str)
 
 void mailAddress::setComment (const QString & _str)
 {
-  rawComment = KIMAP::encodeRFC2047String (_str).toLatin1 ();
+  rawComment = KIMAP::encodeRFC2047String( _str ).toLatin1();
 }
 
 const QString mailAddress::getComment () const
 {
-  return KIMAP::decodeRFC2047String (rawComment);
+  return KIMAP::decodeRFC2047String( rawComment );
 }
 
 const QByteArray & mailAddress::getCommentRaw () const
@@ -264,32 +241,31 @@ const QByteArray & mailAddress::getCommentRaw () const
 QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
 {
   QString retVal;
-  if (!adr.getFullName ().isEmpty ())
-  {
+  if ( !adr.getFullName().isEmpty() ) {
     // should do some umlaut escaping
-    retVal += adr.getFullName () + ' ';
+    retVal += adr.getFullName() + ' ';
   }
-  if (!adr.getUser ().isEmpty () && !shortAdr)
-  {
-    retVal += "&lt;" + adr.getUser ();
-    if (!adr.getHost ().isEmpty ())
-      retVal += '@' + adr.getHost ();
+  if ( !adr.getUser().isEmpty() && !shortAdr ) {
+    retVal += "&lt;" + adr.getUser();
+    if ( !adr.getHost().isEmpty() ) {
+      retVal += '@' + adr.getHost();
+    }
     retVal += "&gt; ";
   }
-  if (!adr.getComment ().isEmpty ())
-  {
+  if ( !adr.getComment().isEmpty() ) {
     // should do some umlaut escaping
-    retVal = '(' + adr.getComment () + ')';
+    retVal = '(' + adr.getComment() + ')';
   }
 
-  if (!adr.getUser ().isEmpty ())
-  {
+  if ( !adr.getUser().isEmpty() ) {
     QString mail;
-    mail = adr.getUser ();
-    if (!mail.isEmpty () && !adr.getHost ().isEmpty ())
-      mail += '@' + adr.getHost ();
-    if (!mail.isEmpty ())
+    mail = adr.getUser();
+    if ( !mail.isEmpty() && !adr.getHost().isEmpty() ) {
+      mail += '@' + adr.getHost();
+    }
+    if ( !mail.isEmpty() ) {
       retVal = "<A HREF=\"mailto:" + mail + "\">" + retVal + "</A>";
+    }
   }
   return retVal;
 }
@@ -297,21 +273,18 @@ QString mailAddress::emailAddrAsAnchor (const mailAddress & adr, bool shortAdr)
 QString mailAddress::emailAddrAsAnchor (const QList < mailAddress *> &list, bool value)
 {
   QString retVal;
-  QListIterator < mailAddress *> it (list);
+  QListIterator < mailAddress *> it( list );
 
-  while (it.hasNext())
-  {
-    retVal += emailAddrAsAnchor ((*it.next()), value) + "<BR></BR>\n";
+  while ( it.hasNext() ) {
+    retVal += emailAddrAsAnchor ( ( *it.next() ), value ) + "<BR></BR>\n";
   }
-
   return retVal;
 }
 
-
-void mailAddress::clear() {
-  user.truncate(0);
-  host.truncate(0);
-  rawFullName.truncate(0);
-  rawComment.truncate(0);
+void mailAddress::clear()
+{
+  user.truncate( 0 );
+  host.truncate( 0 );
+  rawFullName.truncate( 0 );
+  rawComment.truncate( 0 );
 }
-

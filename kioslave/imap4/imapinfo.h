@@ -33,8 +33,7 @@ class imapInfo
 public:
 
 
-  enum MessageAttribute
-  {
+  enum MessageAttribute {
     Seen = 1 << 0,
     Answered = 1 << 1,
     Flagged = 1 << 2,
@@ -96,7 +95,7 @@ public:
   void setFlags (const QByteArray & inFlag)
   {
     flagsAvailable_ = true;
-    flags_ = _flags (inFlag);
+    flags_ = _flags( inFlag );
   }
 
   void setPermanentFlags (ulong l)
@@ -108,7 +107,7 @@ public:
   void setPermanentFlags (const QByteArray& inFlag)
   {
     permanentFlagsAvailable_ = true;
-    permanentFlags_ = _flags (inFlag);
+    permanentFlags_ = _flags( inFlag );
   }
 
   void setReadWrite (bool b)

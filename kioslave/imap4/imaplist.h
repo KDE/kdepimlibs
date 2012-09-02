@@ -45,7 +45,7 @@ public:
   // return all atributes concatenated
   QString attributesAsString() const
   {
-    return attributes_.join(",");
+    return attributes_.join( "," );
   }
 
   QString hierarchyDelimiter () const
@@ -54,7 +54,7 @@ public:
   }
   void setHierarchyDelimiter (const QByteArray & _str)
   {
-    hierarchyDelimiter_ = QString::fromLatin1(_str);
+    hierarchyDelimiter_ = QString::fromLatin1( _str );
   }
 
   QString name () const

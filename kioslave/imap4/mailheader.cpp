@@ -20,7 +20,7 @@
 
 mailHeader::mailHeader ()
 {
-  setType ("text/plain");
+  setType( "text/plain" );
   gmt_offset = 0;
 }
 
@@ -31,68 +31,69 @@ mailHeader::~mailHeader ()
 void
 mailHeader::addHdrLine (mimeHdrLine * inLine)
 {
-  mimeHdrLine *addLine = new mimeHdrLine (inLine);
+  mimeHdrLine *addLine = new mimeHdrLine( inLine );
 
-  const QByteArray label(addLine->getLabel());
-  const QByteArray value(addLine->getValue());
+  const QByteArray label( addLine->getLabel() );
+  const QByteArray value( addLine->getValue() );
 
-  if (!qstricmp (label, "Return-Path")) {
-	returnpathAdr.parseAddress (value.data ());
-	goto out;
+  if ( !qstricmp( label, "Return-Path" ) ) {
+    returnpathAdr.parseAddress( value.data() );
+    goto out;
   }
-  if (!qstricmp (label, "Sender")) {
-	senderAdr.parseAddress (value.data ());
-	goto out;
+  if ( !qstricmp( label, "Sender" ) ) {
+    senderAdr.parseAddress( value.data() );
+    goto out;
   }
-  if (!qstricmp (label, "From")) {
-	fromAdr.parseAddress (value.data ());
-	goto out;
+  if ( !qstricmp( label, "From" ) ) {
+    fromAdr.parseAddress( value.data() );
+    goto out;
   }
-  if (!qstricmp (label, "Reply-To")) {
-	replytoAdr.parseAddress (value.data ());
-	goto out;
+  if ( !qstricmp( label, "Reply-To" ) ) {
+    replytoAdr.parseAddress( value.data() );
+    goto out;
   }
-  if (!qstricmp (label, "To")) {
-	mailHeader::parseAddressList (value, toAdr);
-	goto out;
+  if ( !qstricmp( label, "To" ) ) {
+    mailHeader::parseAddressList( value, toAdr );
+    goto out;
   }
-  if (!qstricmp (label, "CC")) {
-	mailHeader::parseAddressList (value, ccAdr);
-	goto out;
+  if ( !qstricmp( label, "CC" ) ) {
+    mailHeader::parseAddressList( value, ccAdr );
+    goto out;
   }
-  if (!qstricmp (label, "BCC")) {
-	mailHeader::parseAddressList (value, bccAdr);
-	goto out;
+  if ( !qstricmp( label, "BCC" ) ) {
+    mailHeader::parseAddressList( value, bccAdr );
+    goto out;
   }
-  if (!qstricmp (label, "Subject")) {
-	_subject = value.simplified();
-	goto out;
+  if ( !qstricmp( label, "Subject" ) ) {
+    _subject = value.simplified();
+    goto out;
   }
-  if (!qstricmp (label.data (), "Date")) {
-	mDate = value;
-	goto out;
+  if ( !qstricmp( label.data(), "Date" ) ) {
+    mDate = value;
+    goto out;
   }
-  if (!qstricmp (label.data (), "Message-ID")) {
-      int start = value.lastIndexOf ('<');
-      int end = value.lastIndexOf ('>');
-      if (start < end)
-          messageID = value.mid (start, end - start + 1);
-      else {
-	  qWarning("bad Message-ID");
+  if ( !qstricmp( label.data(), "Message-ID" ) ) {
+      int start = value.lastIndexOf( '<' );
+      int end = value.lastIndexOf( '>' );
+      if ( start < end ) {
+        messageID = value.mid( start, end - start + 1 );
+      } else {
+        qWarning( "bad Message-ID" );
           /* messageID = value; */
       }
       goto out;
   }
-  if (!qstricmp (label.data (), "In-Reply-To")) {
-      int start = value.lastIndexOf ('<');
-      int end = value.lastIndexOf ('>');
-      if (start < end)
-        inReplyTo = value.mid (start, end - start + 1);
+  if ( !qstricmp( label.data(), "In-Reply-To" ) ) {
+      int start = value.lastIndexOf( '<' );
+      int end = value.lastIndexOf( '>' );
+      if ( start < end ) {
+        inReplyTo = value.mid( start, end - start + 1 );
+      }
       goto out;
   }
 
   // everything else is handled by mimeHeader
-  mimeHeader::addHdrLine (inLine);
+  mimeHeader::addHdrLine( inLine );
   delete addLine;
   return;
 
@@ -100,55 +101,67 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 //  cout << label.data() << ": '" << value.data() << "'" << endl;
 
   //need only to add this line if not handled by mimeHeader
-  originalHdrLines.append (addLine);
+  originalHdrLines.append( addLine );
 }
 
 void
 mailHeader::outputHeader (mimeIO & useIO)
 {
-  static const QByteArray __returnPath("Return-Path: ");
-  static const QByteArray __from      ("From: ");
-  static const QByteArray __sender    ("Sender: ");
-  static const QByteArray __replyTo   ("Reply-To: ");
-  static const QByteArray __to        ("To: ");
-  static const QByteArray __cc        ("CC: ");
-  static const QByteArray __bcc       ("BCC: ");
-  static const QByteArray __subject   ("Subject: ");
-  static const QByteArray __messageId ("Message-ID: ");
-  static const QByteArray __inReplyTo ("In-Reply-To: ");
-  static const QByteArray __references("References: ");
-  static const QByteArray __date      ("Date: ");
+  static const QByteArray __returnPath( "Return-Path: " );
+  static const QByteArray __from      ( "From: " );
+  static const QByteArray __sender    ( "Sender: " );
+  static const QByteArray __replyTo   ( "Reply-To: " );
+  static const QByteArray __to        ( "To: " );
+  static const QByteArray __cc        ( "CC: " );
+  static const QByteArray __bcc       ( "BCC: " );
+  static const QByteArray __subject   ( "Subject: " );
+  static const QByteArray __messageId ( "Message-ID: " );
+  static const QByteArray __inReplyTo ( "In-Reply-To: " );
+  static const QByteArray __references( "References: " );
+  static const QByteArray __date      ( "Date: " );
 
-  if (!returnpathAdr.isEmpty())
-    useIO.outputMimeLine(__returnPath + returnpathAdr.getStr());
-  if (!fromAdr.isEmpty())
-    useIO.outputMimeLine(__from + fromAdr.getStr());
-  if (!senderAdr.isEmpty())
-    useIO.outputMimeLine(__sender + senderAdr.getStr());
-  if (!replytoAdr.isEmpty())
-    useIO.outputMimeLine(__replyTo + replytoAdr.getStr());
+  if ( !returnpathAdr.isEmpty() ) {
+    useIO.outputMimeLine( __returnPath + returnpathAdr.getStr() );
+  }
+  if ( !fromAdr.isEmpty() ) {
+    useIO.outputMimeLine( __from + fromAdr.getStr() );
+  }
+  if ( !senderAdr.isEmpty() ) {
+    useIO.outputMimeLine( __sender + senderAdr.getStr() );
+  }
+  if ( !replytoAdr.isEmpty() ) {
+    useIO.outputMimeLine( __replyTo + replytoAdr.getStr() );
+  }
 
-  if (toAdr.count())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__to +
-                                    mailHeader::getAddressStr(toAdr)));
-  if (ccAdr.count())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__cc +
-                                    mailHeader::getAddressStr(ccAdr)));
-  if (bccAdr.count())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__bcc +
-                                    mailHeader::getAddressStr(bccAdr)));
-  if (!_subject.isEmpty())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__subject + _subject));
-  if (!messageID.isEmpty())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__messageId + messageID));
-  if (!inReplyTo.isEmpty())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__inReplyTo + inReplyTo));
-  if (!references.isEmpty())
-    useIO.outputMimeLine(mimeHdrLine::truncateLine(__references + references));
+  if ( toAdr.count() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __to +
+                                    mailHeader::getAddressStr( toAdr ) ) );
+  }
+  if ( ccAdr.count() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __cc +
+                                    mailHeader::getAddressStr( ccAdr ) ) );
+  }
+  if ( bccAdr.count() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __bcc +
+                                    mailHeader::getAddressStr( bccAdr ) ) );
+  }
+  if ( !_subject.isEmpty() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __subject + _subject ) );
+  }
+  if ( !messageID.isEmpty() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __messageId + messageID ) );
+  }
+  if ( !inReplyTo.isEmpty() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __inReplyTo + inReplyTo ) );
+  }
+  if ( !references.isEmpty() ) {
+    useIO.outputMimeLine( mimeHdrLine::truncateLine( __references + references ) );
+  }
 
-  if (!mDate.isEmpty())
-    useIO.outputMimeLine(__date + mDate);
-  mimeHeader::outputHeader(useIO);
+  if ( !mDate.isEmpty() ) {
+    useIO.outputMimeLine( __date + mDate );
+  }
+  mimeHeader::outputHeader( useIO );
 }
 
 int
@@ -159,23 +172,21 @@ mailHeader::parseAddressList (const char *inCStr,
   int skip = 1;
   char *aCStr = (char *) inCStr;
 
-  if (!aCStr)
+  if ( !aCStr ) {
     return 0;
-  while (skip > 0)
-  {
+  }
+  while ( skip > 0 ) {
     mailAddress *aAddress = new mailAddress;
-    skip = aAddress->parseAddress (aCStr);
-    if (skip)
-    {
+    skip = aAddress->parseAddress( aCStr );
+    if ( skip ) {
       aCStr += skip;
-      if (skip < 0)
+      if ( skip < 0 ) {
         advance -= skip;
-      else
+      } else {
         advance += skip;
-      aList.append (aAddress);
-    }
-    else
-    {
+      }
+      aList.append( aAddress );
+    } else {
       delete aAddress;
       break;
     }
@@ -188,16 +199,14 @@ mailHeader::getAddressStr (QList < mailAddress *> &aList)
 {
   QByteArray retVal;
 
-  QListIterator < mailAddress *> it = QListIterator < mailAddress *>(aList);
+  QListIterator < mailAddress *> it = QListIterator < mailAddress *>( aList );
   mailAddress *addr;
-  while (it.hasNext())
-  {
+  while ( it.hasNext() ) {
     addr = it.next();
-    retVal += addr->getStr ();
-    if (it.hasNext() )
+    retVal += addr->getStr();
+    if ( it.hasNext() ) {
       retVal += ", ";
+    }
   }
-
-
   return retVal;
 }

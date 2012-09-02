@@ -1,20 +1,20 @@
 /*
-    Copyright (C) 2006-2007 KovoKs <info@kovoks.nl>
+  Copyright (C) 2006-2007 KovoKs <info@kovoks.nl>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 // Uncomment the next line for full comm debug
@@ -35,28 +35,30 @@
 
 using namespace MailTransport;
 
-namespace MailTransport
-{
-  class SocketPrivate
-  {
-    public:
-      SocketPrivate( Socket *s );
-      Socket             *const q;
-      QSslSocket         *socket;
-      QString             server;
-      QString             protocol;
-      int                 port;
-      bool                secure;
+namespace MailTransport {
 
-      // slots
-      void slotConnected();
-      void slotStateChanged( QAbstractSocket::SocketState state );
-      void slotModeChanged( QSslSocket::SslMode  state );
-      void slotSocketRead();
-      void slotSslErrors( const QList<QSslError> &errors );
-    private:
-      QString m_msg;
-  };
+class SocketPrivate
+{
+  public:
+    SocketPrivate( Socket *s );
+    Socket             *const q;
+    QSslSocket         *socket;
+    QString             server;
+    QString             protocol;
+    int                 port;
+    bool                secure;
+
+    // slots
+    void slotConnected();
+    void slotStateChanged( QAbstractSocket::SocketState state );
+    void slotModeChanged( QSslSocket::SslMode  state );
+    void slotSocketRead();
+    void slotSslErrors( const QList<QSslError> &errors );
+
+  private:
+    QString m_msg;
+};
+
 }
 
 SocketPrivate::SocketPrivate( Socket *s ) : q( s )
@@ -65,7 +67,7 @@ SocketPrivate::SocketPrivate( Socket *s ) : q( s )
 
 void SocketPrivate::slotConnected()
 {
-  kDebug() ;
+  kDebug();
 
   if ( !secure ) {
     kDebug() << "normal connect";
@@ -130,7 +132,7 @@ void SocketPrivate::slotSslErrors( const QList<QSslError> & )
 // ------------------ end private ---------------------------//
 
 Socket::Socket( QObject *parent )
-    : QObject( parent ), d( new SocketPrivate( this ) )
+  : QObject( parent ), d( new SocketPrivate( this ) )
 {
   d->socket = 0;
   d->port = 0;
