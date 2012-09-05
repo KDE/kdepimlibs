@@ -134,6 +134,6 @@ class KMIME_EXPORT ContentIndex
 
 }  //namespace KMime
 
-KMIME_EXPORT uint qHash( const KMime::ContentIndex& ); 
+KMIME_EXPORT uint qHash( const KMime::ContentIndex& );
 
 #endif

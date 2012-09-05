@@ -95,7 +95,7 @@ class DotAtomPrivate : public StructuredPrivate
 class ParametrizedPrivate : public StructuredPrivate
 {
   public:
-    QMap<QString,QString> parameterHash;
+    QMap<QString, QString> parameterHash;
 };
 
 } // namespace Generics

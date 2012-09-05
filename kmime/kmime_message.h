@@ -233,6 +233,6 @@ class KMIME_EXPORT Message : public Content
 } // namespace KMime
 
 #define KMIME_MESSAGE_METATYPE_DEFINED 1
-Q_DECLARE_METATYPE(KMime::Message*)
+Q_DECLARE_METATYPE( KMime::Message* )
 
 #endif // __KMIME_MESSAGE_H__

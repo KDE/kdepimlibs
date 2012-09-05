@@ -109,12 +109,13 @@ bool KMime::ContentIndex::operator !=( const ContentIndex &index ) const
 
 ContentIndex& ContentIndex::operator =(const ContentIndex & other)
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
   return *this;
 }
 
 uint qHash( const KMime::ContentIndex &index )
-{ 
+{
   return qHash( index.toString() );
 }

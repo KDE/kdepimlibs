@@ -120,14 +120,14 @@ void ContentTest::testImplicitMultipartGeneration()
 
   // c1 implicitly converted into a multipart/mixed node.
   QVERIFY( c1->contentType( false ) );
-  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray( "multipart/mixed" ) );
   QVERIFY( c1->body().isEmpty() );
 
   QCOMPARE( c1->contents().count(), 2 );
   Content *c = c1->contents().at( 0 ); // Former c1.
   QVERIFY( c->contentType( false ) );
-  QCOMPARE( c->contentType()->mimeType(), QByteArray("text/plain") );
-  QCOMPARE( c->body(), QByteArray("textpart") );
+  QCOMPARE( c->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( c->body(), QByteArray( "textpart" ) );
 
   QCOMPARE( c1->contents().at( 1 ), c2 );
 
@@ -166,7 +166,7 @@ void ContentTest::testExplicitMultipartGeneration()
   c1->addContent( c3 );
 
   // c1 should not have been changed.
-  QCOMPARE( c1->contentType()->mimeType(), QByteArray("multipart/mixed") );
+  QCOMPARE( c1->contentType()->mimeType(), QByteArray( "multipart/mixed" ) );
   QVERIFY( c1->body().isEmpty() );
 
   QCOMPARE( c1->contents().count(), 2 );
@@ -349,9 +349,9 @@ void ContentTest::testMultipleHeaderExtraction()
 
   QList<KMime::Headers::Base*> result = msg->headersByType( "Received" );
   QCOMPARE( result.count(), 3 );
-  QCOMPARE( result[0]->asUnicodeString(),  QString("from ktown.kde.org ([192.168.100.1])") );
-  QCOMPARE( result[1]->asUnicodeString(),  QString("from dev1.kde.org ([192.168.100.2]) by ktown.kde.org ([192.168.100.1])") );
-  QCOMPARE( result[2]->asUnicodeString(),  QString("from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])") );
+  QCOMPARE( result[0]->asUnicodeString(),  QString( "from ktown.kde.org ([192.168.100.1])" ) );
+  QCOMPARE( result[1]->asUnicodeString(),  QString( "from dev1.kde.org ([192.168.100.2]) by ktown.kde.org ([192.168.100.1])" ) );
+  QCOMPARE( result[2]->asUnicodeString(),  QString( "from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])" ) );
 }
 
 void ContentTest::testMultipartMixed()
@@ -632,7 +632,7 @@ void ContentTest::testParent()
   c5->contentType()->from7BitString( "multipart/mixed" );
 
   //c2 doesn't have a parent yet
-  QCOMPARE(c2->parent(), (Content*)(0L));
+  QCOMPARE( c2->parent(), (Content*)( 0L ) );
 
   c1->addContent( c2 );
   c1->addContent( c3 );
@@ -643,17 +643,15 @@ void ContentTest::testParent()
   QCOMPARE( c3->parent(), c1 );
 
   //test removal
-  c1->removeContent(c2, false);
-  QCOMPARE(c2->parent(), (Content*)(0L));
-  QCOMPARE(c1->contents().at( 0 ), c3 );
+  c1->removeContent( c2, false );
+  QCOMPARE( c2->parent(), (Content*)( 0L ) );
+  QCOMPARE( c1->contents().at( 0 ), c3 );
 
  //check if the content is moved correctly to another parent
   c5->addContent( c4 );
-  QCOMPARE(c4->parent(), c5);
-  QCOMPARE(c1->contents().count(), 0); //yes, it should be 0
-  QCOMPARE(c5->contents().at( 0 ), c4);
-
-
+  QCOMPARE( c4->parent(), c5 );
+  QCOMPARE( c1->contents().count(), 0 ); //yes, it should be 0
+  QCOMPARE( c5->contents().at( 0 ), c4 );
 
   // example taken from RFC 2046, section 5.1.1.
   QByteArray data =
@@ -686,11 +684,10 @@ void ContentTest::testParent()
   Message *msg = new Message();
   msg->setContent( data );
   msg->parse();
-  QCOMPARE( msg->parent(),  (Content*)(0L));
-  QCOMPARE( msg->contents().at( 0 )->parent(), msg);
-  QCOMPARE( msg->contents().at( 1 )->parent(), msg);
+  QCOMPARE( msg->parent(),  (Content*)( 0L ));
+  QCOMPARE( msg->contents().at( 0 )->parent(), msg );
+  QCOMPARE( msg->contents().at( 1 )->parent(), msg );
   delete msg;
-
 }
 
 void ContentTest::testFreezing()
@@ -743,4 +740,3 @@ void ContentTest::testFreezing()
 }
 
 #include "contenttest.moc"
-

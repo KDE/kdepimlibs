@@ -69,18 +69,18 @@ void UtilTest::testExtractHeader()
 
   // basic tests
   QVERIFY( extractHeader( header, "Foo" ).isEmpty() );
-  QCOMPARE( extractHeader( header, "To" ), QByteArray("<foo@bla.org>") );
+  QCOMPARE( extractHeader( header, "To" ), QByteArray( "<foo@bla.org>" ) );
 
   // case insensitive matching
   QCOMPARE( extractHeader( header, "mime-version" ), QByteArray( "1.0" ) );
 
   // extraction of multi-line headers
   QCOMPARE( extractHeader( header, "Subject" ),
-            QByteArray("=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=") );
+            QByteArray( "=?UTF-8?Q?_Notification_for_appointment:?= =?UTF-8?Q?_Test?=" ) );
 
   // bug #86302 - malformed header continuation
   QCOMPARE( extractHeader( header, "Continuation" ),
-            QByteArray("=?UTF-8?Q?_TEST CONT1?= =?UTF-8?Q?_TEST CONT2?=") );
+            QByteArray( "=?UTF-8?Q?_TEST CONT1?= =?UTF-8?Q?_TEST CONT2?=" ) );
 
   // missing space after ':'
   QCOMPARE( extractHeader( "From:<toma@kovoks.nl>", "From" ), QByteArray( "<toma@kovoks.nl>" ) );
@@ -183,7 +183,7 @@ void UtilTest::testIsSigned_data()
     "Version: GnuPG v2.0.15 (GNU/Linux)\n"
     "...\n"
     "-----END PGP SIGNATURE-----\n\n"
-    "--nextPart1571960.gHxU0aGA9V--\n"    
+    "--nextPart1571960.gHxU0aGA9V--\n"
   ) << true;
 }
 

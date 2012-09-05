@@ -88,7 +88,7 @@ void RFC2047Test::testRFC2047decode()
             QString::fromLatin1( "Subject: ÖÄÜöäü" ) );
 
   // Small data
-  QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?c?=", encCharset ), QString::fromUtf8("c") );
+  QCOMPARE( decodeRFC2047String( "=?iso-8859-1?Q?c?=", encCharset ), QString::fromUtf8( "c" ) );
 }
 
 void RFC2047Test::testInvalidDecode()
@@ -96,11 +96,11 @@ void RFC2047Test::testInvalidDecode()
   QByteArray encCharset;
 
   // invalid / incomplete encoded data
-  QCOMPARE( decodeRFC2047String( "=", encCharset ), QString::fromUtf8("=") );
-  QCOMPARE( decodeRFC2047String( "=?", encCharset ), QString::fromUtf8("=?") );
-  QCOMPARE( decodeRFC2047String( "=?a?b?=", encCharset ), QString::fromUtf8("=?a?b?=") );
-  QCOMPARE( decodeRFC2047String( "=?a?b?c?", encCharset ), QString::fromUtf8("=?a?b?c?") );
-  QCOMPARE( decodeRFC2047String( "=?a??c?=", encCharset ), QString::fromUtf8("=?a??c?=") );
+  QCOMPARE( decodeRFC2047String( "=", encCharset ), QString::fromUtf8( "=" ) );
+  QCOMPARE( decodeRFC2047String( "=?", encCharset ), QString::fromUtf8( "=?" ) );
+  QCOMPARE( decodeRFC2047String( "=?a?b?=", encCharset ), QString::fromUtf8( "=?a?b?=" ) );
+  QCOMPARE( decodeRFC2047String( "=?a?b?c?", encCharset ), QString::fromUtf8( "=?a?b?c?" ) );
+  QCOMPARE( decodeRFC2047String( "=?a??c?=", encCharset ), QString::fromUtf8( "=?a??c?=" ) );
 }
 
 void RFC2047Test::testRFC2047encode()

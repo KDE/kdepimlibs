@@ -45,8 +45,9 @@ static const char * tokenTypes[] = {
 static const int tokenTypesLen = sizeof tokenTypes / sizeof *tokenTypes;
 
 void usage( const char * msg=0 ) {
-  if ( msg && *msg )
+  if ( msg && *msg ) {
     cerr << msg << endl;
+  }
   cerr <<
     "usage: test_kmime_header_parsing "
     "(--token <tokentype>|--headerfield <fieldtype>|--header)\n"
@@ -54,15 +55,18 @@ void usage( const char * msg=0 ) {
     "  --token <tokentype>       interpret input as <tokentype> and output\n"
     "  (-t)                      in parsed form. Currently defined values of\n"
     "                            <tokentype> are:" << endl;
-  for ( int i = 0 ; i < tokenTypesLen ; ++i )
-    cerr << "                               " << tokenTypes[i] << endl;
+  for ( int i = 0 ; i < tokenTypesLen ; ++i ) {
+    cerr << "                               " << tokenTypes[i]
+         << endl;
+  }
   cerr << "\n"
     "  --headerfield <fieldtype> interpret input as header field <fieldtype>\n"
     "  (-f)                      and output in parsed form.\n"
     "\n"
     "  --header                  parse an RFC2822 header. Iterates over all\n"
-    "  (-h)                      header fields and outputs them in parsed form." << endl;
-  exit(1);
+    "  (-h)                      header fields and outputs them in parsed form."
+    << endl;
+  exit( 1 );
 }
 
 ostream & operator<<( ostream & stream, const QString & str ) {
@@ -70,14 +74,16 @@ ostream & operator<<( ostream & stream, const QString & str ) {
 }
 
 int main( int argc, char * argv[] ) {
-  if ( argc == 1 || argc > 3 ) usage();
+  if ( argc == 1 || argc > 3 ) {
+    usage();
+  }
   //
   // process options:
   //
   enum { None, Token, HeaderField, Header } action = None;
   const char * argument = 0;
   bool withCRLF = false;
-  while( true ) {
+  while ( true ) {
     int option_index = 0;
     static const struct option long_options[] = {
       // actions:
@@ -89,7 +95,9 @@ int main( int argc, char * argv[] ) {
     };
 
     int c = getopt_long( argc, argv, "cf:ht:", long_options, &option_index );
-    if ( c == -1 ) break;
+    if ( c == -1 ) {
+      break;
+    }
 
     switch ( c ) {
     case 'c': // --crlf
@@ -110,15 +118,22 @@ int main( int argc, char * argv[] ) {
     }
   }
 
-  if ( optind < argc ) usage( "non-option argument encountered!" );
+  if ( optind < argc ) {
+    usage( "non-option argument encountered!" );
+  }
 
   assert( action == Token );
 
   int index;
-  for ( index = 0 ; index < tokenTypesLen ; ++index )
-    if ( !qstricmp( tokenTypes[index], argument ) ) break;
+  for ( index = 0 ; index < tokenTypesLen ; ++index ) {
+    if ( !qstricmp( tokenTypes[index], argument ) ) {
+      break;
+    }
+  }
 
-  if ( index >= tokenTypesLen ) usage( "unknown token type" );
+  if ( index >= tokenTypesLen ) {
+    usage( "unknown token type" );
+  }
 
   KComponentData componentData( "test_kmime_header_parsing" );
 
@@ -139,8 +154,8 @@ int main( int argc, char * argv[] ) {
       parseEncodedWord( iit, iend, result, language, charset );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl
-	   << "language:\n" << language.data() << endl;
+           << "result:\n" << result << endl
+           << "language:\n" << language.data() << endl;
     }
     break;
   case 1:
@@ -149,7 +164,8 @@ int main( int argc, char * argv[] ) {
       bool ok = parseAtom( iit, iend, result, true );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
 
       result = "without 8bit: ";
 #ifdef COMPILE_FAIL
@@ -160,7 +176,8 @@ int main( int argc, char * argv[] ) {
 #endif
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 2:
@@ -169,7 +186,8 @@ int main( int argc, char * argv[] ) {
       bool ok = parseToken( iit, iend, result, true );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
 
       result = "without 8bit: ";
 #ifdef COMPILE_FAIL
@@ -180,7 +198,8 @@ int main( int argc, char * argv[] ) {
 #endif
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 3:
@@ -188,10 +207,11 @@ int main( int argc, char * argv[] ) {
       QString result;
       // must have checked for initial '"' already:
       bool ok = *iit++ == '"' &&
-	parseGenericQuotedString( iit, iend, result, withCRLF, '"', '"' );
+           parseGenericQuotedString( iit, iend, result, withCRLF, '"', '"' );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 4:
@@ -199,10 +219,11 @@ int main( int argc, char * argv[] ) {
       QString result;
       // must have checked for initial '[' already:
       bool ok = *iit++ == '[' &&
-	parseGenericQuotedString( iit, iend, result, withCRLF, '[', ']' );
+           parseGenericQuotedString( iit, iend, result, withCRLF, '[', ']' );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 5:
@@ -210,10 +231,11 @@ int main( int argc, char * argv[] ) {
       QString result;
       // must have checked for initial '(' already:
       bool ok = *iit++ == '(' &&
-	parseComment( iit, iend, result, withCRLF, true );
+                parseComment( iit, iend, result, withCRLF, true );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 6:
@@ -222,7 +244,8 @@ int main( int argc, char * argv[] ) {
       bool ok = parsePhrase( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 7:
@@ -231,7 +254,8 @@ int main( int argc, char * argv[] ) {
       bool ok = parseDotAtom( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 8:
@@ -240,7 +264,8 @@ int main( int argc, char * argv[] ) {
       bool ok = parseDomain( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result:\n" << result << endl;
+           << "result:\n" << result
+           << endl;
     }
     break;
   case 9:
@@ -249,10 +274,12 @@ int main( int argc, char * argv[] ) {
       bool ok = parseObsRoute( iit, iend, result, withCRLF, true /*save*/ );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result: " << result.count() << " domains:" << endl;
+           << "result: " << result.count() << " domains:"
+           << endl;
       for ( QStringList::ConstIterator it = result.constBegin() ;
-	    it != result.constEnd() ; ++it )
-	cout << (*it) << endl;
+           it != result.constEnd() ; ++it ) {
+        cout << ( *it ) << endl;
+      }
     }
     break;
   case 10:
@@ -261,8 +288,9 @@ int main( int argc, char * argv[] ) {
       bool ok = parseAddrSpec( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.localPart:\n" << result.localPart << endl
-	   << "result.domain:\n" << result.domain << endl;
+           << "result.localPart:\n" << result.localPart << endl
+           << "result.domain:\n" << result.domain
+           << endl;
     }
     break;
   case 11:
@@ -271,8 +299,9 @@ int main( int argc, char * argv[] ) {
       bool ok = parseAngleAddr( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.localPart:\n" << result.localPart << endl
-	   << "result.domain:\n" << result.domain << endl;
+           << "result.localPart:\n" << result.localPart << endl
+           << "result.domain:\n" << result.domain
+           << endl;
     }
     break;
   case 12:
@@ -281,9 +310,10 @@ int main( int argc, char * argv[] ) {
       bool ok = parseMailbox( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.displayName:\n" << result.name() << endl
-	   << "result.addrSpec.localPart:\n" << result.addrSpec().localPart << endl
-	   << "result.addrSpec.domain:\n" << result.addrSpec().domain << endl;
+           << "result.displayName:\n" << result.name() << endl
+           << "result.addrSpec.localPart:\n" << result.addrSpec().localPart << endl
+           << "result.addrSpec.domain:\n" << result.addrSpec().domain
+           << endl;
     }
     break;
   case 13:
@@ -292,17 +322,19 @@ int main( int argc, char * argv[] ) {
       bool ok = parseGroup( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.displayName:\n" << result.displayName << endl;
+           << "result.displayName:\n" << result.displayName
+           << endl;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
-	      it = result.mailboxList.constBegin();
-	    it != result.mailboxList.constEnd() ; ++it, ++i )
-	cout << "result.mailboxList[" << i << "].displayName:\n"
-	     << (*it).name() << endl
-	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-	     << (*it).addrSpec().localPart << endl
-	     << "result.mailboxList[" << i << "].addrSpec.domain:\n"
-	     << (*it).addrSpec().domain << endl;
+            it = result.mailboxList.constBegin();
+            it != result.mailboxList.constEnd() ; ++it, ++i ) {
+        cout << "result.mailboxList[" << i << "].displayName:\n"
+             << ( *it ).name() << endl
+             << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
+             << ( *it ).addrSpec().localPart << endl
+             << "result.mailboxList[" << i << "].addrSpec.domain:\n"
+             << ( *it ).addrSpec().domain << endl;
+      }
     }
     break;
   case 14:
@@ -311,17 +343,20 @@ int main( int argc, char * argv[] ) {
       bool ok = parseAddress( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.displayName:\n" << endl;
+           << "result.displayName:\n"
+           << endl;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
-	      it = result.mailboxList.constBegin();
-	    it != result.mailboxList.constEnd() ; ++it, ++i )
-	cout << "result.mailboxList[" << i << "].displayName:\n"
-	     << (*it).name() << endl
-	     << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-	     << (*it).addrSpec().localPart << endl
-	     << "result.mailboxList[" << i << "].addrSpec.domain:\n"
-	     << (*it).addrSpec().domain << endl;
+           it = result.mailboxList.constBegin();
+           it != result.mailboxList.constEnd() ; ++it, ++i ) {
+        cout << "result.mailboxList[" << i << "].displayName:\n"
+             << ( *it ).name() << endl
+             << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
+             << ( *it ).addrSpec().localPart << endl
+             << "result.mailboxList[" << i << "].addrSpec.domain:\n"
+             << ( *it ).addrSpec().domain
+             << endl;
+      }
     }
     break;
   case 15:
@@ -332,68 +367,76 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl;
       int j = 0;
       for ( QList<KMime::Types::Address>::ConstIterator
-	      jt = result.constBegin() ; jt != result.constEnd() ; ++jt, ++j ) {
-	cout << "result[" << j << "].displayName:\n"
-	     << (*jt).displayName << endl;
-	int i = 0;
-	for ( QList<KMime::Types::Mailbox>::ConstIterator
-		it = (*jt).mailboxList.begin();
-	      it != (*jt).mailboxList.end() ; ++it, ++i )
-	  cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"
-	       << (*it).name() << endl
-	       << "result[" << j << "].mailboxList[" << i << "].addrSpec.localPart:\n"
-	       << (*it).addrSpec().localPart << endl
-	       << "result[" << j << "].mailboxList[" << i << "].addrSpec.domain:\n"
-	       << (*it).addrSpec().domain << endl;
+           jt = result.constBegin() ; jt != result.constEnd() ; ++jt, ++j ) {
+        cout << "result[" << j << "].displayName:\n"
+             << ( *jt ).displayName
+             << endl;
+        int i = 0;
+        for ( QList<KMime::Types::Mailbox>::ConstIterator
+           it = ( *jt ).mailboxList.begin();
+           it != ( *jt ).mailboxList.end() ; ++it, ++i ) {
+          cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"
+           << ( *it ).name() << endl
+           << "result[" << j << "].mailboxList[" << i << "].addrSpec.localPart:\n"
+           << ( *it ).addrSpec().localPart << endl
+           << "result[" << j << "].mailboxList[" << i << "].addrSpec.domain:\n"
+           << ( *it ).addrSpec().domain
+           << endl;
+        }
       }
     }
     break;
   case 16:
     { // parameter
-      QPair<QString,KMime::Types::QStringOrQPair> result;
+      QPair<QString, KMime::Types::QStringOrQPair> result;
       bool ok = parseParameter( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.first (attribute):\n" << result.first << endl
-	   << "result.second.qstring (value):\n" << result.second.qstring << endl
-	   << "result.second.qpair (value):\n"
-	   << QByteArray( result.second.qpair.first,
-			result.second.qpair.second+1 ).data() << endl;
+           << "result.first (attribute):\n" << result.first << endl
+           << "result.second.qstring (value):\n" << result.second.qstring << endl
+           << "result.second.qpair (value):\n"
+           << QByteArray( result.second.qpair.first, result.second.qpair.second + 1 ).data()
+           << endl;
     }
     break;
   case 17:
     { // raw-parameter-list
-      QMap<QString,KMime::Types::QStringOrQPair> result;
+      QMap<QString, KMime::Types::QStringOrQPair> result;
       bool ok = parseRawParameterList( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result: " << result.count() << " raw parameters:" << endl;
+           << "result: " << result.count() << " raw parameters:"
+           << endl;
       int i = 0;
-      for ( QMap<QString,KMime::Types::QStringOrQPair>::ConstIterator
-	      it = result.constBegin() ; it != result.constEnd() ; ++it, ++i )
-	cout << "result[" << i << "].key() (attribute):\n"
-	     << it.key() << endl
-	     << "result[" << i << "].data().qstring (value):\n"
-	     << it.value().qstring << endl
-	     << "result[" << i << "].data().qpair (value):\n"
-	     << QByteArray( it.value().qpair.first,
-			  it.value().qpair.second+1 ).data() << endl;
+      for ( QMap<QString, KMime::Types::QStringOrQPair>::ConstIterator it = result.constBegin();
+            it != result.constEnd() ; ++it, ++i ) {
+        cout << "result[" << i << "].key() (attribute):\n"
+             << it.key() << endl
+             << "result[" << i << "].data().qstring (value):\n"
+             << it.value().qstring << endl
+             << "result[" << i << "].data().qpair (value):\n"
+             << QByteArray( it.value().qpair.first, it.value().qpair.second + 1 ).data()
+             << endl;
+      }
     }
     break;
   case 18:
     { // parameter-list
-      QMap<QString,QString> result;
+      QMap<QString, QString> result;
       bool ok = parseParameterList( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result: " << result.count() << " parameters:" << endl;
+           << "result: " << result.count() << " parameters:"
+           << endl;
       int i = 0;
-      for ( QMap<QString,QString>::Iterator it = result.begin() ;
-	    it != result.end() ; ++it, ++i )
-	cout << "result[" << i << "].key() (attribute):\n"
-	     << it.key() << endl
-	     << "result[" << i << "].data() (value):\n"
-	     << it.value() << endl;
+      for ( QMap<QString, QString>::Iterator it = result.begin() ;
+            it != result.end() ; ++it, ++i ) {
+        cout << "result[" << i << "].key() (attribute):\n"
+             << it.key() << endl
+             << "result[" << i << "].data() (value):\n"
+             << it.value()
+             << endl;
+      }
     }
     break;
   case 19:
@@ -403,14 +446,15 @@ int main( int argc, char * argv[] ) {
       bool timeZoneKnown = true;
 
       bool ok = parseTime( iit, iend, hour, mins, secs,
-			   secsEastOfGMT, timeZoneKnown, withCRLF );
+                           secsEastOfGMT, timeZoneKnown, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.hour: " << hour << endl
-	   << "result.mins: " << mins << endl
-	   << "result.secs: " << secs << endl
-	   << "result.secsEastOfGMT: " << secsEastOfGMT << endl
-	   << "result.timeZoneKnown: " << timeZoneKnown << endl;
+           << "result.hour: " << hour << endl
+           << "result.mins: " << mins << endl
+           << "result.secs: " << secs << endl
+           << "result.secsEastOfGMT: " << secsEastOfGMT << endl
+           << "result.timeZoneKnown: " << timeZoneKnown
+           << endl;
     }
     break;
   case 20:
@@ -420,9 +464,10 @@ int main( int argc, char * argv[] ) {
       time_t timet = result.toTime_t();
 
       cout << ( ok ? "OK" : "BAD" ) << endl
-	   << "result.time (in local timezone): " << ctime( &timet )
-	   << "result.secsEastOfGMT: " << result.utcOffset()
-	   << " (" << result.utcOffset()/60 << "mins)" << endl;
+           << "result.time (in local timezone): " << ctime( &timet )
+           << "result.secsEastOfGMT: " << result.utcOffset()
+           << " (" << result.utcOffset() / 60 << "mins)"
+           << endl;
     }
     break;
   default:

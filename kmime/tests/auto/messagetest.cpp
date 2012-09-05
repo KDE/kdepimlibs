@@ -411,7 +411,7 @@ void MessageTest::testInlineImages()
   msg.setContent( data );
   msg.parse();
 
-  QCOMPARE( msg.contents().size(), 2);
+  QCOMPARE( msg.contents().size(), 2 );
   QCOMPARE( msg.contents()[0]->contentType()->isMultipart(), true );
   QCOMPARE( msg.contents()[0]->contentType()->subType().data(), "alternative" );
 
@@ -449,7 +449,7 @@ void MessageTest::testIssue3914()
   KMime::Content *attachedMail =  msg->contents().at( 1 );
   QCOMPARE( attachedMail->contentType()->mimeType().data(), "message/rfc822" );
   QVERIFY( attachedMail->contentDisposition( false ) );
-  QVERIFY( attachedMail->contentDisposition()->hasParameter( "filename") );
+  QVERIFY( attachedMail->contentDisposition()->hasParameter( "filename" ) );
   QVERIFY( attachedMail->contentDisposition()->parameter( "filename" ).isEmpty() );
 }
 

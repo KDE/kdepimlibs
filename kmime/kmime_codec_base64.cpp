@@ -200,7 +200,7 @@ bool Base64Decoder::decode( const char* &scursor, const char * const send,
           break;
         }
         mSawPadding = true;
-        mStepNo = (mStepNo + 1) % 4;
+        mStepNo = ( mStepNo + 1 ) % 4;
         continue;
       } else {
         // non-base64 alphabet
@@ -220,21 +220,21 @@ bool Base64Decoder::decode( const char* &scursor, const char * const send,
       mOutbits = value << 2;
       break;
     case 1:
-      *dcursor++ = (char)(mOutbits | value >> 4);
+      *dcursor++ = (char)( mOutbits | value >> 4 );
       mOutbits = value << 4;
       break;
     case 2:
-      *dcursor++ = (char)(mOutbits | value >> 2);
+      *dcursor++ = (char)( mOutbits | value >> 2 );
       mOutbits = value << 6;
       break;
     case 3:
-      *dcursor++ = (char)(mOutbits | value);
+      *dcursor++ = (char)( mOutbits | value );
       mOutbits = 0;
       break;
     default:
       assert( 0 );
     }
-    mStepNo = (mStepNo + 1) % 4;
+    mStepNo = ( mStepNo + 1 ) % 4;
   }
 
   // return false when caller should call us again:
@@ -274,15 +274,15 @@ bool Base64Encoder::encode( const char* &scursor, const char * const send,
     case 0:
       assert( mNextbits == 0 );
       writeBase64( ch >> 2, dcursor, dend ); // top-most 6 bits -> output
-      mNextbits = (ch & 0x3) << 4; // 0..1 bits -> 4..5 in mNextbits
+      mNextbits = ( ch & 0x3 ) << 4; // 0..1 bits -> 4..5 in mNextbits
       break;
     case 1:
-      assert( (mNextbits & ~0x30) == 0 );
+      assert( ( mNextbits & ~0x30 ) == 0 );
       writeBase64( mNextbits | ch >> 4, dcursor, dend ); // 4..7 bits -> 0..3 in value
-      mNextbits = (ch & 0xf) << 2; // 0..3 bits -> 2..5 in mNextbits
+      mNextbits = ( ch & 0xf ) << 2; // 0..3 bits -> 2..5 in mNextbits
       break;
     case 2:
-      assert( (mNextbits & ~0x3C) == 0 );
+      assert( ( mNextbits & ~0x3C ) == 0 );
       writeBase64( mNextbits | ch >> 6, dcursor, dend ); // 6..7 bits -> 0..1 in value
       writeBase64( ch & 0x3F, dcursor, dend ); // 0..5 bits -> output
       mNextbits = 0;
@@ -328,15 +328,15 @@ bool Rfc2047BEncodingEncoder::encode( const char* &scursor,
     case 0:
       assert( mNextbits == 0 );
       writeBase64( ch >> 2, dcursor, dend ); // top-most 6 bits -> output
-      mNextbits = (ch & 0x3) << 4; // 0..1 bits -> 4..5 in mNextbits
+      mNextbits = ( ch & 0x3 ) << 4; // 0..1 bits -> 4..5 in mNextbits
       break;
     case 1:
-      assert( (mNextbits & ~0x30) == 0 );
+      assert( ( mNextbits & ~0x30 ) == 0 );
       writeBase64( mNextbits | ch >> 4, dcursor, dend ); // 4..7 bits -> 0..3 in value
-      mNextbits = (ch & 0xf) << 2; // 0..3 bits -> 2..5 in mNextbits
+      mNextbits = ( ch & 0xf ) << 2; // 0..3 bits -> 2..5 in mNextbits
       break;
     case 2:
-      assert( (mNextbits & ~0x3C) == 0 );
+      assert( ( mNextbits & ~0x3C ) == 0 );
       writeBase64( mNextbits | ch >> 6, dcursor, dend ); // 6..7 bits -> 0..1 in value
       writeBase64( ch & 0x3F, dcursor, dend ); // 0..5 bits -> output
       mNextbits = 0;
@@ -397,7 +397,7 @@ bool Base64Encoder::generic_finish( char* &dcursor, const char * const dend,
   //
   // adding padding...
   //
-  switch( mStepNo ) {
+  switch ( mStepNo ) {
   case 1:
     write( '=', dcursor, dend );
     // fall through:

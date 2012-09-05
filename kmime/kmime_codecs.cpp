@@ -57,7 +57,7 @@ namespace KMime {
 // global list of KMime::Codec's
 //@cond PRIVATE
 KAutoDeleteHash<QByteArray, Codec> *Codec::all = 0;
-K_GLOBAL_STATIC(QMutex, dictLock)
+K_GLOBAL_STATIC( QMutex, dictLock )
 //@endcond
 
 void Codec::cleanupCodec()
@@ -90,12 +90,12 @@ Codec *Codec::codecForName( const QByteArray &name )
   dictLock->lock(); // protect "all"
   if ( !all ) {
     all = new KAutoDeleteHash<QByteArray, Codec>();
-    qAddPostRoutine(cleanupCodec);
+    qAddPostRoutine( cleanupCodec );
     fillDictionary();
   }
   QByteArray lowerName = name;
   kAsciiToLower( lowerName.data() );
-  Codec *codec = (*all)[ lowerName ]; // FIXME: operator[] adds an entry into the hash
+  Codec *codec = ( *all )[ lowerName ]; // FIXME: operator[] adds an entry into the hash
   dictLock->unlock();
 
   if ( !codec ) {

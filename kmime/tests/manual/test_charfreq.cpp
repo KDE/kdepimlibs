@@ -34,7 +34,7 @@ int main( int argc, char **argv ) {
     }
     QByteArray ba = in.readAll();
     CharFreq cf( ba );
-    cout << argv[i] << ": " << typeToString(cf.type()) << endl;
+    cout << argv[i] << ": " << typeToString( cf.type() ) << endl;
   }
   return 0;
 }
