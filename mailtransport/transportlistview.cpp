@@ -42,6 +42,7 @@ TransportListView::TransportListView( QWidget *parent )
                      << i18nc( "@title:column email transport type", "Type" ) );
   setRootIsDecorated( false );
   header()->setMovable( false );
+  header()->setResizeMode(QHeaderView::ResizeToContents);
   setAllColumnsShowFocus( true );
   setAlternatingRowColors( true );
   setSortingEnabled( true );
