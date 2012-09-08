@@ -671,7 +671,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
   const long int bufLen = 8192;
   char buf[bufLen];
   // FIXME
-  while ( buffer.size() < len  ) {
+  while ( buffer.size() < len ) {
     ssize_t readLen = myRead( buf, qMin( len - buffer.size(), bufLen - 1 ) );
     if ( readLen == 0 ) {
       kDebug( 7116 ) << "parseRead: readLen == 0 - connection broken";
@@ -917,7 +917,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
     if ( ask &&
          messageBox( QuestionYesNo,
            i18n( "The following folder will be created on the server: %1 "
-                 "What do you want to store in this folder?", aBox  ),
+                 "What do you want to store in this folder?", aBox ),
            i18n( "Create Folder" ),
            i18n( "&Messages" ), i18n( "&Subfolders" ) ) == KMessageBox::No ) {
       cmd = doCommand( imapCommand::clientDelete( aBox ) );
@@ -1662,7 +1662,7 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
     case 'R': // GETQUOTAROOT
       {
         kDebug( 7116 ) << "QUOTAROOT" << aBox;
-        CommandPtr cmd = doCommand( imapCommand::clientGetQuotaroot( aBox )  );
+        CommandPtr cmd = doCommand( imapCommand::clientGetQuotaroot( aBox ) );
         if ( cmd->result() != "OK" ) {
           error( ERR_SLAVE_DEFINED, i18n( "Retrieving the quota root information on folder %1 "
                                           "failed. The server returned: %2",

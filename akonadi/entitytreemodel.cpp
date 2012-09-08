@@ -286,6 +286,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       {
         return d->m_collectionSyncProgress.value( collection.id() );
       }
+      case IsPopulatedRole:
+      {
+        return d->m_populatedCols.contains( collection.id() );
+      }
       case Qt::BackgroundRole:
       {
         if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
@@ -918,6 +922,13 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
   // Figure out a way to fix this. (Statistics)
   return ( ( rowCount( parent ) > 0 ) ||
            ( canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation ) );
+}
+
+bool EntityTreeModel::isCollectionTreeFetched() const
+{
+  Q_D( const EntityTreeModel );
+
+  return d->m_collectionTreeFetched;
 }
 
 bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const

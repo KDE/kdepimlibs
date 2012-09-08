@@ -466,8 +466,8 @@ bool QuotedPrintableEncoder::fillInputBuffer( const char* &scursor,
 
   // Read until the buffer is full or we have found CRLF or LF (which
   // don't end up in the input buffer):
-  for ( ; ( mInputBufferWriteCursor + 1 ) % 16 != mInputBufferReadCursor
-          && scursor != send ; mInputBufferWriteCursor++ ) {
+  for ( ; ( mInputBufferWriteCursor + 1 ) % 16 != mInputBufferReadCursor &&
+          scursor != send ; mInputBufferWriteCursor++ ) {
     char ch = *scursor++;
     if ( ch == '\r' ) {
       mSawCR = true;
@@ -524,9 +524,9 @@ bool QuotedPrintableEncoder::processNextChar()
   mAccu = mInputBuffer[ mInputBufferReadCursor++ ];
   if ( needsEncoding( mAccu ) ) { // always needs encoding or
     mAccuNeedsEncoding = Definitely;
-  } else if ( ( mSawLineEnd || mFinishing )  // needs encoding at end of line
-              && bufferFill == 1             // or end of buffer
-              && needsEncodingAtEOL( mAccu ) ) {
+  } else if ( ( mSawLineEnd || mFinishing ) && // needs encoding at end of line
+              bufferFill == 1               && // or end of buffer
+              needsEncodingAtEOL( mAccu ) ) {
     mAccuNeedsEncoding = Definitely;
   } else if ( needsEncodingAtBOL( mAccu ) ) {
     mAccuNeedsEncoding = AtBOL;

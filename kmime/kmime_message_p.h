@@ -33,7 +33,7 @@ class MessagePrivate : public ContentPrivate
     {
     }
 
-    Q_DECLARE_PUBLIC(Message)
+    Q_DECLARE_PUBLIC( Message )
 };
 
 }

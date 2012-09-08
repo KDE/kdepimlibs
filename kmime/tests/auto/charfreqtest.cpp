@@ -41,7 +41,7 @@ void CharFreqTest::test8bitData()
   {
     // If it has lines longer than 998, it's EightBitData.
     QByteArray data;
-    for( int i = 0; i < 999; i++ ) {
+    for ( int i = 0; i < 999; i++ ) {
       data += char( 169 );
     }
     CharFreq cf( data );
@@ -92,7 +92,7 @@ void CharFreqTest::test7bitData()
   {
     // If it has lines longer than 998, it's SevenBitData.
     QByteArray data;
-    for( int i = 0; i < 999; i++ ) {
+    for ( int i = 0; i < 999; i++ ) {
       data += 'a';
     }
     CharFreq cf( data );

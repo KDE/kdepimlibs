@@ -92,7 +92,7 @@ class KMIME_EXPORT Base64Codec : public Codec
         // first, the total number of 4-char packets will be:
         int totalNumPackets = ( insize + 2 ) / 3;
         // now, after every 76/4'th packet there needs to be a linebreak:
-        int numLineBreaks = totalNumPackets / (76/4);
+        int numLineBreaks = totalNumPackets / ( 76 / 4 );
         // and at the very end, too:
         ++numLineBreaks;
         // putting it all together, we have:

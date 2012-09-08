@@ -36,7 +36,7 @@ class NewsArticlePrivate : public MessagePrivate
     {
     }
 
-    Q_DECLARE_PUBLIC(NewsArticle)
+    Q_DECLARE_PUBLIC( NewsArticle )
 };
 
 NewsArticle::NewsArticle()

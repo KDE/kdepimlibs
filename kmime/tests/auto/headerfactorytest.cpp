@@ -56,7 +56,7 @@ bool isHeaderRegistered()
 {
   T dummy;
   Base *h = HeaderFactory::self()->createHeader( dummy.type() );
-  if( h ) {
+  if ( h ) {
     delete h;
     return true;
   }

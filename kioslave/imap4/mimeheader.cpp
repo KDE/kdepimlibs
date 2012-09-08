@@ -461,7 +461,7 @@ mimeHeader::parseBody (mimeIO & useIO, QByteArray & messageBody,
                             partBoundary.length() - 1 ) ) {
       retVal = 1;               //continue with next part
       break;
-    } else if ( mbox && inputStr.startsWith( "From " )  ) {
+    } else if ( mbox && inputStr.startsWith( "From " ) ) {
       retVal = 0;               // end of mbox
       break;
     }
@@ -586,9 +586,9 @@ mimeHeader::bodyDecodedBinary ()
 {
   QByteArray retVal;
 
-  if ( contentEncoding.startsWith( QLatin1String( "quoted-printable" ), Qt::CaseInsensitive )  ) {
+  if ( contentEncoding.startsWith( QLatin1String( "quoted-printable" ), Qt::CaseInsensitive ) ) {
     retVal = KCodecs::quotedPrintableDecode( postMultipartBody );
-  } else if ( contentEncoding.startsWith( QLatin1String( "base64" ), Qt::CaseInsensitive )  ) {
+  } else if ( contentEncoding.startsWith( QLatin1String( "base64" ), Qt::CaseInsensitive ) ) {
     KCodecs::base64Decode( postMultipartBody, retVal );
   } else {
     retVal = postMultipartBody;
@@ -610,9 +610,9 @@ mimeHeader::setBodyEncoded (const QByteArray & _arr)
   QByteArray setVal;
 
   kDebug( 7116 ) << "mimeHeader::setBodyEncoded - in size" << _arr.size();
-  if ( contentEncoding.startsWith( QLatin1String( "quoted-printable" ), Qt::CaseInsensitive )  ) {
+  if ( contentEncoding.startsWith( QLatin1String( "quoted-printable" ), Qt::CaseInsensitive ) ) {
     setVal = KCodecs::quotedPrintableEncode( _arr );
-  } else if ( contentEncoding.startsWith( QLatin1String( "base64" ), Qt::CaseInsensitive )  ) {
+  } else if ( contentEncoding.startsWith( QLatin1String( "base64" ), Qt::CaseInsensitive ) ) {
     KCodecs::base64Encode( _arr, setVal );
   } else {
     setVal.duplicate( _arr );

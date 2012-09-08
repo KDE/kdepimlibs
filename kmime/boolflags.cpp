@@ -42,17 +42,17 @@ void BoolFlags::set( unsigned int i, bool b )
   int n;
 
   if ( i < 8 ) { //first byte
-    p = (1 << i);
+    p = ( 1 << i );
     n = 0;
   } else { //second byte
-    p = (1 << (i-8));
+    p = ( 1 << ( i - 8 ) );
     n = 1;
   }
 
   if ( b ) {
     mBits[n] = mBits[n] | p;
   } else {
-    mBits[n] = mBits[n] & (255 - p);
+    mBits[n] = mBits[n] & ( 255 - p );
   }
 }
 
@@ -66,10 +66,10 @@ bool BoolFlags::get( unsigned int i )
   int n;
 
   if ( i < 8 ) { //first byte
-    p = (1 << i);
+    p = ( 1 << i );
     n = 0;
   } else { //second byte
-    p = (1 << (i-8));
+    p = ( 1 << ( i - 8 ) );
     n = 1;
   }
 

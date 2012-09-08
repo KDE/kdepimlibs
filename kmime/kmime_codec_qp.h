@@ -85,7 +85,7 @@ class KMIME_EXPORT QuotedPrintableCodec : public Codec
       { // all chars encoded:
         int result = 3*insize;
         // then after 25 hexchars comes a soft linebreak: =(\r)\n
-        result += (withCRLF ? 3 : 2) * (insize / 25);
+        result += ( withCRLF ? 3 : 2 ) * ( insize / 25 );
 
         return result;
       }

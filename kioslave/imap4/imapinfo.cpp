@@ -162,7 +162,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
       int flagsEnd = line.indexOf( ')' );
 
       if ( ( -1 != flagsStart ) && ( -1 != flagsEnd ) && flagsStart < flagsEnd ) {
-        setFlags( _flags( line.mid( flagsStart, flagsEnd ).toLatin1()  ) );
+        setFlags( _flags( line.mid( flagsStart, flagsEnd ).toLatin1() ) );
       }
     } else {
       if ( tokens[2] == "EXISTS" ) {
