@@ -42,7 +42,7 @@ public:
 public:
     void init();
     QByteArray data;
-    QHash<QString,QString> status;
+    QHash<QString, QString> status;
     QDateTime dateTime;
 };
 
@@ -75,8 +75,9 @@ void StatusItem::Private::init()
     dateTime.setTimeSpec( Qt::UTC );
     dateTime = dateTime.toLocalTime();
 
-    if ( !dateTime.isValid() )
+    if ( !dateTime.isValid() ) {
         kDebug() << "Unable to parse" << status.value( "created_at" ).toLower().mid( 4 );
+    }
     //kDebug() << dateTime;
 }
 
@@ -100,8 +101,9 @@ StatusItem::~StatusItem()
 
 StatusItem StatusItem::operator=( const StatusItem &other )
 {
-    if ( &other != this )
+    if ( &other != this ) {
         d = other.d;
+    }
 
     return *this;
 }
