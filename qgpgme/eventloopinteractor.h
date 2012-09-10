@@ -46,7 +46,7 @@ namespace QGpgME {
     static EventLoopInteractor * instance();
 
   Q_SIGNALS:
-    void nextTrustItemEventSignal( GpgME::Context * context, const GpgME::TrustItem & item  );
+    void nextTrustItemEventSignal( GpgME::Context * context, const GpgME::TrustItem & item );
     void nextKeyEventSignal( GpgME::Context * context, const GpgME::Key & key );
     void operationDoneEventSignal( GpgME::Context * context, const GpgME::Error & e );
     void operationStartEventSignal( GpgME::Context * context );

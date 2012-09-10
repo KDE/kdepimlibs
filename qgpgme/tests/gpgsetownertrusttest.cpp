@@ -55,23 +55,23 @@ int main( int argc, char * argv[] ) {
 
     QCoreApplication app( argc, argv );
 
-    if ( argc != 3 )
+    if ( argc != 3 ) {
         return 1;
+    }
 
     const char * const keyid = argv[1];
     const std::string ownertrust_string = argv[2];
 
     try {
-
         const _Values * const it = std::find_if( begin( values ), end( values ), bind( &_Values::name, _1 ) == ownertrust_string );
-        if ( it == end( values ) )
+        if ( it == end( values ) ) {
             throw std::runtime_error( "Not a valid ownertrust value: \"" + ownertrust_string + "\"" );
+        }
         const Key::OwnerTrust ownertrust = it->value;
 
         std::auto_ptr<EditInteractor> ei( new GpgSetOwnerTrustEditInteractor( ownertrust ) );
 
         return test_editinteractor( ei, keyid );
-
     } catch ( const std::exception & e ) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;

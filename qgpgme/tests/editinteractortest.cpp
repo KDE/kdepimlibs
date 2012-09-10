@@ -55,7 +55,7 @@ public:
     const char * action( Error & err ) const;
     unsigned int nextState( unsigned int status, const char * args, Error & err ) const;
 
-private Q_SLOTS:    
+private Q_SLOTS:
     void slotAckButtonClicked() {
         lastAction = 0;
     }
@@ -81,8 +81,8 @@ InteractiveEditInteractor::InteractiveEditInteractor( QWidget * p )
       textEdit( this ),
       hlay(),
       lineEdit( this ),
-      sendButton( tr("&Send"), this ),
-      ackButton( tr("&ACK"), this ),
+      sendButton( tr( "&Send" ), this ),
+      ackButton( tr( "&ACK" ), this ),
       loop(),
       lastAction( 0 )
 {
@@ -105,24 +105,26 @@ InteractiveEditInteractor::InteractiveEditInteractor( QWidget * p )
 }
 
 InteractiveEditInteractor::~InteractiveEditInteractor() {
-    if ( lastAction )
+    if ( lastAction ) {
         std::free( lastAction );
+    }
 }
 
 const char * InteractiveEditInteractor::action( Error & ) const {
-    const_cast<InteractiveEditInteractor*>(this)->setEnabled( true );
+    const_cast<InteractiveEditInteractor*>( this )->setEnabled( true );
 
     lineEdit.setFocus();
 
-    if ( lastAction )
+    if ( lastAction ) {
         std::free( lastAction );
+    }
     lastAction = 0;
 
     loop.exec();
 
     lineEdit.clear();
 
-    const_cast<InteractiveEditInteractor*>(this)->setEnabled( false );
+    const_cast<InteractiveEditInteractor*>( this )->setEnabled( false );
     return lastAction;
 }
 
@@ -231,7 +233,7 @@ unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * 
         textEdit.append( tr( "%1: %2" ).arg( state_string, QString::fromUtf8( args ) ) );
         return state() + 1; // fake state change
     }
-}    
+}
 
 int main( int argc, char * argv[] ) {
 
@@ -241,40 +243,44 @@ int main( int argc, char * argv[] ) {
 
     Protocol proto = OpenPGP;
     const char * keyid = 0;
-    if ( argc < 1 || argc > 3 )
+    if ( argc < 1 || argc > 3 ) {
         return 1;
-    if ( argc == 2 )
+    }
+    if ( argc == 2 ) {
         keyid = argv[1];
+    }
     if ( argc == 3 ) {
-        if ( qstrcmp( argv[1], "--openpgp" ) == 0 )
+        if ( qstrcmp( argv[1], "--openpgp" ) == 0 ) {
             proto = OpenPGP;
-        else if ( argc == 2 && qstrcmp( argv[1], "--smime" ) == 0 )
+        } else if ( argc == 2 && qstrcmp( argv[1], "--smime" ) == 0 ) {
             proto = CMS;
-        else
+        } else {
             return 1;
+        }
         keyid = argv[2];
     }
 
     try {
-
         Key key;
         {
             const std::auto_ptr<Context> kl( Context::createForProtocol( proto ) );
 
-            if ( !kl.get() )
+            if ( !kl.get() ) {
                 return 1;
+            }
 
-            if ( Error err = kl->startKeyListing( keyid ) )
+            if ( Error err = kl->startKeyListing( keyid ) ) {
                 throw std::runtime_error( std::string( "startKeyListing: " ) + err.asString() );
+            }
 
             Error err;
             key = kl->nextKey( err );
-            if ( err )
+            if ( err ) {
                 throw std::runtime_error( std::string( "nextKey: " ) + err.asString() );
+            }
 
             (void)kl->endKeyListing();
         }
-        
 
         const std::auto_ptr<Context> ctx( Context::createForProtocol( proto ) );
 
@@ -288,13 +294,12 @@ int main( int argc, char * argv[] ) {
                               iei, SLOT(close()) );
             std::auto_ptr<EditInteractor> ei( iei );
             ei->setDebugChannel( stderr );
-            if ( Error err = ctx->startEditing( key, ei, data ) )
+            if ( Error err = ctx->startEditing( key, ei, data ) ) {
                 throw std::runtime_error( std::string( "startEditing: " ) + err.asString() );
+            }
             // ei released in passing to startEditing
         }
-
         return app.exec();
-
     } catch ( const std::exception & e ) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;

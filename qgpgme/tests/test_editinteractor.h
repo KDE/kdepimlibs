@@ -58,14 +58,15 @@ public:
 
         m_ctx->setManagedByEventLoopInteractor( true );
     }
-    
+
     GpgME::Error start( const char * pattern, bool secretOnly=false ) {
         return m_ctx->startKeyListing( pattern, secretOnly );
     }
 
     GpgME::Error waitForDone() {
-        if ( m_done )
+        if ( m_done ) {
             return m_error;
+        }
         QEventLoop loop;
         m_loop = &loop;
         loop.exec();
@@ -79,17 +80,20 @@ public:
 
 private Q_SLOTS:
     void slotNextKey( GpgME::Context * ctx, const GpgME::Key & key ) {
-        if ( ctx != m_ctx.get() )
+        if ( ctx != m_ctx.get() ) {
             return;
+        }
         m_keys.push_back( key );
     }
     void slotDone( GpgME::Context * ctx, const GpgME::Error & err ) {
-        if ( ctx != m_ctx.get() )
+        if ( ctx != m_ctx.get() ) {
             return;
+        }
         m_error = err;
         m_done = true;
-        if ( m_loop )
+        if ( m_loop ) {
             m_loop->quit();
+        }
     }
 
 private:
@@ -105,11 +109,13 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
     using namespace GpgME;
 
     KeyResolveJob job( proto );
-    if ( const GpgME::Error err = job.start( keyid ) )
+    if ( const GpgME::Error err = job.start( keyid ) ) {
         throw std::runtime_error( std::string( "startKeyListing: " ) + err.asString() );
+    }
 
-    if ( const GpgME::Error err = job.waitForDone() )
+    if ( const GpgME::Error err = job.waitForDone() ) {
         throw std::runtime_error( std::string( "nextKey: " ) + err.asString() );
+    }
 
     const Key key = job.keys().front();
 
@@ -123,8 +129,9 @@ static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const c
     QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
                       QCoreApplication::instance(), SLOT(quit()) );
 
-    if ( Error err = ctx->startEditing( key, ei, data ) )
+    if ( Error err = ctx->startEditing( key, ei, data ) ) {
         throw std::runtime_error( std::string( "startEditing: " ) + err.asString() );
+    }
     // ei released in passing to startEditing
 
     return QCoreApplication::instance()->exec();
