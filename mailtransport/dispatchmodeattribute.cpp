@@ -59,7 +59,7 @@ QByteArray DispatchModeAttribute::type() const
 
 QByteArray DispatchModeAttribute::serialized() const
 {
-  switch( d->mMode ) {
+  switch ( d->mMode ) {
     case Automatic:
     {
       if ( !d->mDueDate.isValid() ) {
@@ -84,7 +84,7 @@ void DispatchModeAttribute::deserialize( const QByteArray &data )
     d->mMode = Manual;
   } else if ( data.startsWith( QByteArray( "after" ) ) ) {
     d->mMode = Automatic;
-    d->mDueDate = QDateTime::fromString( QString::fromLatin1( data.mid(5) ), Qt::ISODate );
+    d->mDueDate = QDateTime::fromString( QString::fromLatin1( data.mid( 5 ) ), Qt::ISODate );
     // NOTE: 5 is the strlen of "after".
   } else {
     kWarning() << "Failed to deserialize data [" << data << "]";

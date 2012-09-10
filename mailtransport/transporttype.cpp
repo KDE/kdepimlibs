@@ -41,7 +41,7 @@ TransportType::~TransportType()
 
 TransportType &TransportType::operator=( const TransportType &other )
 {
-  if( this != &other ) {
+  if ( this != &other ) {
     d = other.d;
   }
   return *this;
@@ -49,8 +49,8 @@ TransportType &TransportType::operator=( const TransportType &other )
 
 bool TransportType::operator==( const TransportType &other ) const
 {
-  if( d->mType == Transport::EnumType::Akonadi &&
-      other.d->mType == Transport::EnumType::Akonadi ) {
+  if ( d->mType == Transport::EnumType::Akonadi &&
+       other.d->mType == Transport::EnumType::Akonadi ) {
     return ( d->mAgentType == other.d->mAgentType );
   }
   return ( d->mType == other.d->mType );
@@ -60,7 +60,7 @@ bool TransportType::isValid() const
 {
   using namespace Akonadi;
 
-  if( d->mType == Transport::EnumType::Akonadi ) {
+  if ( d->mType == Transport::EnumType::Akonadi ) {
     return d->mAgentType.isValid() &&
       AgentManager::self()->types().contains( d->mAgentType );
   } else {

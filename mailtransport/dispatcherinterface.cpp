@@ -39,7 +39,7 @@ K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
 void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 {
   // Nothing to do here, really.  If the job fails, the user can retry it.
-  if( job->error() ) {
+  if ( job->error() ) {
     kDebug() << "failed" << job->errorString();
   } else {
     kDebug() << "succeeded.";
@@ -54,7 +54,7 @@ AgentInstance DispatcherInterface::dispatcherInstance() const
 {
   AgentInstance a =
     AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
-  if( !a.isValid() ) {
+  if ( !a.isValid() ) {
     kWarning() << "Could not get MDA instance.";
   }
   return a;
@@ -64,7 +64,7 @@ void DispatcherInterface::dispatchManually()
 {
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if( !outbox.isValid() ) {
+  if ( !outbox.isValid() ) {
 //    kError() << "Could not access Outbox.";
     return;
   }
@@ -77,7 +77,7 @@ void DispatcherInterface::retryDispatching()
 {
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if( !outbox.isValid() ) {
+  if ( !outbox.isValid() ) {
 //    kError() << "Could not access Outbox.";
     return;
   }
@@ -90,7 +90,7 @@ void DispatcherInterface::dispatchManualTransport( int transportId )
 {
   Collection outbox =
     SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if( !outbox.isValid() ) {
+  if ( !outbox.isValid() ) {
 //    kError() << "Could not access Outbox.";
     return;
   }
