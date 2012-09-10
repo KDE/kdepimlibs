@@ -56,7 +56,7 @@ QByteArray kFileToByteArray( const QString &aFileName, bool aEnsureNL,
   QFile file( aFileName );
 
   //assert(aFileName!=0);
-  if( aFileName.isEmpty() ) {
+  if ( aFileName.isEmpty() ) {
     return "";
   }
 
@@ -84,7 +84,7 @@ QByteArray kFileToByteArray( const QString &aFileName, bool aEnsureNL,
 
   if ( !file.open( QIODevice::Unbuffered|QIODevice::ReadOnly ) ) {
     if ( aVerbose ) {
-      switch( file.error() ) {
+      switch ( file.error() ) {
       case QFile::ReadError:
         msgDialog( i18n( "Could not read file:\n%1", aFileName ) );
         break;
@@ -128,7 +128,7 @@ bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
   QFile file( aFileName );
 
   //assert(aFileName!=0);
-  if( aFileName.isEmpty() ) {
+  if ( aFileName.isEmpty() ) {
     return false;
   }
 
@@ -148,9 +148,9 @@ bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
       // TODO: use KSaveFile::backupFile()
       QString bakName = aFileName;
       bakName += '~';
-      QFile::remove(bakName);
+      QFile::remove( bakName );
       if ( !QDir::current().rename( aFileName, bakName ) ) {
-	// failed to rename file
+        // failed to rename file
         if ( !aVerbose ) {
           return false;
         }
@@ -169,7 +169,7 @@ bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
 
   if ( !file.open( QIODevice::Unbuffered|QIODevice::WriteOnly|QIODevice::Truncate ) ) {
     if ( aVerbose ) {
-      switch( file.error() ) {
+      switch ( file.error() ) {
       case QFile::WriteError:
         msgDialog( i18n( "Could not write to file:\n%1", aFileName ) );
         break;
@@ -211,8 +211,8 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   // First we have to find out which type the toCheck is. This can be
   // a directory (follow if recursive) or a file (check permissions).
   // Symlinks are followed as expected.
-  QFileInfo fiToCheck(toCheck);
-  fiToCheck.setCaching(false);
+  QFileInfo fiToCheck( toCheck );
+  fiToCheck.setCaching( false );
   QByteArray toCheckEnc = QFile::encodeName( toCheck );
   QString error;
   KDE_struct_stat statbuffer;
@@ -223,7 +223,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
 
   // check the access bit of a folder.
   if ( fiToCheck.isDir() ) {
-    if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
+    if ( KDE_stat( toCheckEnc, &statbuffer ) != 0 ) {
       kDebug() << "wantItA: Can't read perms of" << toCheck;
     }
     QDir g( toCheck );
@@ -244,7 +244,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isReadable() && wantItReadable ) {
       // Get the current permissions. No need to do anything with an
       // error, it will het added to errors anyhow, later on.
-      if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
+      if ( KDE_stat( toCheckEnc, &statbuffer ) != 0 ) {
         kDebug() << "wantItR: Can't read perms of" << toCheck;
       }
 
@@ -260,7 +260,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !fiToCheck.isWritable() && wantItWritable ) {
       // Gets the current persmissions. Needed because it can be changed
       // curing previous operation.
-      if ( KDE_stat( toCheckEnc,&statbuffer ) != 0 ) {
+      if ( KDE_stat( toCheckEnc, &statbuffer ) != 0 ) {
         kDebug() << "wantItW: Can't read perms of" << toCheck;
       }
 
@@ -275,16 +275,16 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
 
   // If it is a folder and recursive is true, then we check the contents of
   // the folder.
-  if ( fiToCheck.isDir() && recursive ){
+  if ( fiToCheck.isDir() && recursive ) {
     QDir g( toCheck );
     // First check if the folder is readable for us. If not, we get
     // some ugly crashes.
-    if ( !g.isReadable() ){
+    if ( !g.isReadable() ) {
       error.append( i18n( "Folder %1 is inaccessible.", toCheck ) + '\n' );
     } else {
       foreach ( const QFileInfo &fi, g.entryInfoList() ) {
         QString newToCheck = toCheck + '/' + fi.fileName();
-        QFileInfo fiNewToCheck(newToCheck);
+        QFileInfo fiNewToCheck( newToCheck );
         if ( fi.fileName() != "." && fi.fileName() != ".." ) {
           error.append (
             checkAndCorrectPermissionsIfPossible( newToCheck, recursive,

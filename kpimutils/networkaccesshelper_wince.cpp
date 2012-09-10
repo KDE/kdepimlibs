@@ -50,7 +50,7 @@ NetworkAccessHelperPrivate::~NetworkAccessHelperPrivate()
 }
 
 NetworkAccessHelper::NetworkAccessHelper( QObject *parent )
-  : QObject(parent),
+  : QObject( parent ),
     d_ptr( new NetworkAccessHelperPrivate( this ) )
 {
 }
@@ -62,13 +62,13 @@ NetworkAccessHelper::~NetworkAccessHelper()
 
 void NetworkAccessHelper::establishConnection()
 {
-  Q_D(NetworkAccessHelper);
+  Q_D( NetworkAccessHelper );
   d->m_session->establishConnection();
 }
 
 void NetworkAccessHelper::releaseConnection()
 {
-  Q_D(NetworkAccessHelper);
+  Q_D( NetworkAccessHelper );
   d->m_session->releaseConnection();
 }
 
