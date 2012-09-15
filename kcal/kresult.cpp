@@ -141,7 +141,7 @@ QString KResult::message() const
 {
   switch ( d->mType ) {
   case Ok:
-    return i18n( "Ok" );
+    return i18n( "OK" );
   case InProgress:
     return i18n( "In progress" );
   case Error:
