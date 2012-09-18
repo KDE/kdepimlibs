@@ -223,7 +223,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
     case QVariant::StringList:
       {
         QStringList data = arg.toStringList();
-        QStringListIterator dataIterator(data);
+        QStringListIterator dataIterator( data );
         QString markup;
         markup += "<value><array><data>";
         while ( dataIterator.hasNext() ) {
@@ -441,7 +441,7 @@ Query::~Query()
 {
   QList<KJob*>::Iterator it;
   for ( it = d->mPendingJobs.begin(); it != d->mPendingJobs.end(); ++it ) {
-    (*it)->kill();
+    ( *it )->kill();
   }
   delete d;
 }

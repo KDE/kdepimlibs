@@ -34,7 +34,7 @@ void TestClient::testValidity()
   Client *c = new Client();
   c->setUrl( KUrl( "http://test:pass@fake.com/rpc2" ) );
   c->setUserAgent( "Fake/1.0/MozillaCompat" );
-  c->setDigestAuthEnabled(true);
+  c->setDigestAuthEnabled( true );
   QVERIFY( c->url() == KUrl( "http://test:pass@fake.com/rpc2" ) );
   QVERIFY( c->userAgent() == "Fake/1.0/MozillaCompat" );
   QVERIFY( c->isDigestAuthEnabled() == true );

@@ -198,7 +198,7 @@ class Manager : private ManagerNotifier
           if ( !mList || mIt == mList->end() ) {
             return false;
           }
-          return !(*mIt)->isActive();
+          return !( *mIt )->isActive();
         }
 
         Resource::List::Iterator mIt;
@@ -215,7 +215,7 @@ class Manager : private ManagerNotifier
       it.mIt = mImpl->resourceList()->begin();
       it.mList = mImpl->resourceList();
       if ( it.mIt != mImpl->resourceList()->end() ) {
-        if ( !(*it)->isActive() ) {
+        if ( !( *it )->isActive() ) {
           it++;
         }
       }
@@ -412,7 +412,7 @@ class Manager : private ManagerNotifier
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {
-          mObservers.at(i)->resourceAdded( resource );
+          mObservers.at( i )->resourceAdded( resource );
         }
       }
     }
@@ -426,7 +426,7 @@ class Manager : private ManagerNotifier
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {
-          mObservers.at(i)->resourceAdded( resource );
+          mObservers.at( i )->resourceAdded( resource );
         }
       }
     }
@@ -440,7 +440,7 @@ class Manager : private ManagerNotifier
       T *resource = dynamic_cast<T *>( res );
       if ( resource ) {
         for ( int i = 0; i < mObservers.size(); ++i ) {
-          mObservers.at(i)->resourceDeleted( resource );
+          mObservers.at( i )->resourceDeleted( resource );
         }
       }
     }

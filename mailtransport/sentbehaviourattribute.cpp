@@ -58,7 +58,7 @@ QByteArray SentBehaviourAttribute::type() const
 
 QByteArray SentBehaviourAttribute::serialized() const
 {
-  switch( d->mBehaviour ) {
+  switch ( d->mBehaviour ) {
     case Delete: return "delete";
     case MoveToCollection: return "moveTo" + QByteArray::number( d->mMoveToCollection.id() );
     case MoveToDefaultSentCollection: return "moveToDefault";

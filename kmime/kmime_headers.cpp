@@ -2023,7 +2023,7 @@ bool ContentID::parse( const char* &scursor, const char *const send, bool isCRLF
 
       // Save chars untill '>''
       QString result;
-      if ( !parseAtom( scursor, send, result, false ) ) {
+      if( !parseDotAtom(scursor, send, result, false) ) {
         return false;
       }
 

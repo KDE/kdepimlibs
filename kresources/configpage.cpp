@@ -210,7 +210,7 @@ ConfigPage::~ConfigPage()
 {
   QList<KSharedPtr<ResourcePageInfo> >::Iterator it;
   for ( it = d->mInfoMap.begin(); it != d->mInfoMap.end(); ++it ) {
-    (*it)->mManager->removeObserver( this );
+    ( *it )->mManager->removeObserver( this );
   }
 
   d->mConfigGroup->writeEntry( "CurrentFamily", d->mFamilyCombo->currentIndex() );
@@ -235,7 +235,7 @@ void ConfigPage::load()
   KService::List::ConstIterator it = plugins.begin();
   KService::List::ConstIterator end = plugins.end();
   for ( ; it != end; ++it ) {
-    const QString family = (*it)->property( "X-KDE-ResourceFamily" ).toString();
+    const QString family = ( *it )->property( "X-KDE-ResourceFamily" ).toString();
     if ( compatFamilyNames.indexOf( family ) == -1 ) {
       compatFamilyNames.append( family );
     }
@@ -244,9 +244,9 @@ void ConfigPage::load()
   const KService::List managers = KServiceTypeTrader::self()->query( "KResources/Manager" );
   KService::List::ConstIterator m_it;
   for ( m_it = managers.begin(); m_it != managers.end(); ++m_it ) {
-    QString displayName = (*m_it)->property( "Name" ).toString();
+    QString displayName = ( *m_it )->property( "Name" ).toString();
     familyDisplayNames.append( displayName );
-    QString family = (*m_it)->property( "X-KDE-ResourceFamily" ).toString();
+    QString family = ( *m_it )->property( "X-KDE-ResourceFamily" ).toString();
     if ( !family.isEmpty() ) {
       compatFamilyNames.removeAll( family );
       d->mFamilyMap.append( family );
@@ -296,7 +296,7 @@ void ConfigPage::save()
 
   QList<KSharedPtr<ResourcePageInfo> >::Iterator it;
   for ( it = d->mInfoMap.begin(); it != d->mInfoMap.end(); ++it ) {
-    (*it)->mManager->writeConfig( (*it)->mConfig );
+    ( *it )->mManager->writeConfig( ( *it )->mConfig );
   }
 
   emit changed( false );

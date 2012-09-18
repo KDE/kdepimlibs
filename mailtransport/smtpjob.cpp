@@ -43,7 +43,7 @@ class SlavePool
   public:
     SlavePool() : ref( 0 ) {}
     int ref;
-    QHash<int,KIO::Slave*> slaves;
+    QHash<int, KIO::Slave*> slaves;
 
     void removeSlave( KIO::Slave *slave, bool disconnect = false )
     {

@@ -280,10 +280,10 @@ bool TransportManager::showTransportCreationDialog( QWidget *parent,
 
 bool TransportManager::configureTransport( Transport *transport, QWidget *parent )
 {
-  if( transport->type() == Transport::EnumType::Akonadi ) {
+  if ( transport->type() == Transport::EnumType::Akonadi ) {
     using namespace Akonadi;
     AgentInstance instance = AgentManager::self()->instance( transport->host() );
-    if( !instance.isValid() ) {
+    if ( !instance.isValid() ) {
       kWarning() << "Invalid resource instance" << transport->host();
     }
     instance.configure( parent ); // Async...
@@ -293,7 +293,7 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
 
   QPointer<KDialog> dialog = new KDialog( parent );
   TransportConfigWidget *configWidget = 0;
-  switch( transport->type() ) {
+  switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
       {
         configWidget = new SMTPConfigWidget( transport, dialog );
@@ -315,7 +315,7 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
   dialog->setCaption( i18n( "Configure account" ) );
   dialog->setButtons( KDialog::Ok | KDialog::Cancel );
   bool okClicked = ( dialog->exec() == QDialog::Accepted );
-  if( okClicked ) {
+  if ( okClicked ) {
     configWidget->apply(); // calls transport->writeConfig()
   }
   delete dialog;
@@ -418,10 +418,10 @@ void TransportManager::removeTransport( int id )
   emit transportRemoved( t->id(), t->name() );
 
   // Kill the resource, if Akonadi-type transport.
-  if( t->type() == Transport::EnumType::Akonadi ) {
+  if ( t->type() == Transport::EnumType::Akonadi ) {
     using namespace Akonadi;
     const AgentInstance instance = AgentManager::self()->instance( t->host() );
-    if( !instance.isValid() ) {
+    if ( !instance.isValid() ) {
       kWarning() << "Could not find resource instance.";
     }
     AgentManager::self()->removeInstance( instance );
@@ -526,7 +526,7 @@ void TransportManagerPrivate::fillTypes()
     foreach ( const AgentType &atype, AgentManager::self()->types() ) {
       // TODO probably the string "MailTransport" should be #defined somewhere
       // and used like that in the resources (?)
-      if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
+      if ( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
         TransportType type;
         type.d->mType = Transport::EnumType::Akonadi;
         type.d->mAgentType = atype;
@@ -765,7 +765,7 @@ void TransportManagerPrivate::dbusServiceUnregistered()
 void TransportManagerPrivate::agentTypeAdded( const Akonadi::AgentType &atype )
 {
   using namespace Akonadi;
-  if( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
+  if ( atype.capabilities().contains( QLatin1String( "MailTransport" ) ) ) {
     TransportType type;
     type.d->mType = Transport::EnumType::Akonadi;
     type.d->mAgentType = atype;
@@ -780,8 +780,8 @@ void TransportManagerPrivate::agentTypeRemoved( const Akonadi::AgentType &atype 
 {
   using namespace Akonadi;
   foreach ( const TransportType &type, types ) {
-    if( type.type() == Transport::EnumType::Akonadi &&
-        type.agentType() == atype ) {
+    if ( type.type() == Transport::EnumType::Akonadi &&
+         type.agentType() == atype ) {
       types.removeAll( type );
       kDebug() << "Removed Akonadi type" << atype.name();
     }

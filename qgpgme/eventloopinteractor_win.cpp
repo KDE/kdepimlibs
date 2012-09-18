@@ -27,7 +27,7 @@
 #include <QIODevice>
 #include <QSignalMapper>
 
-Q_GLOBAL_STATIC( QSignalMapper, readSignalMapper  )
+Q_GLOBAL_STATIC( QSignalMapper, readSignalMapper )
 Q_GLOBAL_STATIC( QSignalMapper, writeSignalMapper )
 
 static QSignalMapper * setupReadSignalMapper( QObject * o ) {
@@ -57,30 +57,30 @@ void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool
     }
     if ( dir == Read ) {
         static QSignalMapper * rsm = setupReadSignalMapper( this );
-	if ( !rsm->mapping( fd ) ) {
+        if ( !rsm->mapping( fd ) ) {
             rsm->setMapping( iod, fd );
             connect( iod, SIGNAL(readyRead()), rsm, SLOT(map()) );
-	} else {
+        } else {
             // if this fd is already registered, gpgme registers an additional
             // callback for the same fd.
             // if there is already something to read when registering the new 
-	    // callback, gpgme expects the new callback to be called, so we
+            // callback, gpgme expects the new callback to be called, so we
             // trigger it"
             QMetaObject::invokeMethod( this, "slotReadActivity", Qt::QueuedConnection, Q_ARG( int, fd ) );
         }
     } else {
         static QSignalMapper * wsm = setupWriteSignalMapper( this );
-	if ( !wsm->mapping( fd ) ) {
+        if ( !wsm->mapping( fd ) ) {
             wsm->setMapping( iod, fd );
             connect( iod, SIGNAL(bytesWritten(qint64)), wsm, SLOT(map()) );
-	} else {
+        } else {
             // if this fd is already registered, gpgme registers an additional 
             // callback for the same fd.
             // if the device is writable when registering the new 
-	    // callback, gpgme expects the new callback to be called, so we
+            // callback, gpgme expects the new callback to be called, so we
             // trigger it:
-            QMetaObject::invokeMethod( this, "slotWriteActivity", Qt::QueuedConnection, Q_ARG( int, fd ) );            
-	}
+            QMetaObject::invokeMethod( this, "slotWriteActivity", Qt::QueuedConnection, Q_ARG( int, fd ) );
+        }
     }
 
     ok = true;
@@ -93,8 +93,9 @@ void * QGpgME::EventLoopInteractor::registerWatcher( int fd, Direction dir, bool
 }
 
 void QGpgME::EventLoopInteractor::unregisterWatcher( void * tag ) {
-    if ( !tag )
+    if ( !tag ) {
         return;
+    }
     const IO * const io = static_cast<IO*>( tag );
     if ( io->direction == Read ) {
         // no setupReadSignalMapper here, since registerWatcher,

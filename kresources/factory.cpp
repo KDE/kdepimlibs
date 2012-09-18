@@ -60,7 +60,7 @@ class Factory::Private
 class FactoryMap : public QMap<QString, Factory*>
 {
   public:
-    ~FactoryMap() { qDeleteAll(*this); }
+    ~FactoryMap() { qDeleteAll( *this ); }
 };
 
 K_GLOBAL_STATIC( FactoryMap, mSelves )
@@ -133,7 +133,7 @@ void Factory::reloadConfig()
 
   KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    const QVariant type = (*it)->property( "X-KDE-ResourceType" );
+    const QVariant type = ( *it )->property( "X-KDE-ResourceType" );
     if ( !type.toString().isEmpty() ) {
       d->mTypeMap.insert( type.toString(), *it );
     }

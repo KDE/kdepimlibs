@@ -73,15 +73,15 @@ class MailTransport::MessageQueueJob::Private
 
 bool MessageQueueJob::Private::validate()
 {
-  if( !message ) {
+  if ( !message ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Empty message." ) );
     q->emitResult();
     return false;
   }
 
-  if( addressAttribute.to().count() + addressAttribute.cc().count() +
-      addressAttribute.bcc().count() == 0 ) {
+  if ( addressAttribute.to().count() + addressAttribute.cc().count() +
+       addressAttribute.bcc().count() == 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has no recipients." ) );
     q->emitResult();
@@ -89,21 +89,21 @@ bool MessageQueueJob::Private::validate()
   }
 
   const int transport = transportAttribute.transportId();
-  if( TransportManager::self()->transportById( transport, false ) == 0 ) {
+  if ( TransportManager::self()->transportById( transport, false ) == 0 ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid transport." ) );
     q->emitResult();
     return false;
   }
 
-  if( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToCollection &&
-      !( sentBehaviourAttribute.moveToCollection().isValid() ) ) {
+  if ( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToCollection &&
+       !( sentBehaviourAttribute.moveToCollection().isValid() ) ) {
     q->setError( UserDefinedError );
     q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
     q->emitResult();
     return false;
-  } else if( sentBehaviourAttribute.sentBehaviour() ==
-             SentBehaviourAttribute::MoveToDefaultSentCollection ) {
+  } else if ( sentBehaviourAttribute.sentBehaviour() ==
+              SentBehaviourAttribute::MoveToDefaultSentCollection ) {
     // TODO require SpecialMailCollections::SentMail here?
   }
 
@@ -115,14 +115,14 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   Q_ASSERT( !started );
   started = true;
 
-  if( job->error() ) {
+  if ( job->error() ) {
     kError() << "Failed to get the Outbox folder:" << job->error() << job->errorString();
     q->setError( job->error() );
     q->emitResult();
     return;
   }
 
-  if( !validate() ) {
+  if ( !validate() ) {
     // The error has been set; the result has been emitted.
     return;
   }
@@ -230,7 +230,7 @@ void MessageQueueJob::slotResult( KJob *job )
   // error handling
   KCompositeJob::slotResult( job );
 
-  if( !error() ) {
+  if ( !error() ) {
     emitResult();
   }
 }

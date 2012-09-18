@@ -49,7 +49,7 @@ class TestSubResource : public TestResource
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testresources", 0, ki18n("Kresource Test"), "0" );
+  KAboutData aboutData( "testresources", 0, ki18n( "Kresource Test" ), "0" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KApplication app;
@@ -71,7 +71,7 @@ int main( int argc, char **argv )
   kDebug() << "LIST ALL:";
   Manager<TestResource>::Iterator it;
   for ( it = manager.begin(); it != manager.end(); ++it ) {
-    (*it)->dump();
+    ( *it )->dump();
   }
 
   resource2->setActive( false );
@@ -80,7 +80,7 @@ int main( int argc, char **argv )
   kDebug() << "LIST ACTIVE";
   Manager<TestResource>::ActiveIterator it2;
   for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
-    (*it2)->dump();
+    ( *it2 )->dump();
   }
 
   resource1->setActive( false );
@@ -89,11 +89,11 @@ int main( int argc, char **argv )
 
   kDebug() << "LIST ACTIVE";
   for ( it2 = manager.activeBegin(); it2 != manager.activeEnd(); ++it2 ) {
-    (*it2)->dump();
+    ( *it2 )->dump();
   }
 
   kDebug() << "LIST ALL";
   for ( it = manager.begin(); it != manager.end(); ++it ) {
-    (*it)->dump();
+    ( *it )->dump();
   }
 }

@@ -63,7 +63,7 @@ QStringList KPIMUtils::splitAddressList( const QString &aStr )
   int commentlevel = 0;
   bool insidequote = false;
 
-  for ( int index=0; index<aStr.length(); index++ ) {
+  for ( int index = 0; index<aStr.length(); index++ ) {
     // the following conversion to latin1 is o.k. because
     // we can safely ignore all non-latin1 characters
     switch ( aStr[index].toLatin1() ) {
@@ -349,7 +349,7 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
 
   unsigned int strlen = aStr.length();
 
-  for ( unsigned int index=0; index < strlen; index++ ) {
+  for ( unsigned int index = 0; index < strlen; index++ ) {
     switch ( context ) {
     case TopLevel :
       {
@@ -609,8 +609,8 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
   int atCount = localPart.count( '@' );
 
   unsigned int strlen = localPart.length();
-  for ( unsigned int index=0; index < strlen; index++ ) {
-    switch( localPart[ index ].toLatin1() ) {
+  for ( unsigned int index = 0; index < strlen; index++ ) {
+    switch ( localPart[ index ].toLatin1() ) {
     case '"' :
       inQuotedString = !inQuotedString;
       break;
@@ -710,7 +710,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
 
   bool bInComment = false;
   bool bInQuotesOutsideOfEmail = false;
-  int i=0, iAd=0, iMailStart=0, iMailEnd=0;
+  int i = 0, iAd = 0, iMailStart = 0, iMailEnd = 0;
   QChar c;
   unsigned int commentstack = 0;
 
@@ -729,7 +729,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
     }
 
-    if( !bInComment && !bInQuotesOutsideOfEmail ) {
+    if ( !bInComment && !bInQuotesOutsideOfEmail ) {
       if ( '@' == c ) {
         iAd = i;
         break; // found it
@@ -857,7 +857,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
           break;
         }
         // stuff is behind the trailing '>' ?
-        if ( iMailEnd ){
+        if ( iMailEnd ) {
           if ( cQuotes == c ) {
             bInQuotesOutsideOfEmail = true; // start of quoted text found
           } else {
@@ -975,12 +975,12 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
   for ( QStringList::ConstIterator it = addressList.begin();
         ( it != addressList.end() );
         ++it ) {
-    if ( !(*it).isEmpty() ) {
-      if ( splitAddress( (*it).toUtf8(),
+    if ( !( *it ).isEmpty() ) {
+      if ( splitAddress( ( *it ).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
 
-        displayName = KMime::decodeRFC2047String(displayName).toUtf8();
-        comment = KMime::decodeRFC2047String(comment).toUtf8();
+        displayName = KMime::decodeRFC2047String( displayName ).toUtf8();
+        comment = KMime::decodeRFC2047String( comment ).toUtf8();
 
         normalizedAddressList
           << normalizedAddress( QString::fromUtf8( displayName ),
@@ -1013,8 +1013,8 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
   for ( QStringList::ConstIterator it = addressList.begin();
         ( it != addressList.end() );
         ++it ) {
-    if ( !(*it).isEmpty() ) {
-      if ( splitAddress( (*it).toUtf8(),
+    if ( !( *it ).isEmpty() ) {
+      if ( splitAddress( ( *it ).toUtf8(),
                          displayName, addrSpec, comment ) == AddressOk ) {
 
         normalizedAddressList << normalizedAddress( QString::fromUtf8( displayName ),

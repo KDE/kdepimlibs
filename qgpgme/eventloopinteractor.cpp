@@ -33,11 +33,12 @@ QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent )
  : QObject( parent ), GpgME::EventLoopInteractor()
 {
   setObjectName( QLatin1String( "QGpgME::EventLoopInteractor::instance()" ) );
-  if ( !parent )
+  if ( !parent ) {
     if ( QCoreApplication * const app = QCoreApplication::instance() ) {
       connect( app, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
       connect( app, SIGNAL(aboutToQuit()), SIGNAL(aboutToDestroy()) );
     }
+  }
   mSelf = this;
 }
 
@@ -51,11 +52,14 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::mSelf = 0;
 QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
   if ( !mSelf ) {
 #ifndef NDEBUG
-    if ( !QCoreApplication::instance() )
+    if ( !QCoreApplication::instance() ) {
       qWarning( "QGpgME::EventLoopInteractor: Need a Q(Core)Application object before calling instance()!" );
-    else
+    } else {
 #endif
      (void)new EventLoopInteractor;
+#ifndef NDEBUG
+    }
+#endif
   }
   return mSelf;
 }
@@ -67,8 +71,18 @@ namespace {
         const QPointer<T_Enableable> o;
         const bool wasEnabled;
     public:
-        explicit QDisabler( T_Enableable * t ) : o( t ), wasEnabled( o && o->isEnabled() ) { if ( t ) t->setEnabled( false ); }
-        ~QDisabler() { if ( o ) o->setEnabled( wasEnabled ); }
+        explicit QDisabler( T_Enableable * t ) : o( t ), wasEnabled( o && o->isEnabled() )
+        {
+          if ( t ) {
+            t->setEnabled( false );
+          }
+        }
+        ~QDisabler()
+        {
+          if ( o ) {
+            o->setEnabled( wasEnabled );
+          }
+        }
     };
 }
 

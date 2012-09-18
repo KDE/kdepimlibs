@@ -118,18 +118,18 @@ AddTransportDialog::~AddTransportDialog()
 
 void AddTransportDialog::accept()
 {
-  if( !d->selectedType().isValid() ) {
+  if ( !d->selectedType().isValid() ) {
     return;
   }
 
   // Create a new transport and configure it.
   Transport *transport = TransportManager::self()->createTransport();
   transport->setTransportType( d->selectedType() );
-  if( d->selectedType().type() == Transport::EnumType::Akonadi ) {
+  if ( d->selectedType().type() == Transport::EnumType::Akonadi ) {
     // Create a resource instance if Akonadi-type transport.
     using namespace Akonadi;
     AgentInstanceCreateJob *cjob = new AgentInstanceCreateJob( d->selectedType().agentType() );
-    if( !cjob->exec() ) {
+    if ( !cjob->exec() ) {
       kWarning() << "Failed to create agent instance of type"
         << d->selectedType().agentType().identifier();
       return;
@@ -138,11 +138,11 @@ void AddTransportDialog::accept()
   }
   transport->setName( d->ui.name->text().trimmed() );
   transport->forceUniqueName();
-  if( TransportManager::self()->configureTransport( transport, this ) ) {
+  if ( TransportManager::self()->configureTransport( transport, this ) ) {
     // The user clicked OK and the transport settings were saved.
     TransportManager::self()->addTransport( transport );
 #ifndef KDEPIM_MOBILE_UI
-    if( d->ui.setDefault->isChecked() ) {
+    if ( d->ui.setDefault->isChecked() ) {
       TransportManager::self()->setDefaultTransport( transport->id() );
     }
 #endif

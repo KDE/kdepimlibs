@@ -103,7 +103,7 @@ void TransportManagementWidget::Private::addClicked()
 
 void TransportManagementWidget::Private::editClicked()
 {
-  if( !ui.transportList->currentItem() ) {
+  if ( !ui.transportList->currentItem() ) {
     return;
   }
 
@@ -114,7 +114,7 @@ void TransportManagementWidget::Private::editClicked()
 
 void TransportManagementWidget::Private::renameClicked()
 {
-  if( !ui.transportList->currentItem() ) {
+  if ( !ui.transportList->currentItem() ) {
     return;
   }
 
@@ -123,7 +123,7 @@ void TransportManagementWidget::Private::renameClicked()
 
 void TransportManagementWidget::Private::removeClicked()
 {
-  if( !ui.transportList->currentItem() ) {
+  if ( !ui.transportList->currentItem() ) {
     return;
   }
   const int rc =
@@ -142,7 +142,7 @@ void TransportManagementWidget::Private::removeClicked()
 
 void TransportManagementWidget::Private::defaultClicked()
 {
-  if( !ui.transportList->currentItem() ) {
+  if ( !ui.transportList->currentItem() ) {
     return;
   }
 

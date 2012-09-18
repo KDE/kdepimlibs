@@ -44,8 +44,9 @@ static bool resizeAndInit( QByteArray & ba, size_t newSize ) {
   const size_t oldSize = ba.size();
   ba.resize( newSize );
   const bool ok = ( newSize == static_cast<size_t>( ba.size() ) );
-  if ( ok )
+  if ( ok ) {
     memset( ba.data() + oldSize, 0, newSize - oldSize );
+  }
   return ok;
 }
 
@@ -61,14 +62,16 @@ ssize_t QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
   //qDebug( "QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
 #endif
-  if ( bufSize == 0 )
+  if ( bufSize == 0 ) {
     return 0;
+  }
   if ( !buffer ) {
     Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
-  if ( mOff >= mArray.size() )
+  if ( mOff >= mArray.size() ) {
     return 0; // EOF
+  }
   size_t amount = qMin( bufSize, static_cast<size_t>( mArray.size() - mOff ) );
   assert( amount > 0 );
   memcpy( buffer, mArray.data() + mOff, amount );
@@ -80,19 +83,21 @@ ssize_t QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
   //qDebug( "QByteArrayDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
-  if ( bufSize == 0 )
+  if ( bufSize == 0 ) {
     return 0;
+  }
   if ( !buffer ) {
     Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
-  if ( mOff >= mArray.size() )
+  if ( mOff >= mArray.size() ) {
     resizeAndInit( mArray, mOff + bufSize );
+  }
   if ( mOff >= mArray.size() ) {
     Error::setSystemError( GPG_ERR_EIO );
     return -1;
   }
-  assert( bufSize <= static_cast<size_t>(mArray.size()) - mOff );
+  assert( bufSize <= static_cast<size_t>( mArray.size() ) - mOff );
   memcpy( mArray.data() + mOff, buffer, bufSize );
   mOff += bufSize;
   return bufSize;
@@ -185,28 +190,31 @@ ssize_t QIODeviceDataProvider::read( void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
   //qDebug( "QIODeviceDataProvider::read( %p, %lu )", buffer, bufSize );
 #endif
-  if ( bufSize == 0 )
+  if ( bufSize == 0 ) {
     return 0;
+  }
   if ( !buffer ) {
     Error::setSystemError( GPG_ERR_EINVAL );
     return -1;
   }
   const qint64 numRead = mHaveQProcess
-      ? blocking_read( mIO, static_cast<char*>(buffer), bufSize )
-      : mIO->read( static_cast<char*>(buffer), bufSize ) ;
+      ? blocking_read( mIO, static_cast<char*>( buffer ), bufSize )
+      : mIO->read( static_cast<char*>( buffer ), bufSize );
 
   //workaround: some QIODevices (known example: QProcess) might not return 0 (EOF), but immediately -1 when finished. If no
   //errno is set, gpgme doesn't detect the error and loops forever. So return 0 on the very first -1 in case errno is 0
 
   ssize_t rc = numRead;
   if ( numRead < 0 && !Error::hasSystemError() ) {
-      if ( mErrorOccurred )
+      if ( mErrorOccurred ) {
           Error::setSystemError( GPG_ERR_EIO );
-      else
+      } else {
           rc = 0;
+      }
   }
-  if ( numRead < 0 )
+  if ( numRead < 0 ) {
       mErrorOccurred = true;
+  }
   return rc;
 }
 
@@ -214,14 +222,15 @@ ssize_t QIODeviceDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
   //qDebug( "QIODeviceDataProvider::write( %p, %lu )", buffer, static_cast<unsigned long>( bufSize ) );
 #endif
-  if ( bufSize == 0 )
+  if ( bufSize == 0 ) {
     return 0;
+  }
   if ( !buffer ) {
      Error::setSystemError( GPG_ERR_EINVAL );
      return -1;
   }
 
-  return mIO->write( static_cast<const char*>(buffer), bufSize );
+  return mIO->write( static_cast<const char*>( buffer ), bufSize );
 }
 
 off_t QIODeviceDataProvider::seek( off_t offset, int whence ) {

@@ -165,13 +165,13 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     bool sendCommandLine( const QByteArray &cmdline )
     {
       if ( cmdline.length() < 4096 ) {
-        kDebug(7112) << "C: >>" << cmdline.trimmed().data() << "<<";
+        kDebug( 7112 ) << "C: >>" << cmdline.trimmed().data() << "<<";
       } else {
-        kDebug(7112) << "C: <" << cmdline.length() << " bytes>";
+        kDebug( 7112 ) << "C: <" << cmdline.length() << " bytes>";
       }
       ssize_t numWritten, cmdline_len = cmdline.length();
       if ( ( numWritten = socket->write( cmdline ) ) != cmdline_len ) {
-        kDebug(7112) << "Tried to write " << cmdline_len << " bytes, but only "
+        kDebug( 7112 ) << "Tried to write " << cmdline_len << " bytes, but only "
                      << numWritten << " were written!" << endl;
         error( KIO::ERR_SLAVE_DEFINED, i18n ( "Writing to socket failed." ) );
         return false;
@@ -481,7 +481,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
         // SMTP commands, for the benefit of the server.
         const QStringList recipients = request.recipients();
         for ( QStringList::const_iterator it = recipients.begin(); it != recipients.end(); ++it ) {
-          queueCommand( new RcptToCommand( this, (*it).toLatin1() ) );
+          queueCommand( new RcptToCommand( this, ( *it ).toLatin1() ) );
         }
 
         queueCommand( Command::DATA );
@@ -544,7 +544,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 bool SmtpSessionPrivate::saslInitialized = false;
 
 SmtpSession::SmtpSession( QObject *parent ) :
-  QObject(parent),
+  QObject( parent ),
   d( new SmtpSessionPrivate( this ) )
 {
   kDebug();
@@ -620,7 +620,7 @@ void SmtpSession::sendMessage( const KUrl &destination, QIODevice *data )
     d->myHostname = d->request.heloHostname();
   } else {
     d->myHostname = QHostInfo::localHostName();
-    if( d->myHostname.isEmpty() ) {
+    if ( d->myHostname.isEmpty() ) {
       d->myHostname = QLatin1String( "localhost.invalid" );
     } else if ( !d->myHostname.contains( QLatin1Char( '.' ) ) ) {
       d->myHostname += QLatin1String( ".localnet" );

@@ -76,7 +76,7 @@ static PSID getProcessOwner( HANDLE hProcess )
 
     // check how much space is needed
     GetTokenInformation( hToken, TokenUser, NULL, 0, &size );
-    if( ERROR_INSUFFICIENT_BUFFER == GetLastError() ) {
+    if ( ERROR_INSUFFICIENT_BUFFER == GetLastError() ) {
       userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
       GetTokenInformation( hToken, TokenUser, userStruct, size, &size );
 
@@ -110,7 +110,7 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
     return;
   }
 
-  pe32.dwSize = sizeof(PROCESSENTRY32); // Necessary according to MSDN
+  pe32.dwSize = sizeof( PROCESSENTRY32 ); // Necessary according to MSDN
   if ( !Process32First( h, &pe32 ) ) {
     return;
   }
@@ -137,7 +137,7 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
       pids.append( (int)pe32.th32ProcessID );
       kDebug() << "found PID: " << (int)pe32.th32ProcessID;
     }
-  } while( Process32Next( h, &pe32 ) );
+  } while ( Process32Next( h, &pe32 ) );
 #ifndef _WIN32_WCE
   CloseHandle( h );
 #else
