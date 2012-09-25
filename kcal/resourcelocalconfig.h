@@ -29,7 +29,7 @@
 
 #include <kurlrequester.h>
 
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 namespace KCal {
 

@@ -23,10 +23,10 @@
 
 #include <klocale.h>
 
-#include <QtGui/QBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QTreeWidget>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QTreeWidget>
 
 using namespace KCal;
 

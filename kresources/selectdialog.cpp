@@ -26,9 +26,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <QtGui/QGroupBox>
-#include <QtGui/QLayout>
-#include <QtGui/QListWidget>
+#include <QGroupBox>
+#include <QLayout>
+#include <QListWidget>
 
 #include "resource.h"
 

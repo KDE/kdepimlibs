@@ -64,8 +64,8 @@
 
 #include <QtCore/QBuffer>
 #include <QtCore/QList>
-#include <QtGui/QTextDocument>
-#include <QtGui/QApplication>
+#include <QTextDocument>
+#include <QApplication>
 
 using namespace KCal;
 using namespace IncidenceFormatter;

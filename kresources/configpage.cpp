@@ -35,11 +35,11 @@
 
 #include "configpage.h"
 
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTreeWidgetItem>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 #include <kcombobox.h>
 #include <kdebug.h>

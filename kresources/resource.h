@@ -27,7 +27,7 @@
 #include <kpluginfactory.h>
 
 #include <QtCore/QMutex>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KConfig;
 class KConfigGroup;

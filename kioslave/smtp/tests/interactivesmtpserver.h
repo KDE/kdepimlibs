@@ -34,7 +34,7 @@
     your version.
 */
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtNetwork/QTcpServer>
 
 class QLabel;

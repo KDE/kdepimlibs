@@ -44,7 +44,7 @@
 #include <kde_file.h>
 
 #include <QtCore/QList>
-#include <QtGui/QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
+#include <QTextDocument> // for Qt::escape() and Qt::mightBeRichText()
 #include <KMimeType>
 
 using namespace KCal;

@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCECACHEDCONFIG_H
 #define KCAL_RESOURCECACHEDCONFIG_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "kcal_export.h"
 
 namespace KCal {

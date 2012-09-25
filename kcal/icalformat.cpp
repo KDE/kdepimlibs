@@ -48,7 +48,7 @@ extern "C" {
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
-#include <QtGui/QClipboard>
+#include <QClipboard>
 
 #include <kdebug.h>
 #include <klocale.h>
