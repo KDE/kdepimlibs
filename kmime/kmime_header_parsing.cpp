@@ -52,10 +52,11 @@ namespace Types {
 // Fortunately, the presence of IDNA is readily detected with a substring match...
 static inline QString QUrl_fromAce_wrapper( const QString & domain )
 {
-    if ( domain.contains( QLatin1String( "xn--" ) ) )
-        return QUrl::fromAce( domain.toLatin1() );
-    else
-        return domain;
+  if ( domain.contains( QLatin1String( "xn--" ) ) ) {
+    return QUrl::fromAce( domain.toLatin1() );
+  } else {
+    return domain;
+  }
 }
 
 static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
@@ -87,7 +88,7 @@ static QString addr_spec_as_string( const AddrSpec & as, bool pretty )
   if ( needsQuotes ) {
     result = quoteChar + result + quoteChar;
   }
-  if( dom.isEmpty() ) {
+  if ( dom.isEmpty() ) {
     return result;
   } else {
     result += QLatin1Char( '@' );
@@ -188,7 +189,7 @@ QString Mailbox::prettyAddress( Quoting quoting ) const
   }
 
   if ( hasAddress() ) {
-    s += QLatin1String(" <") + QLatin1String( address() ) + QLatin1Char('>');
+    s += QLatin1String( " <" ) + QLatin1String( address() ) + QLatin1Char( '>' );
   }
   return s;
 }
@@ -234,7 +235,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
                        bool forceCS )
 {
   // make sure the caller already did a bit of the work.
-  assert( *(scursor-1) == '=' );
+  assert( *( scursor - 1 ) == '=' );
 
   //
   // STEP 1:
@@ -257,7 +258,7 @@ bool parseEncodedWord( const char* &scursor, const char * const send,
   // find delimiting '?' (and the '*' separating charset and language
   // tags, if any):
   for ( ; scursor != send ; scursor++ ) {
-    if ( *scursor == '?') {
+    if ( *scursor == '?' ) {
       break;
     } else if ( *scursor == '*' && languageStart == 0 ) {
       languageStart = scursor + 1;
@@ -425,7 +426,7 @@ static inline void eatWhiteSpace( const char* &scursor, const char * const send 
 bool parseAtom( const char * &scursor, const char * const send,
                 QString &result, bool allow8Bit )
 {
-  QPair<const char*,int> maybeResult;
+  QPair<const char*, int> maybeResult;
 
   if ( parseAtom( scursor, send, maybeResult, allow8Bit ) ) {
     result += QString::fromLatin1( maybeResult.first, maybeResult.second );
@@ -468,7 +469,7 @@ bool parseAtom( const char * &scursor, const char * const send,
 bool parseToken( const char * &scursor, const char * const send,
                  QString &result, bool allow8Bit )
 {
-  QPair<const char*,int> maybeResult;
+  QPair<const char*, int> maybeResult;
 
   if ( parseToken( scursor, send, maybeResult, allow8Bit ) ) {
     result += QString::fromLatin1( maybeResult.first, maybeResult.second );
@@ -530,7 +531,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
   // We return when we either encounter the end or unescaped openChar
   // or closeChar.
 
-  assert( *(scursor-1) == openChar || *(scursor-1) == closeChar );
+  assert( *( scursor - 1 ) == openChar || *( scursor - 1 ) == closeChar );
 
   while ( scursor != send ) {
     ch = *scursor++;
@@ -541,7 +542,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       return true;
     }
 
-    switch( ch ) {
+    switch ( ch ) {
     case '\\':      // quoted-pair
       // misses "\" CRLF LWSP-char handling, see rfc822, 3.4.5
       READ_ch_OR_FAIL;
@@ -560,7 +561,7 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
       if ( ch != '\n' ) {
         // CR on it's own...
         KMIME_WARN_LONE( CR );
-        result += QLatin1Char('\r');
+        result += QLatin1Char( '\r' );
         scursor--; // points to after the '\r' again
       } else {
         // CRLF encountered.
@@ -610,15 +611,16 @@ bool parseGenericQuotedString( const char* &scursor, const char * const send,
     {
       // ### Work around broken clients that send encoded words in quoted-strings
       //     For example, older KMail versions.
-      if( scursor == send )
+      if ( scursor == send ) {
         break;
+      }
 
       const char *oldscursor = scursor;
       QString tmp;
       QByteArray lang, charset;
-      if( *scursor++ == '?' ) {
+      if ( *scursor++ == '?' ) {
         --scursor;
-        if( parseEncodedWord( scursor, send, tmp, lang, charset ) ) {
+        if ( parseEncodedWord( scursor, send, tmp, lang, charset ) ) {
           result += tmp;
           break;
         } else {
@@ -650,15 +652,15 @@ bool parseComment( const char* &scursor, const char * const send,
   QString maybeCmnt;
   const char *oldscursor = scursor;
 
-  assert( *(scursor-1) == '(' );
+  assert( *( scursor - 1 ) == '(' );
 
   while ( commentNestingDepth ) {
     QString cmntPart;
     if ( parseGenericQuotedString( scursor, send, cmntPart, isCRLF, '(', ')' ) ) {
-      assert( *(scursor-1) == ')' || *(scursor-1) == '(' );
+      assert( *( scursor - 1 ) == ')' || *( scursor - 1 ) == '(' );
       // see the kdoc for above function for the possible conditions
       // we have to check:
-      switch ( *(scursor-1) ) {
+      switch ( *( scursor - 1 ) ) {
       case ')':
         if ( reallySave ) {
           // add the chunk that's now surely inside the comment.
@@ -736,7 +738,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
       tmp.clear();
       if ( parseGenericQuotedString( scursor, send, tmp, isCRLF, '"', '"' ) ) {
         successfullyParsed = scursor;
-        assert( *(scursor-1) == '"' );
+        assert( *( scursor - 1 ) == '"' );
         switch ( found ) {
         case None:
           found = QuotedString;
@@ -746,7 +748,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case EncodedWord:
         case QuotedString:
           found = Phrase;
-          result += QLatin1Char(' '); // rfc822, 3.4.4
+          result += QLatin1Char( ' ' ); // rfc822, 3.4.4
           break;
         default:
           assert( 0 );
@@ -760,7 +762,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         if ( found == None ) {
           return false;
         } else {
-          result += QLatin1Char(' '); // rfc822, 3.4.4
+          result += QLatin1Char( ' ' ); // rfc822, 3.4.4
           result += tmp;
           return true;
         }
@@ -798,7 +800,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case Atom:
         case QuotedString:
           if ( !lastWasEncodedWord ) {
-            result += QLatin1Char(' '); // rfc822, 3.4.4
+            result += QLatin1Char( ' ' ); // rfc822, 3.4.4
           }
           found = Phrase;
           break;
@@ -827,7 +829,7 @@ bool parsePhrase( const char* &scursor, const char * const send,
         case EncodedWord:
         case QuotedString:
           found = Phrase;
-          result += QLatin1Char(' '); // rfc822, 3.4.4
+          result += QLatin1Char( ' ' ); // rfc822, 3.4.4
           break;
         default:
           assert( 0 );
@@ -888,7 +890,7 @@ bool parseDotAtom( const char* &scursor, const char * const send,
       return true;
     }
 
-    result += QLatin1Char('.');
+    result += QLatin1Char( '.' );
     result += maybeAtom;
     successfullyParsed = scursor;
   }
@@ -906,7 +908,7 @@ void eatCFWS( const char* &scursor, const char * const send, bool isCRLF )
 
     char ch = *scursor++;
 
-    switch( ch ) {
+    switch ( ch ) {
     case ' ':
     case '\t': // whitespace
     case '\r':
@@ -950,7 +952,7 @@ bool parseDomain( const char* &scursor, const char * const send,
                                       isCRLF, '[', ']' ) ) {
       if ( scursor == send ) {
         // end of header: check for closing ']':
-        if ( *(scursor-1) == ']' ) {
+        if ( *( scursor - 1 ) == ']' ) {
           // OK, last char was ']':
           result = maybeDomainLiteral;
           return true;
@@ -961,8 +963,8 @@ bool parseDomain( const char* &scursor, const char * const send,
       }
       // we hit openChar in parseGenericQuotedString.
       // include it in maybeDomainLiteral and keep on parsing:
-      if ( *(scursor-1) == '[' ) {
-        maybeDomainLiteral += QLatin1Char('[');
+      if ( *( scursor - 1 ) == '[' ) {
+        maybeDomainLiteral += QLatin1Char( '[' );
         continue;
       }
       // OK, real end of domain-literal:
@@ -976,7 +978,7 @@ bool parseDomain( const char* &scursor, const char * const send,
       result = maybeDotAtom;
       // Domain may end with '.', if so preserve it'
       if ( scursor != send && *scursor == '.' ) {
-        result += QLatin1Char('.');
+        result += QLatin1Char( '.' );
         scursor++;
       }
       return true;
@@ -1064,7 +1066,7 @@ bool parseAddrSpec( const char* &scursor, const char * const send,
     char ch = *scursor++;
     switch ( ch ) {
     case '.': // dot
-      maybeLocalPart += QLatin1Char('.');
+      maybeLocalPart += QLatin1Char( '.' );
       break;
 
     case '@':
@@ -1101,7 +1103,7 @@ bool parseAddrSpec( const char* &scursor, const char * const send,
 
 SAW_AT_SIGN:
 
-  assert( *(scursor-1) == '@' );
+  assert( *( scursor - 1 ) == '@' );
 
   QString maybeDomain;
   if ( !parseDomain( scursor, send, maybeDomain, isCRLF ) ) {
@@ -1166,8 +1168,9 @@ static QString stripQuotes( const QString &input )
   if ( input.startsWith( quotes ) && input.endsWith( quotes ) ) {
     QString stripped( input.mid( 1, input.size() - 2 ) );
     return stripped;
+  } else {
+    return input;
   }
-  else return input;
 }
 
 bool parseMailbox( const char* &scursor, const char * const send,
@@ -1494,7 +1497,7 @@ bool parseRawParameterList( const char* &scursor, const char * const send,
       continue;
     }
 
-    QPair<QString,QStringOrQPair> maybeParameter;
+    QPair<QString, QStringOrQPair> maybeParameter;
     if ( !parseParameter( scursor, send, maybeParameter, isCRLF ) ) {
       // we need to do a bit of work if the attribute is not
       // NULL. These are the cases marked with "needs further
@@ -1600,7 +1603,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
   }
 
   if ( !rfc2231Codec ) {
-    rfc2231Codec = Codec::codecForName("x-kmime-rfc2231");
+    rfc2231Codec = Codec::codecForName( "x-kmime-rfc2231" );
     assert( rfc2231Codec );
   }
 
@@ -1644,8 +1647,8 @@ bool parseParameterListWithCharset( const char* &scursor,
                                                 QByteArray& charset, bool isCRLF )
 {
 // parse the list into raw attribute-value pairs:
-  QMap<QString,QStringOrQPair> rawParameterList;
-  if (!parseRawParameterList( scursor, send, rawParameterList, isCRLF ) ) {
+  QMap<QString, QStringOrQPair> rawParameterList;
+  if ( !parseRawParameterList( scursor, send, rawParameterList, isCRLF ) ) {
     return false;
   }
 
@@ -1672,7 +1675,7 @@ bool parseParameterListWithCharset( const char* &scursor,
     RFC2231
   };
 
-  QMap<QString,QStringOrQPair>::Iterator it, end = rawParameterList.end();
+  QMap<QString, QStringOrQPair>::Iterator it, end = rawParameterList.end();
 
   for ( it = rawParameterList.begin() ; it != end ; ++it ) {
     if ( attribute.isNull() || !it.key().startsWith( attribute ) ) {
@@ -1697,7 +1700,7 @@ bool parseParameterListWithCharset( const char* &scursor,
         encodingMode = RFC2231;
       }
       // is the value rfc2047-encoded?
-      if( !(*it).qstring.isNull() && (*it).qstring.contains( QLatin1String( "=?" ) ) ) {
+      if ( !( *it ).qstring.isNull() && ( *it ).qstring.contains( QLatin1String( "=?" ) ) ) {
         mode |= Encoded;
         encodingMode = RFC2047;
       }
@@ -1713,17 +1716,17 @@ bool parseParameterListWithCharset( const char* &scursor,
         if ( encodingMode == RFC2231 ) {
           decodeRFC2231Value( rfc2231Codec, textcodec,
                               false, /* isn't continuation */
-                              value, (*it).qpair, charset );
+                              value, ( *it ).qpair, charset );
         }
         else if ( encodingMode == RFC2047 ) {
-          value += decodeRFC2047String( (*it).qstring.toLatin1(), charset );
+          value += decodeRFC2047String( ( *it ).qstring.toLatin1(), charset );
         }
       } else {
         // not encoded.
-        if ( (*it).qpair.first ) {
-          value += QString::fromLatin1( (*it).qpair.first, (*it).qpair.second );
+        if ( ( *it ).qpair.first ) {
+          value += QString::fromLatin1( ( *it ).qpair.first, ( *it ).qpair.second );
         } else {
-          value += (*it).qstring;
+          value += ( *it ).qstring;
         }
       }
 
@@ -1731,7 +1734,7 @@ bool parseParameterListWithCharset( const char* &scursor,
       // shortcut-processing when the value isn't encoded:
       //
 
-      if ( !(mode & Continued) ) {
+      if ( !( mode & Continued ) ) {
         // save result already:
         result.insert( attribute, value );
         // force begin of a new attribute:
@@ -1747,13 +1750,13 @@ bool parseParameterListWithCharset( const char* &scursor,
         // encoded
         decodeRFC2231Value( rfc2231Codec, textcodec,
                             true, /* is continuation */
-                            value, (*it).qpair, charset );
+                            value, ( *it ).qpair, charset );
       } else {
         // not encoded
-        if ( (*it).qpair.first ) {
-          value += QString::fromLatin1( (*it).qpair.first, (*it).qpair.second );
+        if ( ( *it ).qpair.first ) {
+          value += QString::fromLatin1( ( *it ).qpair.first, ( *it ).qpair.second );
         } else {
-          value += (*it).qstring;
+          value += ( *it ).qstring;
         }
       }
     }
@@ -1889,7 +1892,7 @@ static bool parseAlphaNumericTimeZone( const char* &scursor,
     }
   }
 
-  QPair<const char*,int> maybeTimeZone( 0, 0 );
+  QPair<const char*, int> maybeTimeZone( 0, 0 );
   if ( !parseToken( scursor, send, maybeTimeZone, false /*no 8bit*/ ) ) {
     return false;
   }
@@ -2179,12 +2182,14 @@ bool parseDateTime( const char* &scursor, const char * const send,
   maybeDateTime.setDate( QDate( maybeYear, maybeMonth, maybeDay ) );
   maybeDateTime.setTime( QTime( maybeHour, maybeMinute, maybeSecond ) );
 
-  if ( !maybeDateTime.isValid() )
+  if ( !maybeDateTime.isValid() ) {
     return false;
+  }
 
   result = KDateTime( maybeDateTime, KDateTime::Spec( KDateTime::OffsetFromUTC, secsEastOfGMT ) );
-  if ( !result.isValid() )
+  if ( !result.isValid() ) {
     return false;
+  }
   return true;
 }
 
@@ -2213,7 +2218,7 @@ Headers::Base *extractFirstHeader( QByteArray &head )
     if ( !rawType.isEmpty() ) {
       header = HeaderFactory::self()->createHeader( rawType );
     }
-    if( !header ) {
+    if ( !header ) {
       //kWarning() << "Returning Generic header of type" << rawType;
       header = new Headers::Generic( rawType.constData() );
     }
@@ -2253,7 +2258,7 @@ Headers::Base::List parseHeaders( const QByteArray &head )
   Headers::Base *h;
 
   QByteArray copy = head;
-  while( ( h = extractFirstHeader( copy ) ) ) {
+  while ( ( h = extractFirstHeader( copy ) ) ) {
     ret << h;
   }
 

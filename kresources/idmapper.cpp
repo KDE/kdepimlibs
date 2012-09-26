@@ -104,7 +104,7 @@ bool IdMapper::load()
 {
   QFile file( filename() );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    kError(5800) << "Cannot read uid map file '" << filename() << "'";
+    kError( 5800 ) << "Cannot read uid map file '" << filename() << "'";
     return false;
   }
 
@@ -132,7 +132,7 @@ bool IdMapper::save()
 {
   QFile file( filename() );
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    kError(5800) << "Can't write uid map file '" << filename() << "'";
+    kError( 5800 ) << "Can't write uid map file '" << filename() << "'";
     return false;
   }
 

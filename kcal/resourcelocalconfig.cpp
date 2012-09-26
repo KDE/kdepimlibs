@@ -31,9 +31,9 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 
-#include <QtGui/QLabel>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
+#include <QLabel>
+#include <QGridLayout>
+#include <QGroupBox>
 
 #include <typeinfo>
 

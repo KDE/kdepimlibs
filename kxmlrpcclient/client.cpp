@@ -67,7 +67,7 @@ Client::~Client()
 {
   QList<Query *>::Iterator it;
   for ( it = d->mPendingQueries.begin(); it != d->mPendingQueries.end(); ++it ) {
-    (*it)->deleteLater();
+    ( *it )->deleteLater();
   }
 
   d->mPendingQueries.clear();

@@ -20,7 +20,7 @@
 */
 #include "kcmkresources.h"
 
-#include <QtGui/QLayout>
+#include <QLayout>
 
 #include <kaboutdata.h>
 #include <kpluginfactory.h>

@@ -48,7 +48,7 @@ namespace Types {
 struct KMIME_EXPORT QStringOrQPair {
   QStringOrQPair() : qstring(), qpair( 0, 0 ) {}
   QString qstring;
-  QPair<const char*,int> qpair;
+  QPair<const char*, int> qpair;
 };
 
 struct KMIME_EXPORT AddrSpec {

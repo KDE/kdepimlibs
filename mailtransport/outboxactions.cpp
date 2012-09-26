@@ -54,7 +54,7 @@ ItemFetchScope SendQueuedAction::fetchScope() const
 
 bool SendQueuedAction::itemAccepted( const Item &item ) const
 {
-  if( !item.hasAttribute<DispatchModeAttribute>() ) {
+  if ( !item.hasAttribute<DispatchModeAttribute>() ) {
     kWarning() << "Item doesn't have DispatchModeAttribute.";
     return false;
   }
@@ -66,7 +66,7 @@ Job *SendQueuedAction::itemAction( const Item &item, FilterActionJob *parent ) c
 {
   Item cp = item;
   cp.addAttribute( new DispatchModeAttribute ); // defaults to Automatic
-  if( cp.hasAttribute<ErrorAttribute>() ) {
+  if ( cp.hasAttribute<ErrorAttribute>() ) {
     cp.removeAttribute<ErrorAttribute>();
     cp.clearFlag( Akonadi::MessageFlags::HasError );
   }
@@ -136,12 +136,12 @@ ItemFetchScope DispatchManualTransportAction::fetchScope() const
 
 bool DispatchManualTransportAction::itemAccepted( const Item &item ) const
 {
-  if( !item.hasAttribute<DispatchModeAttribute>() ) {
+  if ( !item.hasAttribute<DispatchModeAttribute>() ) {
     kWarning() << "Item doesn't have DispatchModeAttribute.";
     return false;
   }
 
-  if( !item.hasAttribute<TransportAttribute>() ) {
+  if ( !item.hasAttribute<TransportAttribute>() ) {
     kWarning() << "Item doesn't have TransportAttribute.";
     return false;
   }

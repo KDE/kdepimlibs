@@ -153,9 +153,9 @@ QByteArray DateFormatter::zone( time_t t ) const
 
   //hmm, could make hours & mins static
   int secs = abs( timezone );
-  int neg  = (timezone > 0) ? 1 : 0;
+  int neg  = ( timezone > 0 ) ? 1 : 0;
   int hours = secs / 3600;
-  int mins  = (secs - hours*3600) / 60;
+  int mins  = ( secs - hours * 3600 ) / 60;
 
   // adjust to daylight
   if ( local->tm_isdst > 0 ) {
@@ -172,9 +172,9 @@ QByteArray DateFormatter::zone( time_t t ) const
 #elif defined(HAVE_TM_GMTOFF)
 
   int secs = abs( local->tm_gmtoff );
-  int neg  = (local->tm_gmtoff < 0) ? 1 : 0;
+  int neg  = ( local->tm_gmtoff < 0 ) ? 1 : 0;
   int hours = secs / 3600;
-  int mins  = (secs - hours * 3600) / 60;
+  int mins  = ( secs - hours * 3600 ) / 60;
 
   if ( local->tm_isdst > 0 ) {
     mDaylight = 1;
@@ -190,7 +190,7 @@ QByteArray DateFormatter::zone( time_t t ) const
   int neg = ( secs < 0 ) ? 1 : 0;
   secs = abs( secs );
   int hours = secs / 3600;
-  int mins  = (secs - hours * 3600) / 60;
+  int mins  = ( secs - hours * 3600 ) / 60;
   // daylight should be already taken care of here
 
 #endif /* HAVE_TIMEZONE */
@@ -268,11 +268,11 @@ QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
   tmp.setTime_t( t );
 
   if ( !lang.isEmpty() ) {
-    locale = new KLocale( lang, lang, lang);
-    ret = locale->formatDateTime( tmp, (shortFormat ? KLocale::ShortDate : KLocale::LongDate), includeSecs );
+    locale = new KLocale( lang, lang, lang );
+    ret = locale->formatDateTime( tmp, ( shortFormat ? KLocale::ShortDate : KLocale::LongDate ), includeSecs );
     delete locale;
   } else {
-    ret = locale->formatDateTime( tmp, (shortFormat ? KLocale::ShortDate : KLocale::LongDate), includeSecs );
+    ret = locale->formatDateTime( tmp, ( shortFormat ? KLocale::ShortDate : KLocale::LongDate ), includeSecs );
   }
 
   return ret;

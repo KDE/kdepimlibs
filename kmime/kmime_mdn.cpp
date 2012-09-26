@@ -53,29 +53,29 @@ static const struct {
   const char * description;
 } dispositionTypes[] = {
   { Displayed, "displayed",
-    I18N_NOOP("The message sent on ${date} to ${to} with subject "
-              "\"${subject}\" has been displayed. This is no guarantee that "
-              "the message has been read or understood.") },
+    I18N_NOOP( "The message sent on ${date} to ${to} with subject "
+               "\"${subject}\" has been displayed. This is no guarantee that "
+               "the message has been read or understood." ) },
   { Deleted, "deleted",
-    I18N_NOOP("The message sent on ${date} to ${to} with subject "
-              "\"${subject}\" has been deleted unseen. This is no guarantee "
-              "that the message will not be \"undeleted\" and nonetheless "
-              "read later on.") },
+    I18N_NOOP( "The message sent on ${date} to ${to} with subject "
+               "\"${subject}\" has been deleted unseen. This is no guarantee "
+               "that the message will not be \"undeleted\" and nonetheless "
+               "read later on." ) },
   { Dispatched, "dispatched",
-    I18N_NOOP("The message sent on ${date} to ${to} with subject "
-              "\"${subject}\" has been dispatched. This is no guarantee "
-              "that the message will not be read later on.") },
+    I18N_NOOP( "The message sent on ${date} to ${to} with subject "
+               "\"${subject}\" has been dispatched. This is no guarantee "
+               "that the message will not be read later on." ) },
   { Processed, "processed",
-    I18N_NOOP("The message sent on ${date} to ${to} with subject "
-              "\"${subject}\" has been processed by some automatic means.") },
+    I18N_NOOP( "The message sent on ${date} to ${to} with subject "
+               "\"${subject}\" has been processed by some automatic means." ) },
   { Denied, "denied",
-    I18N_NOOP("The message sent on ${date} to ${to} with subject "
-              "\"${subject}\" has been acted upon. The sender does not wish "
-              "to disclose more details to you than that.") },
+    I18N_NOOP( "The message sent on ${date} to ${to} with subject "
+               "\"${subject}\" has been acted upon. The sender does not wish "
+               "to disclose more details to you than that." ) },
   { Failed, "failed",
-    I18N_NOOP("Generation of a Message Disposition Notification for the "
-              "message sent on ${date} to ${to} with subject \"${subject}\" "
-              "failed. Reason is given in the Failure: header field below.") }
+    I18N_NOOP( "Generation of a Message Disposition Notification for the "
+               "message sent on ${date} to ${to} with subject \"${subject}\" "
+               "failed. Reason is given in the Failure: header field below." ) }
 };
 
 static const int numDispositionTypes =
@@ -178,7 +178,7 @@ static QByteArray dispositionField( DispositionType d, ActionMode a, SendingMode
 
   // optional parts: Disposition: foo/baz; bar/mod1,mod2,mod3
   bool first = true;
-  for ( QList<DispositionModifier>::const_iterator mt = m.begin() ;
+  for ( QList<DispositionModifier>::const_iterator mt = m.begin();
         mt != m.end() ; ++mt ) {
     if ( first ) {
       result += '/';
@@ -226,7 +226,7 @@ static QByteArray reportingUAField() {
   } else {
     hostName[255] = '\0'; // gethostname may have returned 255 chars (man page)
   }
-  return QByteArray("Reporting-UA: ") + QByteArray( hostName ) +
+  return QByteArray( "Reporting-UA: " ) + QByteArray( hostName ) +
     QByteArray( "; KMime " KMIME_VERSION_STRING "\n" );
 }
 

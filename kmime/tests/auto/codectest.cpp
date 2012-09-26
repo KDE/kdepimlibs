@@ -40,12 +40,12 @@ void CodecTest::testCodecs_data()
   QTest::addColumn<Mode>( "mode" );
 
   QDir codecBaseDir( CODEC_DIR );
-  foreach( const QString &dir, codecBaseDir.entryList( QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
-                                                       QDir::NoSort ) ) {
+  foreach ( const QString &dir, codecBaseDir.entryList( QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
+                                                        QDir::NoSort ) ) {
     if ( dir.toLower().startsWith( "codec_" ) ) {
       const QString codecName = dir.right( dir.size() - 6 );
       QDir codecDir( CODEC_DIR"/" + dir );
-      foreach( const QString &file, codecDir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
+      foreach ( const QString &file, codecDir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
         if ( file.toLower().endsWith( ".expected" ) ) {
           const QString dataFileNameBase = file.left( file.size() - 9 );
           QFile dataFile( codecDir.path() + '/' + dataFileNameBase );
@@ -54,10 +54,11 @@ void CodecTest::testCodecs_data()
           QVERIFY( expectedFile.open( QIODevice::ReadOnly ) );
 
           Mode mode = Decode;
-          if ( file.contains( "-decode" ) )
+          if ( file.contains( "-decode" ) ) {
             mode = Decode;
-          else if ( file.contains( "-encode") )
+          } else if ( file.contains( "-encode" ) ) {
             mode = Encode;
+          }
 
           const QByteArray data = dataFile.readAll();
           const QByteArray expected = expectedFile.readAll();
@@ -85,12 +86,14 @@ void CodecTest::testCodecs()
   QVERIFY( codec );
 
   QStringList blacklistedTags;
-  if ( blacklistedTags.contains( tag ) )
+  if ( blacklistedTags.contains( tag ) ) {
     QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
+  }
 
   QByteArray result;
-  if ( mode == Decode )
+  if ( mode == Decode ) {
     result = codec->decode( input, false );
+  }
   else
     result = codec->encode( input, false );
 

@@ -38,8 +38,9 @@ int main( int argc, char * argv[] ) {
 
     QCoreApplication app( argc, argv );
 
-    if ( argc != 4 && argc != 5 )
+    if ( argc != 4 && argc != 5 ) {
         return 1;
+    }
 
     const char * const keyid = argv[1];
     const std::string name =    QString::fromLocal8Bit( argv[2] ).toUtf8().constData();

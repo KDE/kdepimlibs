@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTLISTVIEW_H
 #define MAILTRANSPORT_TRANSPORTLISTVIEW_H
 
-#include <QtGui/QTreeWidget>
+#include <QTreeWidget>
 
 namespace MailTransport {
 

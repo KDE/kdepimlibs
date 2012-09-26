@@ -235,7 +235,7 @@ CharFreq::Type CharFreq::type() const
 float CharFreq::printableRatio() const
 {
   if ( mTotal ) {
-    return float(mPrintable) / float(mTotal);
+    return float( mPrintable ) / float( mTotal );
   } else {
     return 0;
   }
@@ -244,7 +244,7 @@ float CharFreq::printableRatio() const
 float CharFreq::controlCodesRatio() const
 {
   if ( mTotal ) {
-    return float(mCTL) / float(mTotal);
+    return float( mCTL ) / float( mTotal );
   } else {
     return 0;
   }

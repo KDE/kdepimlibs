@@ -44,7 +44,7 @@ using namespace MailTransport;
 
 MessageQueuer::MessageQueuer()
 {
-  if( !Akonadi::Control::start() ) {
+  if ( !Akonadi::Control::start() ) {
     kFatal() << "Could not start Akonadi server.";
   }
 
@@ -98,7 +98,7 @@ void MessageQueuer::sendOnDateClicked()
   dialog->setMainWidget( dt );
   dialog->enableButtonCancel( false );
   dialog->exec();
-  if( !dialog ) {
+  if ( !dialog ) {
     return;
   }
   kDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
@@ -154,7 +154,7 @@ int main( int argc, char **argv )
 
 void MessageQueuer::jobResult( KJob *job )
 {
-  if( job->error() ) {
+  if ( job->error() ) {
     kDebug() << "job error:" << job->errorText();
   } else {
     kDebug() << "job success.";

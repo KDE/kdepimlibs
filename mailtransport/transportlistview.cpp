@@ -42,6 +42,7 @@ TransportListView::TransportListView( QWidget *parent )
                      << i18nc( "@title:column email transport type", "Type" ) );
   setRootIsDecorated( false );
   header()->setMovable( false );
+  header()->setResizeMode(QHeaderView::ResizeToContents);
   setAllColumnsShowFocus( true );
   setAlternatingRowColors( true );
   setSortingEnabled( true );
@@ -66,7 +67,7 @@ void TransportListView::editItem( QTreeWidgetItem *item, int column )
 
 void TransportListView::commitData( QWidget *editor )
 {
-  if( selectedItems().size() < 1 ) {
+  if ( selectedItems().size() < 1 ) {
     // transport was deleted by someone else???
     kDebug() << "No selected item.";
     return;
@@ -77,7 +78,7 @@ void TransportListView::commitData( QWidget *editor )
 
   int id = item->data( 0, Qt::UserRole ).toInt();
   Transport *t = TransportManager::self()->transportById( id );
-  if( !t ) {
+  if ( !t ) {
     kWarning() << "Transport" << id << "not known by manager.";
     return;
   }

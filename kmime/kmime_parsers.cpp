@@ -124,27 +124,27 @@ QByteArray NonMimeParser::guessMimeType( const QByteArray &fileName )
   if ( !fileName.isEmpty() ) {
     pos = fileName.lastIndexOf( '.' );
     if ( pos++ != -1 ) {
-      tmp = fileName.mid( pos, fileName.length() - pos).toUpper();
-      if ( tmp == "JPG" || tmp=="JPEG" ) {
+      tmp = fileName.mid( pos, fileName.length() - pos ).toUpper();
+      if ( tmp == "JPG" || tmp == "JPEG" ) {
         mimeType = "image/jpeg";
-      } else if ( tmp == "GIF") {
+      } else if ( tmp == "GIF" ) {
         mimeType = "image/gif";
-      } else if ( tmp == "PNG") {
+      } else if ( tmp == "PNG" ) {
         mimeType = "image/png";
-      } else if ( tmp == "TIFF" || tmp == "TIF") {
+      } else if ( tmp == "TIFF" || tmp == "TIF" ) {
         mimeType = "image/tiff";
-      } else if ( tmp == "XPM") {
+      } else if ( tmp == "XPM" ) {
         mimeType = "image/x-xpixmap";
-      } else if ( tmp == "XBM") {
+      } else if ( tmp == "XBM" ) {
         mimeType = "image/x-xbitmap";
-      } else if ( tmp == "BMP") {
+      } else if ( tmp == "BMP" ) {
         mimeType = "image/bmp";
       } else if ( tmp == "TXT" ||
                   tmp == "ASC" ||
                   tmp == "H" ||
                   tmp == "C" ||
                   tmp == "CC" ||
-                  tmp == "CPP") {
+                  tmp == "CPP" ) {
         mimeType = "text/plain";
       } else if ( tmp == "HTML" || tmp == "HTM" ) {
         mimeType = "text/html";
@@ -179,7 +179,7 @@ bool UUEncoded::parse()
 
     if ( ( beginPos = QString::fromLatin1( s_rc ).indexOf( QRegExp( QLatin1String( "begin [0-9][0-9][0-9]" ) ),
                                                            currentPos ) ) > -1 &&
-         ( beginPos == 0 || s_rc.at( beginPos - 1 ) == '\n') ) {
+         ( beginPos == 0 || s_rc.at( beginPos - 1 ) == '\n' ) ) {
       containsBegin = true;
       uuStart = s_rc.indexOf( '\n', beginPos );
       if ( uuStart == -1 ) {//no more line breaks found, we give up
@@ -192,8 +192,7 @@ bool UUEncoded::parse()
       beginPos=currentPos;
     }
 
-    if ( ( endPos = s_rc.
-           indexOf( "\nend", ( uuStart > 0 ) ? uuStart-1:0 ) ) == -1 ) {
+    if ( ( endPos = s_rc.indexOf( "\nend", ( uuStart > 0 ) ? uuStart - 1 : 0 ) ) == -1 ) {
       endPos = s_rc.length(); //no end found
     } else {
       containsEnd = true;
@@ -206,7 +205,7 @@ bool UUEncoded::parse()
       for ( int idx=uuStart; idx<endPos; idx++ ) {
         if ( s_rc[idx] == '\n' ) {
           lineCount++;
-          if ( idx+1 < endPos && s_rc[idx+1] == 'M') {
+          if ( idx + 1 < endPos && s_rc[idx + 1] == 'M' ) {
             idx++;
             MCount++;
           }
@@ -223,14 +222,14 @@ bool UUEncoded::parse()
 
       if ( ( !containsBegin || !containsEnd ) && !s_ubject.isNull() ) {
         // message may be split up => parse subject
-        QRegExp rx( QLatin1String( "[0-9]+/[0-9]+") );
+        QRegExp rx( QLatin1String( "[0-9]+/[0-9]+" ) );
         pos = rx.indexIn( QLatin1String( s_ubject ), 0 );
         len = rx.matchedLength();
         if ( pos != -1 ) {
           tmp = s_ubject.mid( pos, len );
           pos = tmp.indexOf( '/' );
           p_artNr = tmp.left( pos ).toInt();
-          t_otalNr = tmp.right( tmp.length() - pos - 1).toInt();
+          t_otalNr = tmp.right( tmp.length() - pos - 1 ).toInt();
         } else {
           success = false;
           break; //no "part-numbers" found in the subject, we give up
@@ -323,8 +322,7 @@ bool YENCEncoded::parse()
     bool containsPart=false;
     QByteArray fileName, mimeType;
 
-    if ( ( beginPos = s_rc.
-           indexOf( "=ybegin ", currentPos ) ) > -1 &&
+    if ( ( beginPos = s_rc.indexOf( "=ybegin ", currentPos ) ) > -1 &&
          ( beginPos == 0 || s_rc.at( beginPos - 1 ) == '\n' ) ) {
       yencStart = s_rc.indexOf( '\n', beginPos );
       if ( yencStart == -1 ) { // no more line breaks found, give up

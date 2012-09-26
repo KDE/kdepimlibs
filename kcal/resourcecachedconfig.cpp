@@ -24,15 +24,15 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <QtGui/QLayout>
-#include <QtGui/QRadioButton>
-#include <QtGui/QSpinBox>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QCheckBox>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QGroupBox>
+#include <QLayout>
+#include <QRadioButton>
+#include <QSpinBox>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QBoxLayout>
+#include <QCheckBox>
+#include <QButtonGroup>
+#include <QGroupBox>
 
 #include "resourcecachedconfig.moc"
 

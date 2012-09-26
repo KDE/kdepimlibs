@@ -32,8 +32,9 @@ class Base64Benchmark : public QObject
     {
       char c = 0;
       QByteArray result;
-      while ( result.size() < size )
+      while ( result.size() < size ) {
         result.append( c++ );
+      }
       return result;
     }
 

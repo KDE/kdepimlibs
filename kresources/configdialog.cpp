@@ -37,10 +37,10 @@
 #include <klineedit.h>
 #include <kmessagebox.h>
 
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QCheckBox>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QCheckBox>
 
 #include "factory.h"
 

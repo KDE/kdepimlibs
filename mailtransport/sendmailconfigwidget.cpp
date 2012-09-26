@@ -62,7 +62,7 @@ void SendmailConfigWidget::init()
   d->manager->addWidget( this ); // otherwise it doesn't find out about these widgets
   d->manager->updateWidgets();
 
-  if( d->ui.kcfg_host->url().isEmpty() ) {
+  if ( d->ui.kcfg_host->url().isEmpty() ) {
     // Locate sendmail.
     // This is imperfect, because it shows the standard path if an empty path
     // is saved in the config.

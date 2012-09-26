@@ -89,7 +89,7 @@ ManagerImpl::~ManagerImpl()
 {
   kDebug();
 
-  qDeleteAll(d->mResources);
+  qDeleteAll( d->mResources );
   delete d->mStdConfig;
   delete d;
 }
@@ -153,8 +153,8 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   for ( it = d->mResources.begin(); it != d->mResources.end(); ++it ) {
     writeResourceConfig( *it, false );
 
-    QString key = (*it)->identifier();
-    if ( (*it)->isActive() ) {
+    QString key = ( *it )->identifier();
+    if ( ( *it )->isActive() ) {
       activeKeys.append( key );
     } else {
       passiveKeys.append( key );
@@ -313,7 +313,7 @@ QStringList ManagerImpl::resourceNames()
 
   Resource::List::ConstIterator it;
   for ( it = d->mResources.constBegin(); it != d->mResources.constEnd(); ++it ) {
-    result.append( (*it)->resourceName() );
+    result.append( ( *it )->resourceName() );
   }
   return result;
 }
@@ -333,8 +333,8 @@ QList<Resource *> ManagerImpl::resources( bool active )
   QList<Resource *> result;
 
   for ( int i = 0; i < d->mResources.size(); ++i ) {
-    if ( d->mResources.at(i)->isActive() == active ) {
-      result.append( d->mResources.at(i) );
+    if ( d->mResources.at( i )->isActive() == active ) {
+      result.append( d->mResources.at( i ) );
     }
   }
   return result;
@@ -461,7 +461,7 @@ Resource *ManagerImpl::getResource( const QString &identifier )
 {
   Resource::List::ConstIterator it;
   for ( it = d->mResources.constBegin(); it != d->mResources.constEnd(); ++it ) {
-    if ( (*it)->identifier() == identifier ) {
+    if ( ( *it )->identifier() == identifier ) {
       return *it;
     }
   }

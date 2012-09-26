@@ -240,8 +240,8 @@ class KMIME_EXPORT Base
     //@endcond
 
   private:
-    Q_DECLARE_PRIVATE(Base)
-    Q_DISABLE_COPY(Base)
+    Q_DECLARE_PRIVATE( Base )
+    Q_DISABLE_COPY( Base )
 };
 
 //
@@ -290,7 +290,7 @@ class KMIME_EXPORT Unstructured : public Base
     virtual bool isEmpty() const;
 
   private:
-    Q_DECLARE_PRIVATE(Unstructured)
+    Q_DECLARE_PRIVATE( Unstructured )
 };
 
 
@@ -355,9 +355,8 @@ class KMIME_EXPORT Structured : public Base
     //@endcond
 
   private:
-    Q_DECLARE_PRIVATE(Structured)
+    Q_DECLARE_PRIVATE( Structured )
 };
-
 
 class AddressPrivate;
 
@@ -376,9 +375,8 @@ class KMIME_EXPORT Address : public Structured
     kmime_mk_dptr_ctor( Address )
     //@endcond
   private:
-    Q_DECLARE_PRIVATE(Address)
+    Q_DECLARE_PRIVATE( Address )
 };
-
 
 class MailboxListPrivate;
 
@@ -446,9 +444,8 @@ class KMIME_EXPORT MailboxList : public Address
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(MailboxList)
+    Q_DECLARE_PRIVATE( MailboxList )
 };
-
 
 class SingleMailboxPrivate;
 
@@ -464,9 +461,8 @@ class KMIME_EXPORT SingleMailbox : public MailboxList
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
   private:
-    Q_DECLARE_PRIVATE(SingleMailbox)
+    Q_DECLARE_PRIVATE( SingleMailbox )
 };
-
 
 class AddressListPrivate;
 
@@ -536,9 +532,8 @@ class KMIME_EXPORT AddressList : public Address
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(AddressList)
+    Q_DECLARE_PRIVATE( AddressList )
 };
-
 
 class IdentPrivate;
 
@@ -576,9 +571,8 @@ class KMIME_EXPORT Ident : public Address
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(Ident)
+    Q_DECLARE_PRIVATE( Ident )
 };
-
 
 class SingleIdentPrivate;
 
@@ -610,9 +604,8 @@ class KMIME_EXPORT SingleIdent : public Ident
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(SingleIdent)
+    Q_DECLARE_PRIVATE( SingleIdent )
 };
-
 
 class TokenPrivate;
 
@@ -644,9 +637,8 @@ class KMIME_EXPORT Token : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(Token)
+    Q_DECLARE_PRIVATE( Token )
 };
-
 
 class PhraseListPrivate;
 
@@ -673,9 +665,8 @@ class KMIME_EXPORT PhraseList : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(PhraseList)
+    Q_DECLARE_PRIVATE( PhraseList )
 };
-
 
 class DotAtomPrivate;
 
@@ -697,9 +688,8 @@ class KMIME_EXPORT DotAtom : public Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(DotAtom)
+    Q_DECLARE_PRIVATE( DotAtom )
 };
-
 
 class ParametrizedPrivate;
 
@@ -744,7 +734,7 @@ class KMIME_EXPORT Parametrized : public Structured
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(Parametrized)
+    Q_DECLARE_PRIVATE( Parametrized )
 };
 
 } // namespace Generics
@@ -776,7 +766,7 @@ class KMIME_EXPORT ReturnPath : public Generics::Address
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(ReturnPath)
+    Q_DECLARE_PRIVATE( ReturnPath )
 };
 
 // Address et al.:
@@ -886,9 +876,8 @@ class KMIME_EXPORT MailCopiesTo : public Generics::AddressList
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(MailCopiesTo)
+    Q_DECLARE_PRIVATE( MailCopiesTo )
 };
-
 
 class ContentTransferEncodingPrivate;
 
@@ -938,7 +927,7 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
     virtual bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(ContentTransferEncoding)
+    Q_DECLARE_PRIVATE( ContentTransferEncoding )
 };
 
 /**
@@ -998,7 +987,7 @@ class KMIME_EXPORT ContentID : public Generics::SingleIdent
   protected:
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
   private:
-    Q_DECLARE_PRIVATE(ContentID)
+    Q_DECLARE_PRIVATE( ContentID )
 };
 
 /**
@@ -1178,9 +1167,8 @@ class KMIME_EXPORT ContentType : public Generics::Parametrized
     bool parse( const char* &scursor, const char *const send, bool isCRLF=false );
 
   private:
-    Q_DECLARE_PRIVATE(ContentType)
+    Q_DECLARE_PRIVATE( ContentType )
 };
-
 
 class ContentDispositionPrivate;
 
@@ -1350,9 +1338,8 @@ class KMIME_EXPORT Control : public Generics::Structured
     bool parse( const char* &scursor, const char *const send, bool isCRLF = false );
 
   private:
-    Q_DECLARE_PRIVATE(Control)
+    Q_DECLARE_PRIVATE( Control )
 };
-
 
 class DatePrivate;
 

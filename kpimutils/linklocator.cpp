@@ -33,7 +33,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 #include <climits>
 
@@ -143,7 +143,7 @@ QString LinkLocator::getUrl()
       mPos++;
     }
 
-    if ( isEmptyUrl(url) || ( url.length() > maxUrlLen() ) ) {
+    if ( isEmptyUrl( url ) || ( url.length() > maxUrlLen() ) ) {
       mPos = start;
       url = "";
     } else {
@@ -336,12 +336,10 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
         }
         continue;
       } else if ( ch == '\t' ) {
-        do
-        {
+        do {
           result += "&nbsp;";
           x++;
-        }
-        while ( ( x & 7 ) != 0 );
+        } while ( ( x & 7 ) != 0 );
         x--;
         startOfLine = false;
         continue;
@@ -459,7 +457,7 @@ QString LinkLocator::highlightedText()
 
   QRegExp re =
     QRegExp( QString( "\\%1((\\w+)([\\s-']\\w+)*( ?[,.:\\?!;])?)\\%2" ).arg( ch ).arg( ch ) );
-  re.setMinimal(true);
+  re.setMinimal( true );
   if ( re.indexIn( mText, mPos ) == mPos ) {
     int length = re.matchedLength();
     // there must be a whitespace after the closing formating symbol

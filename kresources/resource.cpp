@@ -115,7 +115,7 @@ bool Resource::open()
 {
   d->mIsOpen = true;
 #ifdef QT_THREAD_SUPPORT
-  QMutexLocker guard( &(d->mMutex) );
+  QMutexLocker guard( &( d->mMutex ) );
 #endif
   if ( !d->mOpenCount ) {
     kDebug() << "Opening resource" << resourceName();
@@ -128,7 +128,7 @@ bool Resource::open()
 void Resource::close()
 {
 #ifdef QT_THREAD_SUPPORT
-  QMutexLocker guard( &(d->mMutex) );
+  QMutexLocker guard( &( d->mMutex ) );
 #endif
   if ( !d->mOpenCount ) {
     kDebug() << "ERROR: Resource" << resourceName()

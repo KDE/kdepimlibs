@@ -50,7 +50,7 @@ class MailTransport::TransportConfigDialog::Private
 
 void TransportConfigDialog::Private::okClicked()
 {
-  if( TransportConfigWidget *w = dynamic_cast<TransportConfigWidget*>( configWidget ) ) {
+  if ( TransportConfigWidget *w = dynamic_cast<TransportConfigWidget*>( configWidget ) ) {
     // It is not an Akonadi transport.
     w->apply();
     transport->writeConfig();
@@ -63,7 +63,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   Q_ASSERT( transport );
   d->transport = transport;
 
-  switch( transport->type() ) {
+  switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
       {
         d->configWidget = new SMTPConfigWidget( transport, this );

@@ -43,7 +43,7 @@ void HeaderTest::testIdentHeader()
   h->from7BitString( QByteArray( "<1162746587.784559.5038.nullmailer@svn.kde.org>" ) );
   QCOMPARE( h->identifiers().count(), 1 );
   QCOMPARE( h->identifiers().first(), QByteArray( "1162746587.784559.5038.nullmailer@svn.kde.org" ) );
-  QCOMPARE( h->asUnicodeString(), QString("<1162746587.784559.5038.nullmailer@svn.kde.org>") );
+  QCOMPARE( h->asUnicodeString(), QString( "<1162746587.784559.5038.nullmailer@svn.kde.org>" ) );
   QVERIFY( !h->isEmpty() );
 
   // clearing a header
@@ -75,7 +75,7 @@ void HeaderTest::testIdentHeader()
   QCOMPARE( h->identifiers().count(), 4 );
 
   // assemble the final header
-  QCOMPARE( h->as7BitString( false ), QByteArray("<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>") );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "<1234@local.machine.example> <3456@example.net> <abcd.1234@local.machine.tld> <78910@example.net>" ) );
   delete h;
 
   // parsing of ident with literal domain
@@ -97,11 +97,11 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "joe@where.test" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("joe@where.test") );
+  QCOMPARE( h->addresses().first(), QByteArray( "joe@where.test" ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString() );
   QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test") );
+  QCOMPARE( h->prettyAddresses().first(), QString( "joe@where.test" ) );
 
   // clearing a header
   h->clear();
@@ -113,9 +113,9 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "Pete <pete@silly.example>" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "pete@silly.example" ) );
-  QCOMPARE( h->displayNames().first(), QString("Pete") );
-  QCOMPARE( h->prettyAddresses().first(), QString("Pete <pete@silly.example>") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("Pete <pete@silly.example>") );
+  QCOMPARE( h->displayNames().first(), QString( "Pete" ) );
+  QCOMPARE( h->prettyAddresses().first(), QString( "Pete <pete@silly.example>" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Pete <pete@silly.example>" ) );
   delete h;
 
   // parsing a single address with legacy comment style display name
@@ -123,8 +123,8 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "jdoe@machine.example (John Doe)" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "jdoe@machine.example" ) );
-  QCOMPARE( h->displayNames().first(), QString("John Doe") );
-  QCOMPARE( h->prettyAddresses().first(), QString("John Doe <jdoe@machine.example>") );
+  QCOMPARE( h->displayNames().first(), QString( "John Doe" ) );
+  QCOMPARE( h->prettyAddresses().first(), QString( "John Doe <jdoe@machine.example>" ) );
   delete h;
 
   // parsing and re-assembling list of diffrent addresses
@@ -132,10 +132,10 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>" );
   QCOMPARE( h->addresses().count(), 3 );
   QStringList names = h->displayNames();
-  QCOMPARE( names.takeFirst(), QString("Mary Smith") );
+  QCOMPARE( names.takeFirst(), QString( "Mary Smith" ) );
   QCOMPARE( names.takeFirst(), QString() );
-  QCOMPARE( names.takeFirst(), QString("Who?") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>") );
+  QCOMPARE( names.takeFirst(), QString( "Who?" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Mary Smith <mary@x.test>, jdoe@example.org, Who? <one@y.test>" ) );
   delete h;
 
   // same again with some interessting quoting
@@ -143,10 +143,10 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "\"Joe Q. Public\" <john.q.public@example.com>, <boss@nil.test>, \"Giant; \\\"Big\\\" Box\" <sysservices@example.net>" );
   QCOMPARE( h->addresses().count(), 3 );
   names = h->displayNames();
-  QCOMPARE( names.takeFirst(), QString("Joe Q. Public") );
+  QCOMPARE( names.takeFirst(), QString( "Joe Q. Public" ) );
   QCOMPARE( names.takeFirst(), QString() );
-  QCOMPARE( names.takeFirst(), QString("Giant; \"Big\" Box") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("\"Joe Q. Public\" <john.q.public@example.com>, boss@nil.test, \"Giant; \\\"Big\\\" Box\" <sysservices@example.net>") );
+  QCOMPARE( names.takeFirst(), QString( "Giant; \"Big\" Box" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "\"Joe Q. Public\" <john.q.public@example.com>, boss@nil.test, \"Giant; \\\"Big\\\" Box\" <sysservices@example.net>" ) );
   delete h;
 
   // a display name with non-latin1 content
@@ -154,9 +154,9 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "Ingo =?iso-8859-15?q?Kl=F6cker?= <kloecker@kde.org>" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
-  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
-  QCOMPARE( h->asUnicodeString(), QString::fromUtf8("Ingo Klöcker <kloecker@kde.org>") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>") );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8( "Ingo Klöcker" ) );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>" ) );
   delete h;
 
   // a display name with non-latin1 content in both name components
@@ -181,7 +181,7 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "kloecker@kde.org (Ingo =?iso-8859-15?q?Kl=F6cker?=)" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
-  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8( "Ingo Klöcker" ) );
   delete h;
 
   // parsing a empty group
@@ -195,28 +195,28 @@ void HeaderTest::testAddressListHeader()
   h->from7BitString( "A Group:Chris Jones <c@a.test>,joe@where.test,John <jdoe@one.test>;" );
   QCOMPARE( h->addresses().count(), 3 );
   names = h->displayNames();
-  QCOMPARE( names.takeFirst(), QString("Chris Jones") );
+  QCOMPARE( names.takeFirst(), QString( "Chris Jones" ) );
   QCOMPARE( names.takeFirst(), QString() );
-  QCOMPARE( names.takeFirst(), QString("John") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("Chris Jones <c@a.test>, joe@where.test, John <jdoe@one.test>") );
+  QCOMPARE( names.takeFirst(), QString( "John" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Chris Jones <c@a.test>, joe@where.test, John <jdoe@one.test>" ) );
   delete h;
 
   // modifying a header
   h = new Headers::Generics::AddressList();
   h->from7BitString( "John <jdoe@one.test>" );
-  h->addAddress( "<kloecker@kde.org>", QString::fromUtf8("Ingo Klöcker") );
+  h->addAddress( "<kloecker@kde.org>", QString::fromUtf8( "Ingo Klöcker" ) );
   h->addAddress( "c@a.test" );
   QCOMPARE( h->addresses().count(), 3 );
-  QCOMPARE( h->asUnicodeString(), QString::fromUtf8("John <jdoe@one.test>, Ingo Klöcker <kloecker@kde.org>, c@a.test") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("John <jdoe@one.test>, Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>, c@a.test") );
+  QCOMPARE( h->asUnicodeString(), QString::fromUtf8( "John <jdoe@one.test>, Ingo Klöcker <kloecker@kde.org>, c@a.test" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "John <jdoe@one.test>, Ingo =?ISO-8859-1?Q?Kl=F6cker?= <kloecker@kde.org>, c@a.test" ) );
   delete h;
 
   // parsing from utf-8
   h = new Headers::Generics::AddressList();
-  h->fromUnicodeString( QString::fromUtf8("Ingo Klöcker <kloecker@kde.org>"), "utf-8" );
+  h->fromUnicodeString( QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ), "utf-8" );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first(), QByteArray( "kloecker@kde.org" ) );
-  QCOMPARE( h->displayNames().first(), QString::fromUtf8("Ingo Klöcker") );
+  QCOMPARE( h->displayNames().first(), QString::fromUtf8( "Ingo Klöcker" ) );
   delete h;
 
   // based on bug #137033, a header broken in various ways: ';' as list separator,
@@ -229,25 +229,25 @@ void HeaderTest::testAddressListHeader()
   QCOMPARE( names.takeFirst(), QString() );
   // there is an wrong ' ' after the name, but since the header is completely
   // broken we can be happy it parses at all...
-  QCOMPARE( names.takeFirst(), QString("Int\\\\\\\\\\'l Lotto Commission. ") );
+  QCOMPARE( names.takeFirst(), QString( "Int\\\\\\\\\\'l Lotto Commission. " ) );
   QList<QByteArray> addrs = h->addresses();
-  QCOMPARE( addrs.takeFirst(), QByteArray("Vice@censored.serverkompetenz.net") );
-  QCOMPARE( addrs.takeFirst(), QByteArray("President@mail2.censored.net") );
-  QCOMPARE( addrs.takeFirst(), QByteArray("censored@yahoo.fr") );
+  QCOMPARE( addrs.takeFirst(), QByteArray( "Vice@censored.serverkompetenz.net" ) );
+  QCOMPARE( addrs.takeFirst(), QByteArray( "President@mail2.censored.net" ) );
+  QCOMPARE( addrs.takeFirst(), QByteArray( "censored@yahoo.fr" ) );
   delete h;
 
   // based on bug #102010, a display name containing '<'
-  h = new Headers::Generics::AddressList( 0, QByteArray("\"|<onrad\" <censored@censored.dy>") );
+  h = new Headers::Generics::AddressList( 0, QByteArray( "\"|<onrad\" <censored@censored.dy>" ) );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("censored@censored.dy") );
-  QCOMPARE( h->displayNames().first(), QString("|<onrad") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("\"|<onrad\" <censored@censored.dy>") );
+  QCOMPARE( h->addresses().first(), QByteArray( "censored@censored.dy" ) );
+  QCOMPARE( h->displayNames().first(), QString( "|<onrad" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "\"|<onrad\" <censored@censored.dy>" ) );
 
   // based on bug #93790 (legacy display name with nested comments)
-  h = new Headers::Generics::AddressList( 0, QByteArray("first.name@domain.tld (first name (nickname))") );
+  h = new Headers::Generics::AddressList( 0, QByteArray( "first.name@domain.tld (first name (nickname))" ) );
   QCOMPARE( h->displayNames().count(), 1 );
-  QCOMPARE( h->displayNames().first(), QString("first name (nickname)") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("\"first name (nickname)\" <first.name@domain.tld>") );
+  QCOMPARE( h->displayNames().first(), QString( "first name (nickname)" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "\"first name (nickname)\" <first.name@domain.tld>" ) );
   delete h;
 
   // rfc 2047 encoding in quoted name (it is not allowed there as per the RFC, but it happens)
@@ -259,37 +259,37 @@ void HeaderTest::testAddressListHeader()
   delete h;
 
   // corner case of almost-rfc2047 encoded string in quoted string but not
-  h = new Headers::Generics::AddressList( 0, QByteArray("\"Some =Use ?r\" <user@example.com>") );
+  h = new Headers::Generics::AddressList( 0, QByteArray( "\"Some =Use ?r\" <user@example.com>" ) );
   QCOMPARE( h->mailboxes().count(), 1 );
-  QCOMPARE( h->as7BitString( false ), QByteArray("\"Some =Use ?r\" <user@example.com>" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "\"Some =Use ?r\" <user@example.com>" ) );
   delete h;
 
   // corner case of almost-rfc2047 encoded string in quoted string but not
-  h = new Headers::Generics::AddressList( 0, QByteArray("\"Some ?=U=?se =?r\" <user@example.com>") );
+  h = new Headers::Generics::AddressList( 0, QByteArray( "\"Some ?=U=?se =?r\" <user@example.com>" ) );
   QCOMPARE( h->mailboxes().count(), 1 );
-  QCOMPARE( h->as7BitString( false ), QByteArray("\"Some ?=U=?se =?r\" <user@example.com>" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "\"Some ?=U=?se =?r\" <user@example.com>" ) );
   delete h;
-  
+
   // based on bug #139477, trailing '.' in domain name (RFC 3696, section 2 - http://tools.ietf.org/html/rfc3696#page-4)
   h = new Headers::Generics::AddressList();
   h->from7BitString( "joe@where.test." );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("joe@where.test.") );
+  QCOMPARE( h->addresses().first(), QByteArray( "joe@where.test." ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString() );
   QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("joe@where.test.") );
+  QCOMPARE( h->prettyAddresses().first(), QString( "joe@where.test." ) );
   delete h;
 
   h = new Headers::Generics::AddressList();
   h->from7BitString( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" );
   QCOMPARE( h->addresses().count(), 3 );
   names = h->displayNames();
-  QCOMPARE( names.takeFirst(), QString("Mary Smith") );
+  QCOMPARE( names.takeFirst(), QString( "Mary Smith" ) );
   QCOMPARE( names.takeFirst(), QString() );
-  QCOMPARE( names.takeFirst(), QString("Who?") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>") );
+  QCOMPARE( names.takeFirst(), QString( "Who?" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "Mary Smith <mary@x.test>, jdoe@example.org., Who? <one@y.test>" ) );
   delete h;
 }
 
@@ -304,17 +304,17 @@ void HeaderTest::testMailboxListHeader()
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->mailboxes().count(), 1 );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("joe_smith@where.test") );
+  QCOMPARE( h->addresses().first(), QByteArray( "joe_smith@where.test" ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString() );
   QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
+  QCOMPARE( h->prettyAddresses().first(), QString( "joe_smith@where.test" ) );
 
   // https://bugzilla.novell.com/show_bug.cgi?id=421057 (but apparently this was not the cause of the bug)
   h->from7BitString( "fr...@ce.sco (Francesco)" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->mailboxes().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("Francesco <fr...@ce.sco>") );
+  QCOMPARE( h->prettyAddresses().first(), QString( "Francesco <fr...@ce.sco>" ) );
 
   delete h;
 }
@@ -329,11 +329,11 @@ void HeaderTest::testSingleMailboxHeader()
   h->from7BitString( "joe_smith@where.test" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("joe_smith@where.test") );
+  QCOMPARE( h->addresses().first(), QByteArray( "joe_smith@where.test" ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString() );
   QCOMPARE( h->prettyAddresses().count(), 1 );
-  QCOMPARE( h->prettyAddresses().first(), QString("joe_smith@where.test") );
+  QCOMPARE( h->prettyAddresses().first(), QString( "joe_smith@where.test" ) );
 
   // parse single simple address with display name
   h->from7BitString( "John Smith <joe_smith@where.test>" );
@@ -351,7 +351,7 @@ void HeaderTest::testSingleMailboxHeader()
   h->from7BitString( "\"Lastname\\, Firstname\" <firstname.lastname@example.com>" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->addresses().first(), QByteArray("firstname.lastname@example.com") );
+  QCOMPARE( h->addresses().first(), QByteArray( "firstname.lastname@example.com" ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString( "Lastname, Firstname" ) );
   QCOMPARE( h->asUnicodeString().toAscii().data(),
@@ -467,13 +467,13 @@ void HeaderTest::testParametrizedHeader()
   // empty header
   h = new Parametrized();
   QVERIFY( h->isEmpty() );
-  QVERIFY( !h->hasParameter( "foo") );
+  QVERIFY( !h->hasParameter( "foo" ) );
 
   // add a parameter
   h->setParameter( "filename", "bla.jpg" );
   QVERIFY( !h->isEmpty() );
-  QVERIFY( h->hasParameter( "filename") );
-  QVERIFY( h->hasParameter( "FiLeNaMe") );
+  QVERIFY( h->hasParameter( "filename" ) );
+  QVERIFY( h->hasParameter( "FiLeNaMe" ) );
   QVERIFY( !h->hasParameter( "bla.jpg" ) );
   QCOMPARE( h->parameter( "filename" ), QString( "bla.jpg" ) );
   QCOMPARE( h->as7BitString( false ), QByteArray( "filename=\"bla.jpg\"" ) );
@@ -525,7 +525,7 @@ void HeaderTest::testContentDispositionHeader()
   delete h;
 
   // parse header with parameter
-  h = new ContentDisposition( 0, "attachment; filename=genome.jpeg;\n modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\";");
+  h = new ContentDisposition( 0, "attachment; filename=genome.jpeg;\n modification-date=\"Wed, 12 Feb 1997 16:29:51 -0500\";" );
   QCOMPARE( h->disposition(), CDattachment );
   QCOMPARE( h->filename(), QString( "genome.jpeg" ) );
   delete h;
@@ -549,8 +549,8 @@ void HeaderTest::testContentTypeHeader()
   h->setMimeType( "text/plain" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->mimeType(), QByteArray( "text/plain" ) );
-  QCOMPARE( h->mediaType(), QByteArray("text") );
-  QCOMPARE( h->subType(), QByteArray("plain") );
+  QCOMPARE( h->mediaType(), QByteArray( "text" ) );
+  QCOMPARE( h->subType(), QByteArray( "plain" ) );
   QVERIFY( h->isText() );
   QVERIFY( h->isPlainText() );
   QVERIFY( !h->isMultipart() );
@@ -629,8 +629,8 @@ void HeaderTest::testTokenHeader()
 
   // parse a header
   h = new Token( 0, "value (comment)" );
-  QCOMPARE( h->token(), QByteArray("value") );
-  QCOMPARE( h->as7BitString( false ), QByteArray("value") );
+  QCOMPARE( h->token(), QByteArray( "value" ) );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "value" ) );
   delete h;
 }
 
@@ -645,7 +645,7 @@ void HeaderTest::testContentTransferEncoding()
   // set an encoding
   h->setEncoding( CEbinary );
   QVERIFY( !h->isEmpty() );
-  QCOMPARE( h->as7BitString( true ), QByteArray("Content-Transfer-Encoding: binary") );
+  QCOMPARE( h->as7BitString( true ), QByteArray( "Content-Transfer-Encoding: binary" ) );
 
   // clear again
   h->clear();
@@ -655,7 +655,7 @@ void HeaderTest::testContentTransferEncoding()
   // parse a header
   h = new ContentTransferEncoding( 0, "(comment) base64" );
   QCOMPARE( h->encoding(), CEbase64 );
-  QCOMPARE( h->as7BitString( false ), QByteArray("base64") );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "base64" ) );
   delete h;
 }
 
@@ -675,7 +675,7 @@ void HeaderTest::testPhraseListHeader()
   QStringList phrases = h->phrases();
   QCOMPARE( phrases.takeFirst(), QString( "foo" ) );
   QCOMPARE( phrases.takeFirst(), QString( "bar" ) );
-  QCOMPARE( h->as7BitString( false ), QByteArray("foo, bar") );
+  QCOMPARE( h->as7BitString( false ), QByteArray( "foo, bar" ) );
 
   // clear header
   h->clear();
@@ -859,8 +859,8 @@ void HeaderTest::testNewsgroupsHeader()
   h = new Newsgroups( 0, "gmane.comp.kde.devel.core,gmane.comp.kde.devel.buildsystem" );
   groups = h->groups();
   QCOMPARE( groups.count(), 2 );
-  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.core") );
-  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.buildsystem") );
+  QCOMPARE( groups.takeFirst(), QByteArray( "gmane.comp.kde.devel.core" ) );
+  QCOMPARE( groups.takeFirst(), QByteArray( "gmane.comp.kde.devel.buildsystem" ) );
   delete h;
 
   // same again, this time with whitespaces and comments
@@ -868,8 +868,8 @@ void HeaderTest::testNewsgroupsHeader()
   h->from7BitString( "(comment) gmane.comp.kde.devel.core (second comment),\n gmane.comp.kde.devel.buildsystem (that all)" );
   groups = h->groups();
   QCOMPARE( groups.count(), 2 );
-  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.core") );
-  QCOMPARE( groups.takeFirst(), QByteArray("gmane.comp.kde.devel.buildsystem") );
+  QCOMPARE( groups.takeFirst(), QByteArray( "gmane.comp.kde.devel.core" ) );
+  QCOMPARE( groups.takeFirst(), QByteArray( "gmane.comp.kde.devel.buildsystem" ) );
   delete h;
 }
 
@@ -896,9 +896,9 @@ void HeaderTest::testControlHeader()
   // parse a control header
   h = new Control( 0, "cancel <foo@bar>" );
   QVERIFY( !h->isEmpty() );
-  QCOMPARE( h->parameter(), QByteArray("<foo@bar>") );
+  QCOMPARE( h->parameter(), QByteArray( "<foo@bar>" ) );
   QVERIFY( h->isCancel() );
-  QCOMPARE( h->controlType(), QByteArray("cancel") );
+  QCOMPARE( h->controlType(), QByteArray( "cancel" ) );
   delete h;
 }
 
@@ -950,18 +950,18 @@ void HeaderTest::testInvalidButOkQEncoding()
 
 void HeaderTest::testInvalidQEncoding_data()
 {
-  QTest::addColumn<QString>("encodedWord");
+  QTest::addColumn<QString>( "encodedWord" );
 
   // All examples below should not be treated as invalid encoded strings, since the '?=' is missing
-  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC??" );
-  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC?" );
-  QTest::newRow("") << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC" );
+  QTest::newRow( "" ) << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC??" );
+  QTest::newRow( "" ) << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC?" );
+  QTest::newRow( "" ) << QString( "=?us-ascii?q?Why?_Why_do_some_clients_violate_the_RFC" );
 }
 
 void HeaderTest::testInvalidQEncoding()
 {
   using namespace HeaderParsing;
-  QFETCH( QString,encodedWord );
+  QFETCH( QString, encodedWord );
 
   QByteArray tmp = encodedWord.toAscii();
   const char *data = tmp.data();
@@ -979,47 +979,45 @@ void HeaderTest::testBug271192()
   QFETCH( bool, quote );
 
   const QString addrSpec = QLatin1String( "example@example.com" );
-  const QString mailbox = (quote ? QLatin1String("\"") : QString()) + displayName +
-                          (quote ? QLatin1String("\"") : QString()) +
-                          QLatin1String(" <") + addrSpec + QLatin1String(">");
+  const QString mailbox = ( quote ? QLatin1String( "\"" ) : QString() ) + displayName +
+                          ( quote ? QLatin1String( "\"" ) : QString() ) +
+                          QLatin1String( " <" ) + addrSpec + QLatin1String( ">" );
 
   Headers::Generics::SingleMailbox *h = new Headers::Generics::SingleMailbox();
   h->fromUnicodeString( mailbox, "utf-8" );
   QCOMPARE( h->displayNames().size(), 1 );
-  QCOMPARE( h->displayNames().first().toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
+  QCOMPARE( h->displayNames().first().toUtf8(), displayName.remove( QLatin1String( "\\" ) ).toUtf8() );
   delete h;
   h = 0;
 
   Headers::Generics::MailboxList *h2 = new Headers::Generics::MailboxList();
-  h2->fromUnicodeString( mailbox + QLatin1String(",") + mailbox, "utf-8" );
+  h2->fromUnicodeString( mailbox + QLatin1String( "," ) + mailbox, "utf-8" );
   QCOMPARE( h2->displayNames().size(), 2 );
-  QCOMPARE( h2->displayNames()[0].toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
-  QCOMPARE( h2->displayNames()[1].toUtf8(), displayName.remove( QLatin1String("\\") ).toUtf8() );
+  QCOMPARE( h2->displayNames()[0].toUtf8(), displayName.remove( QLatin1String( "\\" ) ).toUtf8() );
+  QCOMPARE( h2->displayNames()[1].toUtf8(), displayName.remove( QLatin1String( "\\" ) ).toUtf8() );
   delete h2;
   h2 = 0;
 }
 
 void HeaderTest::testBug271192_data()
 {
-  QTest::addColumn<QString>("displayName");
-  QTest::addColumn<bool>("quote");
+  QTest::addColumn<QString>( "displayName" );
+  QTest::addColumn<bool>( "quote" );
 
-  QTest::newRow("Plain") << QString::fromUtf8( "John Doe" ) << false;
-  QTest::newRow("Firstname 1") << QString::fromUtf8( "Marc-André Lastname" ) << false;
-  QTest::newRow("Firstname 2") << QString::fromUtf8( "Интернет-компания Lastname" ) << false;
-  QTest::newRow("Lastname") << QString::fromUtf8( "Tobias König" ) << false;
-  QTest::newRow("Firstname + Lastname") << QString::fromUtf8( "Интернет-компания König" ) << false;
-  QTest::newRow("Quotemarks") << QString::fromUtf8( "John \\\"Rocky\\\" Doe" ) << true;
-  QTest::newRow("Quotemarks") << QString::fromUtf8( "Jöhn \\\"Röcky\\\" Döe" ) << true;
+  QTest::newRow( "Plain" ) << QString::fromUtf8( "John Doe" ) << false;
+  QTest::newRow( "Firstname 1" ) << QString::fromUtf8( "Marc-André Lastname" ) << false;
+  QTest::newRow( "Firstname 2" ) << QString::fromUtf8( "Интернет-компания Lastname" ) << false;
+  QTest::newRow( "Lastname" ) << QString::fromUtf8( "Tobias König" ) << false;
+  QTest::newRow( "Firstname + Lastname" ) << QString::fromUtf8( "Интернет-компания König" ) << false;
+  QTest::newRow( "Quotemarks" ) << QString::fromUtf8( "John \\\"Rocky\\\" Doe" ) << true;
+  QTest::newRow( "Quotemarks" ) << QString::fromUtf8( "Jöhn \\\"Röcky\\\" Döe" ) << true;
 
-  QTest::newRow("Plain") << QString::fromUtf8( "John Doe" ) << true;
-  QTest::newRow("Firstname 1") << QString::fromUtf8( "Marc-André Lastname" ) << true;
-  QTest::newRow("Firstname 2") << QString::fromUtf8( "Интернет-компания Lastname" ) << true;
-  QTest::newRow("Lastname") << QString::fromUtf8( "Tobias König" ) << true;
-  QTest::newRow("Firstname + Lastname") << QString::fromUtf8( "Интернет-компания König" ) << true;
-  QTest::newRow("LastName, Firstname") << QString::fromUtf8( "König, Интернет-компания" ) << true;
+  QTest::newRow( "Plain" ) << QString::fromUtf8( "John Doe" ) << true;
+  QTest::newRow( "Firstname 1" ) << QString::fromUtf8( "Marc-André Lastname" ) << true;
+  QTest::newRow( "Firstname 2" ) << QString::fromUtf8( "Интернет-компания Lastname" ) << true;
+  QTest::newRow( "Lastname" ) << QString::fromUtf8( "Tobias König" ) << true;
+  QTest::newRow( "Firstname + Lastname" ) << QString::fromUtf8( "Интернет-компания König" ) << true;
+  QTest::newRow( "LastName, Firstname" ) << QString::fromUtf8( "König, Интернет-компания" ) << true;
 }
-
-
 
 #include "headertest.moc"

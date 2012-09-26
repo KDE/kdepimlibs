@@ -38,8 +38,9 @@ int main( int argc, char * argv[] ) {
 
     QCoreApplication app( argc, argv );
 
-    if ( argc != 3 )
+    if ( argc != 3 ) {
         return 1;
+    }
 
     const char * const keyid = argv[1];
     const char * const date = argv[2];

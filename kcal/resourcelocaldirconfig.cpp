@@ -29,9 +29,9 @@
 #include <kurlrequester.h>
 #include <KMessageBox>
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QGridLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QGridLayout>
 
 #include <typeinfo>
 

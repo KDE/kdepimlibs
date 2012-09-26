@@ -127,8 +127,8 @@ QList< int > ServerTestPrivate::parseAuthenticationList( const QStringList &auth
 {
   QList< int > result;
   for ( QStringList::ConstIterator it = authentications.begin();
-        it != authentications.end(); ++it )  {
-    QString current = (*it).toUpper();
+        it != authentications.end(); ++it ) {
+    QString current = ( *it ).toUpper();
     if ( current == QLatin1String( "LOGIN" ) ) {
       result << Transport::EnumAuthenticationType::LOGIN;
     } else if ( current == QLatin1String( "PLAIN" ) ) {

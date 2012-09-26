@@ -24,7 +24,7 @@
 
 #include <kblog/blog.h>
 
-#include <QtGui/QColor>
+#include <QColor>
 
 class KUrl;
 

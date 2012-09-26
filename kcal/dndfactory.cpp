@@ -46,10 +46,10 @@
 #include <klocale.h>
 #include <kurl.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
-#include <QtGui/QDropEvent>
-#include <QtGui/QPixmap>
+#include <QApplication>
+#include <QClipboard>
+#include <QDropEvent>
+#include <QPixmap>
 
 using namespace KCal;
 

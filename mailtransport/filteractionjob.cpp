@@ -118,7 +118,7 @@ FilterActionJob::~FilterActionJob()
 
 void FilterActionJob::doStart()
 {
-  if( d->collection.isValid() ) {
+  if (  d->collection.isValid() ) {
     kDebug() << "Fetching collection" << d->collection.id();
     ItemFetchJob *fjob = new ItemFetchJob( d->collection, this );
     Q_ASSERT( d->functor );

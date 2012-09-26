@@ -206,21 +206,21 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
       break;
     case 1:
       if ( mCurrentOctetCount < mAnnouncedOctetCount ) {
-        *dcursor++ = (char)(mOutbits | value >> 4);
+        *dcursor++ = (char)( mOutbits | value >> 4 );
       }
       ++mCurrentOctetCount;
       mOutbits = value << 4;
       break;
     case 2:
       if ( mCurrentOctetCount < mAnnouncedOctetCount ) {
-        *dcursor++ = (char)(mOutbits | value >> 2);
+        *dcursor++ = (char)( mOutbits | value >> 2 );
       }
       ++mCurrentOctetCount;
       mOutbits = value << 6;
       break;
     case 3:
       if ( mCurrentOctetCount < mAnnouncedOctetCount ) {
-        *dcursor++ = (char)(mOutbits | value);
+        *dcursor++ = (char)( mOutbits | value );
       }
       ++mCurrentOctetCount;
       mOutbits = 0;
@@ -228,7 +228,7 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
     default:
       assert( 0 );
     }
-    mStepNo = (mStepNo + 1) % 4;
+    mStepNo = ( mStepNo + 1 ) % 4;
 
     // check whether we ran over the announced octet count for this line:
     kWarning( mCurrentOctetCount == mAnnouncedOctetCount + 1 )

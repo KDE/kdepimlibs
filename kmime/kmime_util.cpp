@@ -96,7 +96,7 @@ bool isUsAscii( const QString &s )
 
 QString nameForEncoding( Headers::contentEncoding enc )
 {
-  switch( enc ) {
+  switch ( enc ) {
     case Headers::CE7Bit: return QString::fromLatin1( "7bit" );
     case Headers::CE8Bit: return QString::fromLatin1( "8bit" );
     case Headers::CEquPr: return QString::fromLatin1( "quoted-printable" );
@@ -280,13 +280,13 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
     //no codec available => try local8Bit and hope the best ;-)
     usedCS = KGlobal::locale()->encoding();
     codec = KGlobal::charsets()->codecForName( QString::fromLatin1( usedCS ), ok );
-  }
-  else {
+  } else {
     Q_ASSERT( codec );
-    if ( charset.isEmpty() )
+    if ( charset.isEmpty() ) {
       usedCS = codec->name();
-    else
+    } else {
       usedCS = charset;
+    }
   }
 
   QTextCodec::ConverterState converterState( QTextCodec::IgnoreHeader );
@@ -327,8 +327,8 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
     }
 
     for ( int x=end; x<encoded8Bit.length(); x++ ) {
-      if ( ( (signed char)encoded8Bit[x]<0) || ( encoded8Bit[x] == '\033' ) ||
-           ( addressHeader && ( strchr(reservedCharacters, encoded8Bit[x]) != 0 ) ) ) {
+      if ( ( (signed char)encoded8Bit[x] < 0 ) || ( encoded8Bit[x] == '\033' ) ||
+           ( addressHeader && ( strchr( reservedCharacters, encoded8Bit[x] ) != 0 ) ) ) {
         end = x;     // we found another non-ascii word
 
         while ( ( end < encoded8Bit.length() ) && ( encoded8Bit[end] != ' ' ) ) {
@@ -355,12 +355,12 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
             result += c;
           } else {
             result += '=';                 // "stolen" from KMail ;-)
-            hexcode = ((c & 0xF0) >> 4) + 48;
+            hexcode = ( ( c & 0xF0 ) >> 4 ) + 48;
             if ( hexcode >= 58 ) {
               hexcode += 7;
             }
             result += hexcode;
-            hexcode = (c & 0x0F) + 48;
+            hexcode = ( c & 0x0F ) + 48;
             if ( hexcode >= 58 ) {
               hexcode += 7;
             }
@@ -385,7 +385,7 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
 {
   QByteArray result;
   QList<QChar> splitChars;
-  splitChars << QLatin1Char(',') << QLatin1Char('\"') << QLatin1Char(';') << QLatin1Char('\\');
+  splitChars << QLatin1Char( ',' ) << QLatin1Char( '\"' ) << QLatin1Char( ';' ) << QLatin1Char( '\\' );
   const QChar *ch = src.constData();
   const int length = src.length();
   int pos = 0;
@@ -394,13 +394,13 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
   //qDebug() << "Input:" << src;
   // Loop over all characters of the string.
   // When encountering a split character, RFC-2047-encode the word before it, and add it to the result.
-  while (pos < length) {
+  while ( pos < length ) {
     //qDebug() << "Pos:" << pos << "Result:" << result << "Char:" << ch->toAscii();
     const bool isAscii = ch->unicode() < 127;
-    const bool isReserved = (strchr( reservedCharacters, ch->toAscii() ) != 0);
+    const bool isReserved = ( strchr( reservedCharacters, ch->toAscii() ) != 0 );
     if ( isAscii && isReserved ) {
       const int wordSize = pos - wordStart;
-      if (wordSize > 0) {
+      if ( wordSize > 0 ) {
         const QString word = src.mid( wordStart, wordSize );
         result += encodeRFC2047String( word, charset );
       }
@@ -414,7 +414,7 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
 
   // Encode the last word
   const int wordSize = pos - wordStart;
-  if (wordSize > 0) {
+  if ( wordSize > 0 ) {
     const QString word = src.mid( wordStart, pos - wordStart );
     result += encodeRFC2047String( word, charset );
   }
@@ -427,50 +427,56 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
 //-----------------------------------------------------------------------------
 QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
 {
-  if ( str.isEmpty() )
+  if ( str.isEmpty() ) {
     return QByteArray();
-
+  }
 
   const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
   QByteArray latin;
-  if ( charset == "us-ascii" )
+  if ( charset == "us-ascii" ) {
     latin = str.toAscii();
-  else if ( codec )
+  } else if ( codec ) {
     latin = codec->fromUnicode( str );
-  else
+  } else {
     latin = str.toLocal8Bit();
+  }
 
   char *l;
   for ( l = latin.data(); *l; ++l ) {
-    if ( ( ( *l & 0xE0 ) == 0 ) || ( *l & 0x80 ) )
+    if ( ( ( *l & 0xE0 ) == 0 ) || ( *l & 0x80 ) ) {
       // *l is control character or 8-bit char
       break;
+    }
   }
-  if ( !*l )
+  if ( !*l ) {
     return latin;
+  }
 
   QByteArray result = charset + "''";
   for ( l = latin.data(); *l; ++l ) {
     bool needsQuoting = ( *l & 0x80 ) || ( *l == '%' );
-    if( !needsQuoting ) {
+    if ( !needsQuoting ) {
       const QByteArray especials = "()<>@,;:\"/[]?.= \033";
       int len = especials.length();
-      for ( int i = 0; i < len; i++ )
+      for ( int i = 0; i < len; i++ ) {
         if ( *l == especials[i] ) {
           needsQuoting = true;
           break;
         }
+      }
     }
     if ( needsQuoting ) {
       result += '%';
       unsigned char hexcode;
       hexcode = ( ( *l & 0xF0 ) >> 4 ) + 48;
-      if ( hexcode >= 58 )
+      if ( hexcode >= 58 ) {
         hexcode += 7;
+      }
       result += hexcode;
       hexcode = ( *l & 0x0F ) + 48;
-      if ( hexcode >= 58 )
+      if ( hexcode >= 58 ) {
         hexcode += 7;
+      }
       result += hexcode;
     } else {
       result += *l;
@@ -484,31 +490,33 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
 QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QByteArray &defaultCS,
   bool forceCS )
 {
-  int p = str.indexOf('\'');
-  if (p < 0) return KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS  ))->toUnicode( str );
+  int p = str.indexOf( '\'' );
+  if ( p < 0 ) {
+    return KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS ) )->toUnicode( str );
+  }
 
 
-  QByteArray charset = str.left(p);
+  QByteArray charset = str.left( p );
 
-  QByteArray st = str.mid( str.lastIndexOf('\'') + 1 );
+  QByteArray st = str.mid( str.lastIndexOf( '\'' ) + 1 );
 
   char ch, ch2;
   p = 0;
-  while (p < (int)st.length())
-  {
-    if (st.at(p) == 37)
-    {
+  while ( p < (int)st.length() ) {
+    if ( st.at( p ) == 37 ) {
       // Only try to decode the percent-encoded character if the percent sign
       // is really followed by two other characters, see testcase at bug 163024
       if ( p + 2 < st.length() ) {
-        ch = st.at(p+1) - 48;
-        if (ch > 16)
+        ch = st.at( p + 1 ) - 48;
+        if ( ch > 16 ) {
           ch -= 7;
-        ch2 = st.at(p+2) - 48;
-        if (ch2 > 16)
+        }
+        ch2 = st.at( p + 2 ) - 48;
+        if ( ch2 > 16 ) {
           ch2 -= 7;
+        }
         st[p] = ch * 16 + ch2;
-        st.remove( p+1, 2 );
+        st.remove( p + 1, 2 );
       }
     }
     p++;
@@ -516,8 +524,9 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
   kDebug() << "Got pre-decoded:" << st;
   QString result;
   const QTextCodec * charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
-  if ( !charsetcodec || forceCS )
+  if ( !charsetcodec || forceCS ) {
     charsetcodec = KGlobal::charsets()->codecForName( QString::fromLatin1( defaultCS ) );
+  }
 
   usedCS = charsetcodec->name();
   return charsetcodec->toUnicode( st );
@@ -539,11 +548,11 @@ QByteArray uniqueString()
 
   p[10] = '\0';
   now = time( 0 );
-  ran = 1 + (int)(1000.0*rand() / (RAND_MAX + 1.0));
-  timeval = (now / ran) + getpid();
+  ran = 1 + (int)( 1000.0 * rand() / ( RAND_MAX + 1.0 ) );
+    timeval = ( now / ran ) + getpid();
 
-  for ( int i=0; i<10; i++ ) {
-    pos = (int) (61.0*rand() / (RAND_MAX + 1.0));
+  for ( int i = 0; i < 10; i++ ) {
+    pos = (int) ( 61.0 * rand() / ( RAND_MAX + 1.0 ) );
     //kDebug() << pos;
     p[i] = chars[pos];
   }
@@ -582,8 +591,7 @@ QByteArray unfoldHeader( const QByteArray &header )
     while ( foldEnd <= header.length() - 1 ) {
       if ( QChar::fromLatin1( header[foldEnd] ).isSpace() ) {
         ++foldEnd;
-      }
-      else if ( foldEnd > 0 && header[foldEnd - 1] == '\n' &&
+      } else if ( foldEnd > 0 && header[foldEnd - 1] == '\n' &&
                 header[foldEnd] == '=' && foldEnd + 2 < header.length() &&
                 ( ( header[foldEnd + 1] == '0' &&
                     header[foldEnd + 2] == '9' ) ||
@@ -598,8 +606,9 @@ QByteArray unfoldHeader( const QByteArray &header )
     }
 
     result += header.mid( pos, foldBegin - pos );
-    if ( foldEnd < header.length() -1 )
+    if ( foldEnd < header.length() - 1 ) {
       result += ' ';
+    }
     pos = foldEnd;
   }
   const int len = header.length();
@@ -614,8 +623,9 @@ int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folded )
   int end = dataBegin;
   int len = src.length() - 1;
 
-  if ( folded )
+  if ( folded ) {
     *folded = false;
+  }
 
   if ( dataBegin < 0 ) {
     // Not found
@@ -630,28 +640,28 @@ int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folded )
   // If the first line contains nothing, but the next line starts with a space
   // or a tab, that means a stupid mail client has made the first header field line
   // entirely empty, and has folded the rest to the next line(s).
-  if ( src.at(end) == '\n' && end + 1 < len &&
-       ( src[end+1] == ' ' || src[end+1] == '\t' ) ) {
+  if ( src.at( end ) == '\n' && end + 1 < len &&
+       ( src[end + 1] == ' ' || src[end + 1] == '\t' ) ) {
 
     // Skip \n and first whitespace
     dataBegin += 2;
     end += 2;
   }
 
-  if ( src.at(end) != '\n' ) {  // check if the header is not empty
+  if ( src.at( end ) != '\n' ) {  // check if the header is not empty
     while ( true ) {
       end = src.indexOf( '\n', end + 1 );
       if ( end == -1 || end == len ) {
         // end of string
         break;
-      }
-      else if ( src[end+1] == ' ' || src[end+1] == '\t' ||
-                ( src[end+1] == '=' && end+3 <= len &&
-                  ( ( src[end+2] == '0' && src[end+3] == '9' ) ||
-                    ( src[end+2] == '2' && src[end+3] == '0' ) ) ) ) {
+      } else if ( src[end + 1] == ' ' || src[end + 1] == '\t' ||
+                ( src[end + 1] == '=' && end + 3 <= len &&
+                  ( ( src[end + 2] == '0' && src[end + 3] == '9' ) ||
+                    ( src[end + 2] == '2' && src[end + 3] == '0' ) ) ) ) {
         // next line is header continuation or starts with =09/=20 (bug #86302)
-        if ( folded )
+        if ( folded ) {
           *folded = true;
+        }
       } else {
         // end of header (no header continuation)
         break;
@@ -674,7 +684,7 @@ int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int 
   if ( qstrnicmp( n.constData(), src.constData(), n.length() ) == 0 ) {
     begin = 0;
   } else {
-    n.prepend('\n');
+    n.prepend( '\n' );
     const char *p = strcasestr( src.constData(), n.constData() );
     if ( !p ) {
       begin = -1;
@@ -684,7 +694,7 @@ int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int 
     }
   }
 
-  if ( begin > -1) {     //there is a header with the given name
+  if ( begin > -1 ) {     //there is a header with the given name
     dataBegin = begin + name.length() + 1; //skip the name
     // skip the usual space after the colon
     if ( src.at( dataBegin ) == ' ' ) {
@@ -748,7 +758,6 @@ QList<QByteArray> extractHeaders( const QByteArray &src, const QByteArray &name 
       break;
     }
   }
-
   return result;
 }
 
@@ -807,12 +816,12 @@ template < typename StringType, typename CharType > void removeQuotesGeneric( St
 
 void removeQuots( QByteArray &str )
 {
-  removeQuotesGeneric<QByteArray,char>( str );
+  removeQuotesGeneric<QByteArray, char>( str );
 }
 
 void removeQuots( QString &str )
 {
-  removeQuotesGeneric<QString,QLatin1Char>( str );
+  removeQuotesGeneric<QString, QLatin1Char>( str );
 }
 
 template<class StringType,class CharType,class CharConverterType,class StringConverterType,class ToString>
@@ -838,12 +847,12 @@ void addQuotes_impl( StringType &str, bool forceQuotes )
 
 void addQuotes( QByteArray &str, bool forceQuotes )
 {
-  addQuotes_impl<QByteArray,char,char,char*,QLatin1String>( str, forceQuotes );
+  addQuotes_impl<QByteArray, char, char, char*, QLatin1String>( str, forceQuotes );
 }
 
 void addQuotes( QString &str, bool forceQuotes )
 {
-  addQuotes_impl<QString,QChar,QLatin1Char,QLatin1String,QString>( str, forceQuotes );
+  addQuotes_impl<QString, QChar, QLatin1Char, QLatin1String, QString>( str, forceQuotes );
 }
 
 KMIME_EXPORT QString balanceBidiState( const QString &input )
@@ -862,12 +871,10 @@ KMIME_EXPORT QString balanceBidiState( const QString &input )
     const ushort &code = input.at( i ).unicode();
     if ( code == LRO || code == RLO || code == LRE || code == RLE ) {
       openDirChangers++;
-    }
-    else if ( code == PDF ) {
+    } else if ( code == PDF ) {
       if ( openDirChangers > 0 ) {
         openDirChangers--;
-      }
-      else {
+      } else {
         // One PDF too much, remove it
         kWarning() << "Possible Unicode spoofing (unexpected PDF) detected in" << input;
         result.remove( i - numPDFsRemoved, 1 );
@@ -883,10 +890,11 @@ KMIME_EXPORT QString balanceBidiState( const QString &input )
     // As a special exception, when encountering quoted strings, place the PDF before
     // the last quote.
     for ( int i = openDirChangers; i > 0; i-- ) {
-      if ( result.endsWith( QLatin1Char( '"' ) ) )
+      if ( result.endsWith( QLatin1Char( '"' ) ) ) {
         result.insert( result.length() - 1, QChar( PDF ) );
-      else
+      } else {
         result += QChar( PDF );
+      }
     }
   }
 
@@ -909,12 +917,14 @@ QString removeBidiControlChars( const QString &input )
 
 static bool isCryptoPart( Content* content )
 {
-  if( !content->contentType( false ) )
+  if ( !content->contentType( false ) ) {
     return false;
+  }
 
-  if( content->contentType()->subType().toLower() == "octet-stream" &&
-      !content->contentDisposition( false ) )
+  if ( content->contentType()->subType().toLower() == "octet-stream" &&
+      !content->contentDisposition( false ) ) {
     return false;
+  }
 
   const Headers::ContentType *contentType = content->contentType();
   const QByteArray lowerSubType = contentType->subType().toLower();
@@ -930,35 +940,43 @@ static bool isCryptoPart( Content* content )
 
 bool hasAttachment( Content* content )
 {
-  if( !content )
+  if ( !content ) {
     return false;
-
-  bool emptyFilename = true;
-  if( content->contentDisposition( false ) && !content->contentDisposition()->filename().isEmpty() )
-    emptyFilename = false;
-
-  if( emptyFilename && content->contentType( false ) && !content->contentType()->name().isEmpty() )
-    emptyFilename = false;
-
-  // ignore crypto parts
-  if( !emptyFilename && !isCryptoPart( content ) )
-    return true;
-
-  // Ok, content itself is not an attachment. now we deal with multiparts
-  if( content->contentType()->isMultipart() ) {
-    Q_FOREACH( Content* child, content->contents() ) {
-      if( hasAttachment( child ) )
-        return true;
-    }
   }
 
+  bool emptyFilename = true;
+  if ( content->contentDisposition( false ) &&
+       !content->contentDisposition()->filename().isEmpty() ) {
+    emptyFilename = false;
+  }
+
+  if ( emptyFilename &&
+       content->contentType( false ) &&
+       !content->contentType()->name().isEmpty() ) {
+    emptyFilename = false;
+  }
+
+  // ignore crypto parts
+  if ( !emptyFilename && !isCryptoPart( content ) ) {
+    return true;
+  }
+
+  // Ok, content itself is not an attachment. now we deal with multiparts
+  if ( content->contentType()->isMultipart() ) {
+    Q_FOREACH ( Content *child, content->contents() ) {
+      if ( hasAttachment( child ) ) {
+        return true;
+      }
+    }
+  }
   return false;
 }
 
 bool isSigned( Message *message )
 {
-  if ( !message )
+  if ( !message ) {
     return false;
+  }
 
   const KMime::Headers::ContentType* const contentType = message->contentType();
   if ( contentType->isSubtype( "signed" ) ||
@@ -971,14 +989,14 @@ bool isSigned( Message *message )
        message->mainBodyPart( "application/x-pkcs7-signature" ) ) {
     return true;
   }
-
   return false;
 }
 
 bool isEncrypted( Message *message )
 {
-  if ( !message )
+  if ( !message ) {
     return false;
+  }
 
   const KMime::Headers::ContentType* const contentType = message->contentType();
   if ( contentType->isSubtype( "encrypted" ) ||
@@ -995,13 +1013,15 @@ bool isEncrypted( Message *message )
 
 bool isInvitation( Content *content )
 {
-  if ( !content )
+  if ( !content ) {
     return false;
+  }
 
   const KMime::Headers::ContentType* const contentType = content->contentType( false );
 
-  if ( contentType && contentType->isMediatype( "text" ) && contentType->isSubtype( "calendar" ) )
+  if ( contentType && contentType->isMediatype( "text" ) && contentType->isSubtype( "calendar" ) ) {
     return true;
+  }
 
   return false;
 }

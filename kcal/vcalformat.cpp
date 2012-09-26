@@ -48,7 +48,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace KCal;
 

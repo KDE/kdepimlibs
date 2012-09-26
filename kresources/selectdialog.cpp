@@ -26,9 +26,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <QtGui/QGroupBox>
-#include <QtGui/QLayout>
-#include <QtGui/QListWidget>
+#include <QGroupBox>
+#include <QLayout>
+#include <QListWidget>
 
 #include "resource.h"
 
@@ -49,7 +49,7 @@ static bool resourceNameLessThan( Resource *a, Resource *b )
 SelectDialog::SelectDialog( QList<Resource *> list, QWidget *parent )
   : KDialog( parent ), d( new SelectDialogPrivate )
 {
-  setModal(true);
+  setModal( true );
   setCaption( i18n( "Resource Selection" ) );
   resize( 300, 200 );
   setButtons( Ok|Cancel );
@@ -120,13 +120,13 @@ Resource *SelectDialog::getResource( QList<Resource *> list, QWidget *parent )
   Resource *found = 0;
 
   for ( int i=0; i< list.size(); ++i ) {
-    if ( !list.at(i)->readOnly() ) {
+    if ( !list.at( i )->readOnly() ) {
       if ( found ) {
         found = 0;
         break;
       }
     } else {
-      found = list.at(i);
+      found = list.at( i );
     }
   }
 
