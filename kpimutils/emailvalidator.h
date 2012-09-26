@@ -23,7 +23,7 @@
 
 #include "kpimutils_export.h"
 
-#include <QtGui/QValidator>
+#include <QValidator>
 
 namespace KPIMUtils {
 

@@ -34,7 +34,7 @@
 #define KRESOURCES_CONFIGPAGE_H
 
 #include <QtCore/QStringList>
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtCore/QList>
 
 #include <ksharedptr.h>

@@ -40,7 +40,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QRegExp>
 #include <QtCore/QMap>
-#include <QtGui/QApplication>
+#include <QApplication>
 
 using namespace KCal;
 

@@ -24,7 +24,7 @@
 #include <mailtransport/mailtransport_export.h>
 #include <mailtransport/transport.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtCore/QHash>
 
 class QProgressBar;

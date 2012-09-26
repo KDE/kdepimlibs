@@ -33,13 +33,13 @@
 
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QTextEdit>
-#include <QtGui/QWidget>
+#include <QApplication>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QWidget>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
 

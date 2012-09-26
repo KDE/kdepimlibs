@@ -26,7 +26,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTCONFIGWIDGET_H
 #define MAILTRANSPORT_TRANSPORTCONFIGWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KConfigDialogManager;
 

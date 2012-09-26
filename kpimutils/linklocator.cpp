@@ -33,7 +33,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 #include <climits>
 

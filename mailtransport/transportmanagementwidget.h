@@ -25,7 +25,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace MailTransport {
 

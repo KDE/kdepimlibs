@@ -27,11 +27,11 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
-#include <QtGui/QClipboard>
+#include <QClipboard>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 #include <QtXml/QXmlAttributes>
 #include <QtXml/QXmlDefaultHandler>

@@ -30,7 +30,7 @@
 #ifndef KRESOURCES_CONFIGWIDGET_H
 #define KRESOURCES_CONFIGWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <kconfig.h>
 
