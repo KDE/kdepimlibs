@@ -119,6 +119,9 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(Libical)
   macro_log_feature(LIBICAL_FOUND "libical" "Calendar support" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Needed by the kcal and kcalcore libraries")
 
+  find_package(QJSON)
+  macro_log_feature(QJSON_FOUND "QJSON" "Qt library for handling JSON data" "http://qjson.sourceforge.net/" TRUE)
+
 endif()
 
 ############### Needed commands before building anything ###############
