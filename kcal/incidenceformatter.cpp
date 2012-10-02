@@ -2017,7 +2017,7 @@ static QString invitationAttendees( Incidence *incidence )
   if ( count ) {
     tmpStr += "</table>";
   } else {
-    tmpStr += "<i>" + i18nc( "no attendees", "None" ) + "</i>";
+    tmpStr += "<i> " + i18nc( "no attendees", "None" ) + "</i>";
   }
 
   return tmpStr;
