@@ -2,6 +2,8 @@ project(akonadi-social-utils)
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
+include_directories(${QJSON_INCLUDE_DIR})
+
 add_subdirectory(serializer)
 add_subdirectory(tests)
 
@@ -25,6 +27,7 @@ target_link_libraries(akonadi-socialutils
   ${KDE4_KIO_LIBS}
   ${QT_QTNETWORK_LIBS}
   ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES} # for Debian
 )
 
 set_target_properties(akonadi-socialutils PROPERTIES

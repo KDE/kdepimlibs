@@ -28,8 +28,8 @@
 #include <ktimezone.h>
 #include <QtCore/QDateTime>
 
-KUrl mUrl( "http://soctest.wordpress.com/xmlrpc.php" );
-QString mUsername( "socapitest" );
+KUrl mUrl( "http://kblogunittests.wordpress.com/xmlrpc.php" );
+QString mUsername( "kblogunittests" );
 QString mPassword( "k0nt4ctbl0g" );
 QString mBlogId( "1" );
 
