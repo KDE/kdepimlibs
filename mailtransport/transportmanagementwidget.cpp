@@ -26,6 +26,7 @@
 #include "transport.h"
 
 #include <KMessageBox>
+#include <KMenu>
 
 using namespace MailTransport;
 
@@ -45,6 +46,7 @@ class TransportManagementWidget::Private
     void editClicked();
     void addClicked();
     void updateButtonState();
+    void slotCustomContextMenuRequested(const QPoint&);
 };
 
 TransportManagementWidget::Private::Private( TransportManagementWidget *parent )
@@ -59,6 +61,7 @@ TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   d->ui.setupUi( this );
   d->updateButtonState();
 
+  d->ui.transportList->setContextMenuPolicy( Qt::CustomContextMenu );
   connect( d->ui.transportList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
            SLOT(updateButtonState()) );
   connect( d->ui.transportList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
@@ -68,6 +71,7 @@ TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   connect( d->ui.renameButton, SIGNAL(clicked()), SLOT(renameClicked()) );
   connect( d->ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
   connect( d->ui.defaultButton, SIGNAL(clicked()), SLOT(defaultClicked()) );
+  connect( d->ui.transportList, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotCustomContextMenuRequested(QPoint)) );
 }
 
 TransportManagementWidget::~TransportManagementWidget()
@@ -148,6 +152,25 @@ void TransportManagementWidget::Private::defaultClicked()
 
   TransportManager::self()->setDefaultTransport(
         ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
+}
+
+void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QPoint& pos)
+{
+  QTreeWidgetItem *item = ui.transportList->itemAt( pos );
+  if ( item ) {
+    KMenu *menu = new KMenu( q );
+    menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
+    menu->addAction( i18n( "Edit..." ), q, SLOT(editClicked()) );
+    menu->addAction( i18n( "Rename..." ), q, SLOT(renameClicked()) );
+    menu->addAction( i18n( "Remove..." ), q, SLOT(removeClicked()) );
+    if ( item->data( 0, Qt::UserRole ) != TransportManager::self()->defaultTransportId() ) {
+       menu->addSeparator();
+       menu->addAction( i18n( "Set as Default" ), q, SLOT(defaultClicked()) );
+    }
+
+    menu->exec( ui.transportList->viewport()->mapToGlobal( pos ));
+    delete menu;
+  }
 }
 
 #include "transportmanagementwidget.moc"
