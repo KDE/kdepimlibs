@@ -161,8 +161,8 @@ void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QP
     KMenu *menu = new KMenu( q );
     menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
     menu->addAction( i18n( "Edit..." ), q, SLOT(editClicked()) );
-    menu->addAction( i18n( "Rename..." ), q, SLOT(renameClicked()) );
-    menu->addAction( i18n( "Remove..." ), q, SLOT(removeClicked()) );
+    menu->addAction( i18n( "Rename" ), q, SLOT(renameClicked()) );
+    menu->addAction( i18n( "Remove" ), q, SLOT(removeClicked()) );
     if ( item->data( 0, Qt::UserRole ) != TransportManager::self()->defaultTransportId() ) {
        menu->addSeparator();
        menu->addAction( i18n( "Set as Default" ), q, SLOT(defaultClicked()) );
