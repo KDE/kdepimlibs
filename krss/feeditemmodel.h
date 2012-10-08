@@ -27,8 +27,6 @@
 
 #include <akonadi/entitytreemodel.h>
 
-#include "item.h"
-
 class KJob;
 
 namespace KRss {

@@ -32,7 +32,6 @@ void TestItem::testDefaultValues()
 {
     const Item item;
     QCOMPARE( item.commentsCount(), -1 );
-    QCOMPARE( item.status(), 0 );
     QCOMPARE( item.guidIsHash(), false );
     QCOMPARE( item.sourceFeedId(), -1 );
     QCOMPARE( item.hash(), 0 );
@@ -73,17 +72,21 @@ void TestItem::testContentAndDescription()
     Item item;
     item.setDescription( desc1 );
     QCOMPARE( item.description(), desc1 );
-    QCOMPARE( item.content(), desc1 );
+    QCOMPARE( item.content(), QString() );
+    QCOMPARE( item.contentWithDescriptionAsFallback(), desc1 );
     item.setContent( content );
     QCOMPARE( item.description(), desc1 );
     QCOMPARE( item.content(), content );
+    QCOMPARE( item.contentWithDescriptionAsFallback(), content );
     item.setContent( QString() );
     QCOMPARE( item.description(), desc1 );
-    QCOMPARE( item.content(), desc1 );
+    QCOMPARE( item.content(), QString() );
+    QCOMPARE( item.contentWithDescriptionAsFallback(), desc1 );
     item.setDescription( desc2 );
     item.setContent( content );
     QCOMPARE( item.description(), desc2 );
     QCOMPARE( item.content(), content );
+    QCOMPARE( item.contentWithDescriptionAsFallback(), content );
 }
 
 QTEST_KDEMAIN( TestItem, NoGUI )

@@ -22,7 +22,7 @@
 
 #include "feedcollection.h"
 #include "feeditemmodel.h"
-#include "rssitem.h"
+#include "item.h"
 #include "person.h"
 
 #include <KDateTime>
@@ -57,15 +57,15 @@ FeedItemModel::~FeedItemModel() {
 }
 
 QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column, int role ) const {
-    if ( !akonadiItem.hasPayload<RssItem>() )
+    if ( !akonadiItem.hasPayload<Item>() )
         return EntityTreeModel::entityData( akonadiItem, column, role );
 
-    const RssItem item = akonadiItem.payload<RssItem>();
+    const Item item = akonadiItem.payload<Item>();
     if ( role == SortRole && column == DateColumn )
         return item.dateUpdated().toTime_t();
 
     if ( role == IsDeletedRole )
-        return KRss::RssItem::isDeleted( akonadiItem );
+        return KRss::Item::isDeleted( akonadiItem );
 
     if ( role == Qt::DisplayRole || role == SortRole ) {
         switch ( column ) {
@@ -96,13 +96,13 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
 
     switch ( role ) {
         case IsImportantRole:
-            return RssItem::isImportant( akonadiItem );
+            return Item::isImportant( akonadiItem );
         case IsUnreadRole:
-            return RssItem::isUnread( akonadiItem );
+            return Item::isUnread( akonadiItem );
         case IsReadRole:
-            return RssItem::isRead( akonadiItem );
+            return Item::isRead( akonadiItem );
         case IsDeletedRole:
-            return RssItem::isDeleted( akonadiItem );
+            return Item::isDeleted( akonadiItem );
         case LinkRole:
             return item.link();
     default:
@@ -110,11 +110,11 @@ QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column
     }
     //PENDING(frank) TODO: use configurable colors
     if ( role == Qt::ForegroundRole ) {
-        if ( RssItem::isUnread( akonadiItem ) )
+        if ( Item::isUnread( akonadiItem ) )
             return Qt::blue;
     }
 
-    if ( role == Qt::DecorationRole && column == ItemTitleColumn && RssItem::isImportant( akonadiItem ) )
+    if ( role == Qt::DecorationRole && column == ItemTitleColumn && Item::isImportant( akonadiItem ) )
         return d->importantIcon;
 
     return EntityTreeModel::entityData( akonadiItem, column, role );

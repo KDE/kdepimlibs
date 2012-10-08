@@ -24,7 +24,7 @@
 #define KRSS_ITEM_P_H
 
 #include "item.h"
-#include "rssitem.h"
+#include "item.h"
 
 #include <akonadi/item.h>
 
@@ -35,7 +35,7 @@ class Item::Private : public QSharedData
 public:
     Private()
     {
-        akonadiItem.setPayload<KRss::RssItem>( RssItem() );
+        akonadiItem.setPayload<KRss::Item>( Item() );
         akonadiItem.setMimeType( Item::mimeType() );
     }
 

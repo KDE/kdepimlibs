@@ -25,18 +25,15 @@
 
 #include "krss_export.h"
 
+#include <akonadi/item.h>
+
 #include <QtCore/QSharedDataPointer>
-#include <QtCore/QMetaType>
 
 class KDateTime;
 
 template <class T> class QList;
 template <class K, class T> class QHash;
 class QString;
-
-namespace Akonadi {
-    class Item;
-}
 
 namespace KRss {
 
@@ -46,50 +43,55 @@ class Person;
 
 typedef qint64 ItemId;
 
+enum ItemStatusFlag {
+    Unread      = 0x02,
+    Important   = 0x04,
+    Deleted     = 0x08,
+    Updated     = 0x16
+};
+Q_DECLARE_FLAGS( ItemStatus, ItemStatusFlag )
+
+ItemStatus itemStatus( const Akonadi::Item& item );
+void setItemStatus( Akonadi::Item& aitem, const ItemStatus& stat );
+
 class KRSS_EXPORT Item
 {
 public:
-    enum StatusFlag {
-        Unread      = 0x02,
-        Important   = 0x04,
-        Deleted     = 0x08,
-        Updated     = 0x16
-    };
-    Q_DECLARE_FLAGS( Status, StatusFlag )
+      // mimetype
+    static QString mimeType();
 
-    // parts
     static const char *HeadersPart;     //  All attributes except description + content
     static const char *ContentPart;     //  Description + Content
 
-    // mimetype
-    static QString mimeType();
+    // return the corresponding Akonadi flags
+    // for the status flags defined in item.h
+    static QByteArray flagRead();
+    static QByteArray flagImportant();
+    static QByteArray flagDeleted();
+    static QByteArray flagUpdated();
 
-public:
+    static ItemId itemIdFromAkonadi( const Akonadi::Item::Id& id );
+    static Akonadi::Item::Id itemIdToAkonadi( const ItemId& itemId );
+
     Item();
-    explicit Item( const Akonadi::Item& aitem );
     Item( const Item& other );
     ~Item();
-
-    Akonadi::Item akonadiItem() const;
 
     void swap( Item& other );
     Item& operator=( const Item& other );
     bool operator==( const Item& other ) const;
     bool operator!=( const Item& other ) const;
-    bool operator<( const Item& other ) const;
 
-    ItemId id() const;
+    static bool isImportant( const Akonadi::Item& );
+    static bool isRead( const Akonadi::Item& );
+    static bool isUnread( const Akonadi::Item& );
+    static bool isDeleted( const Akonadi::Item& );
+    static bool isUpdated( const Akonadi::Item& );
 
-    static Item::Status status( const Akonadi::Item& aitem );
-    Item::Status status() const;
-    static void setStatus( Akonadi::Item& aitem, const Item::Status& stat );
-    void setStatus( const Item::Status& stat );
-
-    bool isImportant() const;
-    bool isRead() const;
-    bool isUnread() const;
-    bool isDeleted() const;
-    bool isUpdated() const;
+    bool headersLoaded() const;
+    void setHeadersLoaded( bool headersLoaded );
+    bool contentLoaded() const;
+    void setContentLoaded( bool contentLoaded );
 
     int hash() const;
     void setHash( int hash );
@@ -99,8 +101,6 @@ public:
 
     int sourceFeedId() const;
     void setSourceFeedId( int id );
-
-    bool isNull() const;
 
     /**
      * The title of the item.
@@ -113,7 +113,6 @@ public:
      */
     QString title() const;
     void setTitle( const QString& title );
-
     QString titleAsPlainText() const;
 
     /**
@@ -154,6 +153,14 @@ public:
     void setContent( const QString& content );
 
     /**
+     * Convenience function to get content if available, and description otherwise.
+     * If content is available, it's returned.
+     * If the content was loaded but is empty, returns the description instead.
+     * If the content wasn't retrieved, returns an empty string.
+     */
+    QString contentWithDescriptionAsFallback() const;
+
+    /**
      * returns the date when the item was initially published.
      *
      * @return publication date, as seconds since epoch (Jan 1st 1970), or 0
@@ -163,12 +170,12 @@ public:
     void setDatePublished( const KDateTime& date );
 
     /**
-        * returns the date when the item was modified the last time. If no such
-        * date is provided by the feed, this method returns the value of
-        * datePublished().
-        *
-        * @return modification date, as seconds since epoch (Jan 1st 1970)
-        */
+     * returns the date when the item was modified the last time. If no such
+     * date is provided by the feed, this method returns the value of
+     * datePublished().
+     *
+     * @return modification date, as seconds since epoch (Jan 1st 1970)
+     */
     KDateTime dateUpdated() const;
     void setDateUpdated( const KDateTime& date );
 
@@ -262,25 +269,12 @@ public:
     void setCustomProperty( const QString& key, const QString& value );
 
 private:
-    friend class ItemFetchJob;
-    friend class ItemFetchJobPrivate;
-    friend class ItemModifyJob;
-    friend class ItemModifyJobPrivate;
-    friend class ItemDeleteJob;
-    friend class ItemDeleteJobPrivate;
-    friend class Feed;
-    friend class ItemListJobImpl;
-    friend class ItemListing;
-    friend class ItemListingPrivate;
-
     class Private;
     QSharedDataPointer<Private> d;
 };
 
 } // namespace KRss
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( KRss::Item::Status )
-Q_DECLARE_METATYPE( KRss::Item::Status )
+Q_DECLARE_METATYPE( KRss::Item )
 
-
-#endif // KRSS_ITEM_H
+#endif // KRSS_RSSITEM_H
