@@ -156,10 +156,10 @@ void TransportManagementWidget::Private::defaultClicked()
 
 void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QPoint& pos)
 {
+  KMenu *menu = new KMenu( q );
+  menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
   QTreeWidgetItem *item = ui.transportList->itemAt( pos );
   if ( item ) {
-    KMenu *menu = new KMenu( q );
-    menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
     menu->addAction( i18n( "Edit..." ), q, SLOT(editClicked()) );
     menu->addAction( i18n( "Rename" ), q, SLOT(renameClicked()) );
     menu->addAction( i18n( "Remove" ), q, SLOT(removeClicked()) );
@@ -167,10 +167,9 @@ void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QP
        menu->addSeparator();
        menu->addAction( i18n( "Set as Default" ), q, SLOT(defaultClicked()) );
     }
-
-    menu->exec( ui.transportList->viewport()->mapToGlobal( pos ));
-    delete menu;
   }
+  menu->exec( ui.transportList->viewport()->mapToGlobal( pos ));
+  delete menu;
 }
 
 #include "transportmanagementwidget.moc"
