@@ -5,9 +5,9 @@
 <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 	
-<article lang="&language;">
+<article id="kresources" lang="&language;">
 <title>&kde; Resources</title>
-<articleinfo>
+<article id="kresources"info>
 
 <authorgroup>
 <author><personname><firstname>Burkhard</firstname><surname>Lück</surname></personname></author>
