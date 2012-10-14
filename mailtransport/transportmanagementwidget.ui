@@ -11,34 +11,6 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" rowspan="6">
-    <widget class="TransportListView" name="transportList">
-     <property name="itemsExpandable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="KPushButton" name="addButton">
-     <property name="text">
-      <string>A&amp;dd...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="KPushButton" name="editButton">
-     <property name="text">
-      <string>&amp;Modify...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="KPushButton" name="renameButton">
-     <property name="text">
-      <string>&amp;Rename</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="1">
     <widget class="KPushButton" name="removeButton">
      <property name="text">
@@ -46,14 +18,21 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <widget class="KPushButton" name="defaultButton">
      <property name="text">
       <string>&amp;Set as Default</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="0" column="0" rowspan="7">
+    <widget class="TransportListView" name="transportList">
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -66,9 +45,38 @@
      </property>
     </spacer>
    </item>
+   <item row="0" column="1">
+    <widget class="KPushButton" name="addButton">
+     <property name="text">
+      <string>A&amp;dd...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="KPushButton" name="renameButton">
+     <property name="text">
+      <string>&amp;Rename</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="KPushButton" name="editButton">
+     <property name="text">
+      <string>&amp;Modify...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="KSeparator" name="kseparator"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
   <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
