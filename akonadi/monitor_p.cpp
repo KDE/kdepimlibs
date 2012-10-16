@@ -416,18 +416,32 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
   int appendedMessages = 0;
+  int modifiedMessages = 0;
+  int erasedMessages = 0;
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
+      const int oldSize = pendingNotifications.size();
       const bool appended = translateAndCompress( pendingNotifications, msg );
-      if ( appended )
+      if ( appended ) {
         ++appendedMessages;
+        // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
+        if ( pendingNotifications.count() != oldSize + 1 )
+          ++erasedMessages;
+      }
+      else
+        ++modifiedMessages;
     }
   }
 
   // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
-  notificationsEnqueued( appendedMessages );
+  if ( appendedMessages > 0 || modifiedMessages > 0 ) {
+    if ( erasedMessages > 0 )
+      notificationsErased();
+    else
+      notificationsEnqueued( appendedMessages );
+  }
 
   dispatchNotifications();
 }
