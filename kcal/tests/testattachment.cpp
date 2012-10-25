@@ -20,7 +20,6 @@
 #include <qtest_kde.h>
 
 #include "testattachment.h"
-#include "testattachment.moc"
 
 QTEST_KDEMAIN( AttachmentTest, NoGUI )
 

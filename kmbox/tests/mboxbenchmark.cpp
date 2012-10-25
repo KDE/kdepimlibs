@@ -18,7 +18,6 @@
 */
 
 #include "mboxbenchmark.h"
-#include "mboxbenchmark.moc"
 
 #include <QtCore/QCryptographicHash>
 

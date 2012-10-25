@@ -612,5 +612,4 @@ void ConfigPage::Private::saveResourceSettings( ConfigPage *page )
 
 }
 
-#include "configpage.moc"
 

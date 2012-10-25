@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testcalendarresources.h"
-#include "testcalendarresources.moc"
 
 QTEST_KDEMAIN( CalendarResourcesTest, NoGUI )
 

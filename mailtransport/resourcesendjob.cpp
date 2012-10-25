@@ -92,4 +92,4 @@ void ResourceSendJob::doStart()
   job->start();
 }
 
-#include "resourcesendjob_p.moc"
+#include "moc_resourcesendjob_p.cpp"

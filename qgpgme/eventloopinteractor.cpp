@@ -116,4 +116,3 @@ void QGpgME::EventLoopInteractor::operationStartEvent( GpgME::Context * context 
   emit operationStartEventSignal( context );
 }
 
-#include "eventloopinteractor.moc"

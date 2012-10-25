@@ -20,7 +20,6 @@
 #include <qtest_kde.h>
 
 #include "testalarm.h"
-#include "testalarm.moc"
 
 QTEST_KDEMAIN( AlarmTest, NoGUI )
 

@@ -739,4 +739,3 @@ void ContentTest::testFreezing()
   QCOMPARE( msg->encodedContent(), data );
 }
 
-#include "contenttest.moc"

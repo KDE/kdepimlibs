@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testcalendarnull.h"
-#include "testcalendarnull.moc"
 
 QTEST_KDEMAIN( CalendarNullTest, NoGUI )
 

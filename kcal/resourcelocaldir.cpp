@@ -45,8 +45,8 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include "resourcelocaldir.moc"
-#include "resourcelocaldir_p.moc"
+#include "moc_resourcelocaldir.cpp"
+#include "moc_resourcelocaldir_p.cpp"
 
 using namespace KCal;
 

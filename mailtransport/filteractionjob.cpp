@@ -130,4 +130,4 @@ void FilterActionJob::doStart()
   }
 }
 
-#include "filteractionjob_p.moc"
+#include "moc_filteractionjob_p.cpp"

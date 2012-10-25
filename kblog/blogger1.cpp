@@ -539,4 +539,4 @@ QString Blogger1Private::getCallFromFunction( FunctionToCall type )
   }
 }
 
-#include "blogger1.moc"
+#include "moc_blogger1.cpp"

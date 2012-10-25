@@ -446,5 +446,5 @@ Query::~Query()
   delete d;
 }
 
-#include "query.moc"
+#include "moc_query.cpp"
 

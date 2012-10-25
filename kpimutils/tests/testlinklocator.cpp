@@ -21,7 +21,6 @@
 
 #include "testlinklocator.h"
 
-#include "testlinklocator.moc"
 
 #include <qtest_kde.h>
 #include <kdebug.h>

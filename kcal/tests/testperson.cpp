@@ -20,7 +20,6 @@
 #include <qtest_kde.h>
 
 #include "testperson.h"
-#include "testperson.moc"
 
 QTEST_KDEMAIN( PersonTest, NoGUI )
 

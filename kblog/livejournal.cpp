@@ -491,4 +491,4 @@ void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
                       i18n( "The returned post ID did not match the sent one: " ), post ); // Emit an error signal if the post IDs don't match.
 }
 
-#include "livejournal.moc"
+#include "moc_livejournal.cpp"

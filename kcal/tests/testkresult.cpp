@@ -18,7 +18,6 @@
   Boston, MA 02110-1301, USA.
 */
 #include "testkresult.h"
-#include "testkresult.moc"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( KResultTest, NoGUI )

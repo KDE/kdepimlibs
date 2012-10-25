@@ -100,4 +100,4 @@ void DispatcherInterface::dispatchManualTransport( int transportId )
   QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
 }
 
-#include "dispatcherinterface_p.moc"
+#include "moc_dispatcherinterface_p.cpp"

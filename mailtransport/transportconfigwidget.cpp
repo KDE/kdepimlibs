@@ -79,4 +79,3 @@ void TransportConfigWidget::apply()
   kDebug() << "Config written.";
 }
 
-#include "transportconfigwidget.moc"

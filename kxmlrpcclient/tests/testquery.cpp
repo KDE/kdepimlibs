@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testquery.h"
-#include "testquery.moc"
 
 QTEST_KDEMAIN( TestQuery, NoGUI )
 

@@ -219,4 +219,4 @@ void Client::call( const QString &method, const QStringList &arg,
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
-#include "client.moc"
+#include "moc_client.cpp"

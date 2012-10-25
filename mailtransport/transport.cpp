@@ -362,4 +362,3 @@ void Transport::setTransportType( const TransportType &type )
   setType( type.type() );
 }
 
-#include "transport.moc"

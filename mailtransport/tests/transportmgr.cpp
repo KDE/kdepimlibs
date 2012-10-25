@@ -145,4 +145,3 @@ void TransportMgr::jobInfoMessage( KJob *job, const QString &info, const QString
   kDebug() << info2;
 }
 
-#include "transportmgr.moc"

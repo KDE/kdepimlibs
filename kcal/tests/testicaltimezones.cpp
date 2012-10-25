@@ -28,7 +28,6 @@
 #include <ktemporaryfile.h>
 
 #include "testicaltimezones.h"
-#include "testicaltimezones.moc"
 
 QTEST_KDEMAIN( ICalTimeZonesTest, NoGUI )
 

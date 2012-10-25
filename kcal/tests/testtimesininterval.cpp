@@ -19,7 +19,6 @@
   Boston, MA 02110-1301, USA.
 */
 #include "testtimesininterval.h"
-#include "testtimesininterval.moc"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( TimesInIntervalTest, NoGUI )

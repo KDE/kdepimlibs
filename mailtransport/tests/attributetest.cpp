@@ -165,4 +165,3 @@ void AttributeTest::testSerialization()
 
 QTEST_AKONADIMAIN( AttributeTest, NoGUI )
 
-#include "attributetest.moc"

@@ -23,7 +23,6 @@
 
 #include <kdatetime.h>
 #include "testduration.h"
-#include "testduration.moc"
 
 QTEST_KDEMAIN( DurationTest, NoGUI )
 

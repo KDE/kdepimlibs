@@ -172,4 +172,4 @@ void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QP
   delete menu;
 }
 
-#include "transportmanagementwidget.moc"
+#include "moc_transportmanagementwidget.cpp"

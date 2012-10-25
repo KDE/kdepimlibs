@@ -107,4 +107,3 @@ bool SendmailJob::doKill()
   return true;
 }
 
-#include "sendmailjob.moc"

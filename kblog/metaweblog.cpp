@@ -329,4 +329,4 @@ QString MetaWeblogPrivate::getCallFromFunction( FunctionToCall type )
     default: return QString();
   }
 }
-#include "metaweblog.moc"
+#include "moc_metaweblog.cpp"
