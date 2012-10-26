@@ -41,7 +41,7 @@ endif()
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" TRUE)
-cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" TRUE)
+cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
 cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" OFF "_default_mobile_ui" ON)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 
