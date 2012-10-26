@@ -618,4 +618,4 @@ QList< ServerTest::Capability > ServerTest::capabilities() const
   return d->capabilityResults.toList();
 }
 
-#include "servertest.moc"
+#include "moc_servertest.cpp"

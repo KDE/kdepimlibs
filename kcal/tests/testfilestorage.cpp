@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testfilestorage.h"
-#include "testfilestorage.moc"
 
 QTEST_KDEMAIN( FileStorageTest, NoGUI )
 

@@ -163,4 +163,3 @@ void HeaderFactoryTest::testErrors()
   QVERIFY( ret == false );
 }
 
-#include "headerfactorytest.moc"

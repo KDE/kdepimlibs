@@ -42,7 +42,6 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
-#include "resourcecached.moc"
 
 using namespace KCal;
 

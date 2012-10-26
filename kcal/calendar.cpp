@@ -1395,4 +1395,3 @@ void Calendar::appendRecurringAlarms( Alarm::List &alarms,
   }
 }
 
-#include "calendar.moc"

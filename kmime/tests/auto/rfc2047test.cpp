@@ -19,7 +19,6 @@
 #include <qtest_kde.h>
 
 #include "rfc2047test.h"
-#include "rfc2047test.moc"
 
 #include <kmime_util.h>
 using namespace KMime;

@@ -18,7 +18,6 @@
 */
 
 #include "messagetest.h"
-#include "messagetest.moc"
 #include <qtest_kde.h>
 #include <kdebug.h>
 

@@ -23,7 +23,6 @@
 #include <qtest_kde.h>
 
 #include "utiltest.h"
-#include "utiltest.moc"
 
 #include <kmime_util.h>
 #include <kmime_message.h>

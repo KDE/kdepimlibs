@@ -265,7 +265,7 @@ void ImageWidget::changeImage()
     return;
   }
 
-  const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
+  const KUrl url = KFileDialog::getOpenUrl( QUrl(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
     bool ok = false;
     const QImage image = imageLoader()->loadImage( url, &ok );
@@ -301,4 +301,3 @@ ImageLoader* ImageWidget::imageLoader()
   return mImageLoader;
 }
 
-#include "imagewidget.moc"

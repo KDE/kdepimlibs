@@ -28,7 +28,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "resourcecalendar.moc"
 
 using namespace KCal;
 

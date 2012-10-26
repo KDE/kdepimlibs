@@ -35,7 +35,6 @@
 
 #include <typeinfo>
 
-#include "resourcelocaldirconfig.moc"
 
 using namespace KCal;
 

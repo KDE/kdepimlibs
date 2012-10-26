@@ -46,4 +46,3 @@ void ConfigWidget::setInEditMode( bool )
 {
 }
 
-#include "configwidget.moc"

@@ -397,4 +397,4 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   }
 }
 
-#include "wordpressbuggy.moc"
+#include "moc_wordpressbuggy.cpp"

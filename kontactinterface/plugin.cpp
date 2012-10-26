@@ -30,6 +30,7 @@
 #include <kxmlguifactory.h>
 #include <kaboutdata.h>
 #include <kglobal.h>
+#include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
@@ -410,6 +411,6 @@ void Plugin::virtual_hook( int, void * )
   //BASE::virtual_hook( id, data );
 }
 
-#include "plugin.moc"
+#include "moc_plugin.cpp"
 
 // vim: sw=2 et sts=2 tw=80

@@ -18,7 +18,6 @@
   Boston, MA 02110-1301, USA.
 */
 #include "testjournal.h"
-#include "testjournal.moc"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( JournalTest, NoGUI )

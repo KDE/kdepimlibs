@@ -68,4 +68,3 @@ void KCMKResources::defaults()
   mConfigPage->defaults();
 }
 
-#include "kcmkresources.moc"

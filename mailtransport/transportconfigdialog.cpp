@@ -98,4 +98,4 @@ TransportConfigDialog::~TransportConfigDialog()
   delete d;
 }
 
-#include "transportconfigdialog.moc"
+#include "moc_transportconfigdialog.cpp"

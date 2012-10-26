@@ -18,7 +18,6 @@
   Boston, MA 02110-1301, USA.
 */
 #include "testtodo.h"
-#include "testtodo.moc"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( TodoTest, NoGUI )

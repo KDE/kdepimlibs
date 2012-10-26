@@ -633,4 +633,4 @@ QString SmtpSession::errorMessage() const
   return d->errorMessage;
 }
 
-#include "smtpsession.moc"
+#include "moc_smtpsession.cpp"

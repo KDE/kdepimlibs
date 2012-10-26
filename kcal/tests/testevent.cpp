@@ -18,7 +18,6 @@
   Boston, MA 02110-1301, USA.
 */
 #include "testevent.h"
-#include "testevent.moc"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( EventTest, NoGUI )

@@ -150,4 +150,4 @@ void AddTransportDialog::accept()
   }
 }
 
-#include "addtransportdialog.moc"
+#include "moc_addtransportdialog.cpp"

@@ -70,4 +70,3 @@ void SendmailConfigWidget::init()
   }
 }
 
-#include "sendmailconfigwidget.moc"

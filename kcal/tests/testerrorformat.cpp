@@ -20,7 +20,6 @@
 #include <qtest_kde.h>
 
 #include "testerrorformat.h"
-#include "testerrorformat.moc"
 
 QTEST_KDEMAIN( ErrorFormatTest, NoGUI )
 

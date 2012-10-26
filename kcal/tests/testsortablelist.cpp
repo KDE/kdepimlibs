@@ -24,7 +24,6 @@
 #include <qtest_kde.h>
 
 #include "testsortablelist.h"
-#include "testsortablelist.moc"
 
 QTEST_KDEMAIN( SortableListTest, NoGUI )
 

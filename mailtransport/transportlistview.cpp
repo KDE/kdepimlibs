@@ -112,4 +112,3 @@ void TransportListView::fillTransportList()
   }
 }
 
-#include "transportlistview.moc"

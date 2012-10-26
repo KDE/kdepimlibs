@@ -13,7 +13,7 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 ############### search packages used by KDE ###############
 
-# cmake would not find kde for xcompile if that is not set 
+# cmake would not find kde for xcompile if that is not set
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif()
@@ -25,6 +25,8 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
 
+# Used by options
+include(CMakeDependentOption)
 
 ############### Desktop vs. Mobile options ##############
 
@@ -38,9 +40,9 @@ endif()
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
-option(KDEPIM_NO_KCAL "Build without legacy KCal." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
+cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" OFF "_default_mobile_ui" ON)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 
 ############### Load the CTest options ###############
