@@ -18,9 +18,9 @@ if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif()
 
-set (QT_MIN_VERSION "4.7.0")
+set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-find_package(KDE4 4.7.0 REQUIRED)
+find_package(KDE4 4.9.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
@@ -40,9 +40,9 @@ endif()
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
-cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." FALSE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
-cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" OFF "_default_mobile_ui" ON)
+cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" TRUE "_default_mobile_ui" FALSE)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 
 ############### Load the CTest options ###############
@@ -296,3 +296,4 @@ install(EXPORT kdepimlibsLibraryTargets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+
