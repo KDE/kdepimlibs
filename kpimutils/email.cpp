@@ -625,11 +625,12 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
     }
   }
 
-  QString addrRx; 
-     // ="[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@";
+  QString addrRx;
 
   if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
     addrRx = "\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@";
+  } else {
+    addrRx = "[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@";
   }
   if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
     addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
