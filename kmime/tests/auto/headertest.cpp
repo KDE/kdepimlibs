@@ -1020,4 +1020,3 @@ void HeaderTest::testBug271192_data()
   QTest::newRow( "LastName, Firstname" ) << QString::fromUtf8( "König, Интернет-компания" ) << true;
 }
 
-#include "headertest.moc"

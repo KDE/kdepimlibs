@@ -7,24 +7,26 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 9)
-set(KDEPIMLIBS_VERSION_PATCH 59)
+set(KDEPIMLIBS_VERSION_PATCH 80)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
 ############### search packages used by KDE ###############
 
-# cmake would not find kde for xcompile if that is not set 
+# cmake would not find kde for xcompile if that is not set
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif()
 
-set (QT_MIN_VERSION "4.7.0")
+set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-find_package(KDE4 4.7.0 REQUIRED)
+find_package(KDE4 4.9.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
 
+# Used by options
+include(CMakeDependentOption)
 
 ############### Desktop vs. Mobile options ##############
 
@@ -38,9 +40,9 @@ endif()
 ############### Build Options ###############
 
 option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
-option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
-option(KDEPIM_NO_KCAL "Build without legacy KCal." ${KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED})
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" ${_default_mobile_ui})
+cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
+cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" TRUE "_default_mobile_ui" FALSE)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
 
@@ -81,7 +83,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.8.0")
+  set(Akonadi_MIN_VERSION "1.8.51")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
 
@@ -294,3 +296,4 @@ install(EXPORT kdepimlibsLibraryTargets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake "\n message(FATAL_ERROR \"For using this version of kdepimlibs (${KDEPIMLIBS_VERSION}) you need a newer version of kdelibs, please update.\")\n")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPimLibsDependencies.cmake
         DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+

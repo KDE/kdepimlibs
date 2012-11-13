@@ -88,4 +88,3 @@ void ContentIndexTest::testContent( )
   QCOMPARE( c1->indexForContent( (Content*)0 ), ContentIndex() );
 }
 
-#include "contentindextest.moc"

@@ -164,4 +164,3 @@ void ConfigDialog::accept()
   KDialog::accept();
 }
 
-#include "configdialog.moc"

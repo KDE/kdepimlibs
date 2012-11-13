@@ -54,7 +54,6 @@
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>
 
-#include "resourcelocal.moc"
 
 using namespace KCal;
 

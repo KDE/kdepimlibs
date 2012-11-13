@@ -474,4 +474,3 @@ QString ManagerImpl::defaultConfigFile( const QString &family )
                                      QString( "kresources/%1/stdrc" ).arg( family ) );
 }
 
-#include "managerimpl.moc"

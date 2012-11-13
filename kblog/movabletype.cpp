@@ -585,4 +585,4 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
   return true;
 }
 
-#include "movabletype.moc"
+#include "moc_movabletype.cpp"

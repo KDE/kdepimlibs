@@ -451,7 +451,7 @@ QString LinkLocator::highlightedText()
   }
 
   const QChar ch = mText[mPos];
-  if ( ch != '/' && ch != '*' && ch != '_' ) {
+  if ( ch != '/' && ch != '*' && ch != '_' && ch != '-' ) {
     return QString();
   }
 
@@ -472,6 +472,8 @@ QString LinkLocator::highlightedText()
       return "<u>" + re.cap( 1 ) + "</u>";
     case '/':
       return "<i>" + re.cap( 1 ) + "</i>";
+    case '-':
+      return "<strike>" + re.cap( 1 ) + "</strike>";
     }
   }
   return QString();

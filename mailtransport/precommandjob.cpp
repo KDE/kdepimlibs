@@ -112,4 +112,4 @@ void PreCommandJobPrivate::slotFinished( int exitCode, QProcess::ExitStatus exit
   q->emitResult();
 }
 
-#include "precommandjob.moc"
+#include "moc_precommandjob.cpp"

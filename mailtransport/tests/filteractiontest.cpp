@@ -203,4 +203,3 @@ Item FilterActionTest::createItem( const Collection &col, bool accept )
   return cjob->item();
 }
 
-#include "filteractiontest.moc"

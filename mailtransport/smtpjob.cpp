@@ -362,4 +362,4 @@ void SmtpJob::slaveError( KIO::Slave *slave, int errorCode, const QString &error
   }
 }
 
-#include "smtpjob.moc"
+#include "moc_smtpjob.cpp"

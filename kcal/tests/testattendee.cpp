@@ -20,7 +20,6 @@
 #include <qtest_kde.h>
 
 #include "testattendee.h"
-#include "testattendee.moc"
 
 QTEST_KDEMAIN( AttendeeTest, NoGUI )
 

@@ -235,4 +235,4 @@ void MessageQueueJob::slotResult( KJob *job )
   }
 }
 
-#include "messagequeuejob.moc"
+#include "moc_messagequeuejob.cpp"

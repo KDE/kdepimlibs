@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testperiod.h"
-#include "testperiod.moc"
 
 QTEST_KDEMAIN( PeriodTest, NoGUI )
 

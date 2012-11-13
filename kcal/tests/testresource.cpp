@@ -259,4 +259,3 @@ void TestResource::cleanup()
 
 }
 
-#include "testresource.moc"

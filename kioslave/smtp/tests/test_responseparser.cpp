@@ -102,5 +102,4 @@ void ResponseParserTest::testResponseParser()
   QVERIFY( !r.isWellFormed() );
 }
 
-#include "test_responseparser.moc"
 #include "../response.cpp"

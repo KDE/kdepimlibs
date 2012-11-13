@@ -20,7 +20,6 @@
 */
 
 #include "idmappertest.h"
-#include "idmappertest.moc"
 
 #include "kresources/idmapper.h"
 

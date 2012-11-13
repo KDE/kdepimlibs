@@ -19,7 +19,6 @@
 #include <qtest_kde.h>
 
 #include "rfc2231test.h"
-#include "rfc2231test.moc"
 
 #include <kmime_util.h>
 #include <KDebug>

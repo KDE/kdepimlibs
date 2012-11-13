@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include "testclient.h"
-#include "testclient.moc"
 
 QTEST_KDEMAIN( TestClient, NoGUI )
 

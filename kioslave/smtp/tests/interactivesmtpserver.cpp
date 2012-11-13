@@ -202,4 +202,3 @@ void InteractiveSMTPServerWindow::slotCloseConnection()
   mSocket->close();
 }
 
-#include "interactivesmtpserver.moc"

@@ -232,4 +232,3 @@ QObject *PluginFactoryBase::createObject( QObject *parent,
   return 0;
 }
 
-#include "resource.moc"

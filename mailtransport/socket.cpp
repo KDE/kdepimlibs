@@ -227,4 +227,4 @@ void Socket::setSecure( bool what )
   d->secure = what;
 }
 
-#include "socket.moc"
+#include "moc_socket.cpp"

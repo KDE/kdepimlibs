@@ -358,4 +358,3 @@ void SMTPConfigWidget::encryptionChanged( int enc )
   ensureValidAuthSelection();
 }
 
-#include "smtpconfigwidget.moc"

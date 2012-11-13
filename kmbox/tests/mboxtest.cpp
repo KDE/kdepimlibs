@@ -18,7 +18,6 @@
 
 
 #include "mboxtest.h"
-#include "mboxtest.moc"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>

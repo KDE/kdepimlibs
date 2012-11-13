@@ -23,7 +23,6 @@
 #include <QStringList>
 
 #include "testcalfilter.h"
-#include "testcalfilter.moc"
 
 QTEST_KDEMAIN( CalFilterTest, NoGUI )
 

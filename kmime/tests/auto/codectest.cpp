@@ -100,4 +100,3 @@ void CodecTest::testCodecs()
   QCOMPARE( result, expResult );
 }
 
-#include "codectest.moc"

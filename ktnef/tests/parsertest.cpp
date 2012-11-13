@@ -18,7 +18,6 @@
 */
 
 #include "parsertest.h"
-#include "parsertest.moc"
 
 #include "config-ktnef-tests.h"
 

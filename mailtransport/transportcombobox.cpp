@@ -93,4 +93,3 @@ void TransportComboBox::fillComboBox()
   }
 }
 
-#include "transportcombobox.moc"

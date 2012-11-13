@@ -793,4 +793,4 @@ void TransportManagerPrivate::jobResult( KJob *job )
   walletQueue.removeAll( static_cast<TransportJob*>( job ) );
 }
 
-#include "transportmanager.moc"
+#include "moc_transportmanager.cpp"

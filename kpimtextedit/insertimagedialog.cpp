@@ -37,7 +37,7 @@ class InsertImageDialogPrivate
 {
 public:
   InsertImageDialogPrivate(InsertImageDialog *qq)
-    :q( qq )
+    :imageRatio(-1), q( qq )
   {
     q->setCaption( i18n( "Insert Image" ) );
     q->setButtons( KDialog::Ok|KDialog::Cancel );
@@ -208,4 +208,4 @@ bool InsertImageDialog::keepOriginalSize() const
 
 }
 
-#include "insertimagedialog.moc"
+#include "moc_insertimagedialog.cpp"

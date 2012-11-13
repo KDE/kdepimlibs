@@ -1003,4 +1003,4 @@ void GDataPrivate::slotRemoveComment( KJob *job )
   emit q->removedComment( post, comment );
 }
 
-#include "gdata.moc"
+#include "moc_gdata.cpp"

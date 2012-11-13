@@ -174,4 +174,3 @@ void MessageQueuer::jobInfoMessage( KJob *job, const QString &info, const QStrin
   kDebug() << info2;
 }
 
-#include "queuer.moc"

@@ -145,4 +145,3 @@ BlogPrivate::~BlogPrivate()
   kDebug() << "~BlogPrivate()";
 }
 
-#include "blog.moc"
