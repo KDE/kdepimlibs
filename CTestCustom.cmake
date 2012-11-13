@@ -7,7 +7,7 @@ set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 
 # Warnings that will be ignored
 set(CTEST_CUSTOM_WARNING_EXCEPTION
-  
+  ${CTEST_CUSTOM_WARNING_EXCEPTION}
   "kio/connection.h"
   "temporary since Dec 2000"
   "/kcal/versit/"
@@ -21,7 +21,7 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
 
 # Errors that will be ignored
 set(CTEST_CUSTOM_ERROR_EXCEPTION
-  
+  ${CTEST_CUSTOM_ERROR_EXCEPTION}
   "ICECC"
   "Segmentation fault"
   "GConf Error"
