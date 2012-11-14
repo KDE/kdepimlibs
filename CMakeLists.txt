@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 9)
-set(KDEPIMLIBS_VERSION_PATCH 62)
+set(KDEPIMLIBS_VERSION_PATCH 80)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -44,6 +44,7 @@ cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" TRUE "KDE_PLAT
 cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
 cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" TRUE "_default_mobile_ui" FALSE)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
+#option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
 
 ############### Load the CTest options ###############
 # Setting DART_TESTING_TIMEOUT has no effect on the tests timeout,
