@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2011 Sérgio Martins <iamsergio@gmail.com>
+   Copyright (C) 2011-2012 Sérgio Martins <iamsergio@gmail.com>
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -55,8 +55,8 @@ void ETMCalendarPrivate::init()
 {
   Akonadi::Session *session = new Akonadi::Session( "ETMCalendar", q );
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( q );
-  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>) ),
-           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>) ) );
+  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
 
   Akonadi::ItemFetchScope scope;
   scope.fetchFullPayload( true );

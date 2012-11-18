@@ -848,8 +848,8 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     d->mDeletedItemIds.remove( 0, 50 );
 
   // QueuedConnection because of possible sync exec calls.
-  connect( deleteJob, SIGNAL(result(KJob *)),
-           d, SLOT(handleDeleteJobResult(KJob *)), Qt::QueuedConnection );
+  connect( deleteJob, SIGNAL(result(KJob*)),
+           d, SLOT(handleDeleteJobResult(KJob*)), Qt::QueuedConnection );
 
   return changeId;
 }
@@ -981,8 +981,8 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
 
     mModificationsInProgress[newItem.id()] = change;
     // QueuedConnection because of possible sync exec calls.
-    connect( modifyJob, SIGNAL(result(KJob *)),
-             SLOT(handleModifyJobResult(KJob *)), Qt::QueuedConnection );
+    connect( modifyJob, SIGNAL(result(KJob*)),
+             SLOT(handleModifyJobResult(KJob*)), Qt::QueuedConnection );
   }
 }
 
@@ -1132,8 +1132,8 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
       errorString = i18n( "Duplicate item id in a group operation");
       break;
     case IncidenceChanger::ResultCodeRolledback:
-      errorString = i18n( "One change belonging to a group of changes failed."
-                          "All changes are being rolledback." );
+      errorString = i18n( "One change belonging to a group of changes failed. "
+                          "All changes are being rolled back." );
       break;
     default:
       Q_ASSERT( false );
