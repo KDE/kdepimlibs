@@ -1,6 +1,8 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
+  based on code from qt-labs-graphics-dojo/htmleditor/highlighter.*
+
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
   the Free Software Foundation; either version 2 of the License, or (at your
@@ -18,46 +20,33 @@
 
 */
 
-#ifndef TABLEFORMATDIALOG_H
-#define TABLEFORMATDIALOG_H
+#ifndef HTMLHIGHLIGHTER_H
+#define HTMLHIGHLIGHTER_H
+
 #include "kpimtextedit_export.h"
+#include <QSyntaxHighlighter>
 
-#include <KDialog>
-#include <QTextLength>
-
+/*
+ * @since 4.10
+ */
 namespace KPIMTextEdit {
+class HtmlHighlighterPrivate;
 
-class KPIMTEXTEDIT_EXPORT TableFormatDialog : public KDialog
+class KPIMTEXTEDIT_EXPORT HtmlHighlighter : public QSyntaxHighlighter
 {
+    Q_OBJECT
 public:
-  explicit TableFormatDialog(QWidget *parent);
-  ~TableFormatDialog();
+    explicit HtmlHighlighter(QTextDocument *document);
+    ~HtmlHighlighter();
 
-  int columns() const;
-  int rows() const;
-  int border() const;
-
-  void setColumns(int);
-  void setRows(int);
-  void setBorder(int);
-
-  int padding() const;
-  void setPadding(int);
-
-  int spacing() const;
-  void setSpacing(int);
-
-
-  void setAlignment(Qt::Alignment alignment);
-  Qt::Alignment alignment() const;
-
-  QTextLength::Type typeOfLength() const;
-  int length() const;
-
+protected:
+    void highlightBlock(const QString &text);
 
 private:
-  class TableFormatDialogPrivate;
-  TableFormatDialogPrivate *d;
+    friend class HtmlHighlighterPrivate;
+    HtmlHighlighterPrivate * const d;
+
 };
 }
-#endif // TABLEFORMATDIALOG_H
+
+#endif // HTMLHIGHLIGHTER_H
