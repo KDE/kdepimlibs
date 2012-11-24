@@ -1565,20 +1565,25 @@ void EntityTreeModelPrivate::ref( Collection::Id id )
 
 bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
 {
+  // reference counted collections should never be purged
+  // they first have to be deref'ed until they reach 0
   if ( m_monitor->d_ptr->refCountMap.contains( id ) ) {
     return false;
   }
 
+  // if the collection is buffered, keep it
   if ( m_monitor->d_ptr->m_buffer.isBuffered( id ) ) {
     return false;
   }
 
   static const int MAXITEMS = 10000;
 
+  // if we do not exceed the maximum items limit, keep it
   if ( m_items.size() < MAXITEMS ) {
     return false;
   }
 
+  // otherwise we can safely purge this item
   return true;
 }
 
@@ -1614,6 +1619,7 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
   QList<Node *>::iterator startIt = it;
 
+  // figure out how many items we will delete
   int start = *pos;
   for ( ; it != end; ++it ) {
     if ( ( *it )->type != Node::Item ) {
@@ -1622,15 +1628,22 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
     ++( *pos );
   }
-  QList<Node *>::iterator endIt = it;
   it = startIt;
 
   const QModelIndex parentIndex = indexForCollection( collection );
 
   q->beginRemoveRows( parentIndex, start, ( *pos ) - 1 );
+  const int toDelete = (*pos) - start;
+  Q_ASSERT(toDelete > 0);
 
   QList<Node *> &es = m_childEntities[ collection.id() ];
-  while ( it != endIt ) {
+  //NOTE: .erase will invalidate all iterators besides "it"!
+  for(int i = 0; i < toDelete; ++i) {
+    Q_ASSERT(es.count(*it) == 1);
+    // don't keep implicitly shared data alive
+    Q_ASSERT(m_items.contains((*it)->id));
+    m_items.remove((*it)->id);
+    // delete actual node
     delete *it;
     it = es.erase( it );
   }
@@ -1647,12 +1660,14 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
   Q_ASSERT( collection.isValid() );
 
   QList<Node*>::iterator begin = childEntities.begin();
-  const QList<Node*>::iterator end = childEntities.end();
+  QList<Node*>::iterator end = childEntities.end();
 
   int pos = 0;
   while ( ( begin = skipCollections( begin, end, &pos ) ) != end ) {
     begin = removeItems( begin, end, &pos, collection );
+    end = childEntities.end();
   }
+  m_populatedCols.remove(id);
 }
 
 void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIndex &bottom )
