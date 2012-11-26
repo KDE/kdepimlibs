@@ -1,23 +1,23 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+  Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
-    Based on KMail code by:
-    Copyright (C) 2001-2003 Marc Mutz <mutz@kde.org>
+  Based on KMail code by:
+  Copyright (C) 2001-2003 Marc Mutz <mutz@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "transportmanagementwidget.h"
@@ -46,7 +46,7 @@ class TransportManagementWidget::Private
     void editClicked();
     void addClicked();
     void updateButtonState();
-    void slotCustomContextMenuRequested(const QPoint&);
+    void slotCustomContextMenuRequested( const QPoint & );
 };
 
 TransportManagementWidget::Private::Private( TransportManagementWidget *parent )
@@ -71,7 +71,8 @@ TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   connect( d->ui.renameButton, SIGNAL(clicked()), SLOT(renameClicked()) );
   connect( d->ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
   connect( d->ui.defaultButton, SIGNAL(clicked()), SLOT(defaultClicked()) );
-  connect( d->ui.transportList, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotCustomContextMenuRequested(QPoint)) );
+  connect( d->ui.transportList, SIGNAL(customContextMenuRequested(QPoint)),
+           SLOT(slotCustomContextMenuRequested(QPoint)) );
 }
 
 TransportManagementWidget::~TransportManagementWidget()
@@ -154,7 +155,7 @@ void TransportManagementWidget::Private::defaultClicked()
         ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt() );
 }
 
-void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QPoint& pos)
+void TransportManagementWidget::Private::slotCustomContextMenuRequested( const QPoint &pos )
 {
   KMenu *menu = new KMenu( q );
   menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
@@ -168,7 +169,7 @@ void TransportManagementWidget::Private::slotCustomContextMenuRequested(const QP
        menu->addAction( i18n( "Set as Default" ), q, SLOT(defaultClicked()) );
     }
   }
-  menu->exec( ui.transportList->viewport()->mapToGlobal( pos ));
+  menu->exec( ui.transportList->viewport()->mapToGlobal( pos ) );
   delete menu;
 }
 
