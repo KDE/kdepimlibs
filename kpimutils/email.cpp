@@ -410,7 +410,6 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
               return MissingLocalPart;
             } else if ( index == strlen-1 ) {
               return MissingDomainPart;
-              break;
             }
           } else if ( inQuotedString ) {
             --atCount;

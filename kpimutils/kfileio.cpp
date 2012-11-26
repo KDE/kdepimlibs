@@ -78,7 +78,7 @@ QByteArray kFileToByteArray( const QString &aFileName, bool aEnsureNL,
     }
     return QByteArray();
   }
-  if ( len <= 0 ) {
+  if ( len == 0 ) {
     return QByteArray();
   }
 
