@@ -698,7 +698,7 @@ void LDAPProtocol::listDir( const KUrl &_url )
   unsigned long total=0;
   QStringList att,saveatt;
   LdapUrl usrc(_url),usrc2;
-  bool critical;
+  bool critical = true;
   bool isSub = ( usrc.extension( "x-dir", critical ) == "sub" );
 
   kDebug(7125) << "listDir(" << _url << ")";
