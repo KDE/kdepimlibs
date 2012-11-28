@@ -100,12 +100,15 @@ void TransportListView::fillTransportList()
   foreach ( Transport *t, TransportManager::self()->transports() ) {
     QTreeWidgetItem *item = new QTreeWidgetItem( this );
     item->setData( 0, Qt::UserRole, t->id() );
-    item->setText( 0, t->name() );
-    QString type = t->transportType().name();
+    QString name = t->name();
     if ( TransportManager::self()->defaultTransportId() == t->id() ) {
-      type += i18nc( "@label the default mail transport", " (Default)" );
+      name += i18nc( "@label the default mail transport", " (Default)" );
+      QFont font(item->font(0));
+      font.setBold(true);
+      item->setFont(0, font);
     }
-    item->setText( 1, type );
+    item->setText( 0, name );
+    item->setText( 1, t->transportType().name() );
     if ( t->id() == selected ) {
       setCurrentItem( item );
     }
