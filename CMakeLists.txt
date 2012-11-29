@@ -24,6 +24,7 @@ find_package(KDE4 4.9.0 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
+include(FeatureSummary)
 
 # Used by options
 include(CMakeDependentOption)
@@ -70,9 +71,7 @@ if (WIN32)
 else()
   find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
 endif()
-macro_log_feature(Boost_FOUND "Boost C++ Libraries" "Required by core components" "http://www.boost.org" TRUE "${Boost_MINIMUM_VERSION}" "Boost must include the boost-graph library")
-
-
+set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost must include the boost-graph library")
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
 find_package(Gpgme REQUIRED)
@@ -85,27 +84,29 @@ if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
   set(Akonadi_MIN_VERSION "1.8.51")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
+  set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 
   find_package(Sasl2)
-  macro_log_feature(SASL2_FOUND "cyrus-sasl" "Login authentication for IMAP and Sieve" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "")
+  set_package_properties(Sasl2 PROPERTIES DESCRIPTION "cyrus-sasl" URL "http://asg.web.cmu.edu/sasl/sasl-library.html" TYPE REQUIRED PURPOSE "Login authentication for IMAP and Sieve")
+
   include (ConfigureChecks.cmake)
 
   set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
   find_package(SharedMimeInfo)
-  macro_log_feature(SHARED_MIME_INFO_FOUND "shared-mime-info" "Information about filetypes" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "")
+  set_package_properties(SharedMimeInfo PROPERTIES DESCRIPTION "shared-mime-info" URL "http://freedesktop.org/wiki/Software/shared-mime-info" TYPE REQUIRED PURPOSE "Information about filetypes")
+
 
   set(SDO_MIN_VERSION 0.10)
   set(SOPRANO_MIN_VERSION 2.7.56)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
-  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Ontology information for use with Nepomuk" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "")
+  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
 
   find_package(Soprano)
   if (NOT WINCE)
-    macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "")
+    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
   else()
-    macro_log_feature(Soprano_FOUND "Soprano" "Storage of semantic data" "http://soprano.sourceforge.net" FALSE "${SOPRANO_MIN_VERSION}" "")
+    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE OPTIONAL PURPOSE "Storage of semantic data")
   endif()
   if (Soprano_FOUND AND NOT WINCE)
   include(SopranoAddOntology)
@@ -113,17 +114,17 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(Nepomuk)
   if (WINCE)
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" FALSE "" "STRONGLY RECOMMENDED: Nepomuk is part of kdelibs")
+    set_package_properties(Nepomuk PROPERTIES DESCRIPTION "Nepomuk" URL "http://soprano.sourceforge.net" TYPE OPTIONAL PURPOSE "Support for the semantic desktop, including indexing of PIM data")
   else()
-    macro_log_feature(Nepomuk_FOUND "Nepomuk" "Support for the semantic desktop, including indexing of PIM data" "http://www.kde.org" TRUE "" "STRONGLY RECOMMENDED: Nepomuk is part of kdelibs")
+    set_package_properties(Nepomuk PROPERTIES DESCRIPTION "Nepomuk" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Support for the semantic desktop, including indexing of PIM data")
   endif()
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)
-  macro_log_feature(LIBICAL_FOUND "libical" "Calendar support" "http://sourceforge.net/projects/freeassociation" TRUE "${LIBICAL_MIN_VERSION}" "Needed by the kcal and kcalcore libraries")
+  set_package_properties(Libical PROPERTIES DESCRIPTION "libical" URL "http://sourceforge.net/projects/freeassociation" TYPE REQUIRED PURPOSE "Calendar support")
 
   find_package(QJSON)
-  macro_log_feature(QJSON_FOUND "QJSON" "Qt library for handling JSON data" "http://qjson.sourceforge.net/" TRUE)
+  set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
 
 endif()
 
@@ -208,8 +209,7 @@ endif()
 macro_optional_add_subdirectory(doc)
 
 # All done, let's display what we found...
-macro_display_feature_log()
-
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 ############### Here we install some extra stuff  ###############
 
