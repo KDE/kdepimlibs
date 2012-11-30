@@ -384,15 +384,7 @@ if ( NOT Gpgme_FIND_QUIETLY )
     set( _gpgme_homepage "http://www.gnupg.org/related_software/gpgme" )
   endif()
 
-  macro_log_feature(
-    GPGME_FOUND
-    "gpgme"
-    "GNU Privacy Guard (GPG/PGP) support"
-    ${_gpgme_homepage}
-    ${_req}
-    "${_GPGME_MIN_VERSION} or greater"
-    "Necessary to compile many PIM applications, including KMail"
-  )
+  set_package_properties(Gpgme PROPERTIES DESCRIPTION "GNU Privacy Guard (GPG/PGP) support" URL ${_gpgme_homepage} TYPE REQUIRED PURPOSE "Necessary to compile many PIM applications, including KMail")
 
 else()
 
