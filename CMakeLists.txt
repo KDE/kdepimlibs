@@ -66,11 +66,7 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCu
 ############### Find the stuff we need ###############
 
 set(Boost_MINIMUM_VERSION "1.34.0")
-if (WIN32)
-  find_package(Boost ${Boost_MINIMUM_VERSION}) # (jstaniek) temp. fix unless we have graph library, not just headers
-else()
-  find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
-endif()
+find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
 set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost must include the boost-graph library")
 
 #FindGpgme.cmake already handles the log message but we must ensure it is required.
