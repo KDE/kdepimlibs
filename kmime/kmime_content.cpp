@@ -367,7 +367,7 @@ QByteArray Content::encodedBody()
     if ( !d->epilogue.isEmpty() ) {
       e += d->epilogue;
     }
-  };
+  }
   return e;
 }
 
@@ -383,7 +383,8 @@ QByteArray Content::decodedContent()
 
   if ( ec->decoded() ) {
     ret = d_ptr->body;
-    removeTrailingNewline = true;
+    //Laurent Fix bug #311267
+    //removeTrailingNewline = true;
   } else {
     switch ( ec->encoding() ) {
     case Headers::CEbase64 :
@@ -849,7 +850,6 @@ bool Content::decodeText()
   default :
     break;
   }
-
   enc->setDecoded( true );
   return true;
 }
