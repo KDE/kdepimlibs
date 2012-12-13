@@ -395,9 +395,9 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
   // Loop over all characters of the string.
   // When encountering a split character, RFC-2047-encode the word before it, and add it to the result.
   while ( pos < length ) {
-    //qDebug() << "Pos:" << pos << "Result:" << result << "Char:" << ch->toAscii();
+    //qDebug() << "Pos:" << pos << "Result:" << result << "Char:" << ch->toLatin1();
     const bool isAscii = ch->unicode() < 127;
-    const bool isReserved = ( strchr( reservedCharacters, ch->toAscii() ) != 0 );
+    const bool isReserved = ( strchr( reservedCharacters, ch->toLatin1() ) != 0 );
     if ( isAscii && isReserved ) {
       const int wordSize = pos - wordStart;
       if ( wordSize > 0 ) {
@@ -405,7 +405,7 @@ QByteArray encodeRFC2047Sentence(const QString& src, const QByteArray& charset )
         result += encodeRFC2047String( word, charset );
       }
 
-      result += ch->toAscii();
+      result += ch->toLatin1();
       wordStart = pos + 1;
     }
     ch++;
@@ -434,7 +434,7 @@ QByteArray encodeRFC2231String( const QString& str, const QByteArray& charset )
   const QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( charset ) );
   QByteArray latin;
   if ( charset == "us-ascii" ) {
-    latin = str.toAscii();
+    latin = str.toLatin1();
   } else if ( codec ) {
     latin = codec->fromUnicode( str );
   } else {

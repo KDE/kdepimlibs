@@ -374,9 +374,9 @@ void TestMovableType::testNetwork()
   BlogMedia *m = new BlogMedia();
   m->setName( "testMovableType.txt" );
   m->setMimetype( "text/plain" );
-  m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
+  m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toLatin1() );
   QVERIFY( m->mimetype() == "text/plain" );
-  QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toAscii() );
+  QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toLatin1() );
   QVERIFY( m->name() == QString( "testMovableType.txt" ) );
 
   connect( b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
