@@ -144,7 +144,7 @@ void MessageTest::testWillsAndTillsCrash()
 void MessageTest::testDavidsParseCrash()
 {
   KMime::Message::Ptr mail = readAndParseMail( QLatin1String( "dfaure-crash.mbox" ) );
-  QCOMPARE( mail->to()->asUnicodeString().toAscii().data(), "frank@domain.com" );
+  QCOMPARE( mail->to()->asUnicodeString().toLatin1().data(), "frank@domain.com" );
 }
 
 void MessageTest::testHeaderFieldWithoutSpace()
@@ -157,7 +157,7 @@ void MessageTest::testHeaderFieldWithoutSpace()
                  "Subject: Test\n"
                  "X-Mailer:";
   KMime::Message msg;
-  msg.setContent( mail.toAscii() );
+  msg.setContent( mail.toLatin1() );
   msg.parse();
 
   QCOMPARE( msg.to()->asUnicodeString(), QString( "heinz@test.de" ) );
@@ -179,7 +179,7 @@ void MessageTest::testWronglyFoldedHeaders()
                  " test@test.de\n\n"
                  "<Body>";
   KMime::Message msg;
-  msg.setContent( mail.toAscii() );
+  msg.setContent( mail.toLatin1() );
   msg.parse();
 
   QCOMPARE( msg.subject()->asUnicodeString(), QString( "Hello World" ) );
@@ -196,11 +196,11 @@ void MessageTest::missingHeadersTest()
     "To: donaldrumsfeld@whitehouse.org\n"
     "Subject: Cute Kittens\n"
     "\n" + body;
-  msg.setContent( content.toAscii() );
+  msg.setContent( content.toLatin1() );
   msg.parse();
   msg.assemble();
 
-  QCOMPARE( body, QString::fromAscii( msg.body() ) );
+  QCOMPARE( body, QString::fromLatin1( msg.body() ) );
 
   // Now create a new message, based on the content of the first one.
   // The body of the new message should still be the same.
@@ -212,7 +212,7 @@ void MessageTest::missingHeadersTest()
   msg2.parse();
   msg2.assemble();
 
-  QCOMPARE( body, QString::fromAscii( msg2.body() ) );
+  QCOMPARE( body, QString::fromLatin1( msg2.body() ) );
 }
 
 void MessageTest::testBug219749()
@@ -237,7 +237,7 @@ void MessageTest::testBug219749()
       "\n"
       "--0-1804289383-1260384639=:52580--\n";
 
-  msg.setContent( content.toAscii() );
+  msg.setContent( content.toLatin1() );
   msg.parse();
 
   QCOMPARE( msg.contents().size(), 2 );
@@ -459,7 +459,7 @@ void MessageTest::testBug223509()
   QCOMPARE( msg->subject()->as7BitString().data(), "Subject: Blub" );
   QCOMPARE( msg->contents().size(), 0 );
   QCOMPARE( msg->contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
-  QCOMPARE( msg->decodedText().toAscii().data(), "Bla Bla Bla\n" );
+  QCOMPARE( msg->decodedText().toLatin1().data(), "Bla Bla Bla\n" );
 
   // encodedContent() was crashing in this bug because of an invalid assert
   QVERIFY( !msg->encodedContent().isEmpty() );
@@ -473,8 +473,8 @@ void MessageTest::testBug223509()
   QCOMPARE( msg2.contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
 
   QEXPECT_FAIL( "", "KMime adds an additional newline", Continue );
-  QCOMPARE( msg2.decodedText().toAscii().data(), "Bla Bla Bla\n" );
-  QCOMPARE( msg2.decodedText( true, true /* remove newlines at end */ ).toAscii().data(),
+  QCOMPARE( msg2.decodedText().toLatin1().data(), "Bla Bla Bla\n" );
+  QCOMPARE( msg2.decodedText( true, true /* remove newlines at end */ ).toLatin1().data(),
             "Bla Bla Bla" );
 }
 
@@ -496,7 +496,7 @@ void MessageTest::testEncapsulatedMessages()
   QVERIFY( !textContent->isTopLevel() );
   QCOMPARE( textContent->decodedText( true, true ),
             QString( "Hi Hans!\nLook at this interesting mail I forwarded to you!" ) );
-  QCOMPARE( textContent->index().toString().toAscii().data(), "1" );
+  QCOMPARE( textContent->index().toString().toLatin1().data(), "1" );
 
   KMime::Content * messageContent = msg->contents().at( 1 );
   QCOMPARE( messageContent->contentType()->mimeType().data(), "message/rfc822" );
@@ -505,7 +505,7 @@ void MessageTest::testEncapsulatedMessages()
   QVERIFY( messageContent->bodyIsMessage() );
   QVERIFY( messageContent->bodyAsMessage() );
   QVERIFY( !messageContent->isTopLevel() );
-  QCOMPARE( messageContent->index().toString().toAscii().data(), "2" );
+  QCOMPARE( messageContent->index().toString().toLatin1().data(), "2" );
 
   KMime::Message::Ptr encapsulated = messageContent->bodyAsMessage();
   QCOMPARE( encapsulated->contents().size(), 0 );
@@ -520,7 +520,7 @@ void MessageTest::testEncapsulatedMessages()
   QCOMPARE( encapsulated->parent(), messageContent );
   QVERIFY( !encapsulated->isTopLevel() );
   QCOMPARE( encapsulated->topLevel(), msg.get() );
-  QCOMPARE( encapsulated->index().toString().toAscii().data(), "2.1" );
+  QCOMPARE( encapsulated->index().toString().toLatin1().data(), "2.1" );
 
   // Now test some misc functions
   QCOMPARE( msg->storageSize(), msg->head().size() + textContent->storageSize() +

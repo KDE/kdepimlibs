@@ -212,7 +212,7 @@ void ServerTestPrivate::sendInitialCapabilityQuery( MailTransport::Socket *socke
       hostname = QHostInfo::localHostName();
       if ( hostname.isEmpty() ) {
         hostname = QLatin1String( "localhost.invalid" );
-      } else if ( !hostname.contains( QChar::fromAscii( '.' ) ) ) {
+      } else if ( !hostname.contains( QChar::fromLatin1( '.' ) ) ) {
         hostname += QLatin1String( ".localnet" );
       }
     }

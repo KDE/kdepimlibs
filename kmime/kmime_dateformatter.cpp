@@ -184,8 +184,8 @@ QByteArray DateFormatter::zone( time_t t ) const
 
 #else
 
-  QDateTime d1 = QDateTime::fromString( QString::fromAscii( asctime( gmtime( &t ) ) ) );
-  QDateTime d2 = QDateTime::fromString( QString::fromAscii( asctime( localtime( &t ) ) ) );
+  QDateTime d1 = QDateTime::fromString( QString::fromLatin1( asctime( gmtime( &t ) ) ) );
+  QDateTime d2 = QDateTime::fromString( QString::fromLatin1( asctime( localtime( &t ) ) ) );
   int secs = d1.secsTo( d2 );
   int neg = ( secs < 0 ) ? 1 : 0;
   secs = abs( secs );

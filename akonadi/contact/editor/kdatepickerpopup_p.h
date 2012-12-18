@@ -92,6 +92,7 @@ class KDatePickerPopup: public QMenu
     /**
       This signal emits the new date (selected with datepicker or other
       menu-items).
+      @param date changed date
     */
     void dateChanged ( const QDate &date );
 

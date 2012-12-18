@@ -20,12 +20,17 @@
 
 #include "tableformatdialog.h"
 #include "inserttabledialog.h"
+
 #include <KLocale>
 #include <KComboBox>
+#include <KSeparator>
+#include <KColorButton>
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSpinBox>
 #include <QLabel>
+#include <QCheckBox>
 
 using namespace KPIMTextEdit;
 
@@ -42,6 +47,9 @@ public:
     QVBoxLayout *lay = new QVBoxLayout( page );
     tableWidget = new InsertTableWidget;
     lay->addWidget( tableWidget );
+
+    KSeparator *sep = new KSeparator;
+    lay->addWidget( sep );
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *lab = new QLabel( i18n( "Spacing:" ) );
@@ -63,6 +71,9 @@ public:
     hbox->addWidget( lab );
     lay->addLayout( hbox );
 
+    sep = new KSeparator;
+    lay->addWidget( sep );
+
     alignment = new KComboBox;
     alignment->addItem( i18n( "Left" ), Qt::AlignLeft );
     alignment->addItem( i18n( "Right" ), Qt::AlignRight );
@@ -73,9 +84,29 @@ public:
     lab = new QLabel( i18n( "Table Alignment:" ) );
     hbox->addWidget( lab );
     hbox->addWidget( alignment );
+
     lay->addLayout( hbox );
 
+    sep = new KSeparator;
+    lay->addWidget( sep );
+
+    hbox = new QHBoxLayout;
+    useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
+
+    hbox->addWidget( useBackgroundColor );
+    backgroundColor = new KColorButton;
+    backgroundColor->setDefaultColor(Qt::white);
+    hbox->addWidget( backgroundColor );
+    lay->addLayout(hbox);
+
+    sep = new KSeparator;
+    lay->addWidget( sep );
+    backgroundColor->setEnabled(false);
+    q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
+
   }
+  QCheckBox *useBackgroundColor;
+  KColorButton *backgroundColor;
   KComboBox *alignment;
   QSpinBox *spacing;
   QSpinBox *padding;
@@ -163,3 +194,30 @@ int TableFormatDialog::length() const
 {
   return d->tableWidget->length();
 }
+
+void TableFormatDialog::setLength(int val)
+{
+  d->tableWidget->setLength(val);
+}
+
+void TableFormatDialog::setTypeOfLength(QTextLength::Type type)
+{
+    d->tableWidget->setTypeOfLength(type);
+}
+
+QColor TableFormatDialog::tableBackgroundColor() const
+{
+    return d->backgroundColor->color();
+}
+
+void TableFormatDialog::setTableBackgroundColor(const QColor& col)
+{
+    d->backgroundColor->setColor(col);
+    d->useBackgroundColor->setChecked(true);
+}
+
+bool TableFormatDialog::useBackgroundColor() const
+{
+    return d->useBackgroundColor->isChecked();
+}
+

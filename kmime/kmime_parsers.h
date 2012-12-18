@@ -60,7 +60,7 @@ class MultiPart
 class NonMimeParser
 {
   public:
-    NonMimeParser( const QByteArray &src );
+    explicit NonMimeParser( const QByteArray &src );
     virtual ~NonMimeParser() {}
     virtual bool parse() = 0;
     bool isPartial()
@@ -112,7 +112,7 @@ class UUEncoded : public NonMimeParser
 class YENCEncoded : public NonMimeParser
 {
   public:
-    YENCEncoded( const QByteArray &src );
+    explicit YENCEncoded( const QByteArray &src );
 
     virtual bool parse();
     QList<QByteArray> binaryParts()

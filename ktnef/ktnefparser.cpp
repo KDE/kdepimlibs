@@ -908,39 +908,39 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
       case MAPI_TYPE_UINT16:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI short" <<  mapiname.toAscii().data()
+                           << ") MAPI short" <<  mapiname.toLatin1().data()
                            << ":" << hex << mapi.value.toUInt();
         break;
       case MAPI_TYPE_ULONG:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI long" <<  mapiname.toAscii().data()
+                           << ") MAPI long" <<  mapiname.toLatin1().data()
                            << ":" << hex << mapi.value.toUInt();
         break;
       case MAPI_TYPE_BOOLEAN:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI boolean" <<  mapiname.toAscii().data()
+                           << ") MAPI boolean" <<  mapiname.toLatin1().data()
                            << ":" << mapi.value.toBool();
         break;
       case MAPI_TYPE_TIME:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI time" <<  mapiname.toAscii().data()
-                           << ":" << mapi.value.toString().toAscii().data();
+                           << ") MAPI time" <<  mapiname.toLatin1().data()
+                           << ":" << mapi.value.toString().toLatin1().data();
         break;
       case MAPI_TYPE_USTRING:
       case MAPI_TYPE_STRING8:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI string" <<  mapiname.toAscii().data()
+                           << ") MAPI string" <<  mapiname.toLatin1().data()
                            << ":size=" << mapi.value.toByteArray().size()
                            << mapi.value.toString();
         break;
       case MAPI_TYPE_BINARY:
         kDebug().nospace() << "(tag="
                            << hex << mapi.tag
-                           << ") MAPI binary" <<  mapiname.toAscii().data()
+                           << ") MAPI binary" <<  mapiname.toLatin1().data()
                            << ":size=" << mapi.value.toByteArray().size();
         break;
       }

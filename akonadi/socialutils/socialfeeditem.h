@@ -30,19 +30,7 @@ class KDateTime;
 
 namespace Akonadi {
 
-class SocialFeedItemData;
-
-class LIBAKONADISOCIALUTILS_EXPORT PostReply
-{
-  public:
-    QString userId;
-    QString userName;
-    QString userAvatarUrl;
-    QString replyText;
-    QString replyTime;
-    QString replyId;
-    QString postId;
-};
+class SocialFeedItemPrivate;
 
 /**
  * Class representing one entry in the social feed
@@ -53,6 +41,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     SocialFeedItem();
     SocialFeedItem( const SocialFeedItem &other );
     ~SocialFeedItem();
+    SocialFeedItem &operator=(const SocialFeedItem &other);
 
     /**
      * This returns the service string such as "on Facebook", "on Twitter"
@@ -279,11 +268,19 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
      */
     void setAvatarUrl( const QUrl &url );
 
-    void setPostReplies( const QList<PostReply> &replies );
-    QList<PostReply> postReplies() const;
+    /**
+     * Sets replies/comments for this post
+     * @param replies List of replies
+     */
+    void setPostReplies( const QList<SocialFeedItem> &replies );
+
+    /**
+     * @return List of replies/comments to this post
+     */
+    QList<SocialFeedItem> postReplies() const;
 
   private:
-    QSharedDataPointer<SocialFeedItemData> d;
+    QSharedDataPointer<SocialFeedItemPrivate> d;
 };
 
 }

@@ -562,7 +562,7 @@ void EMailTest::testMailtoUrls()
   QFETCH( QString, input );
   const KUrl url = encodeMailtoUrl( input );
   qDebug() << url;
-  QCOMPARE( url.protocol().toAscii().data(), "mailto" );
+  QCOMPARE( url.protocol().toLatin1().data(), "mailto" );
   QCOMPARE( decodeMailtoUrl( url ), input );
   qDebug() << decodeMailtoUrl( url );
 }

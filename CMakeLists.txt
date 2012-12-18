@@ -6,8 +6,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
-set(KDEPIMLIBS_VERSION_MINOR 9)
-set(KDEPIMLIBS_VERSION_PATCH 90)
+set(KDEPIMLIBS_VERSION_MINOR 10)
+set(KDEPIMLIBS_VERSION_PATCH 60)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -108,12 +108,8 @@ if (NOT KDEPIM_ONLY_KLEO)
   include(SopranoAddOntology)
   endif()
 
-  find_package(Nepomuk)
-  if (WINCE)
-    set_package_properties(Nepomuk PROPERTIES DESCRIPTION "Nepomuk" URL "http://soprano.sourceforge.net" TYPE OPTIONAL PURPOSE "Support for the semantic desktop, including indexing of PIM data")
-  else()
-    set_package_properties(Nepomuk PROPERTIES DESCRIPTION "Nepomuk" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Support for the semantic desktop, including indexing of PIM data")
-  endif()
+  find_package(NepomukCore)
+  set_package_properties(Nepomuk PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE OPTIONAL PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)

@@ -22,9 +22,14 @@
 #include "textedit.h"
 #include "inserttabledialog.h"
 #include "tableformatdialog.h"
+#include "tablecellformatdialog.h"
+
 #include <KActionCollection>
 #include <KLocale>
+
 #include <QTextTable>
+#include <QPointer>
+#include <QDebug>
 
 namespace KPIMTextEdit {
 
@@ -50,7 +55,9 @@ public:
   void _k_slotRemoveColumnBefore();
   void _k_slotRemoveColumnAfter();
   void _k_slotMergeCell();
+  void _k_slotMergeSelectedCells();
   void _k_slotTableFormat();
+  void _k_slotTableCellFormat();
   void _k_slotSplitCell();
   void _k_updateActions(bool forceUpdate = false);
 
@@ -69,9 +76,11 @@ public:
   KAction *actionRemoveColumnAfter;
 
   KAction *actionMergeCell;
+  KAction *actionMergeSelectedCells;
   KAction *actionSplitCell;
 
   KAction *actionTableFormat;
+  KAction *actionTableCellFormat;
 
   KActionCollection *actionCollection;
   TextEdit *textEdit;
@@ -83,7 +92,7 @@ void TableActionMenuPrivate::_k_slotRemoveRowBelow()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.row()<table->rows() - 1 ) {
         table->removeRows( cell.row(), 1 );
       }
@@ -96,7 +105,7 @@ void TableActionMenuPrivate::_k_slotRemoveRowAbove()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.row() >= 1 ) {
         table->removeRows( cell.row() - 1, 1 );
       }
@@ -109,7 +118,7 @@ void TableActionMenuPrivate::_k_slotRemoveColumnBefore()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.column() > 0 ) {
         table->removeColumns( cell.column() - 1, 1 );
       }
@@ -122,7 +131,7 @@ void TableActionMenuPrivate::_k_slotRemoveColumnAfter()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.column()<table->columns() - 1 ) {
         table->removeColumns( cell.column(), 1 );
       }
@@ -135,7 +144,7 @@ void TableActionMenuPrivate::_k_slotInsertRowBelow()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.row()<table->rows() ) {
         table->insertRows( cell.row() + 1, 1 );
       } else {
@@ -150,7 +159,7 @@ void TableActionMenuPrivate::_k_slotInsertRowAbove()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       table->insertRows( cell.row(), 1 );
     }
   }
@@ -161,7 +170,7 @@ void TableActionMenuPrivate::_k_slotInsertColumnBefore()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       table->insertColumns( cell.column(), 1 );
     }
   }
@@ -172,7 +181,7 @@ void TableActionMenuPrivate::_k_slotInsertColumnAfter()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.column()<table->columns() ) {
         table->insertColumns( cell.column() + 1, 1 );
       } else {
@@ -186,7 +195,7 @@ void TableActionMenuPrivate::_k_slotInsertColumnAfter()
 void TableActionMenuPrivate::_k_slotInsertTable()
 {
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
-    InsertTableDialog *dialog = new InsertTableDialog( textEdit );
+    QPointer<InsertTableDialog> dialog = new InsertTableDialog( textEdit );
     if ( dialog->exec() ) {
       QTextCursor cursor = textEdit->textCursor();
       QTextTableFormat tableFormat;
@@ -197,12 +206,13 @@ void TableActionMenuPrivate::_k_slotInsertTable()
       const int length = dialog->length();
 
       for ( int i = 0; i < numberOfColumns; ++i ) {
-          QTextLength textlength( type, length / numberOfColumns );
+          const QTextLength textlength( type, length / numberOfColumns );
           contrains.append( textlength );
       }
       tableFormat.setColumnWidthConstraints( contrains );
-      cursor.insertTable( dialog->rows(), numberOfColumns, tableFormat );
-      textEdit->enableRichTextMode();
+      tableFormat.setAlignment(Qt::AlignLeft);
+      QTextTable *table = cursor.insertTable( dialog->rows(), numberOfColumns);
+      table->setFormat(tableFormat);
     }
     delete dialog;
   }
@@ -213,8 +223,18 @@ void TableActionMenuPrivate::_k_slotMergeCell()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
-      table->mergeCells( cell.row(), cell.column(), 1, 2 );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      table->mergeCells( cell.row(), cell.column(), 1, cell.columnSpan() +1 );
+    }
+  }
+}
+
+void TableActionMenuPrivate::_k_slotMergeSelectedCells()
+{
+  if ( textEdit->textMode() == KRichTextEdit::Rich ) {
+    QTextTable *table = textEdit->textCursor().currentTable();
+    if ( table ) {
+      table->mergeCells( textEdit->textCursor() );
     }
   }
 }
@@ -224,7 +244,7 @@ void TableActionMenuPrivate::_k_slotTableFormat()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      TableFormatDialog *dialog = new TableFormatDialog( textEdit );
+      QPointer<TableFormatDialog> dialog = new TableFormatDialog( textEdit );
       const int numberOfColumn( table->columns() );
       const int numberOfRow( table->rows() );
       dialog->setColumns( numberOfColumn );
@@ -233,10 +253,20 @@ void TableActionMenuPrivate::_k_slotTableFormat()
       dialog->setBorder( tableFormat.border() );
       dialog->setSpacing( tableFormat.cellSpacing() );
       dialog->setPadding( tableFormat.cellPadding() );
+      dialog->setAlignment(tableFormat.alignment());
+      if(tableFormat.hasProperty(QTextFormat::BackgroundBrush)) {
+        dialog->setTableBackgroundColor(tableFormat.background().color());
+      }
+      QVector<QTextLength> contrains = tableFormat.columnWidthConstraints();
+      if(!contrains.isEmpty()) {
+        dialog->setTypeOfLength(contrains.at(0).type());
+        dialog->setLength(contrains.at(0).rawValue()*numberOfColumn);
+      }
+
       if ( dialog->exec() ) {
         const int newNumberOfColumns(dialog->columns());
         if ( ( newNumberOfColumns != numberOfColumn ) || ( dialog->rows() != numberOfRow ) ) {
-           table->resize( dialog->rows(), newNumberOfColumns );
+          table->resize( dialog->rows(), newNumberOfColumns );
         }
         tableFormat.setBorder( dialog->border() );
         tableFormat.setCellPadding( dialog->padding() );
@@ -248,12 +278,48 @@ void TableActionMenuPrivate::_k_slotTableFormat()
         const int length = dialog->length();
 
         for ( int i = 0; i < newNumberOfColumns; ++i ) {
-            QTextLength textlength( type, length / newNumberOfColumns );
-            contrains.append( textlength );
+          QTextLength textlength( type, length / newNumberOfColumns );
+          contrains.append( textlength );
         }
         tableFormat.setColumnWidthConstraints( contrains );
-
+        const QColor tableBackgroundColor = dialog->tableBackgroundColor();
+        if(dialog->useBackgroundColor()) {
+            if(tableBackgroundColor.isValid()) {
+              tableFormat.setBackground(tableBackgroundColor);
+            }
+        } else {
+            tableFormat.clearBackground();
+        }
         table->setFormat( tableFormat );
+      }
+      delete dialog;
+    }
+  }
+}
+
+void TableActionMenuPrivate::_k_slotTableCellFormat()
+{
+  if ( textEdit->textMode() == KRichTextEdit::Rich ) {
+    QTextTable *table = textEdit->textCursor().currentTable();
+    if ( table ) {
+      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      QPointer<TableCellFormatDialog> dialog = new TableCellFormatDialog( textEdit );
+      QTextTableCellFormat format = cell.format().toTableCellFormat();
+      if(format.hasProperty(QTextFormat::BackgroundBrush)) {
+          dialog->setTableCellBackgroundColor(format.background().color());
+      }
+      dialog->setVerticalAlignment(format.verticalAlignment());
+      if(dialog->exec()) {
+          if(dialog->useBackgroundColor()) {
+              const QColor tableCellColor = dialog->tableCellBackgroundColor();
+              if(tableCellColor.isValid()) {
+                  format.setBackground(tableCellColor);
+              }
+          } else {
+              format.clearBackground();
+          }
+          format.setVerticalAlignment(dialog->verticalAlignment());
+          cell.setFormat(format);
       }
       delete dialog;
     }
@@ -265,9 +331,10 @@ void TableActionMenuPrivate::_k_slotSplitCell()
   if ( textEdit->textMode() == KRichTextEdit::Rich ) {
     QTextTable *table = textEdit->textCursor().currentTable();
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
-      if ( cell.columnSpan() > 1 ) {
-        table->splitCell( cell.row(), cell.column(), 1, 1 );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      if ( cell.columnSpan() > 1 || cell.rowSpan() > 1 ) {
+        table->splitCell( cell.row(), cell.column(), qMax(1,cell.rowSpan()-1), qMax(1,cell.columnSpan()-1) );
+        _k_updateActions();
       }
     }
   }
@@ -291,22 +358,26 @@ void TableActionMenuPrivate::_k_updateActions(bool forceUpdate)
     actionRemoveColumnAfter->setEnabled( isTable );
 
     if ( table ) {
-      QTextTableCell cell = table->cellAt( textEdit->textCursor() );
+      const QTextTableCell cell = table->cellAt( textEdit->textCursor() );
       if ( cell.column()>table->columns() - 2 ) {
         actionMergeCell->setEnabled( false );
       } else {
         actionMergeCell->setEnabled( true );
       }
-      if ( cell.columnSpan() > 1 ) {
+      if ( cell.columnSpan() > 1 ||  cell.rowSpan() > 1 ) {
         actionSplitCell->setEnabled( true );
       } else {
         actionSplitCell->setEnabled( false );
       }
+      actionTableCellFormat->setEnabled( true );
+      actionMergeSelectedCells->setEnabled( true );
     } else {
       actionSplitCell->setEnabled( false );
       actionMergeCell->setEnabled( false );
+      actionMergeSelectedCells->setEnabled( false );
     }
     actionTableFormat->setEnabled( isTable );
+    actionTableCellFormat->setEnabled( isTable );
   }
 }
 
@@ -368,11 +439,17 @@ TableActionMenu::TableActionMenu(KActionCollection *ac, TextEdit *textEdit)
     removeMenu->addAction( d->actionRemoveColumnAfter );
     ac->addAction( QLatin1String( "remove_column_after" ), d->actionRemoveColumnAfter );
     connect( d->actionRemoveColumnAfter, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumnAfter()) );
+    addSeparator();
 
     d->actionMergeCell = new KAction( i18n( "Join With Cell to the Right" ), this );
     ac->addAction( QLatin1String( "join_cell_to_the_right" ), d->actionMergeCell );
     connect( d->actionMergeCell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCell()) );
     addAction( d->actionMergeCell );
+
+    d->actionMergeSelectedCells = new KAction( i18n( "Join Selected Cells" ), this );
+    ac->addAction( QLatin1String( "join_cell_selected_cells" ), d->actionMergeSelectedCells );
+    connect( d->actionMergeSelectedCells, SIGNAL(triggered(bool)), SLOT(_k_slotMergeSelectedCells()) );
+    addAction( d->actionMergeSelectedCells );
     addSeparator();
 
     d->actionSplitCell = new KAction( i18n( "Split cells" ), this );
@@ -384,6 +461,12 @@ TableActionMenu::TableActionMenu(KActionCollection *ac, TextEdit *textEdit)
     ac->addAction( QLatin1String( "table_format" ), d->actionTableFormat );
     connect( d->actionTableFormat, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
     addAction( d->actionTableFormat );
+
+    d->actionTableCellFormat = new KAction( i18n( "Table Cell Format..." ), this );
+    ac->addAction( QLatin1String( "table_cell_format" ), d->actionTableCellFormat );
+    connect( d->actionTableCellFormat, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()) );
+    addAction( d->actionTableCellFormat );
+
 
     connect( textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(_k_updateActions()) );
     d->_k_updateActions( true );

@@ -25,8 +25,6 @@
 #include <KDialog>
 #include <QTextLength>
 
-class KComboBox;
-class QSpinBox;
 namespace KPIMTextEdit {
 
 class KPIMTEXTEDIT_EXPORT InsertTableWidget : public QWidget
@@ -44,15 +42,17 @@ public:
   void setBorder(int border);
 
   QTextLength::Type typeOfLength() const;
+  void setTypeOfLength(QTextLength::Type type);
+
   int length() const;
+  void setLength(int);
+
 private Q_SLOTS:
   void slotTypeOfLengthChanged(int);
+
 private:
-  QSpinBox *mColumns;
-  QSpinBox *mRows;
-  QSpinBox *mBorder;
-  QSpinBox *mLength;
-  KComboBox *mTypeOfLength;
+  class InsertTableWidgetPrivate;
+  InsertTableWidgetPrivate * const d;
 };
 
 class KPIMTEXTEDIT_EXPORT InsertTableDialog : public KDialog
@@ -64,13 +64,20 @@ public:
   int rows() const;
   int border() const;
 
+  void setColumns(int col);
+  void setRows(int rows);
+  void setBorder(int border);
+
+
   QTextLength::Type typeOfLength() const;
+  void setTypeOfLength(QTextLength::Type type);
   int length() const;
+  void setLength(int);
 
 
 private:
   class InsertTableDialogPrivate;
-  InsertTableDialogPrivate *d;
+  InsertTableDialogPrivate * const d;
 };
 }
 

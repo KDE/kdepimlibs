@@ -79,7 +79,7 @@ class HeaderFactory
     Headers::Base *createHeader( const QByteArray &type );
 
   private:
-    HeaderFactory( HeaderFactoryPrivate *dd );
+    explicit HeaderFactory( HeaderFactoryPrivate *dd );
     HeaderFactory( const HeaderFactory &other ); // undefined
     HeaderFactory& operator=( const HeaderFactory &other ); // undefined
     ~HeaderFactory();

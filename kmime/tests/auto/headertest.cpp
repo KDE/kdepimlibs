@@ -354,11 +354,11 @@ void HeaderTest::testSingleMailboxHeader()
   QCOMPARE( h->addresses().first(), QByteArray( "firstname.lastname@example.com" ) );
   QCOMPARE( h->displayNames().count(), 1 );
   QCOMPARE( h->displayNames().first(), QString( "Lastname, Firstname" ) );
-  QCOMPARE( h->asUnicodeString().toAscii().data(),
+  QCOMPARE( h->asUnicodeString().toLatin1().data(),
             "Lastname, Firstname <firstname.lastname@example.com>" );
-  QCOMPARE( h->mailboxes().first().prettyAddress().toAscii().data(),
+  QCOMPARE( h->mailboxes().first().prettyAddress().toLatin1().data(),
             "Lastname, Firstname <firstname.lastname@example.com>" );
-  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toAscii().data(),
+  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toLatin1().data(),
             "\"Lastname, Firstname\" <firstname.lastname@example.com>" );
 
   // parse quoted display name with " in it
@@ -366,8 +366,8 @@ void HeaderTest::testSingleMailboxHeader()
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
   QCOMPARE( h->addresses().first().data(), "john.smith@mail.domain" );
-  QCOMPARE( h->displayNames().first().toAscii().data(), "John \"the guru\" Smith" );
-  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toAscii().data(),
+  QCOMPARE( h->displayNames().first().toLatin1().data(), "John \"the guru\" Smith" );
+  QCOMPARE( h->mailboxes().first().prettyAddress( Types::Mailbox::QuoteWhenNecessary ).toLatin1().data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
   QCOMPARE( h->as7BitString( false ).data(),
             "\"John \\\"the guru\\\" Smith\" <john.smith@mail.domain>" );
@@ -377,15 +377,15 @@ void HeaderTest::testSingleMailboxHeader()
   h->from7BitString( "=?iso-8859-1?Q?=22Andre_Woebbeking=22?= <woebbeking@example.com>" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre Woebbeking" );
+  QCOMPARE( h->mailboxes().first().name().toLatin1().data(), "Andre Woebbeking" );
   h->from7BitString( "=?iso-8859-1?Q?=22Andre_=22Mr._Tall=22_Woebbeking=22?= <woebbeking@example.com>" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre \"Mr. Tall\" Woebbeking" );
+  QCOMPARE( h->mailboxes().first().name().toLatin1().data(), "Andre \"Mr. Tall\" Woebbeking" );
   h->from7BitString( "=?iso-8859-1?Q?=22Andre_=22?= =?iso-8859-1?Q?Mr._Tall?= =?iso-8859-1?Q?=22_Woebbeking=22?= <woebbeking@example.com>" );
   QVERIFY( !h->isEmpty() );
   QCOMPARE( h->addresses().count(), 1 );
-  QCOMPARE( h->mailboxes().first().name().toAscii().data(), "Andre \"Mr. Tall\" Woebbeking" );
+  QCOMPARE( h->mailboxes().first().name().toLatin1().data(), "Andre \"Mr. Tall\" Woebbeking" );
 
 
   delete h;
@@ -963,7 +963,7 @@ void HeaderTest::testInvalidQEncoding()
   using namespace HeaderParsing;
   QFETCH( QString, encodedWord );
 
-  QByteArray tmp = encodedWord.toAscii();
+  QByteArray tmp = encodedWord.toLatin1();
   const char *data = tmp.data();
   const char *start = data + 1;
   const char *end = data + strlen( data );

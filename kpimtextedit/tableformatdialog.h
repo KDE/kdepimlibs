@@ -52,8 +52,15 @@ public:
   Qt::Alignment alignment() const;
 
   QTextLength::Type typeOfLength() const;
-  int length() const;
+  void setTypeOfLength(QTextLength::Type type);
 
+  int length() const;
+  void setLength(int);
+
+  QColor tableBackgroundColor() const;
+  void setTableBackgroundColor(const QColor& col);
+
+  bool useBackgroundColor() const;
 
 private:
   class TableFormatDialogPrivate;

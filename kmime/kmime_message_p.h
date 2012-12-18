@@ -29,7 +29,7 @@ namespace KMime {
 class MessagePrivate : public ContentPrivate
 {
   public:
-    MessagePrivate( Message *q ) : ContentPrivate( q )
+    explicit MessagePrivate( Message *q ) : ContentPrivate( q )
     {
     }
 

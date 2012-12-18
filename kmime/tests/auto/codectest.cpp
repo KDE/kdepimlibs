@@ -64,7 +64,7 @@ void CodecTest::testCodecs_data()
           const QByteArray expected = expectedFile.readAll();
 
           const QString tag = codecName + '/' + dataFileNameBase;
-          QTest::newRow( tag.toAscii() ) << data << expected << codecName.toAscii() << tag  << mode;
+          QTest::newRow( tag.toLatin1() ) << data << expected << codecName.toAscii() << tag  << mode;
 
           dataFile.close();
           expectedFile.close();
@@ -87,7 +87,7 @@ void CodecTest::testCodecs()
 
   QStringList blacklistedTags;
   if ( blacklistedTags.contains( tag ) ) {
-    QEXPECT_FAIL( tag.toAscii(), "Codec broken", Continue );
+    QEXPECT_FAIL( tag.toLatin1(), "Codec broken", Continue );
   }
 
   QByteArray result;

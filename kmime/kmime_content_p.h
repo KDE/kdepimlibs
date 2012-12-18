@@ -34,7 +34,7 @@ namespace KMime {
 class ContentPrivate
 {
   public:
-    ContentPrivate( Content *q ) :
+    explicit ContentPrivate( Content *q ) :
       parent( 0 ),
       q_ptr( q ),
       forceDefaultCS( false ),

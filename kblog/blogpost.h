@@ -450,7 +450,9 @@ public:
     /**
       The swap operator.
     */
-    void swap( BlogPost &other ) { qSwap( this->d_ptr, other.d_ptr ); }
+    void swap( BlogPost &other ) {
+        qSwap( this->d_ptr, other.d_ptr );
+    }
 
   private:
     BlogPostPrivate *d_ptr;  //krazy:exclude=dpointer can't constify due to bic and swap being declared inline

@@ -280,7 +280,7 @@ bool POP3Protocol::sendCommand(const QByteArray &cmd)
   // doesn't show up in the debug output
   QByteArray debugCommand = cmd;
   if (!m_sPass.isEmpty())
-    debugCommand.replace(m_sPass.toAscii(),"<password>");
+    debugCommand.replace(m_sPass.toLatin1(),"<password>");
   //kDebug(7105) << "C:" << debugCommand;
 
   // Now actually write the command to the socket
@@ -1013,7 +1013,7 @@ void POP3Protocol::get(const KUrl & url)
     }
 
     memset(buf, 0, sizeof(buf));
-    if ( command(path.toAscii(), buf, sizeof(buf) - 1) == Ok ) {
+    if ( command(path.toLatin1(), buf, sizeof(buf) - 1) == Ok ) {
       const int len = strlen(buf);
       mimeType("text/plain");
       totalSize(len);
@@ -1142,7 +1142,7 @@ void POP3Protocol::del(const KUrl & url, bool /*isfile */ )
     invalidURI = _path;
   } else {
     _path.prepend("DELE ");
-    if ( command(_path.toAscii()) != Ok ) {
+    if ( command(_path.toLatin1()) != Ok ) {
       invalidURI = _path;
     }
   }
