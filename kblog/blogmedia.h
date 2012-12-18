@@ -185,7 +185,9 @@ class KBLOG_EXPORT BlogMedia
     /**
       The swap operator.
     */
-    void swap( BlogMedia &other ) { qSwap( this->d_ptr, other.d_ptr ); }
+    void swap( BlogMedia &other ) {
+        qSwap( this->d_ptr, other.d_ptr );
+    }
 
   private:
     BlogMediaPrivate *d_ptr; //krazy:exclude=dpointer can't constify due to bic and swap being declared inline

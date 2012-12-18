@@ -39,7 +39,9 @@ namespace QGpgME {
     explicit QByteArrayDataProvider( const QByteArray & initialData );
     ~QByteArrayDataProvider();
 
-    const QByteArray & data() const { return mArray; }
+    const QByteArray & data() const {
+        return mArray;
+    }
 
   private:
     // these shall only be accessed through the dataprovider
@@ -65,7 +67,9 @@ namespace QGpgME {
     explicit QIODeviceDataProvider( const boost::shared_ptr<QIODevice> & initialData );
     ~QIODeviceDataProvider();
 
-    const boost::shared_ptr<QIODevice> & ioDevice() const { return mIO; }
+    const boost::shared_ptr<QIODevice> & ioDevice() const {
+        return mIO;
+    }
 
   private:
     // these shall only be accessed through the dataprovider
