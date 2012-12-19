@@ -1,1 +1,4 @@
 IGNORESUBS gpgme-qt,kcal
+
+#if you have a build subdir, skip it
+SKIP /build
