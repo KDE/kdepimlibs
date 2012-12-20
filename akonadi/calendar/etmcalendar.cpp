@@ -44,10 +44,10 @@ using namespace KCalCore;
 //TODO: implement batchAdding
 
 ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate( qq )
-                                                            , mETM( 0 )
-                                                            , mFilteredETM( 0 )
-                                                            , mCheckableProxyModel( 0 )
-                                                            , q( qq )
+                                                          , mETM( 0 )
+                                                          , mFilteredETM( 0 )
+                                                          , mCheckableProxyModel( 0 )
+                                                          , q( qq )
 {
 }
 
@@ -424,6 +424,12 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
     }
   }
   return alarmList;
+}
+
+Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
+{
+  Q_D( const ETMCalendar );
+  return d->mETM;
 }
 
 #include "etmcalendar.moc"
