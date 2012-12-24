@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KResources Manager
+Name[bs]=Menadžer K-resursa
 Name[ca]=Gestor del KResources
 Name[ca@valencia]=Gestor del KResources
 Name[cs]=KResource správce
@@ -53,6 +54,7 @@ Name[zh_TW]=KResources 管理者
 Type=ServiceType
 X-KDE-ServiceType=KResources/Manager
 Comment=KResources Manager
+Comment[bs]=Menadžer K-resursa
 Comment[ca]=Gestió del KResources
 Comment[ca@valencia]=Gestió del KResources
 Comment[cs]=KResource správce
