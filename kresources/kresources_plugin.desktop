@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=KResources Plugin
-Name[bs]=Priključak K-resursa
 Name[ca]=Connector pel KResources
 Name[ca@valencia]=Connector pel KResources
 Name[cs]=Modul rámce KResource
@@ -53,7 +52,6 @@ Name[zh_TW]=KResources 外掛程式
 Type=ServiceType
 X-KDE-ServiceType=KResources/Plugin
 Comment=KResources Framework Plugin
-Comment[bs]=Priključak radnog okvira K-resursa
 Comment[ca]=Connector del marc de treball pel KResources
 Comment[ca@valencia]=Connector del marc de treball pel KResources
 Comment[cs]=Modul rámce KResource

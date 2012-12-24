@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=Calendar in Local Directory
 Name[be]=Каляндар у мясцовай тэчцы
-Name[bs]=Kalendar u lokalnom direktoriju
 Name[ca]=Calendari en un directori local
 Name[ca@valencia]=Calendari en un directori local
 Name[cs]=Kalendář v místním adresáři
@@ -51,7 +50,6 @@ Name[x-test]=xxCalendar in Local Directoryxx
 Name[zh_CN]=本地目录中的日历
 Name[zh_TW]=本地端目錄裡的行事曆
 Comment=Provides access to calendar items, each stored in a single file, in a given directory
-Comment[bs]=Pruža pristup kalendarskim stavkama, skladištenim u poјedinačnim faјlovima u datoј fascikli
 Comment[ca]=Proporciona l'accés als elements d'un calendari, cada un emmagatzemat en un fitxer individual, en un directori proporcionat
 Comment[ca@valencia]=Proporciona l'accés als elements d'un calendari, cada un emmagatzemat en un fitxer individual, en un directori proporcionat
 Comment[cs]=Poskytuje přístup k položkám kalendáře, každé uložené v jednom souboru v daném adresáři
