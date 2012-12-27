@@ -31,7 +31,7 @@
 namespace Akonadi {
 
 /**
- * @short IncidenceChanger is the prefered way to easily create, modify and delete incidences.
+ * @short IncidenceChanger is the preferred way to easily create, modify and delete incidences.
  *
  * It hides the communication with akonadi from the library user.
  *
@@ -338,7 +338,7 @@ public:
 
   /**
     * Returns the collection that the last createIncidence() used.
-    * Will invalid if no incidences were created yet.
+    * Will be invalid if no incidences were created yet.
     *
     * @see createIncidence().
     */

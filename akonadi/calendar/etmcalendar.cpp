@@ -23,6 +23,7 @@
 #include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
+#include "calfilterproxymodel_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/session.h>
@@ -32,8 +33,10 @@
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/collectionfilterproxymodel.h>
 #include <KSelectionProxyModel>
-#include <kcheckableproxymodel.h>
+#include <KCheckableProxyModel>
+#include <KDescendantsProxyModel>
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
@@ -47,6 +50,10 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                           , mETM( 0 )
                                                           , mFilteredETM( 0 )
                                                           , mCheckableProxyModel( 0 )
+                                                          , mCollectionProxyModel( 0 )
+                                                          , mCalFilterProxyModel( 0 )
+                                                          , mSelectionProxy( 0 )
+                                                          , mCollectionFilteringEnabled( true )
                                                           , q( qq )
 {
 }
@@ -75,6 +82,8 @@ void ETMCalendarPrivate::init()
 
   setupFilteredETM();
 
+  connect( q, SIGNAL(filterChanged()), SLOT(onFilterChanged()) );
+
   connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(onRowsInserted(QModelIndex,int,int)) );
   connect( mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -100,37 +109,43 @@ void ETMCalendarPrivate::init()
 
 void ETMCalendarPrivate::setupFilteredETM()
 {
-  // Our calendar tree must be sorted.
-  QSortFilterProxyModel *sortFilterProxy = new QSortFilterProxyModel( this );
-  sortFilterProxy->setObjectName( "Sort" );
-  sortFilterProxy->setDynamicSortFilter( true );
-  sortFilterProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
-  sortFilterProxy->setSourceModel( mETM );
-
   // We're only interested in the CollectionTitle column
   KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-  columnFilterProxy->setSourceModel( sortFilterProxy );
+  columnFilterProxy->setSourceModel( mETM );
   columnFilterProxy->setVisibleColumn( CalendarModel::CollectionTitle );
   columnFilterProxy->setObjectName( "Remove columns" );
 
+  mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel( this );
+  mCollectionProxyModel->setObjectName( "Only show collections" );
+  mCollectionProxyModel->setDynamicSortFilter( true );
+  mCollectionProxyModel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
+  mCollectionProxyModel->setExcludeVirtualCollections( true );
+  mCollectionProxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+  mCollectionProxyModel->setSourceModel( columnFilterProxy );
+
   // Keep track of selected items.
-  QItemSelectionModel* selectionModel = new QItemSelectionModel( columnFilterProxy );
+  QItemSelectionModel* selectionModel = new QItemSelectionModel( mCollectionProxyModel );
   selectionModel->setObjectName( "Calendar Selection Model" );
 
   // Make item selection work by means of checkboxes.
   mCheckableProxyModel = new KCheckableProxyModel( this );
   mCheckableProxyModel->setSelectionModel( selectionModel );
-  mCheckableProxyModel->setSourceModel( columnFilterProxy );
+  mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
+  
+  mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
+  mSelectionProxy->setObjectName( "Only show items of selected collection" );
+  mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  mSelectionProxy->setSourceModel( mETM );
 
-  KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
-  selectionProxy->setObjectName( "Only show items of selected collection" );
-  selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  selectionProxy->setSourceModel( mETM );
+  mCalFilterProxyModel = new CalFilterProxyModel( this );
+  mCalFilterProxyModel->setFilter( q->filter() );
+  mCalFilterProxyModel->setSourceModel( mSelectionProxy );
+  mCalFilterProxyModel->setObjectName( "KCalCore::CalFilter filtering" );
 
   mFilteredETM = new Akonadi::EntityMimeTypeFilterModel( this );
+  mFilteredETM->setSourceModel( mCalFilterProxyModel );
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  mFilteredETM->setSourceModel( selectionProxy );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
 }
@@ -339,6 +354,11 @@ void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel( const QModelInde
   itemsRemoved( itemsFromModel( mFilteredETM, index, start, end ) );
 }
 
+void ETMCalendarPrivate::onFilterChanged()
+{
+  mCalFilterProxyModel->setFilter( q->filter() );
+}
+
 ETMCalendar::ETMCalendar() : CalendarBase( new ETMCalendarPrivate( this ) )
 {
   Q_D( ETMCalendar );
@@ -370,16 +390,10 @@ bool ETMCalendar::hasRight( const Akonadi::Item &item, Akonadi::Collection::Righ
   return col.rights() & right;
 }
 
-QAbstractItemModel *ETMCalendar::filteredModel() const
+QAbstractItemModel *ETMCalendar::model() const
 {
   Q_D( const ETMCalendar );
   return d->mFilteredETM;
-}
-
-QAbstractItemModel *ETMCalendar::unfilteredModel() const
-{
-  Q_D( const ETMCalendar );
-  return d->mETM;
 }
 
 KCheckableProxyModel *ETMCalendar::checkableProxyModel() const
@@ -430,6 +444,30 @@ Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
 {
   Q_D( const ETMCalendar );
   return d->mETM;
+}
+
+void ETMCalendar::setCollectionFilteringEnabled( bool enable )
+{
+  Q_D( ETMCalendar );
+  if ( d->mCollectionFilteringEnabled != enable ) {
+    d->mCollectionFilteringEnabled = enable;
+    if ( enable ) {
+      d->mSelectionProxy->setSourceModel( d->mETM );
+      QAbstractItemModel *oldModel = d->mCalFilterProxyModel->sourceModel();
+      d->mCalFilterProxyModel->setSourceModel( d->mSelectionProxy );
+      delete qobject_cast<KDescendantsProxyModel *>( oldModel );
+    } else {
+      KDescendantsProxyModel *flatner = new KDescendantsProxyModel( this );
+      flatner->setSourceModel( d->mETM );
+      d->mCalFilterProxyModel->setSourceModel( flatner );
+    }
+  }
+}
+
+bool ETMCalendar::collectionFilteringEnabled() const
+{
+  Q_D( const ETMCalendar );
+  return d->mCollectionFilteringEnabled;
 }
 
 #include "etmcalendar.moc"
