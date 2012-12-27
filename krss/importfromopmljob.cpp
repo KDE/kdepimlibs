@@ -111,21 +111,24 @@ static Collection::List buildCollectionTree( const QString& opmlPath, const QLis
         if (!parsedNode->isFolder()) {
             Collection c = (static_pointer_cast<const ParsedFeed>(parsedNode))->toAkonadiCollection();
             c.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( parsedNode->title() );
-            c.setParent( parent );
+            c.setParentCollection( parent );
 
             //it customizes the collection with an rss icon
             c.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( QString("application-rss+xml") );
+            c.setRights( Collection::CanChangeCollection | Collection::CanDeleteCollection |
+                         Collection::CanCreateItem | Collection::CanChangeItem | Collection::CanDeleteItem );
 
             list << c;
         } else {
             shared_ptr<const ParsedFolder> parsedFolder = static_pointer_cast<const ParsedFolder>(parsedNode);
             KRss::FeedCollection folder;
-            folder.setParent( parent );
+            folder.setParentCollection( parent );
             folder.setName( parsedFolder->title() + KRandom::randomString( 8 ) );
             folder.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( parsedFolder->title() );
             folder.setRemoteId( opmlPath + parsedFolder->title() );
             folder.setIsFolder( true );
             folder.setContentMimeTypes( QStringList() << Collection::mimeType() << mimeType() );
+            folder.setRights( Collection::CanCreateCollection | Collection::CanChangeCollection | Collection::CanDeleteCollection );
             list << buildCollectionTree( opmlPath, parsedFolder->children(), folder );
         }
     }
