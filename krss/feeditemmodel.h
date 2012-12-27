@@ -49,9 +49,9 @@ public:
 
     enum FeedColumn {
         FeedTitleColumn=0,
-        UnreadCountColumn=1,
-        TotalCountColumn=2,
-        FeedColumnCount=1 //PENDING(frank) multiple columns crash KSelectionProxyModel, review
+        UnreadCountColumn,
+        TotalCountColumn,
+        FeedColumnCount
     };
 
     enum FeedRoles {
