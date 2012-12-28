@@ -488,6 +488,7 @@ void TransportManagerPrivate::readConfig()
   }
   validateDefault();
   migrateToWallet();
+  q->loadPasswordsAsync();
 }
 
 void TransportManagerPrivate::writeConfig()
