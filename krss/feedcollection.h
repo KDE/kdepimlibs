@@ -49,6 +49,16 @@ public:
     QString feedType() const;
     void setFeedType( const QString &feedType );
 
+    QString imageUrl() const;
+    void setImageUrl( const QString& imageUrl );
+
+    QString imageTitle() const;
+    void setImageTitle( const QString& imageTitle );
+
+    QString imageLink() const;
+    void setImageLink( const QString& imageLink);
+
+
     bool fetchError() const;
     void setFetchError( bool hasError );
 

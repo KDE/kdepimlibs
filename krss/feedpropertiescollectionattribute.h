@@ -53,6 +53,12 @@ public:
         void setFetchError( bool error );
         QString fetchErrorString() const;
         void setFetchErrorString( const QString& fetchErrorString );
+        QString imageUrl() const;
+        void setImageUrl( const QString& imageUrl );
+        QString imageTitle() const;
+        void setImageTitle( const QString& imageTitle );
+        QString imageLink() const;
+        void setImageLink( const QString& imageLink );
 
 private:
         QHash<QString,QString> m_properties;

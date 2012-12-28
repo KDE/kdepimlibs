@@ -112,6 +112,51 @@ void FeedCollection::setDescription( const QString &description )
     attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setDescription( description );
 }
 
+
+QString FeedCollection::imageUrl() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->imageUrl();
+    else
+      return QString();
+}
+
+void FeedCollection::setImageUrl( const QString& imageUrl )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setImageUrl( imageUrl );
+}
+
+
+QString FeedCollection::imageLink() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->imageLink();
+    else
+      return QString();
+}
+
+void FeedCollection::setImageLink( const QString& imageLink )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setImageLink( imageLink );
+}
+
+
+QString FeedCollection::imageTitle() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->imageTitle();
+    else
+      return QString();
+}
+
+void FeedCollection::setImageTitle( const QString& imageTitle )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setImageTitle( imageTitle );
+}
+
 QString FeedCollection::feedType() const
 {
     FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();

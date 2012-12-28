@@ -126,3 +126,33 @@ void FeedPropertiesCollectionAttribute::setFetchErrorString( const QString& fetc
 {
     m_properties.insert( QLatin1String("FetchErrorString"), fetchErrorString );
 }
+
+QString FeedPropertiesCollectionAttribute::imageUrl() const
+{
+    return m_properties.value( QLatin1String("ImageUrl") );
+}
+
+void  FeedPropertiesCollectionAttribute::setImageUrl( const QString& imageUrl )
+{
+    m_properties.insert( QLatin1String("ImageUrl"), imageUrl );
+}
+
+QString FeedPropertiesCollectionAttribute::imageTitle() const
+{
+    return m_properties.value( QLatin1String("ImageTitle") );
+}
+
+void  FeedPropertiesCollectionAttribute::setImageTitle( const QString& imageTitle )
+{
+    m_properties.insert( QLatin1String("ImageTitle"), imageTitle );
+}
+
+QString FeedPropertiesCollectionAttribute::imageLink() const
+{
+    return m_properties.value( QLatin1String("ImageLink") );
+}
+
+void  FeedPropertiesCollectionAttribute::setImageLink( const QString& imageLink )
+{
+    m_properties.insert( QLatin1String("ImageLink"), imageLink );
+}
