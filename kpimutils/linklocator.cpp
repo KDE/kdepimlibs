@@ -467,13 +467,13 @@ QString LinkLocator::highlightedText()
     mPos += length - 1;
     switch ( ch.toLatin1() ) {
     case '*':
-      return "<b>" + re.cap( 1 ) + "</b>";
+      return "<b>*" + re.cap( 1 ) + "*</b>";
     case '_':
-      return "<u>" + re.cap( 1 ) + "</u>";
+      return "<u>_" + re.cap( 1 ) + "_</u>";
     case '/':
-      return "<i>" + re.cap( 1 ) + "</i>";
+      return "<i>/" + re.cap( 1 ) + "/</i>";
     case '-':
-      return "<strike>" + re.cap( 1 ) + "</strike>";
+      return "<strike>-" + re.cap( 1 ) + "-</strike>";
     }
   }
   return QString();
