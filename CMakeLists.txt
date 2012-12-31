@@ -1,5 +1,9 @@
 project(kdepimlibs)
 
+# set_package_properties appeared in cmake 2.8.6
+# TODO: Remove when kdelibs >= 4.10 will be required
+cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
+
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -7,7 +11,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 10)
-set(KDEPIMLIBS_VERSION_PATCH 60)
+set(KDEPIMLIBS_VERSION_PATCH 61)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -109,7 +113,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   endif()
 
   find_package(NepomukCore)
-  set_package_properties(Nepomuk PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)

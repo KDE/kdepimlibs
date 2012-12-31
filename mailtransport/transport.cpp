@@ -226,15 +226,6 @@ void Transport::usrReadConfig()
     } else {
       d->storePasswordInFile = true;
     }
-  } else {
-    // read password if wallet is open, defer otherwise
-    if ( Wallet::isOpen( Wallet::NetworkWallet() ) ) {
-      // Don't read the password right away because this can lead
-      // to reentrancy problems in KDBusServiceStarter when an application
-      // run in Kontact creates the transports (due to a QEventLoop in the
-      // synchronous KWallet openWallet call).
-      QTimer::singleShot( 0, this, SLOT(readPassword()) );
-    }
   }
 }
 
