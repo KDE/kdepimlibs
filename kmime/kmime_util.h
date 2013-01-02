@@ -55,6 +55,7 @@ KMIME_EXPORT extern bool isUsAscii( const QString &s );
 /**
   Returns a user-visible string for a contentEncoding, for example
   "quoted-printable" for CEquPr.
+  @param enc the contentEncoding to return string for
   @ since 4.4
   TODO should they be i18n'ed?
 */
@@ -62,6 +63,7 @@ KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc
 
 /**
   Returns a list of encodings that can correctly encode the @p data.
+  @param data the data to check encodings for
   @ since 4.4
 */
 KMIME_EXPORT QList<KMime::Headers::contentEncoding> encodingsForData(
@@ -339,12 +341,14 @@ KMIME_EXPORT extern void removeQuots( QString &str );
   any special characters (ie. one of ()<>@,.;:[]=\").
 
   @param str us-ascii string to work on.
-  @param forceQuotes if @p true, always add quote characters.
+  @param forceQuotes if @c true, always add quote characters.
 */
 KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
 
 /**
  * Overloaded method, behaves same as the above.
+ * @param str us-ascii string to work on.
+ * @param forceQuotes if @c true, always add quote characters.
  * @since 4.5
  */
 KMIME_EXPORT extern void addQuotes( QString &str, bool forceQuotes );
@@ -396,6 +400,8 @@ KMIME_EXPORT QString balanceBidiState( const QString &input );
  * Similar to the above function. Instead of trying to balance the Bidi chars, it outright
  * removes them from the string.
  *
+ * @param input the display name of a mailbox, which is checked for unbalanced Unicode
+ * direction control characters
  * Reason: KHTML seems to ignore the PDF character, so adding them doesn't fix things :(
  */
 KMIME_EXPORT QString removeBidiControlChars( const QString &input );
@@ -403,12 +409,14 @@ KMIME_EXPORT QString removeBidiControlChars( const QString &input );
 /**
  * Returns whether or not the given MIME node contains an attachment part. This function will
  *  recursively parse the MIME tree looking for a suitable attachment and return true if one is found.
+ * @param content the MIME node to parse
  */
 KMIME_EXPORT bool hasAttachment( Content* content );
 
 /**
  * Returns whether or not the given @p message is partly or fully signed.
  *
+ * @param message the message to check for being signed
  * @since 4.6
  */
 KMIME_EXPORT bool isSigned( Message* message );
@@ -416,6 +424,7 @@ KMIME_EXPORT bool isSigned( Message* message );
 /**
  * Returns whether or not the given @p message is partly or fully encrypted.
  *
+ * @param message the message to check for being encrypted
  * @since 4.6
  */
 KMIME_EXPORT bool isEncrypted( Message* message );

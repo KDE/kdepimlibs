@@ -718,6 +718,7 @@ class KMIME_EXPORT Parametrized : public Structured
     QString parameter( const QString &key ) const;
 
     /**
+      @param key the key of the parameter to check for
       @return true if a parameter with the given @p key exists.
       @since 4.5
     */
@@ -914,6 +915,7 @@ class KMIME_EXPORT ContentTransferEncoding : public Generics::Token
       Set whether the Content containing this header is already decoded.
       For instance, if you fill your Content with already-encoded base64 data,
       you will want to setDecoded( false ).
+      @param decoded if @c true the content is already decoded
     */
     void setDecoded( bool decoded = true );
 

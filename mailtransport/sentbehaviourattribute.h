@@ -72,6 +72,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 
     /**
       Sets the sent-behaviour of the message.
+      @param beh the sent-behaviour to set
       @see SentBehaviour.
     */
     void setSentBehaviour( SentBehaviour beh );
@@ -85,6 +86,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     /**
       Sets the collection to which the item should be moved after it is sent.
       Make sure you set the SentBehaviour to MoveToCollection first.
+      @param moveToCollection target collection for "move to" operation
       @see setSentBehaviour.
     */
     void setMoveToCollection( Akonadi::Collection moveToCollection );

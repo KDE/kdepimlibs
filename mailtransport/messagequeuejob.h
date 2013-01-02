@@ -90,6 +90,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
   public:
     /**
       Creates a new MessageQueueJob.
+      @param parent the QObject parent
       This is not an autostarting job; you need to call start() yourself.
     */
     explicit MessageQueueJob( QObject *parent = 0 );
