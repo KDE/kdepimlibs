@@ -53,6 +53,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
     *  it takes no other args, the article data are
     *  requested by dataReq() and should be valid
     *  as in RFC850. It's not checked for correctness here.
+    *  @param data the special command for article
     *  @deprecated use put() for posting
     */
   virtual void special(const QByteArray& data);
@@ -62,6 +63,7 @@ class NNTPProtocol:public KIO::TCPSlaveBase
   /**
     *  Send a command to the server. Returns the response code and
     *  the response line
+    *  @param cmd the command to send to server
     */
   int sendCommand( const QString &cmd );
 

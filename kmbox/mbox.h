@@ -76,7 +76,7 @@ class KMBOX_EXPORT MBox
      * Retrieve the mbox entry objects for all emails from the file except the
      * @p deleteEntries.
      * The @p deletedEntries should be a list of mbox entries with offsets of deleted messages.
-     *
+     * @param deletedEntries list of mbox entries that have been deleted and need not be retrieved
      * Note: One <em>must</em> call load() before calling this method.
      */
     MBoxEntry::List entries( const MBoxEntry::List &deletedEntries = MBoxEntry::List() ) const;
@@ -197,7 +197,7 @@ class KMBOX_EXPORT MBox
      * Sets the locktype that should be used for locking the mbox file. If the
      * new LockType cannot be used (e.g. the lockfile executable could not be
      * found) the LockType will not be changed.
-     *
+     * @param ltype the locktype to set
      * This method will not do anything if the mbox obeject is currently locked
      * to make sure that it doesn't leave a locked file for one of the lockfile
      * / mutt_dotlock methods.
@@ -209,6 +209,7 @@ class KMBOX_EXPORT MBox
      * file method. If this method is not called and one of the before mentioned
      * lock methods is used the name of the lock file will be equal to
      * MBOXFILENAME.lock.
+     * @param lockFile the lockfile to set
      */
     void setLockFile( const QString &lockFile );
 
@@ -217,6 +218,7 @@ class KMBOX_EXPORT MBox
      * is expensive in case of many consecutive calls to readEntry. Setting the
      * time out to a non zero value will keep the lock open until the timeout has
      * passed. On each read the timer will be reset.
+     * @param msec the time out to set for file lock
      */
     void setUnlockTimeout( int msec );
 
