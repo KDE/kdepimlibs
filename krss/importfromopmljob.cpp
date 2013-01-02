@@ -139,7 +139,7 @@ static Collection::List buildCollectionTree( const QString& opmlPath, const QLis
 void ImportFromOpmlJob::Private::doStart() {
 
     QFile file( inputFile );
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if ( !file.open( QIODevice::ReadOnly ) ) {
         q->setError( KJob::UserDefinedError );
         q->setErrorText( i18n("Could not open %1: %2", inputFile, file.errorString()) );
         q->emitResult();
