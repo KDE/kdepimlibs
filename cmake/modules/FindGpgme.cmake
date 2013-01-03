@@ -42,10 +42,6 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
-include (MacroEnsureVersion)
-
-
-
 if ( WIN32 )
 
   # On Windows, we don't have a gpgme-config script, so we need to
@@ -206,7 +202,9 @@ else() # not WIN32
       exec_program( ${_GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION )
 
       set( _GPGME_MIN_VERSION "1.1.7" )
-      macro_ensure_version( ${_GPGME_MIN_VERSION} ${GPGME_VERSION} _GPGME_INSTALLED_VERSION_OK )
+      if( ${GPGME_VERSION} VERSION_GREATER ${_GPGME_MIN_VERSION} )
+        set( _GPGME_INSTALLED_VERSION_OK TRUE )
+      endif()
 
       if ( NOT _GPGME_INSTALLED_VERSION_OK )
 
