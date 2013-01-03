@@ -32,34 +32,47 @@
 #include <KRandom>
 
 #include <QFile>
+#include <QPair>
 #include <QPointer>
+#include <QVector>
 
 using namespace Akonadi;
 using namespace boost;
 using namespace KRss;
 
-static QString mimeType()
-{
-    return QLatin1String("application/rss+xml");
-}
+struct CreateInfo {
+    CreateInfo()
+        : relativeParentIndex( -1 )
+        , error( false ) {
+    }
+
+    CreateInfo( const Collection& c, int pp )
+        : collection( c )
+        , relativeParentIndex( pp )
+        , error( false )
+    {}
+
+    Collection collection;
+    int relativeParentIndex;
+    bool error;
+    QString errorString;
+};
 
 class KRss::ImportFromOpmlJob::Private {
     ImportFromOpmlJob* const q;
 public:
-    explicit Private( ImportFromOpmlJob* qq ) : q( qq ), session( 0 ), createCollections( true ) {}
+    explicit Private( ImportFromOpmlJob* qq ) : q( qq ), currentlyCreatedIndex( -1 ), session( 0 ), createCollections( true ) {}
 
     void doStart();
-    void collectionsCreated( KJob* );
+    void collectionCreated( KJob* );
     void createNext();
 
     QString inputFile;
     Collection parentFolder;
     QString opmlTitle;
-    Collection::List collections;
-    Collection::List creationQueue;
-    Collection currentlyCreated;
+    QVector<CreateInfo> collections;
+    int currentlyCreatedIndex;
     QPointer<Session> session;
-    QMap<Collection, QString> errors;
     bool createCollections;
 };
 
@@ -102,41 +115,40 @@ void ImportFromOpmlJob::setParentFolder( const Collection& parentFolder ) {
 }
 
 Collection::List ImportFromOpmlJob::collections() const {
-    return d->collections;
+    Collection::List l;
+    l.reserve( d->collections.size() );
+    Q_FOREACH( const CreateInfo& ci, d->collections )
+        if ( !ci.error )
+            l.append( ci.collection );
+    return l;
 }
 
 QString ImportFromOpmlJob::opmlTitle() const {
     return d->opmlTitle;
 }
 
-static Collection::List buildCollectionTree( const QString& opmlPath, const QList<shared_ptr<const ParsedNode> >& listOfNodes, const Collection &parent)
+static QVector<CreateInfo> buildCollectionTree( const QString& opmlPath, const QList<shared_ptr<const ParsedNode> >& listOfNodes, const CreateInfo& parent )
 {
-    Collection::List list;
+    QVector<CreateInfo> list;
     list << parent;
 
-    foreach(const shared_ptr<const ParsedNode> parsedNode, listOfNodes) {
-        if (!parsedNode->isFolder()) {
-            Collection c = (static_pointer_cast<const ParsedFeed>(parsedNode))->toAkonadiCollection();
-            c.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( parsedNode->title() );
-            c.setParentCollection( parent );
+    int relPos = 1;
+    Q_FOREACH (const shared_ptr<const ParsedNode>& parsedNode, listOfNodes )
+    {
+        Collection c = parsedNode->toAkonadiCollection();
 
-            //it customizes the collection with an rss icon
-            c.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( QString("application-rss+xml") );
+        if ( !parsedNode->isFolder() ) {
             c.setRights( Collection::CanChangeCollection | Collection::CanDeleteCollection |
                          Collection::CanCreateItem | Collection::CanChangeItem | Collection::CanDeleteItem );
-
-            list << c;
+            list << CreateInfo( c, -relPos );
+            ++relPos;
         } else {
+            c.setRemoteId( opmlPath + parsedNode->title() );
+            c.setRights( Collection::CanCreateCollection | Collection::CanChangeCollection | Collection::CanDeleteCollection );
             shared_ptr<const ParsedFolder> parsedFolder = static_pointer_cast<const ParsedFolder>(parsedNode);
-            KRss::FeedCollection folder;
-            folder.setParentCollection( parent );
-            folder.setName( parsedFolder->title() + KRandom::randomString( 8 ) );
-            folder.attribute<Akonadi::EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( parsedFolder->title() );
-            folder.setRemoteId( opmlPath + parsedFolder->title() );
-            folder.setIsFolder( true );
-            folder.setContentMimeTypes( QStringList() << Collection::mimeType() << mimeType() );
-            folder.setRights( Collection::CanCreateCollection | Collection::CanChangeCollection | Collection::CanDeleteCollection );
-            list << buildCollectionTree( opmlPath, parsedFolder->children(), folder );
+            const QVector<CreateInfo> children = buildCollectionTree( opmlPath, parsedFolder->children(), CreateInfo( c, -relPos ) );
+            list << children;
+            relPos += children.count();
         }
     }
 
@@ -174,53 +186,69 @@ void ImportFromOpmlJob::Private::doStart() {
 
     if (reader.hasError()) {
         q->setError( KJob::UserDefinedError );
-        q->setErrorText( i18n("Could not parse OPML from %1: %2", inputFile, reader.errorString() ) );
+        q->setErrorText( i18n("Could not parse OPML from %1: [%2:%3] %4",
+                              inputFile,
+                              QString::number( reader.lineNumber() ),
+                              QString::number( reader.columnNumber() ),
+                              reader.errorString() ) );
         q->emitResult();
         return;
     }
 
     opmlTitle = parser.titleOpml();
     const QList<shared_ptr<const ParsedNode> > parsedNodes = parser.topLevelNodes();
-    collections = buildCollectionTree( inputFile, parsedNodes, parentFolder );
+    collections = buildCollectionTree( inputFile, parsedNodes, CreateInfo( parentFolder, 0 ) );
 
     if ( !createCollections ) {
         q->emitResult();
         return;
     }
 
-    std::swap( creationQueue, collections ); //put all collection in queue, clear collections
-    Q_ASSERT( collections.isEmpty() );
-
     createNext();
 }
 
-void ImportFromOpmlJob::Private::collectionsCreated( KJob* j ) {
+void ImportFromOpmlJob::Private::collectionCreated( KJob* j ) {
     const CollectionCreateJob* const job = qobject_cast<CollectionCreateJob*>( j );
     Q_ASSERT( job );
-    if ( job->error() != KJob::NoError )
-        errors.insert( currentlyCreated, job->errorString() );
-    else
-        collections.append( job->collection() );
+    if ( job->error() != KJob::NoError ) {
+        collections[currentlyCreatedIndex].error = true;
+        collections[currentlyCreatedIndex].errorString = job->errorString();
+    } else {
+        collections[currentlyCreatedIndex].collection = job->collection();
+    }
     createNext();
 }
 
+struct Successful {
+    bool operator()( const CreateInfo& ci ) const {
+        return !ci.error;
+    }
+};
+
 void ImportFromOpmlJob::Private::createNext() {
-    if ( creationQueue.isEmpty() ) {
+    if ( currentlyCreatedIndex == collections.size()-1 ) {
+        QVector<CreateInfo> errors = collections;
+        errors.erase( std::remove_if( errors.begin(), errors.end(), Successful() ), errors.end() );
         if ( !errors.isEmpty() ) {
             q->setError( KJob::UserDefinedError );
             QStringList lines;
-            QMap<Collection,QString>::ConstIterator it = errors.constBegin();
-            for ( ; it != errors.constEnd(); ++it )
-                lines += i18nc( "feed title: reason why feed could not be imported", "%1: %2", it.key().attribute<Akonadi::EntityDisplayAttribute>()->displayName(), it.value() );
-            q->setErrorText( i18n("The import of the following feeds and folders failed: %1", lines.join( QLatin1String("\n") ) ) );
+            Q_FOREACH( const CreateInfo& ci, errors )
+                lines += i18nc( "feed title: reason why feed could not be imported", "%1: %2", ci.collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName(), ci.errorString );
+            q->setErrorText( i18n("The import of the following feeds and folders failed:\n\n%1", lines.join( QLatin1String("\n") ) ) );
         }
         q->emitResult();
         return;
     }
 
-    currentlyCreated = creationQueue.takeFirst();
-    CollectionCreateJob* job = new CollectionCreateJob( currentlyCreated, session );
-    job->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionsCreated(KJob*)) );
+    currentlyCreatedIndex++;
+    CreateInfo& ci = collections[currentlyCreatedIndex];
+    Q_ASSERT( ci.relativeParentIndex < 0 || currentlyCreatedIndex == 0 );
+    if ( ci.relativeParentIndex < 0 ) {
+        const int parentIndex = currentlyCreatedIndex + ci.relativeParentIndex;
+        ci.collection.setParentCollection( collections[parentIndex].collection );
+    }
+    CollectionCreateJob* job = new CollectionCreateJob( ci.collection, session );
+    job->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionCreated(KJob*)) );
     job->start();
 }
 

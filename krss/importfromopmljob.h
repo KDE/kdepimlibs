@@ -61,7 +61,7 @@ private:
     class Private;
     Private* const d;
     Q_PRIVATE_SLOT(d, void doStart())
-    Q_PRIVATE_SLOT(d, void collectionsCreated(KJob*))
+    Q_PRIVATE_SLOT(d, void collectionCreated(KJob*))
 };
 
 }

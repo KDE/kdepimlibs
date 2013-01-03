@@ -28,6 +28,8 @@
 #include <QtXml/QXmlAttributes>
 #include <memory>
 
+#include <Akonadi/EntityDisplayAttribute>
+
 using namespace boost;
 
 class ParsedNode::Private {
@@ -177,6 +179,7 @@ Akonadi::Collection ParsedFeed::toAkonadiCollection() const
     feed.setTitle( title() );
     feed.setName( title() + KRandom::randomString( 8 ) );
     feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
+    feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( QLatin1String("application-rss+xml") );
     return feed;
 }
 
@@ -235,6 +238,20 @@ void ParsedFolder::setChildren( const QList<shared_ptr<const ParsedNode> >& chil
 
 void ParsedFolder::addChild( const shared_ptr<const ParsedNode>& child ) {
     d->children.push_back( child );
+}
+
+static QString mimeType()
+{
+    return QLatin1String("application/rss+xml");
+}
+
+Akonadi::Collection ParsedFolder::toAkonadiCollection() const {
+    KRss::FeedCollection folder;
+    folder.setName( title() + KRandom::randomString( 8 ) );
+    folder.setTitle( title() );
+    folder.setIsFolder( true );
+    folder.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << mimeType() );
+    return folder;
 }
 
 class OpmlReader::Private

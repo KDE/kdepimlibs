@@ -58,6 +58,7 @@ public:
     void setAttributes( const QHash<QString, QString>& attributes );
 
     QStringList parentFolderTitles() const;
+    virtual Akonadi::Collection toAkonadiCollection() const = 0;
 
 private:
     Q_DISABLE_COPY(ParsedNode)
@@ -106,6 +107,7 @@ public:
     QList<boost::shared_ptr<const ParsedNode> > children() const;
     void setChildren( const QList<boost::shared_ptr<const ParsedNode> >& children );
     void addChild( const boost::shared_ptr<const ParsedNode>& child );
+    Akonadi::Collection toAkonadiCollection() const;
 
 private:
     class Private;
