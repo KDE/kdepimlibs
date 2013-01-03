@@ -28,7 +28,7 @@
 #include <QtXml/QXmlAttributes>
 #include <memory>
 
-#include <Akonadi/EntityDisplayAttribute>
+#include <akonadi/entitydisplayattribute.h>
 
 using namespace boost;
 
