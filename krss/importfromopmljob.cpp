@@ -24,6 +24,7 @@
 #include "opmlparser.h"
 #include "feedcollection.h"
 
+#include <akonadi/collectioncreatejob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/session.h>
 
@@ -45,15 +46,21 @@ static QString mimeType()
 class KRss::ImportFromOpmlJob::Private {
     ImportFromOpmlJob* const q;
 public:
-    explicit Private( ImportFromOpmlJob* qq ) : q( qq ), session( 0 ) {}
+    explicit Private( ImportFromOpmlJob* qq ) : q( qq ), session( 0 ), createCollections( true ) {}
 
     void doStart();
+    void collectionsCreated( KJob* );
+    void createNext();
 
     QString inputFile;
     Collection parentFolder;
     QString opmlTitle;
     Collection::List collections;
+    Collection::List creationQueue;
+    Collection currentlyCreated;
     QPointer<Session> session;
+    QMap<Collection, QString> errors;
+    bool createCollections;
 };
 
 ImportFromOpmlJob::ImportFromOpmlJob( QObject* parent )
@@ -173,9 +180,56 @@ void ImportFromOpmlJob::Private::doStart() {
     }
 
     opmlTitle = parser.titleOpml();
-    QList<shared_ptr<const ParsedNode> > parsedNodes = parser.topLevelNodes();
-    collections = buildCollectionTree(inputFile, parsedNodes, parentFolder);
-    q->emitResult();
+    const QList<shared_ptr<const ParsedNode> > parsedNodes = parser.topLevelNodes();
+    collections = buildCollectionTree( inputFile, parsedNodes, parentFolder );
+
+    if ( !createCollections ) {
+        q->emitResult();
+        return;
+    }
+
+    std::swap( creationQueue, collections ); //put all collection in queue, clear collections
+    Q_ASSERT( collections.isEmpty() );
+
+    createNext();
+}
+
+void ImportFromOpmlJob::Private::collectionsCreated( KJob* j ) {
+    const CollectionCreateJob* const job = qobject_cast<CollectionCreateJob*>( j );
+    Q_ASSERT( job );
+    if ( job->error() != KJob::NoError )
+        errors.insert( currentlyCreated, job->errorString() );
+    else
+        collections.append( job->collection() );
+    createNext();
+}
+
+void ImportFromOpmlJob::Private::createNext() {
+    if ( creationQueue.isEmpty() ) {
+        if ( !errors.isEmpty() ) {
+            q->setError( KJob::UserDefinedError );
+            QStringList lines;
+            QMap<Collection,QString>::ConstIterator it = errors.constBegin();
+            for ( ; it != errors.constEnd(); ++it )
+                lines += i18nc( "feed title: reason why feed could not be imported", "%1: %2", it.key().attribute<Akonadi::EntityDisplayAttribute>()->displayName(), it.value() );
+            q->setErrorText( i18n("The import of the following feeds and folders failed: %1", lines.join( QLatin1String("\n") ) ) );
+        }
+        q->emitResult();
+        return;
+    }
+
+    currentlyCreated = creationQueue.takeFirst();
+    CollectionCreateJob* job = new CollectionCreateJob( currentlyCreated, session );
+    job->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionsCreated(KJob*)) );
+    job->start();
+}
+
+bool ImportFromOpmlJob::createCollections() const {
+    return d->createCollections;
+}
+
+void ImportFromOpmlJob::setCreateCollections( bool create ) {
+    d->createCollections = create;
 }
 
 #include "importfromopmljob.moc"

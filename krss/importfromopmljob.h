@@ -41,6 +41,9 @@ public:
 
     void start();
 
+    bool createCollections() const;
+    void setCreateCollections( bool );
+
     QString inputFile() const;
     void setInputFile( const QString& path );
 
@@ -58,6 +61,7 @@ private:
     class Private;
     Private* const d;
     Q_PRIVATE_SLOT(d, void doStart())
+    Q_PRIVATE_SLOT(d, void collectionsCreated(KJob*))
 };
 
 }
