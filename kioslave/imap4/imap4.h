@@ -70,6 +70,7 @@ public:
    * the data is normally sent as we get it from the server
    * if you want the slave to decode the content (e.g. for attachments)
    * then append an additional INFO=DECODE to the URL
+   * @param url the url to get message from
    */
   virtual void get (const KUrl & _url);
   /**

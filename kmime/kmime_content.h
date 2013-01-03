@@ -219,7 +219,7 @@ class KMIME_EXPORT Content
 
     /**
       Freezes this Content if @p frozen is true; otherwise unfreezes it.
-
+      @param frozen freeze content if @c true, otherwise unfreeze
       @since 4.4
       @see isFrozen().
     */
@@ -305,6 +305,7 @@ class KMIME_EXPORT Content
 
     /**
       Tries to find a @p type header in the Content and returns it.
+      @param type the header type to find
       @deprecated Use headerByType( const char * )
     */
     // KDE5: Make non-virtual.
@@ -313,6 +314,7 @@ class KMIME_EXPORT Content
     /**
       Returns the first header of type @p type, if it exists.  Otherwise returns 0.
       Note that the returned header may be empty.
+      @param type the header type to find
       @since 4.2
     */
     // KDE5: Make non-virtual.
@@ -334,6 +336,7 @@ class KMIME_EXPORT Content
     /**
       Returns all @p type headers in the Content.
       Take care that this result is not cached, so could be slow.
+      @param type the header type to find
       @since 4.2
     */
     virtual QList<Headers::Base*> headersByType( const char *type );
@@ -781,6 +784,7 @@ class KMIME_EXPORT Content
 
     /**
       Returns the raw string representing the header of type @p name.
+      @param name the header type to find
       @deprecated Use KMime::extractHeader() directly instead.
     */
     KDE_DEPRECATED QByteArray rawHeader( const char *name ) const;

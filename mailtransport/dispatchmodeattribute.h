@@ -72,6 +72,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 
     /**
       Sets the dispatch mode for the message.
+      @param mode the dispatch mode to set
       @see DispatchMode.
     */
     void setDispatchMode( DispatchMode mode );
@@ -84,6 +85,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 
     /**
       Sets the date and time when the message should be sent.
+      @param date the date and time to set
       @see setDispatchMode.
     */
     void setSendAfter( const QDateTime &date );

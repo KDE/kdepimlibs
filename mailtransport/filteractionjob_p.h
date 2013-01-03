@@ -100,6 +100,8 @@ class MAILTRANSPORT_EXPORT FilterAction
     /**
      * Returns a job to act on the @p item.
      * The FilterActionJob will finish when all such jobs are finished.
+     * @param item the item to work on
+     * @param parent the parent job
      */
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
                                       Akonadi::FilterActionJob *parent ) const = 0;

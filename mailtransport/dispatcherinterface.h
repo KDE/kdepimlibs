@@ -71,6 +71,7 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
       Looks for messages in the outbox with DispatchMode::Manual and changes the
       Transport for them to the one with id @p transportId.
 
+      @param transportId the transport to dispatch "manual dispatch" messages with
       @since 4.5
     */
     void dispatchManualTransport( int transportId );
