@@ -30,7 +30,6 @@ namespace KRss {
 class KRSS_EXPORT FeedPropertiesCollectionAttribute : public Akonadi::Attribute
 {
 public:
-
         FeedPropertiesCollectionAttribute();
         QByteArray type() const;
         FeedPropertiesCollectionAttribute* clone() const;
@@ -59,6 +58,32 @@ public:
         void setImageTitle( const QString& imageTitle );
         QString imageLink() const;
         void setImageLink( const QString& imageLink );
+        /**
+         * returns the custom fetch interval in minutes, or -1 if none is set
+         */
+        int customFetchInterval() const;
+        void setCustomFetchInterval( int );
+
+        enum ArchiveMode {
+            GlobalDefault,
+            KeepAllItems,
+            DisableArchiving,
+            LimitItemNumber,
+            LimitItemAge
+        };
+
+        ArchiveMode archiveMode() const;
+        void setArchiveMode( ArchiveMode mode );
+
+        int maximumItemNumber() const;
+        void setMaximumItemNumber( int );
+
+        int maximumItemAge() const;
+        void setMaximumItemAge( int );
+
+private:
+        void setProperty( const QString& key, const QString& value, const QString& defaultValue );
+        int readIntProperty( const QString& key, int defaultValue ) const;
 
 private:
         QHash<QString,QString> m_properties;

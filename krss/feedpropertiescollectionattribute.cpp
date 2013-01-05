@@ -156,3 +156,94 @@ void  FeedPropertiesCollectionAttribute::setImageLink( const QString& imageLink 
 {
     m_properties.insert( QLatin1String("ImageLink"), imageLink );
 }
+
+static const QString CustomFetchIntervalKey = QLatin1String("CustomFetchIntervalKey");
+
+int FeedPropertiesCollectionAttribute::customFetchInterval() const
+{
+    return readIntProperty( CustomFetchIntervalKey, -1 );
+}
+
+void FeedPropertiesCollectionAttribute::setCustomFetchInterval( int interval )
+{
+    setProperty( CustomFetchIntervalKey, QString::number( interval ), QLatin1String("-1") );
+}
+
+static const QString MaximumItemNumberKey = QLatin1String("MaximumItemNumber");
+
+int FeedPropertiesCollectionAttribute::maximumItemNumber() const
+{
+    return readIntProperty( MaximumItemNumberKey, -1 );
+}
+
+void FeedPropertiesCollectionAttribute::setMaximumItemNumber( int mv )
+{
+    setProperty( MaximumItemNumberKey, QString::number( mv ), QLatin1String("-1") );
+}
+
+static const QString MaximumItemAgeKey = QLatin1String("MaximumItemAge");
+
+int FeedPropertiesCollectionAttribute::maximumItemAge() const
+{
+    return readIntProperty( MaximumItemAgeKey, -1 );
+}
+
+void FeedPropertiesCollectionAttribute::setMaximumItemAge( int ma )
+{
+    setProperty( MaximumItemAgeKey, QString::number( ma ), QLatin1String("-1") );
+}
+
+static QString ArchiveModeKey = QLatin1String("ArchiveModeKey");
+
+FeedPropertiesCollectionAttribute::ArchiveMode FeedPropertiesCollectionAttribute::archiveMode() const
+{
+    const QString str = m_properties.value( ArchiveModeKey );
+    if (str == "keepAllItems")
+        return KeepAllItems;
+    else if (str == "disableArchiving")
+        return DisableArchiving;
+    else if (str == "limitItemNumber")
+        return LimitItemNumber;
+    else if (str == "limitItemAge")
+        return LimitItemAge;
+    else
+        return GlobalDefault;
+}
+
+void FeedPropertiesCollectionAttribute::setProperty( const QString& key, const QString& value, const QString& defaultValue )
+{
+    if ( value == defaultValue )
+        m_properties.remove( key );
+    else
+        m_properties.insert( key, value );
+}
+
+int FeedPropertiesCollectionAttribute::readIntProperty( const QString& key, int defaultValue ) const
+{
+    const QString s = m_properties.value( key );
+    bool ok = false;
+    const int v = s.toInt( &ok );
+    return ok ? v : defaultValue;
+}
+
+void FeedPropertiesCollectionAttribute::setArchiveMode( ArchiveMode mode )
+{
+    QString s;
+    switch ( mode ) {
+    case GlobalDefault:
+        break;
+    case KeepAllItems:
+        s = QLatin1String("keepAllItems");
+        break;
+    case DisableArchiving:
+        s = QLatin1String("disableArchiving");
+        break;
+    case LimitItemNumber:
+        s = QLatin1String("limitItemNumber");
+        break;
+    case LimitItemAge:
+        s = QLatin1String("limitItemAge");
+    }
+
+    setProperty( ArchiveModeKey, s, QString() );
+}

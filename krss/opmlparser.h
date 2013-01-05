@@ -137,10 +137,15 @@ private:
 class OpmlWriter
 {
 public:
+    enum Flag {
+        None=0,
+        WriteCustomAttributes=1
+    };
+
     static void writeOpml( QXmlStreamWriter& writer, const QList<boost::shared_ptr< const ParsedNode> >& nodes,
-                           const QString& title = QLatin1String("") );
-    static void writeOutlineFeed( QXmlStreamWriter& writer, const boost::shared_ptr<const ParsedFeed>& feed );
-    static void writeOutlineNodes( QXmlStreamWriter& writer, const QList<boost::shared_ptr< const ParsedNode> >& nodes );
+                           int flags, const QString& title = QString() );
+    static void writeOutlineFeed( QXmlStreamWriter& writer, const boost::shared_ptr<const ParsedFeed>& feed, int flags );
+    static void writeOutlineNodes( QXmlStreamWriter& writer, const QList<boost::shared_ptr< const ParsedNode> >& nodes, int flags );
 
 };
 

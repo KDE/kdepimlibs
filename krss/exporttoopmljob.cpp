@@ -41,7 +41,7 @@ static QList< shared_ptr< const ParsedNode > > parsedDescendants( const Collecti
     Akonadi::Collection::List collections = collections_;
     QList<shared_ptr< const ParsedNode > > nodesList;
 
-    Q_FOREACH( const Akonadi::Collection& collection , collections ) {
+    Q_FOREACH( const Collection& collection, collections ) {
         if (collection.parentCollection() == parent) {
             shared_ptr< ParsedNode > node;
             const FeedCollection feedCollection = collection;
@@ -56,7 +56,6 @@ static QList< shared_ptr< const ParsedNode > > parsedDescendants( const Collecti
             } else {
                 node = ParsedFeed::fromAkonadiCollection ( collection );
             }
-
             collections.removeOne( collection );
             nodesList.append( node );
         }
@@ -72,7 +71,6 @@ static bool writeFeedsToOpml(const QString &path,
                              bool withCustomProperties,
                              QString* errorString)
 {
-    Q_UNUSED(withCustomProperties)
     Q_ASSERT(errorString);
     KSaveFile file( path );
     if ( !file.open( QIODevice::WriteOnly ) ) {
@@ -83,7 +81,7 @@ static bool writeFeedsToOpml(const QString &path,
     QXmlStreamWriter writer( &file );
     writer.setAutoFormatting( true );
     writer.writeStartDocument();
-    OpmlWriter::writeOpml( writer, nodes, titleOpml );
+    OpmlWriter::writeOpml( writer, nodes, withCustomProperties ? OpmlWriter::WriteCustomAttributes : OpmlWriter::None, titleOpml );
     writer.writeEndDocument();
 
     if ( writer.hasError() || !file.finalize() ) { //hasError() refers to the underlying device, so file.errorString() is our best bet in both cases

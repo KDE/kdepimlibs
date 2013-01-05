@@ -18,7 +18,7 @@
 #include "opmlparser.h"
 
 #include <krss/feedcollection.h>
-
+#include <krss/feedpropertiescollectionattribute.h>
 #include <KLocale>
 #include <KDebug>
 #include <KRandom>
@@ -29,7 +29,9 @@
 #include <memory>
 
 #include <akonadi/entitydisplayattribute.h>
+#include <akonadi/cachepolicy.h>
 
+using namespace Akonadi;
 using namespace boost;
 
 class ParsedNode::Private {
@@ -170,7 +172,8 @@ void ParsedFeed::setType( const QString& type )
 
 Akonadi::Collection ParsedFeed::toAkonadiCollection() const
 {
-    KRss::FeedCollection feed;
+    using namespace KRss;
+    FeedCollection feed;
     feed.setRemoteId( d->xmlUrl );
     feed.setXmlUrl( d->xmlUrl );
     feed.setHtmlUrl( d->htmlUrl );
@@ -180,20 +183,80 @@ Akonadi::Collection ParsedFeed::toAkonadiCollection() const
     feed.setName( title() + KRandom::randomString( 8 ) );
     feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
     feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( QLatin1String("application-rss+xml") );
+    if ( attribute( QLatin1String("useCustomFetchInterval") ) == QLatin1String("true") )
+    {
+        const QString str = attribute( QLatin1String("fetchInterval") );
+        bool ok = false;
+        const int interval = str.toInt( &ok );
+        if ( ok )
+            feed.setFetchInterval( interval );
+    }
+
+    const QString archiveModeStr = attribute( QLatin1String("archiveMode") );
+    FeedCollection::ArchiveMode am = FeedCollection::GlobalDefault;
+    if ( archiveModeStr == QLatin1String("keepAllArticles") )
+        am = FeedCollection::KeepAllItems;
+    else if ( archiveModeStr == QLatin1String("disableArchiving") )
+        am = FeedCollection::DisableArchiving;
+    else if ( archiveModeStr == QLatin1String("limitArticleNumber") )
+        am = FeedCollection::LimitItemNumber;
+    else if ( archiveModeStr == QLatin1String("limitArticleAge") )
+        am = FeedCollection::LimitItemAge;
+    feed.setArchiveMode( am );
+
+    bool ok = false;
+    const int maxItemNumber = attribute( QLatin1String("maxArticleNumber") ).toInt( &ok );
+    if ( ok )
+        feed.setMaximumItemNumber( maxItemNumber );
+    const int maxItemAge = attribute( QLatin1String("maxArticleAge") ).toInt( &ok );
+    if ( ok )
+        feed.setMaximumItemAge( maxItemAge );
+
     return feed;
 }
 
 shared_ptr<ParsedFeed> ParsedFeed::fromAkonadiCollection( const Akonadi::Collection& collection )
 {
-    const KRss::FeedCollection feedCollection = collection;
-    shared_ptr<ParsedFeed> parsedFeed( new ParsedFeed );
-    parsedFeed->setTitle( feedCollection.title() );
-    parsedFeed->d->xmlUrl = feedCollection.xmlUrl();
-    parsedFeed->d->htmlUrl = feedCollection.htmlUrl();
-    parsedFeed->d->description = feedCollection.description();
-    parsedFeed->d->type = feedCollection.feedType();
-    parsedFeed->setAttribute( QLatin1String("remoteid"), feedCollection.remoteId() );
-    return parsedFeed;
+    using namespace KRss;
+    const FeedCollection feedCollection = collection;
+    shared_ptr<ParsedFeed> feed( new ParsedFeed );
+    if ( feedCollection.fetchInterval() == -1 ) {
+        feed->setAttribute( QLatin1String("useCustomFetchInterval"), QLatin1String("false") );
+    } else {
+        feed->setAttribute( QLatin1String("useCustomFetchInterval"), QLatin1String("true") );
+        feed->setAttribute( QLatin1String("fetchInterval"), QString::number( feedCollection.fetchInterval() ) );
+    }
+    QString archiveMode;
+    switch ( feedCollection.archiveMode() ) {
+    case FeedPropertiesCollectionAttribute::GlobalDefault:
+        break;
+    case FeedPropertiesCollectionAttribute::KeepAllItems:
+        archiveMode = QLatin1String("keepAllArticles");
+        break;
+    case FeedPropertiesCollectionAttribute::DisableArchiving:
+        archiveMode = QLatin1String("disableArchiving");
+        break;
+    case FeedPropertiesCollectionAttribute::LimitItemNumber:
+        archiveMode = QLatin1String("limitArticleNumber");
+        break;
+    case FeedPropertiesCollectionAttribute::LimitItemAge:
+        archiveMode = QLatin1String("limitArticleAge");
+        break;
+    }
+
+    if ( !archiveMode.isEmpty() )
+        feed->setAttribute( QLatin1String("archiveMode"), archiveMode );
+    if ( feedCollection.maximumItemAge() != -1 )
+        feed->setAttribute( QLatin1String("maxArticleAge"), QString::number( feedCollection.maximumItemAge() ) );
+    if ( feedCollection.maximumItemNumber() != -1 )
+        feed->setAttribute( QLatin1String("maxArticleNumber"), QString::number( feedCollection.maximumItemNumber() ) );
+    feed->setTitle( feedCollection.title() );
+    feed->d->xmlUrl = feedCollection.xmlUrl();
+    feed->d->htmlUrl = feedCollection.htmlUrl();
+    feed->d->description = feedCollection.description();
+    feed->d->type = feedCollection.feedType();
+    feed->setAttribute( QLatin1String("remoteid"), feedCollection.remoteId() );
+    return feed;
 }
 
 class ParsedFolder::Private {
@@ -500,7 +563,7 @@ void OpmlReader::readOpml( QXmlStreamReader& reader )
     }
 }
 
-void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<shared_ptr<const ParsedNode> >& nodes, const QString& title)
+void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<shared_ptr<const ParsedNode> >& nodes, int flags, const QString& title  )
 {
     writer.writeStartElement( QLatin1String("opml") );
     writer.writeAttribute( QLatin1String("version"), QLatin1String("2.0") );
@@ -508,44 +571,42 @@ void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<shared_ptr<con
     writer.writeTextElement( QLatin1String("title"), title );
     writer.writeEndElement(); // head
     writer.writeStartElement( QLatin1String("body") );
-    writeOutlineNodes( writer, nodes );
+    writeOutlineNodes( writer, nodes, flags );
     writer.writeEndElement(); // body
     writer.writeEndElement(); // opml
 }
 
-void OpmlWriter::writeOutlineNodes( QXmlStreamWriter& writer, const QList<shared_ptr<const ParsedNode> >& nodes )
+void OpmlWriter::writeOutlineNodes( QXmlStreamWriter& writer, const QList<shared_ptr<const ParsedNode> >& nodes, int flags )
 {
     Q_FOREACH( const shared_ptr<const ParsedNode>& node, nodes ) {
-	if (node->isFolder()) {
-	    const shared_ptr<const ParsedFolder> folder = (static_pointer_cast<const ParsedFolder>( node ));
-	    writer.writeStartElement( QLatin1String("outline") );
-	    writer.writeAttribute( QLatin1String("title"), folder->title() );
-	    writer.writeAttribute( QLatin1String("text"), folder->title() );
-	    writeOutlineNodes( writer, folder->children());
-	    writer.writeEndElement();
-	}
-	else {
-	    writeOutlineFeed( writer, static_pointer_cast<const ParsedFeed>( node ) );
-	}
+        if (node->isFolder()) {
+            const shared_ptr<const ParsedFolder> folder = (static_pointer_cast<const ParsedFolder>( node ));
+            writer.writeStartElement( QLatin1String("outline") );
+            writer.writeAttribute( QLatin1String("title"), folder->title() );
+            writer.writeAttribute( QLatin1String("text"), folder->title() );
+            writeOutlineNodes( writer, folder->children(), flags);
+            writer.writeEndElement();
+        } else {
+            writeOutlineFeed( writer, static_pointer_cast<const ParsedFeed>( node ), flags );
+        }
     }
 }
 
-void OpmlWriter::writeOutlineFeed( QXmlStreamWriter& writer, const shared_ptr<const ParsedFeed>& feed )
+void OpmlWriter::writeOutlineFeed( QXmlStreamWriter& writer, const shared_ptr<const ParsedFeed>& feed, int flags )
 {
     writer.writeStartElement( QLatin1String("outline") );
     writer.writeAttribute( QLatin1String("text"), feed->title() );
     writer.writeAttribute( QLatin1String("title"), feed->title() );
     writer.writeAttribute( QLatin1String("type"), feed->type());
-//    writer.writeAttribute( QLatin1String("description"), feed->description() );
     writer.writeAttribute( QLatin1String("xmlUrl"), feed->xmlUrl() );
     writer.writeAttribute( QLatin1String("htmlUrl"), feed->htmlUrl() );
-    
-/*    
-    QHashIterator<QString, QString> it( feed->attributes() );
-    while ( it.hasNext() ) {
-        it.next();
-        writer.writeAttribute( it.key(), it.value() );
+    if ( flags & WriteCustomAttributes ) {
+        QHashIterator<QString, QString> it( feed->attributes() );
+        while ( it.hasNext() ) {
+            it.next();
+            writer.writeAttribute( it.key(), it.value() );
+        }
     }
-*/
+
     writer.writeEndElement();   // outline
 }

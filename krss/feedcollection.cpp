@@ -187,15 +187,16 @@ void FeedCollection::setPreferItemLinkForDisplay( bool b )
 
 int FeedCollection::fetchInterval() const
 {
-    return cachePolicy().intervalCheckTime();
+    const FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    if ( attr )
+        return attr->customFetchInterval();
+    else
+        return -1;
 }
 
 void FeedCollection::setFetchInterval( int interval )
 {
-    Akonadi::CachePolicy policy = cachePolicy();
-    policy.setInheritFromParent( false );
-    policy.setIntervalCheckTime( interval );
-    setCachePolicy( policy );
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setCustomFetchInterval( interval );
 }
 
 bool FeedCollection::fetchError() const
@@ -224,4 +225,69 @@ QString FeedCollection::fetchErrorString() const
 void FeedCollection::setFetchErrorString( const QString& errorString )
 {
     attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setFetchErrorString( errorString );
+}
+
+FeedCollection::ArchiveMode FeedCollection::archiveMode() const
+{
+    FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    const FeedPropertiesCollectionAttribute::ArchiveMode am = attr ? attr->archiveMode() : FeedPropertiesCollectionAttribute::GlobalDefault;
+    switch ( am ) {
+    case FeedPropertiesCollectionAttribute::GlobalDefault:
+        return GlobalDefault;
+    case FeedPropertiesCollectionAttribute::KeepAllItems:
+        return KeepAllItems;
+    case FeedPropertiesCollectionAttribute::DisableArchiving:
+        return DisableArchiving;
+    case FeedPropertiesCollectionAttribute::LimitItemAge:
+        return LimitItemAge;
+    case FeedPropertiesCollectionAttribute::LimitItemNumber:
+        return LimitItemNumber;
+    }
+    Q_ASSERT( !"unhandled archive mode" );
+    return GlobalDefault;
+}
+
+void FeedCollection::setArchiveMode( ArchiveMode mode )
+{
+    FeedPropertiesCollectionAttribute::ArchiveMode am = FeedPropertiesCollectionAttribute::GlobalDefault;
+    switch ( mode ) {
+    case GlobalDefault:
+        am = FeedPropertiesCollectionAttribute::GlobalDefault;
+        break;
+    case KeepAllItems:
+        am = FeedPropertiesCollectionAttribute::KeepAllItems;
+        break;
+    case DisableArchiving:
+        am = FeedPropertiesCollectionAttribute::DisableArchiving;
+        break;
+    case LimitItemAge:
+        am = FeedPropertiesCollectionAttribute::LimitItemAge;
+        break;
+    case LimitItemNumber:
+        am = FeedPropertiesCollectionAttribute::LimitItemNumber;
+        break;
+    }
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setArchiveMode( am );
+}
+
+int FeedCollection::maximumItemNumber() const
+{
+    const FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    return attr ? attr->maximumItemNumber() : -1;
+}
+
+void FeedCollection::setMaximumItemNumber( int m )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setMaximumItemNumber( m );
+}
+
+int FeedCollection::maximumItemAge() const
+{
+    const FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    return attr ? attr->maximumItemAge() : -1;
+}
+
+void FeedCollection::setMaximumItemAge( int m )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setMaximumItemAge( m );
 }

@@ -70,6 +70,23 @@ public:
 
     bool preferItemLinkForDisplay() const;
     void setPreferItemLinkForDisplay( bool );
+
+    enum ArchiveMode {
+        GlobalDefault,
+        KeepAllItems,
+        DisableArchiving,
+        LimitItemNumber,
+        LimitItemAge
+    };
+
+    ArchiveMode archiveMode() const;
+    void setArchiveMode( ArchiveMode mode );
+
+    int maximumItemNumber() const;
+    void setMaximumItemNumber( int );
+
+    int maximumItemAge() const;
+    void setMaximumItemAge( int );
 };
 
 } // namespace KRss
