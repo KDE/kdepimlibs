@@ -136,7 +136,7 @@ static QVector<CreateInfo> buildCollectionTree( const QString& opmlPath, const Q
     Q_FOREACH (const shared_ptr<const ParsedNode>& parsedNode, listOfNodes )
     {
         Collection c = parsedNode->toAkonadiCollection();
-
+        c.setParentCollection( parent.collection );
         if ( !parsedNode->isFolder() ) {
             c.setRights( Collection::CanChangeCollection | Collection::CanDeleteCollection |
                          Collection::CanCreateItem | Collection::CanChangeItem | Collection::CanDeleteItem );
