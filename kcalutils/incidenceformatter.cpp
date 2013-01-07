@@ -46,6 +46,7 @@
 using namespace KCalCore;
 
 #include <kpimutils/email.h>
+#include <kpimutils/linklocator.h>
 
 #include <KCalendarSystem>
 #include <KDebug>
@@ -1122,7 +1123,9 @@ QString IncidenceFormatter::extensiveDisplayStr( const QString &sourceName,
 //@cond PRIVATE
 static QString string2HTML( const QString &str )
 {
-  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
+//  return Qt::convertFromPlainText( str, Qt::WhiteSpaceNormal );
+  // use convertToHtml so we get clickable links and other goodies
+  return KPIMUtils::LinkLocator::convertToHtml( str );
 }
 
 static QString cleanHtml( const QString &html )
@@ -3138,8 +3141,12 @@ static QString formatICalInvitationHelper( QString invitation,
         }
       }
 
-      if ( !myInc && a ) {
-        html += responseButtons( inc, rsvpReq, rsvpRec, helper );
+      if ( !myInc ) {
+        if ( a ) {
+          html += responseButtons( inc, rsvpReq, rsvpRec, helper );
+        } else {
+          html += responseButtons( inc, false, false, helper );
+        }
       }
       break;
     }
