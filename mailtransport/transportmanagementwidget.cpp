@@ -161,7 +161,7 @@ void TransportManagementWidget::Private::slotCustomContextMenuRequested( const Q
   menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
   QTreeWidgetItem *item = ui.transportList->itemAt( pos );
   if ( item ) {
-    menu->addAction( i18n( "Edit..." ), q, SLOT(editClicked()) );
+    menu->addAction( i18n( "Modify..." ), q, SLOT(editClicked()) );
     menu->addAction( i18n( "Rename" ), q, SLOT(renameClicked()) );
     menu->addAction( i18n( "Remove" ), q, SLOT(removeClicked()) );
     if ( item->data( 0, Qt::UserRole ) != TransportManager::self()->defaultTransportId() ) {
