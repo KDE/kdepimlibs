@@ -113,7 +113,7 @@ macro(kcal_run_single_test _prefix _file _test _testarg)
   endif()
 
   add_test( ${_prefix}-${_fn} ${_runner} ${_test_path} ${_testarg} ${_file} ${_outFile})
-endmacro(kcal_run_single_test)
+endmacro()
 
 FILE(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/FAILED.log)
 

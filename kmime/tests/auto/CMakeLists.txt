@@ -7,7 +7,7 @@ macro(add_kmime_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME kmime-${_name} ${_test})
   target_link_libraries(${_name} kmime ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} )
-endmacro(add_kmime_test)
+endmacro()
 
 add_kmime_test(rfc2047test.cpp)
 add_kmime_test(utiltest.cpp)

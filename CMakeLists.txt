@@ -228,7 +228,7 @@ macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
    else()
       set(${out} "\${KDEPIMLIBS_INSTALL_DIR}/${in}")
    endif()
-endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+endmacro()
 
 # all the following variables are put into KdepimLibsConfig.cmake, so
 # they are usable by projects using kdepimlibs. Alex
