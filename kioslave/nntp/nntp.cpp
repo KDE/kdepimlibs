@@ -898,6 +898,7 @@ void NNTPProtocol::unexpected_response( int res_code, const QString &command )
     case 480: // credential request
       error( ERR_COULD_NOT_LOGIN,
              i18n( "You need to authenticate to access the requested resource." ) );
+      break;
     case 481: // wrong credential (TODO: place a specific message for this case)
       error( ERR_COULD_NOT_LOGIN,
              i18n( "The supplied login and/or password are incorrect." ) );
