@@ -4,7 +4,7 @@ add_subdirectory( tests )
 
 macro(install_headers _dir)
   install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE )
-endmacro(install_headers _dir)
+endmacro()
 
 install_headers( Akonadi )
 install_headers( KHolidays )

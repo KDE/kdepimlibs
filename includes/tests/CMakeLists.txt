@@ -18,7 +18,7 @@ macro(add_includes _dir)
   foreach( file ${_includes} )
     file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "#include <${file}>\n" )
   endforeach(file)
-endmacro(add_includes)
+endmacro()
 
 include_directories(
   # HACK: akonadi/calendar has a generated header. We need to go up 3 directories level
