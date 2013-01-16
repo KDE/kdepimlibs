@@ -24,7 +24,8 @@ endif()
 
 set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-find_package(KDE4 4.9.0 REQUIRED)
+# Exception is made for kdepimlibs 4.10: The feature_summary port implicitly requires kdelibs 4.9.4 and CMake 2.8.6
+find_package(KDE4 4.9.4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
