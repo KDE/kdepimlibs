@@ -440,11 +440,12 @@ class StandardContactActionManager::Private
         return;
       }
 
-      QPointer<Akonadi::ContactEditorDialog> dlg( new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::CreateMode, mParentWidget ) );
+      QPointer<Akonadi::ContactEditorDialog> dlg =
+        new Akonadi::ContactEditorDialog(
+          Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
-
-      dlg->exec();
-      delete dlg;
+      dlg->setAttribute( Qt::WA_DeleteOnClose );
+      dlg->show();
     }
 
     void slotCreateContactGroup()
@@ -453,11 +454,12 @@ class StandardContactActionManager::Private
         return;
       }
 
-      QPointer<Akonadi::ContactGroupEditorDialog> dlg( new Akonadi::ContactGroupEditorDialog( Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget ) );
+      QPointer<Akonadi::ContactGroupEditorDialog> dlg =
+        new Akonadi::ContactGroupEditorDialog(
+          Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
-
-      dlg->exec();
-      delete dlg;
+      dlg->setAttribute( Qt::WA_DeleteOnClose );
+      dlg->show();
     }
 
     void slotEditItem()
@@ -485,15 +487,19 @@ class StandardContactActionManager::Private
       }
 
       if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
-        QPointer<Akonadi::ContactEditorDialog> dlg( new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, mParentWidget ) );
+        QPointer<Akonadi::ContactEditorDialog> dlg =
+          new Akonadi::ContactEditorDialog(
+            Akonadi::ContactEditorDialog::EditMode, mParentWidget );
         dlg->setContact( item );
-        dlg->exec();
-        delete dlg;
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
+        dlg->show();
       } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
-        QPointer<Akonadi::ContactGroupEditorDialog> dlg( new Akonadi::ContactGroupEditorDialog( Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget ) );
+        QPointer<Akonadi::ContactGroupEditorDialog> dlg =
+          new Akonadi::ContactGroupEditorDialog(
+            Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
         dlg->setContactGroup( item );
-        dlg->exec();
-        delete dlg;
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
+        dlg->show();
       }
     }
 
