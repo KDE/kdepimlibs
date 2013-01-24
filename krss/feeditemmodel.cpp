@@ -142,9 +142,11 @@ QVariant FeedItemModel::entityData( const Collection &collection, int column, in
     switch ( role ) {
     case Qt::DecorationRole:
     {
-        const FeedCollection fc( collection );
-        if ( fc.fetchError() )
-            return d->errorIcon;
+        if ( column == FeedTitleColumn ) {
+            const FeedCollection fc( collection );
+            if ( fc.fetchError() )
+                return d->errorIcon;
+        }
         break;
     }
     case Qt::ToolTipRole:
