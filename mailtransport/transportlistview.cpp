@@ -62,6 +62,15 @@ void TransportListView::editItem( QTreeWidgetItem *item, int column )
     item->setFlags( oldFlags | Qt::ItemIsEditable );
     QTreeWidget::editItem( item, 0 );
     item->setFlags( oldFlags );
+    const int id = item->data( 0, Qt::UserRole ).toInt();
+    Transport *t = TransportManager::self()->transportById( id );
+    if (!t) {
+      kWarning() << "Transport" << id << "not known by manager.";
+      return;
+    }
+    if (TransportManager::self()->defaultTransportId() == t->id()) {
+      item->setText( 0, t->name() );
+    }
   }
 }
 
@@ -76,7 +85,7 @@ void TransportListView::commitData( QWidget *editor )
   QLineEdit *edit = dynamic_cast<QLineEdit*>( editor ); // krazy:exclude=qclasses
   Q_ASSERT( edit ); // original code had if
 
-  int id = item->data( 0, Qt::UserRole ).toInt();
+  const int id = item->data( 0, Qt::UserRole ).toInt();
   Transport *t = TransportManager::self()->transportById( id );
   if ( !t ) {
     kWarning() << "Transport" << id << "not known by manager.";
