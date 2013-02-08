@@ -78,3 +78,9 @@ void SendmailConfigWidget::slotTextChanged(const QString &text)
 {
     Q_EMIT enableButtonOk(!text.isEmpty());
 }
+
+bool SendmailConfigWidget::pathIsEmpty() const
+{
+    Q_D( const SendmailConfigWidget );
+    return d->ui.kcfg_host->text().isEmpty();
+}
