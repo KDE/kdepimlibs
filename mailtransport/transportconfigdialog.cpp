@@ -69,7 +69,6 @@ void TransportConfigDialog::Private::okClicked()
 
 void TransportConfigDialog::Private::slotTextChanged(const QString &text)
 {
-    qDebug()<<" void TransportConfigDialog::Private::slotTextChanged(const QString &text)"<<text;
     q->enableButtonOk(!text.isEmpty());
 }
 
@@ -79,6 +78,8 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
 {
   Q_ASSERT( transport );
   d->transport = transport;
+  setButtons( Ok|Cancel );
+  bool pathIsEmpty = false;
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
       {
@@ -90,6 +91,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
         SendmailConfigWidget *sendMailWidget = new SendmailConfigWidget( transport, this );
         d->configWidget = sendMailWidget;
         connect(sendMailWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(enableButtonOk(bool)));
+        pathIsEmpty = sendMailWidget->pathIsEmpty();
         break;
       }
     case Transport::EnumType::Akonadi:
@@ -107,8 +109,8 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   }
   setMainWidget( d->configWidget );
 
-  setButtons( Ok|Cancel );
   connect( this, SIGNAL(okClicked()), this, SLOT(okClicked()) );
+  enableButtonOk(!pathIsEmpty);
 }
 
 TransportConfigDialog::~TransportConfigDialog()
