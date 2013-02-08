@@ -112,7 +112,7 @@ void TransportManagementWidget::Private::editClicked()
     return;
   }
 
-  int currentId = ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
+  const int currentId = ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
   Transport *transport = TransportManager::self()->transportById( currentId );
   TransportManager::self()->configureTransport( transport, q );
 }
