@@ -88,6 +88,14 @@
    <header location="global">transportlistview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>transportList</tabstop>
+  <tabstop>addButton</tabstop>
+  <tabstop>editButton</tabstop>
+  <tabstop>renameButton</tabstop>
+  <tabstop>removeButton</tabstop>
+  <tabstop>defaultButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
