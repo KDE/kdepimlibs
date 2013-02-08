@@ -292,6 +292,8 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
   }
 
   QPointer<KDialog> dialog = new KDialog( parent );
+  dialog->setCaption( i18n( "Configure account" ) );
+  dialog->setButtons( KDialog::Ok | KDialog::Cancel );
   TransportConfigWidget *configWidget = 0;
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
@@ -301,7 +303,9 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
       }
     case Transport::EnumType::Sendmail:
       {
-        configWidget =  new SendmailConfigWidget( transport, dialog );
+        SendmailConfigWidget *sendMailWidget = new SendmailConfigWidget( transport, dialog );
+        configWidget = sendMailWidget;
+        connect(sendMailWidget, SIGNAL(enableButtonOk(bool)), dialog, SLOT(enableButtonOk(bool)));
         break;
       }
     default:
@@ -312,8 +316,6 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
       }
   }
   dialog->setMainWidget( configWidget );
-  dialog->setCaption( i18n( "Configure account" ) );
-  dialog->setButtons( KDialog::Ok | KDialog::Cancel );
   bool okClicked = ( dialog->exec() == QDialog::Accepted );
   if ( okClicked ) {
     configWidget->apply(); // calls transport->writeConfig()

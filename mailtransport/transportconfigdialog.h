@@ -70,6 +70,7 @@ class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void okClicked() )
+    Q_PRIVATE_SLOT( d, void slotTextChanged(const QString &) )
     //@endcond
 };
 
