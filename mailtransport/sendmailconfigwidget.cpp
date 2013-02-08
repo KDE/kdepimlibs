@@ -1,4 +1,5 @@
 /*
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     Based on MailTransport code by:
@@ -29,6 +30,7 @@
 #include "ui_sendmailsettings.h"
 
 #include <KStandardDirs>
+#include <KLineEdit>
 
 using namespace MailTransport;
 
@@ -68,5 +70,11 @@ void SendmailConfigWidget::init()
     // is saved in the config.
     d->ui.kcfg_host->setText( KStandardDirs::findExe( QLatin1String( "sendmail" ) ) );
   }
+  connect(d->ui.kcfg_host->lineEdit(),SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)));
+  slotTextChanged(d->ui.kcfg_host->text());
 }
 
+void SendmailConfigWidget::slotTextChanged(const QString &text)
+{
+    Q_EMIT enableButtonOk(!text.isEmpty());
+}

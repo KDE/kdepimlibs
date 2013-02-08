@@ -47,7 +47,12 @@ class SendmailConfigWidget : public TransportConfigWidget
 
   public:
     explicit SendmailConfigWidget( Transport *transport, QWidget *parent = 0 );
-    //virtual ~SendmailConfigWidget();
+
+  Q_SIGNALS:
+    void enableButtonOk(bool);
+
+  private Q_SLOTS:
+    void slotTextChanged(const QString &text);
 
   protected:
     SendmailConfigWidget( SendmailConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );

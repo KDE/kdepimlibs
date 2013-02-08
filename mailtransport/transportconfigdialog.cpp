@@ -41,11 +41,21 @@ using namespace MailTransport;
 class MailTransport::TransportConfigDialog::Private
 {
   public:
+    Private(TransportConfigDialog *qq)
+        : transport(0),
+          configWidget(0),
+          q(qq)
+    {
+
+    }
+
     Transport *transport;
     QWidget *configWidget;
+    TransportConfigDialog *q;
 
     // slots
     void okClicked();
+    void slotTextChanged(const QString &text);
 };
 
 void TransportConfigDialog::Private::okClicked()
@@ -57,12 +67,18 @@ void TransportConfigDialog::Private::okClicked()
   }
 }
 
+void TransportConfigDialog::Private::slotTextChanged(const QString &text)
+{
+    qDebug()<<" void TransportConfigDialog::Private::slotTextChanged(const QString &text)"<<text;
+    q->enableButtonOk(!text.isEmpty());
+}
+
+
 TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *parent )
-  : KDialog( parent ), d( new Private )
+    : KDialog( parent ), d( new Private(this) )
 {
   Q_ASSERT( transport );
   d->transport = transport;
-
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
       {
@@ -71,7 +87,9 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
       }
     case Transport::EnumType::Sendmail:
       {
-        d->configWidget = new SendmailConfigWidget( transport, this );
+        SendmailConfigWidget *sendMailWidget = new SendmailConfigWidget( transport, this );
+        d->configWidget = sendMailWidget;
+        connect(sendMailWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(enableButtonOk(bool)));
         break;
       }
     case Transport::EnumType::Akonadi:
