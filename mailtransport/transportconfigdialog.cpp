@@ -69,7 +69,6 @@ void TransportConfigDialog::Private::okClicked()
 
 void TransportConfigDialog::Private::slotTextChanged(const QString &text)
 {
-    qDebug()<<" void TransportConfigDialog::Private::slotTextChanged(const QString &text)"<<text;
     q->enableButtonOk(!text.isEmpty());
 }
 
@@ -79,6 +78,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
 {
   Q_ASSERT( transport );
   d->transport = transport;
+  setButtons( Ok|Cancel );
   switch ( transport->type() ) {
     case Transport::EnumType::SMTP:
       {
@@ -107,7 +107,6 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   }
   setMainWidget( d->configWidget );
 
-  setButtons( Ok|Cancel );
   connect( this, SIGNAL(okClicked()), this, SLOT(okClicked()) );
 }
 

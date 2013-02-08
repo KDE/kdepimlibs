@@ -291,36 +291,10 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
     return true; // No way to know here if the user cancelled or not.
   }
 
-  QPointer<KDialog> dialog = new KDialog( parent );
-  dialog->setCaption( i18n( "Configure account" ) );
-  dialog->setButtons( KDialog::Ok | KDialog::Cancel );
-  TransportConfigWidget *configWidget = 0;
-  switch ( transport->type() ) {
-    case Transport::EnumType::SMTP:
-      {
-        configWidget = new SMTPConfigWidget( transport, dialog );
-        break;
-      }
-    case Transport::EnumType::Sendmail:
-      {
-        SendmailConfigWidget *sendMailWidget = new SendmailConfigWidget( transport, dialog );
-        configWidget = sendMailWidget;
-        connect(sendMailWidget, SIGNAL(enableButtonOk(bool)), dialog, SLOT(enableButtonOk(bool)));
-        break;
-      }
-    default:
-      {
-        Q_ASSERT( false );
-        delete dialog;
-        return false;
-      }
-  }
-  dialog->setMainWidget( configWidget );
-  bool okClicked = ( dialog->exec() == QDialog::Accepted );
-  if ( okClicked ) {
-    configWidget->apply(); // calls transport->writeConfig()
-  }
-  delete dialog;
+  QPointer<TransportConfigDialog> transportConfigDialog = new TransportConfigDialog(transport, parent);
+  transportConfigDialog->setCaption( i18n( "Configure account" ) );
+  bool okClicked = ( transportConfigDialog->exec() == QDialog::Accepted );
+  delete transportConfigDialog;
   return okClicked;
 }
 
