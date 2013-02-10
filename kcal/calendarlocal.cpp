@@ -59,7 +59,7 @@ using namespace KCal;
 class KCal::CalendarLocal::Private
 {
   public:
-    Private() {}
+    Private() : mFormat(0) {}
     QString mFileName;                     // filename where calendar is stored
     CalFormat *mFormat;                    // calendar format
 
