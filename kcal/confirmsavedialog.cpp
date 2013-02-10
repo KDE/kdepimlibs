@@ -39,6 +39,7 @@ class KCal::ConfirmSaveDialog::Private
 {
   public:
     Private()
+     : mListView( 0 )
     {}
     QTreeWidget *mListView;
 };
