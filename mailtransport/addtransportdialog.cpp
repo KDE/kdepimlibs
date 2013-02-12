@@ -51,7 +51,7 @@ class AddTransportDialog::Private
     /**
       Enables the OK button if a type is selected.
     */
-    void typeListClicked(); // slot
+    void updateOkButton(); // slot
 
     AddTransportDialog *const q;
     ::Ui::AddTransportDialog ui;
@@ -66,10 +66,10 @@ TransportType AddTransportDialog::Private::selectedType() const
   return TransportType();
 }
 
-void AddTransportDialog::Private::typeListClicked()
+void AddTransportDialog::Private::updateOkButton()
 {
   // Make sure a type is selected before allowing the user to continue.
-  q->enableButtonOk( selectedType().isValid() );
+  q->enableButtonOk( selectedType().isValid() && !ui.name->text().trimmed().isEmpty() );
 }
 
 AddTransportDialog::AddTransportDialog( QWidget *parent )
@@ -104,11 +104,13 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
 
   // Connect user input.
   connect( d->ui.typeListView, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-      this, SLOT(typeListClicked()) );
+      this, SLOT(updateOkButton()) );
   connect( d->ui.typeListView, SIGNAL(itemSelectionChanged()),
-      this, SLOT(typeListClicked()) );
+      this, SLOT(updateOkButton()) );
   connect( d->ui.typeListView, SIGNAL(doubleClicked(QModelIndex)),
            this, SLOT(accept()) );
+  connect( d->ui.name, SIGNAL(textChanged(QString)),
+           this, SLOT(updateOkButton()) );
 }
 
 AddTransportDialog::~AddTransportDialog()

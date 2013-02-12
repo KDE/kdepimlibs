@@ -177,10 +177,11 @@ void kio_sieveResponse::clear()
 /* ---------------------------------------------------------------------------------- */
 kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket)
 	: TCPSlaveBase("sieve", pool_socket, app_socket, false)
-	, m_connMode(NORMAL)
-	, m_supportsTLS(false)
-	, m_shouldBeConnected(false)
+        , m_connMode(NORMAL)
+        , m_supportsTLS(false)
+        , m_shouldBeConnected(false)
         , m_allowUnencrypted(false)
+        , m_port(SIEVE_DEFAULT_PORT)
 {
 }
 
