@@ -89,28 +89,12 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="KComboBox" name="kcfg_DialPhoneNumberAction">
-        <item>
-         <property name="text">
-          <string>Skype</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>External Application</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Sflphone</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="KComboBox" name="DialPhoneNumberAction"/>
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget_2">
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="page_3"/>
         <widget class="QWidget" name="page_4">
@@ -127,6 +111,7 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="page_7"/>
        </widget>
       </item>
       <item>
@@ -245,22 +230,6 @@
     <hint type="destinationlabel">
      <x>161</x>
      <y>80</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_DialPhoneNumberAction</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>stackedWidget_2</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>100</x>
-     <y>160</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>99</x>
-     <y>199</y>
     </hint>
    </hints>
   </connection>

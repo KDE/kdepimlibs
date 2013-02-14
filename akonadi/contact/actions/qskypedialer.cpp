@@ -28,7 +28,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
-
+#include <QDebug>
 #include <klocale.h>
 
 #include <unistd.h>

@@ -27,7 +27,6 @@
 #include <ktextedit.h>
 
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
 
 SmsDialog::SmsDialog( const KABC::PhoneNumber &number )
