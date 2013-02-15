@@ -114,9 +114,9 @@ QString LinkLocator::getUrl()
     if ( mPos > 0 ) {
       beforeUrl = mText[mPos - 1];
 
-      if ( beforeUrl == '(' ) {
+      /*if ( beforeUrl == '(' ) {
         afterUrl = ')';
-      } else if ( beforeUrl == '[' ) {
+      } else */if ( beforeUrl == '[' ) {
         afterUrl = ']';
       } else if ( beforeUrl == '<' ) {
         afterUrl = '>';
