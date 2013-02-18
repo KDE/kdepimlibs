@@ -291,7 +291,8 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
     return true; // No way to know here if the user cancelled or not.
   }
 
-  QPointer<TransportConfigDialog> transportConfigDialog = new TransportConfigDialog(transport, parent);
+  QPointer<TransportConfigDialog> transportConfigDialog =
+    new TransportConfigDialog( transport, parent );
   transportConfigDialog->setCaption( i18n( "Configure account" ) );
   bool okClicked = ( transportConfigDialog->exec() == QDialog::Accepted );
   delete transportConfigDialog;
@@ -307,12 +308,12 @@ TransportJob *TransportManager::createTransportJob( int transportId )
   t = t->clone(); // Jobs delete their transports.
   t->updatePasswordState();
   switch ( t->type() ) {
-    case Transport::EnumType::SMTP:
-      return new SmtpJob( t, this );
-    case Transport::EnumType::Sendmail:
-      return new SendmailJob( t, this );
-    case Transport::EnumType::Akonadi:
-      return new ResourceSendJob( t, this );
+  case Transport::EnumType::SMTP:
+    return new SmtpJob( t, this );
+  case Transport::EnumType::Sendmail:
+    return new SendmailJob( t, this );
+  case Transport::EnumType::Akonadi:
+    return new ResourceSendJob( t, this );
   }
   Q_ASSERT( false );
   return 0;
