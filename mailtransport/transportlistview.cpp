@@ -64,11 +64,11 @@ void TransportListView::editItem( QTreeWidgetItem *item, int column )
     item->setFlags( oldFlags );
     const int id = item->data( 0, Qt::UserRole ).toInt();
     Transport *t = TransportManager::self()->transportById( id );
-    if (!t) {
+    if ( !t ) {
       kWarning() << "Transport" << id << "not known by manager.";
       return;
     }
-    if (TransportManager::self()->defaultTransportId() == t->id()) {
+    if ( TransportManager::self()->defaultTransportId() == t->id() ) {
       item->setText( 0, t->name() );
     }
   }
@@ -112,9 +112,9 @@ void TransportListView::fillTransportList()
     QString name = t->name();
     if ( TransportManager::self()->defaultTransportId() == t->id() ) {
       name += i18nc( "@label the default mail transport", " (Default)" );
-      QFont font(item->font(0));
-      font.setBold(true);
-      item->setFont(0, font);
+      QFont font( item->font(0) );
+      font.setBold( true );
+      item->setFont( 0, font );
     }
     item->setText( 0, name );
     item->setText( 1, t->transportType().name() );
@@ -123,4 +123,3 @@ void TransportListView::fillTransportList()
     }
   }
 }
-
