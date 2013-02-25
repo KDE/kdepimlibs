@@ -40,7 +40,7 @@ class TransportListView : public QTreeWidget
     void editItem( QTreeWidgetItem *item, int column = 0 );
 
   protected slots:
-    virtual void commitData( QWidget *editor );
+    void commitData( QWidget *editor );
 
   private slots:
     void fillTransportList();
