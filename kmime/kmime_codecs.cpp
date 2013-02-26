@@ -93,7 +93,8 @@ Codec *Codec::codecForName( const QByteArray &name )
     fillDictionary();
   }
   QByteArray lowerName = name;
-  kAsciiToLower( lowerName.data() );
+  // Qt5: Port
+  //kAsciiToLower( lowerName.data() );
   Codec *codec = ( *all )[ lowerName ]; // FIXME: operator[] adds an entry into the hash
   dictLock->unlock();
 
