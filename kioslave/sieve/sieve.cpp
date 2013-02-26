@@ -980,7 +980,7 @@ bool kio_sieveProtocol::authenticate()
 	 * before it automatically skips the prompt?
 	 * Note2: encoding issues with PLAIN login? */
 	AuthInfo ai;
-	ai.url.setProtocol("sieve");
+	ai.url.setScheme("sieve");
 	ai.url.setHost(m_sServer);
 	ai.url.setPort( m_port );
 	ai.username = m_sUser;
