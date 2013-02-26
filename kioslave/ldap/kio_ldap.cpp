@@ -297,10 +297,10 @@ void LDAPProtocol::openConnection()
   mConnected = true;
 
   AuthInfo info;
-  info.url.setProtocol( mProtocol );
+  info.url.setScheme( mProtocol );
   info.url.setHost( mServer.host() );
   info.url.setPort( mServer.port() );
-  info.url.setUser( mServer.user() );
+  info.url.setUserName( mServer.user() );
   info.caption = i18n("LDAP Login");
   info.comment = QString::fromLatin1( mProtocol ) + "://" + mServer.host() + ':' +
     QString::number( mServer.port() );
