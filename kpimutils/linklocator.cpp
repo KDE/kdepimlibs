@@ -53,7 +53,7 @@ class KPIMUtils::LinkLocator::Private
 //@endcond
 
 // Use a static for this as calls to the KEmoticons constructor are expensive.
-K_GLOBAL_STATIC( KEmoticons, sEmoticons )
+Q_GLOBAL_STATIC( KEmoticons, sEmoticons )
 
 LinkLocator::LinkLocator( const QString &text, int pos )
   : mText( text ), mPos( pos ), d( new KPIMUtils::LinkLocator::Private )

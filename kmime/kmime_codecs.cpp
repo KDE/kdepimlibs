@@ -57,7 +57,7 @@ namespace KMime {
 // global list of KMime::Codec's
 //@cond PRIVATE
 KAutoDeleteHash<QByteArray, Codec> *Codec::all = 0;
-K_GLOBAL_STATIC( QMutex, dictLock )
+Q_GLOBAL_STATIC( QMutex, dictLock )
 //@endcond
 
 void Codec::cleanupCodec()

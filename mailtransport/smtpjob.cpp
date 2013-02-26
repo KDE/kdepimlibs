@@ -59,7 +59,7 @@ class SlavePool
     }
 };
 
-K_GLOBAL_STATIC( SlavePool, s_slavePool )
+Q_GLOBAL_STATIC( SlavePool, s_slavePool )
 
 /**
  * Private class that helps to provide binary compatibility between releases.
