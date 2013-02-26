@@ -90,7 +90,7 @@ class TestGDataWarnings : public QObject
     void removeCommentTimeoutWarning();
 };
 
-#include "testGData.moc"
+#include "testgdata.moc"
 
 void TestGData::dumpPost( const BlogPost *post )
 {
