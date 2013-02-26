@@ -1,6 +1,7 @@
 if (NOT KDEPIM_ONLY_KLEO)
 
-add_subdirectory( tests )
+# Qt5: Port
+# add_subdirectory( tests )
 
 macro(install_headers _dir)
   install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE )

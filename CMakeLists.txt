@@ -1,19 +1,61 @@
 project(kdepimlibs)
 
-# set_package_properties appeared in cmake 2.8.6
-# TODO: Remove when kdelibs >= 4.10 will be required
-cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
+# Temporary: Make sure we use the right CMake Version
+cmake_minimum_required(VERSION 2.8.10.2 FATAL_ERROR)
 
-# where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+# Enable CMake's Automoc
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC_RELAXED_MODE ON)
 
+################# set KDE specific information #################
 
-############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
+find_package(ECM 0.0.7 REQUIRED NO_MODULE)
+
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+
+find_package(Qt5Core REQUIRED NO_MODULE)
+
+find_package(Qt5Transitional REQUIRED MODULE COMPONENTS X11Extras)
+
+find_package(kdeqt5staging REQUIRED NO_MODULE)
+
+# Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
+find_package(KF5 MODULE REQUIRED COMPONENTS CMake Compiler InstallDirs
+                                            kidletime itemmodels kwidgetsaddons kwindowsystem kcodecs karchive kcoreaddons solid
+                                            kconfig kauth)
+
+find_package(ki18n REQUIRED NO_MODULE)
+find_package(kio REQUIRED NO_MODULE)
+find_package(kjs REQUIRED NO_MODULE)
+find_package(kguiaddons REQUIRED NO_MODULE)
+find_package(kde4support REQUIRED NO_MODULE)
+
+find_package(KDELibs4 REQUIRED NO_MODULE)
+
+include(ECMVersion)
+include(ECMWriteVersionHeader)
+
+set_package_properties(ECM PROPERTIES
+                       URL "https://projects.kde.org/extra-cmake-modules"
+                       DESCRIPTION "Replacement for kdelibs cmake macros"
+                       TYPE REQUIRED
+                       PURPOSE "Required by the kdepimlibs build system"
+)
+
+remove_definitions(-DQT_NO_KEYWORDS)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII)
+remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+
+string(REPLACE "--pedantic-errors" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+string(REPLACE "-pedantic-errors" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
+############### The kdepimlibs version ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 10)
 set(KDEPIMLIBS_VERSION_PATCH 64)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
-
 
 ############### search packages used by KDE ###############
 
@@ -21,15 +63,6 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 if(WINCE)
     set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
 endif()
-
-set (QT_MIN_VERSION "4.8.0")
-# kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-# Exception is made for kdepimlibs 4.10: The feature_summary port implicitly requires kdelibs 4.9.4 and CMake 2.8.6
-find_package(KDE4 4.9.4 REQUIRED)
-include(KDE4Defaults)
-include(MacroLibrary)
-include(KDEPlatformProfile)
-include(FeatureSummary)
 
 # Used by options
 include(CMakeDependentOption)
