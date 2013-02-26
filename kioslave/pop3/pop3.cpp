@@ -43,7 +43,6 @@ extern "C" {
 #include <sasl/sasl.h>
 }
 
-#include <QtCore/QBool>
 #include <QCoreApplication>
 #include <QByteArray>
 #include <QRegExp>
@@ -52,6 +51,7 @@ extern "C" {
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 #include <kcodecs.h>
+#include <kmd5.h>
 #include <kprotocolmanager.h>
 
 #include <kio/slaveinterface.h>
@@ -61,7 +61,7 @@ extern "C" {
 #define MAX_COMMANDS 10
 
 extern "C" {
-  int KDE_EXPORT kdemain(int argc, char **argv);
+  int Q_DECL_EXPORT kdemain(int argc, char **argv);
 }
 
 using namespace KIO;
