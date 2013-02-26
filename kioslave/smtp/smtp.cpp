@@ -59,6 +59,7 @@ using KioSMTP::SMTPSessionInterface;
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>
+#include <kurl.h>
 
 #include <QHostInfo>
 

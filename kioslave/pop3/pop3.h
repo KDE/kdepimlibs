@@ -31,6 +31,7 @@
 #include "pop3-config.h"
 
 #include <kio/tcpslavebase.h>
+#include <kurl.h>
 
 #include <sys/types.h>
 #include <sys/time.h>

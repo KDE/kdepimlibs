@@ -49,6 +49,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
+#include <KGlobal>
 #include <KUrl>
 #include <KWallet/Wallet>
 

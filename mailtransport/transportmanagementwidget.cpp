@@ -27,6 +27,7 @@
 
 #include <KMessageBox>
 #include <KMenu>
+#include <KGlobal>
 
 using namespace MailTransport;
 

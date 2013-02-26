@@ -24,6 +24,7 @@
 #include <KDebug>
 #include <KJob>
 #include <KLocalizedString>
+#include <KLocale>
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>

@@ -25,6 +25,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QPair>
+#include <QtCore/QList>
 
 #include <kdatetime.h>
 
