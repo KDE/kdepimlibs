@@ -28,7 +28,7 @@
 
 #include <kxmlrpcclient/client.h>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 #include <kstandarddirs.h>
 

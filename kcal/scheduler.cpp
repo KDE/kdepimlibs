@@ -32,7 +32,7 @@
 #include "icalformat.h"
 #include "assignmentvisitor.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>

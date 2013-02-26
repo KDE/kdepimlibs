@@ -33,7 +33,7 @@
 #include <kcal/assignmentvisitor.h>
 #include <kcal/comparisonvisitor.h>
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>

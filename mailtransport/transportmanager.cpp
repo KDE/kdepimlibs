@@ -46,6 +46,7 @@
 #include <KDebug>
 #include <KEMailSettings>
 #include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
 #include <KUrl>

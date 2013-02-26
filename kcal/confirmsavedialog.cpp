@@ -21,7 +21,7 @@
 
 #include "confirmsavedialog.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QBoxLayout>
 #include <QLabel>

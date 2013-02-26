@@ -33,7 +33,7 @@
 #include "period.h"
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace KCal;
 

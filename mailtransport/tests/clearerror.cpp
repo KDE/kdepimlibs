@@ -23,6 +23,7 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KJob>
+#include <KLocalizedString>
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>

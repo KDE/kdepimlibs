@@ -25,7 +25,7 @@
 #include <QString>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcomponentdata.h>
 #include <kglobal.h>
 #include <kurl.h>

@@ -42,7 +42,7 @@
 
 #include <kdebug.h>
 #include <kdatetime.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QString>
 #include <QtCore/QRegExp>

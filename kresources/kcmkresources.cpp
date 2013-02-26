@@ -25,7 +25,7 @@
 #include <kaboutdata.h>
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include "configpage.h"
 

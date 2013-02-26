@@ -57,7 +57,7 @@
 
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcalendarsystem.h>
 #include <ksystemtimezone.h>
 #include <kmimetype.h>

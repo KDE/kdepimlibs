@@ -55,7 +55,7 @@ extern "C" {
 #include <kdatetime.h>
 #include <ktzfiletimezone.h>
 #include <ksystemtimezone.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcodecs.h>
 
 #include <cstdlib>

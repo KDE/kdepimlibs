@@ -26,7 +26,7 @@
 #include <kdebug.h>
 #include <krandom.h>
 #include <kconfig.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kconfiggroup.h>
 
 using namespace KRES;

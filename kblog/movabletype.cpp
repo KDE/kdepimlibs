@@ -29,7 +29,7 @@
 #include <kio/job.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 
 #include <QtCore/QStringList>

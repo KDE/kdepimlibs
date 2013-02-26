@@ -28,6 +28,8 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KLineEdit>
+#include <KLocale>
+#include <KLocalizedString>
 #include <KTextEdit>
 
 #include <QPushButton>

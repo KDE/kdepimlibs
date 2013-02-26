@@ -21,6 +21,9 @@
 #include <akonadi/collectionpathresolver_p.h>
 #include <testattribute.h>
 
+#include <KLocale>
+#include <KLocalizedString>
+
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/itemcreatejob.h>

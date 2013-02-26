@@ -29,7 +29,7 @@
 
 #include <KDebug>
 #include <KDateTime>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QList>
 

@@ -21,6 +21,9 @@
 
 #include <QStringList>
 
+#include <KLocale>
+#include <KLocalizedString>
+
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>

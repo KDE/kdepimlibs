@@ -34,6 +34,7 @@
 #include <kdefakes.h> // for strcasestr
 #include <kglobal.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcharsets.h>
 #include <kcodecs.h>
 #include <kdebug.h>

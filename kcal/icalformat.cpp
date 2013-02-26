@@ -51,7 +51,7 @@ extern "C" {
 #include <QClipboard>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <ksavefile.h>
 
 #include <stdio.h>

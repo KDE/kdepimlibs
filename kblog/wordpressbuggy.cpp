@@ -25,7 +25,7 @@
 #include "blogpost.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 
 #include <kio/http.h>

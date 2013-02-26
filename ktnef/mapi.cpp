@@ -30,7 +30,7 @@
 
 #include "mapi.h"
 #include <QtCore/QMap>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 //@cond IGNORE
 static struct
