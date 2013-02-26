@@ -268,7 +268,7 @@ QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
   tmp.setTime_t( t );
 
   if ( !lang.isEmpty() ) {
-    locale = new KLocale( lang, lang, lang );
+    locale = new KLocale( lang, lang, 0 );
     ret = locale->formatDateTime( tmp, ( shortFormat ? KLocale::ShortDate : KLocale::LongDate ), includeSecs );
     delete locale;
   } else {
