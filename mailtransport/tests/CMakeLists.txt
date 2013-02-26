@@ -14,6 +14,7 @@ macro(add_akonadi_isolated_test _source _path)
     mailtransport
     kmime
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDE4SUPPORT_LIBS}
   )
 
   # based on kde4_add_unit_test
@@ -38,23 +39,23 @@ endmacro()
 
 set(tm_srcs transportmgr.cpp)
 kde4_add_executable(transportmgr TEST ${tm_srcs})
-target_link_libraries(transportmgr ${KDE4_KDEUI_LIBS} mailtransport)
+target_link_libraries(transportmgr ${KDE4_KDEUI_LIBS} ${KDE4_KDE4SUPPORT_LIBS} mailtransport)
 
 set(queuer_srcs queuer.cpp)
 kde4_add_executable(queuer TEST ${queuer_srcs})
-target_link_libraries(queuer ${KDE4_KDEUI_LIBS} mailtransport kmime akonadi-kde akonadi-kmime)
+target_link_libraries(queuer ${KDE4_KDEUI_LIBS} ${KDE4_KDE4SUPPORT_LIBS} mailtransport kmime akonadi-kde akonadi-kmime)
 
 set( sendqueued_srcs sendqueued.cpp )
 kde4_add_executable( sendqueued TEST ${sendqueued_srcs} )
-target_link_libraries( sendqueued ${KDE4_KDEUI_LIBS} mailtransport akonadi-kde akonadi-kmime)
+target_link_libraries( sendqueued ${KDE4_KDEUI_LIBS} ${KDE4_KDE4SUPPORT_LIBS} mailtransport akonadi-kde akonadi-kmime)
 
 set( clearerror_srcs clearerror.cpp )
 kde4_add_executable( clearerror TEST ${clearerror_srcs} )
-target_link_libraries( clearerror ${KDE4_KDEUI_LIBS} mailtransport akonadi-kde akonadi-kmime)
+target_link_libraries( clearerror ${KDE4_KDEUI_LIBS} ${KDE4_KDE4SUPPORT_LIBS} mailtransport akonadi-kde akonadi-kmime)
 
 set( abort_srcs abort.cpp )
 kde4_add_executable( abort TEST ${abort_srcs} )
-target_link_libraries( abort ${KDE4_KDEUI_LIBS} mailtransport akonadi-kde)
+target_link_libraries( abort ${KDE4_KDEUI_LIBS} ${KDE4_KDE4SUPPORT_LIBS} mailtransport akonadi-kde)
 
 
 # Akonadi testrunner-based tests:

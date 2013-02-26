@@ -26,7 +26,7 @@ set(ktnef_LIB_SRCS
 
 kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
-target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
+target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils ${KDE4_KDE4SUPPORT_LIBS})
 
 set_target_properties(ktnef PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}

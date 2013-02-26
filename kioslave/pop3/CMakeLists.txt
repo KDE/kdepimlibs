@@ -23,7 +23,7 @@ set(kio_pop3_PART_SRCS pop3.cpp )
 kde4_add_plugin(kio_pop3 ${kio_pop3_PART_SRCS})
 
 
-target_link_libraries(kio_pop3  ${KDE4_KIO_LIBS} ${pop3_optional_libs})
+target_link_libraries(kio_pop3  ${KDE4_KIO_LIBS} ${pop3_optional_libs} ${KDE4_KDE4SUPPORT_LIBS})
 
 install(TARGETS kio_pop3  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
