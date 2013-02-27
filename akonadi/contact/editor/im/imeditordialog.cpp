@@ -25,13 +25,12 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "imdelegate.h"
 #include "imitemdialog.h"
 
-#include <QtCore/QStringList>
 #include <QGridLayout>
 #include <QPointer>
 #include <QPushButton>
 #include <QTreeView>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 
 IMEditorDialog::IMEditorDialog( QWidget *parent )

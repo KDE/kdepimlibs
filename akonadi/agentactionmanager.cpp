@@ -27,10 +27,11 @@
 #include "metatypes.h"
 
 #include <KAction>
+#include <KIcon>
 #include <KActionCollection>
 #include <KDebug>
 #include <KInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QItemSelectionModel>

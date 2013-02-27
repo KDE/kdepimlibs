@@ -46,8 +46,10 @@
 #include <KDebug>
 #include <KEMailSettings>
 #include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
+#include <KGlobal>
 #include <KUrl>
 #include <KWallet/Wallet>
 

@@ -22,6 +22,8 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KDebug>
+#include <KLocale>
+#include <KLocalizedString>
 #include <KJob>
 
 #include <akonadi/collection.h>

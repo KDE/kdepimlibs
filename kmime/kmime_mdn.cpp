@@ -35,7 +35,7 @@
 #include "kmime_version.h"
 #include "kmime_util.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 
 #include <QtCore/QByteArray>

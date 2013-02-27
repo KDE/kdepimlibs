@@ -22,7 +22,9 @@
 
 #include <krandom.h>
 #include <kdebug.h>
+#include <kglobal.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kconfiggroup.h>

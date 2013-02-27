@@ -24,7 +24,7 @@
 #include "improtocols.h"
 
 #include <kicon.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 IMAddress::IMAddress()
   : mProtocol( QLatin1String( "messaging/aim" ) ), mPreferred( false )
@@ -92,7 +92,7 @@ IMAddress::List IMModel::addresses() const
 
 QModelIndex IMModel::index( int row, int column, const QModelIndex& ) const
 {
-  return createIndex( row, column, 0 );
+  return createIndex( row, column );
 }
 
 QModelIndex IMModel::parent( const QModelIndex& ) const

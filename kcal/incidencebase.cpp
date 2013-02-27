@@ -38,6 +38,7 @@
 
 #include <kglobal.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 #include <kurl.h>
 #include <ksystemtimezone.h>

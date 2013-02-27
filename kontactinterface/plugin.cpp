@@ -30,7 +30,7 @@
 #include <kxmlguifactory.h>
 #include <kaboutdata.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
@@ -38,6 +38,7 @@
 
 #include <QObject>
 #include <QDBusConnection>
+#include <QDomDocument>
 
 #include <unistd.h>
 

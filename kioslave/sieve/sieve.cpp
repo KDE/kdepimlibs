@@ -37,7 +37,7 @@ extern "C" {
 #include <kdemacros.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kurl.h>
 #include <kglobal.h>
 #include <kmessagebox.h>

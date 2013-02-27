@@ -24,7 +24,7 @@
 #include "agentbase.h"
 #include "tracerinterface.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <solid/networking.h>
 
@@ -69,6 +69,11 @@ class AgentBasePrivate : public QObject
     QString defaultErrorMessage() const
     {
       return i18nc( "@info:status", "Error." );
+    }
+
+    QString defaultUnconfiguredMessage() const
+    {
+      return i18nc( "@info:status", "Not configured" );
     }
 
     void setProgramName();

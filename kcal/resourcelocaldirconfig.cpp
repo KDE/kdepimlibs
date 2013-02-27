@@ -23,7 +23,7 @@
 #include "resourcelocaldir.h"
 #include "resourcelocaldir_p.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>

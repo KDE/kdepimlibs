@@ -31,7 +31,7 @@
 
 #include "response.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kio/global.h>
 
 #include <QByteArray>

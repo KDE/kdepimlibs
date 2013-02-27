@@ -82,7 +82,7 @@ extern "C" {
 #include <kdebug.h>
 #include <kio/connection.h>
 #include <kio/slaveinterface.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmimetype.h>
 #include <kcodecs.h>
 #include <kde_file.h>

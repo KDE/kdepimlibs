@@ -24,6 +24,8 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KDebug>
+#include <KLocale>
+#include <KLocalizedString>
 
 #include <akonadi/control.h>
 

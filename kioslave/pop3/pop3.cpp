@@ -50,7 +50,7 @@ extern "C" {
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcodecs.h>
 #include <kprotocolmanager.h>
 

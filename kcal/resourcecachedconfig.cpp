@@ -21,7 +21,7 @@
 #include "resourcecached.h"
 
 #include <khbox.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 
 #include <QLayout>

@@ -25,7 +25,7 @@
 #include "kedittagsdialog_p.h"
 
 #include <kicon.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <ksqueezedtextlabel.h>
 
 #include <QHBoxLayout>
@@ -40,7 +40,7 @@ TagWidget::TagWidget( QWidget *parent )
   layout->addWidget( mTagLabel );
 
   QToolButton *editButton = new QToolButton;
-  editButton->setText( QLatin1String( "..." ) );
+  editButton->setText( i18n( "..." ) );
   layout->addWidget( editButton, Qt::AlignRight );
 
   layout->setStretch( 0, 10 );

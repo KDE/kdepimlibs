@@ -25,7 +25,6 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QString>
-#include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -36,7 +35,7 @@
 #include <kinputdialog.h>
 #include <klineedit.h>
 #include <KListWidget>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kpimutils/email.h>
 

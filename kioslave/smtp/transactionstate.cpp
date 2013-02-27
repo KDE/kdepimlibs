@@ -32,7 +32,7 @@
 #include "transactionstate.h"
 
 #include <kio/global.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 
 namespace KioSMTP {

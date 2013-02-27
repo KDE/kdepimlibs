@@ -53,7 +53,7 @@
 #include <kio/connection.h>
 #include <kio/slaveinterface.h>
 #include <kio/passdlg.h>
-#include <klocale.h> */
+#include <klocalizedstring.h> */
 
 using namespace KIMAP;
 

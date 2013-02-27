@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <QIcon>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 
@@ -207,7 +207,7 @@ QModelIndex AgentInstanceModel::index( int row, int column, const QModelIndex& )
     return QModelIndex();
   }
 
-  return createIndex( row, column, 0 );
+  return createIndex( row, column);
 }
 
 QModelIndex AgentInstanceModel::parent( const QModelIndex& ) const

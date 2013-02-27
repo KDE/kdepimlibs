@@ -41,6 +41,7 @@
 #include <QButtonGroup>
 
 #include <KProtocolInfo>
+#include <KDebug>
 
 namespace {
 

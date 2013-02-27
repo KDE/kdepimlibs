@@ -26,7 +26,7 @@
 #include "vcalformat.h"
 #include "icalformat.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>

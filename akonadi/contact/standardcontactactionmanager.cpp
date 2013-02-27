@@ -28,9 +28,10 @@
 #include <akonadi/mimetypechecker.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <kicon.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 
 #include <QtCore/QPointer>

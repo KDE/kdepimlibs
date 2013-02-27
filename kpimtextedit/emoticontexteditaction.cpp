@@ -20,8 +20,9 @@
 #include "emoticontexteditaction.h"
 #include "emoticontexteditselector.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
+#include <KIcon>
 
 #include <QWidgetAction>
 

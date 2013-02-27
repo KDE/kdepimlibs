@@ -36,7 +36,7 @@
 #include "exceptions.h"
 #include "calformat.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace KCal;
 

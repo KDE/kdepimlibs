@@ -48,7 +48,7 @@
 #include <QtCore/QString>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kurl.h>
 #include <kdirwatch.h>
 #include <kstandarddirs.h>

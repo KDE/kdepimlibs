@@ -26,7 +26,7 @@
 #include <kabc/addressee.h>
 #include <kicon.h>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 
@@ -224,7 +224,7 @@ QString ContactGroupModel::lastErrorMessage() const
 
 QModelIndex ContactGroupModel::index( int row, int col, const QModelIndex& ) const
 {
-  return createIndex( row, col, 0 );
+  return createIndex( row, col);
 }
 
 QModelIndex ContactGroupModel::parent( const QModelIndex& ) const

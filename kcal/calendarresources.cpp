@@ -44,7 +44,7 @@
 #include <kdebug.h>
 #include <kdatetime.h>
 #include <kstandarddirs.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QString>
 #include <QtCore/QList>

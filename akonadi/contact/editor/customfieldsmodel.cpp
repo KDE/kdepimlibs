@@ -24,6 +24,7 @@
 #include <kglobal.h>
 #include <kicon.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QDateTime>
 
@@ -54,7 +55,7 @@ CustomField::List CustomFieldsModel::customFields() const
 
 QModelIndex CustomFieldsModel::index( int row, int column, const QModelIndex& ) const
 {
-  return createIndex( row, column, 0 );
+  return createIndex( row, column );
 }
 
 QModelIndex CustomFieldsModel::parent( const QModelIndex& ) const
@@ -85,6 +86,7 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
       switch ( customField.type() ) {
         case CustomField::TextType:
         case CustomField::NumericType:
+        case CustomField::UrlType:
           return customField.value();
           break;
         case CustomField::BooleanType:

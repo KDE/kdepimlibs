@@ -38,7 +38,7 @@
 #include <QtCore/QFile>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kprocess.h>

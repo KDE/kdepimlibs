@@ -40,7 +40,7 @@
 #include <QtCore/QTextStream>
 
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kcalendarsystem.h>
 
 using namespace KMime;

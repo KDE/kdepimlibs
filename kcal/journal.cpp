@@ -30,7 +30,7 @@
 */
 
 #include "journal.h"
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace KCal;
 

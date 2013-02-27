@@ -32,6 +32,7 @@
 
 #include <KLocalizedString>
 #include <KUrl>
+#include <KDebug>
 #include <KIO/Job>
 #include <KIO/Scheduler>
 #include <KPasswordDialog>

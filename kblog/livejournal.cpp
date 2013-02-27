@@ -27,7 +27,7 @@
 #include <kxmlrpcclient/client.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 
 using namespace KBlog;

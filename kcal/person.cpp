@@ -38,7 +38,7 @@
 #include <QtCore/QRegExp>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace KCal;
 

@@ -38,7 +38,7 @@
 #include "kpimutils/kfileio.h"
 
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdebug.h>
 #include <ktemporaryfile.h>
 #include <kde_file.h>

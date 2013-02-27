@@ -24,9 +24,10 @@
 #include <QApplication>
 #include <QDropEvent>
 #include <QMenu>
+#include <QDrag>
 
 #include <KDE/KIcon>
-#include <KDE/KLocale>
+#include <KDE/KLocalizedString>
 #include <KDE/KUrl>
 
 #include "akonadi/collection.h"

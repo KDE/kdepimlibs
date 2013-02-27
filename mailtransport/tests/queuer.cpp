@@ -30,6 +30,8 @@
 #include <KDateTimeWidget>
 #include <KDialog>
 #include <KLineEdit>
+#include <KLocale>
+#include <KLocalizedString>
 #include <KTextEdit>
 
 #include <akonadi/control.h>

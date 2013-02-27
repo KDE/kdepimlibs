@@ -28,7 +28,7 @@
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <netdb.h>
 #include <netinet/in.h>

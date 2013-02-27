@@ -32,7 +32,7 @@
 #include <kio/http.h>
 #include <kio/job.h>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 
 #include <QByteArray>

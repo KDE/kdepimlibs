@@ -50,7 +50,7 @@
 #include <kcalcore/icalformat.h>
 #include <kcalutils/incidenceformatter.h>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdatetime.h>
 
 #include <QtCore/QBuffer>

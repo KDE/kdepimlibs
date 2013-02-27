@@ -40,7 +40,7 @@
 #include <QtXml/QXmlSimpleReader>
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kdatetime.h>
 
 using namespace KCal;

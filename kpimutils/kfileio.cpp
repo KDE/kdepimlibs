@@ -22,7 +22,7 @@
 #include "kpimutils_export.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <kde_file.h> //krazy:exclude=camelcase

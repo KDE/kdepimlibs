@@ -40,7 +40,7 @@
 #include "calfilter.h"
 #include "icaltimezones.h"
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 extern "C" {
   #include <icaltimezone.h>

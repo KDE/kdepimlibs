@@ -21,6 +21,8 @@
 #include <QtCore/QFile>
 
 #include <kaboutdata.h>
+#include <klocalizedstring.h>
+#include <klocale.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 

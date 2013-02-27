@@ -21,8 +21,9 @@
 #include "collectiondialog.h"
 
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kpushbutton.h>
+#include <kicon.h>
 #include <kstandardshortcut.h>
 
 #include <QtCore/QEvent>

@@ -22,6 +22,8 @@
 
 #include <kdemacros.h>
 
+#include <KLocale>
+
 #ifndef MAILTRANSPORT_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */

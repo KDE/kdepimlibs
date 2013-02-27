@@ -25,7 +25,9 @@
 #include "tablecellformatdialog.h"
 
 #include <KActionCollection>
-#include <KLocale>
+#include <KAction>
+#include <KIcon>
+#include <KLocalizedString>
 
 #include <QTextTable>
 #include <QPointer>

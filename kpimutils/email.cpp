@@ -29,7 +29,7 @@
 #include <kmime/kmime_util.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KUrl>
 
 #include <QtCore/QRegExp>

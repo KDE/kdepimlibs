@@ -19,6 +19,9 @@
 
 #include "attributetest.h"
 
+#include <KLocalizedString>
+#include <KLocale>
+
 #include <akonadi/attributefactory.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/kmime/addressattribute.h>
