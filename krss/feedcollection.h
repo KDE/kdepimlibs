@@ -87,6 +87,9 @@ public:
 
     int maximumItemAge() const;
     void setMaximumItemAge( int );
+
+    bool allowSubfolders() const;
+    void setAllowSubfolders( bool allow );
 };
 
 } // namespace KRss

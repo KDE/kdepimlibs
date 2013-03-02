@@ -193,6 +193,18 @@ void FeedPropertiesCollectionAttribute::setMaximumItemAge( int ma )
     setProperty( MaximumItemAgeKey, QString::number( ma ), QLatin1String("-1") );
 }
 
+static const QString AllowSubfoldersProperty = QLatin1String("AllowSubfolders");
+
+bool FeedPropertiesCollectionAttribute::allowSubfolders() const
+{
+    return (bool) readIntProperty( AllowSubfoldersProperty, 1 );
+}
+
+void FeedPropertiesCollectionAttribute::setAllowSubfolders( bool canHaveSubfolders )
+{
+    setProperty( AllowSubfoldersProperty, QString::number( canHaveSubfolders ), QLatin1String("1") );
+}
+
 static QString ArchiveModeKey = QLatin1String("ArchiveModeKey");
 
 FeedPropertiesCollectionAttribute::ArchiveMode FeedPropertiesCollectionAttribute::archiveMode() const

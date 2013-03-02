@@ -63,6 +63,8 @@ public:
          */
         int customFetchInterval() const;
         void setCustomFetchInterval( int );
+        bool allowSubfolders() const;
+        void setAllowSubfolders( bool allow );
 
         enum ArchiveMode {
             GlobalDefault,

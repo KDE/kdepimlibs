@@ -291,3 +291,14 @@ void FeedCollection::setMaximumItemAge( int m )
 {
     attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setMaximumItemAge( m );
 }
+
+bool FeedCollection::allowSubfolders() const
+{
+  const FeedPropertiesCollectionAttribute *attr = attribute<FeedPropertiesCollectionAttribute>();
+    return attr ? attr->allowSubfolders() : true;
+}
+
+void FeedCollection::setAllowSubfolders( bool allow )
+{
+    attribute<FeedPropertiesCollectionAttribute>( AddIfMissing )->setAllowSubfolders( allow );
+}
