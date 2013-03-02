@@ -63,10 +63,10 @@ public:
         SortRole=EntityTreeModel::UserRole,
         IsUnreadRole,
         IsReadRole,
-        IsDeletedRole, //PENDING(frank) transitional Akregator compat, review
-        IsImportantRole, //PENDING(frank) transitional Akregator compat, review
-        LinkRole, //PENDING(frank) transitional Akregator compat, review
-        IsFolderRole //PENDING(frank) old krss transitional
+        IsDeletedRole,
+        IsImportantRole,
+        LinkRole,
+        IsFolderRole
     };
 
 public:
