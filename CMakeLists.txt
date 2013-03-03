@@ -11,7 +11,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 10)
-set(KDEPIMLIBS_VERSION_PATCH 64)
+set(KDEPIMLIBS_VERSION_PATCH 65)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -83,7 +83,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.8.51")
+  set(Akonadi_MIN_VERSION "1.9.51")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 

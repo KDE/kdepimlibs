@@ -129,7 +129,7 @@ void SessionThread::readMessage()
   }
 
   if ( m_stream->availableDataSize() > 1 ) {
-    QMetaObject::invokeMethod( this, "readMessage" );
+    QMetaObject::invokeMethod( this, "readMessage", Qt::QueuedConnection );
   }
 
 }
@@ -137,7 +137,7 @@ void SessionThread::readMessage()
 // Called in main thread
 void SessionThread::closeSocket()
 {
-  QMetaObject::invokeMethod( this, "doCloseSocket" );
+  QMetaObject::invokeMethod( this, "doCloseSocket", Qt::QueuedConnection );
 }
 
 // Called in secondary thread
@@ -191,7 +191,7 @@ void SessionThread::threadInit()
   connect( m_socket, SIGNAL(readyRead()),
            this, SIGNAL(socketActivity()) );
 
-  QMetaObject::invokeMethod( this, "reconnect" );
+  QMetaObject::invokeMethod(this, "reconnect", Qt::QueuedConnection);
 }
 
 // Called in secondary thread

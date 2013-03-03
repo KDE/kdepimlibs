@@ -19,6 +19,7 @@
 
 #include "collectionrequester.h"
 #include "collectiondialog.h"
+#include "entitydisplayattribute.h"
 
 #include <klineedit.h>
 #include <klocalizedstring.h>
@@ -138,7 +139,12 @@ Collection CollectionRequester::collection() const
 void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
-  d->edit->setText( collection.isValid() ? collection.name() : QString() );
+  QString name;
+  if ( collection.isValid() ) {
+    name = collection.displayName();
+  }
+
+  d->edit->setText( name );
   emit collectionChanged( collection );
 }
 
