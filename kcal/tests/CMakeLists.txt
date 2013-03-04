@@ -5,7 +5,6 @@ include_directories(
  ${LIBICAL_INCLUDE_DIRS}
 )
 
-add_definitions( -DICALTESTDATADIR="\\"${CMAKE_SOURCE_DIR}/kcal/tests/data/\\"" )
 
 MACRO(KCAL_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
@@ -46,6 +45,8 @@ KCAL_UNIT_TESTS(
   testtodo
   testtimesininterval
 )
+
+set_target_properties(testcalendarlocal PROPERTIES COMPILE_FLAGS -DICALTESTDATADIR="\\"${CMAKE_SOURCE_DIR}/kcal/tests/data/\\"" )
 # this test cannot work with msvc because libical should not be altered
 # and therefore we can't add KCAL_EXPORT_DEPRECATED there
 # it should work fine with mingw because of the auto-import feature
