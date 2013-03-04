@@ -39,12 +39,12 @@ void CodecTest::testCodecs_data()
   QTest::addColumn<QString>( "tag" );
   QTest::addColumn<Mode>( "mode" );
 
-  QDir codecBaseDir( CODEC_DIR );
+  QDir codecBaseDir( TEST_DATA_DIR );
   foreach ( const QString &dir, codecBaseDir.entryList( QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
                                                         QDir::NoSort ) ) {
     if ( dir.toLower().startsWith( "codec_" ) ) {
       const QString codecName = dir.right( dir.size() - 6 );
-      QDir codecDir( CODEC_DIR"/" + dir );
+      QDir codecDir( TEST_DATA_DIR"/" + dir );
       foreach ( const QString &file, codecDir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
         if ( file.toLower().endsWith( ".expected" ) ) {
           const QString dataFileNameBase = file.left( file.size() - 9 );

@@ -1,5 +1,3 @@
-add_definitions( -DMAIL_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/../data/mails\\"" )
-add_definitions( -DCODEC_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/../data\\"" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 macro(add_kmime_test _source)
@@ -7,6 +5,7 @@ macro(add_kmime_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME kmime-${_name} ${_test})
   target_link_libraries(${_name} kmime ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} )
+  set_target_properties(${_name} PROPERTIES COMPILE_FLAGS -DTEST_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/../data\\"" )
 endmacro(add_kmime_test)
 
 add_kmime_test(rfc2047test.cpp)
