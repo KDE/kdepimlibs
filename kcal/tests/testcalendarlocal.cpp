@@ -154,9 +154,9 @@ void CalendarLocalTest::testRelationsCrash()
   // the incidences had special relations.
   // This test tests that scenario, and will crash if it fails.
   CalendarLocal cal( KDateTime::UTC );
-  cal.load( ICALTESTDATADIR "test_relations.ics" );
+  QVERIFY( cal.load( ICALTESTDATADIR "test_relations.ics" ) );
   Todo::List oldTodos = cal.todos();
-  cal.load( ICALTESTDATADIR "test_relations.ics" );
+  QVERIFY( cal.load( ICALTESTDATADIR "test_relations.ics" ) );
   Todo::List newTodos = cal.todos();
 
   // We can saftely access the old deleted todos here, since they are not really deleted
