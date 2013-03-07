@@ -157,7 +157,7 @@ QString LinkLocator::getUrl()
   //       even though that is not wanted. So work around that here.
   //       Most real-life URLs hopefully don't end with dots or commas.
   QList<QChar> wordBoundaries;
-  wordBoundaries << '.' << ',' << ':' << '!' << '?' << ')';
+  wordBoundaries << '.' << ',' << ':' << '!' << '?' << ')' << '>';
   if ( url.length() > 1 ) {
     do {
       if ( wordBoundaries.contains( url.at( url.length() - 1 ) ) ) {
