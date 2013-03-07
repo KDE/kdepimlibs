@@ -296,8 +296,8 @@ void LinkLocatorTest::testHtmlConvert_data()
 
   // Test highlighting with *, / and _
   QTest::newRow( "" ) << "Ce paragraphe _contient_ des mots ou des _groupes de mots_ à mettre en"
-                         " forme…" << 0x09 << "Ce paragraphe <u>contient</u> des mots ou des"
-                         " <u>groupes de mots</u> à mettre en forme…";
+                         " forme…" << 0x09 << "Ce paragraphe <u>_contient_</u> des mots ou des"
+                         " <u>_groupes de mots_</u> à mettre en forme…";
   QTest::newRow( "punctation-bug" ) << "Ce texte *a l'air* de _fonctionner_, à condition"
                                        " d’utiliser le guillemet ASCII." << 0x09
                                        << "Ce texte <b>a l'air</b> de <u>fonctionner</u>, à"
@@ -308,7 +308,7 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::newRow( "punctation-bug" ) << "*BLA BLA BLA BLA*." << 0x09 << "<b>BLA BLA BLA BLA</b>.";
   QTest::newRow( "" ) << "Je vais tenter de repérer des faux positif*" << 0x09
                       << "Je vais tenter de repérer des faux positif*";
-  QTest::newRow( "" ) << "*Ouais !* *Yes!*" << 0x09 << "<b>Ouais !</b> <b>Yes!</b>";
+  QTest::newRow( "" ) << "*Ouais !* *Yes!*" << 0x09 << "<b>*Ouais !*</b> <b>*Yes!*</b>";
   QTest::newRow( "" ) << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file" << 0x09
                       << "the /etc/{rsyslog.d,syslog-ng.d}/package.rpmnew file";
 
