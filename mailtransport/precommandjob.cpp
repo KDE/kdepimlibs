@@ -49,7 +49,7 @@ class PreCommandJobPrivate
 };
 
 PreCommandJobPrivate::PreCommandJobPrivate( PrecommandJob *parent )
-  : q( parent )
+  : process( 0 ), q( parent )
 {
 }
 
