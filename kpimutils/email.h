@@ -323,7 +323,7 @@ namespace KPIMUtils {
   KPIMUTILS_EXPORT
   QString normalizedAddress( const QString &displayName,
                              const QString &addrSpec,
-                             const QString &comment );
+                             const QString &comment = QString() );
 
   /** @} */
 
