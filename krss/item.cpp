@@ -69,7 +69,7 @@ KRss::ItemStatus itemStatus( const Akonadi::Item& aitem )
     return stat;
 }
 
-void setItemStatus( Akonadi::Item& aitem, const ItemStatus& stat )
+void KRss::setItemStatus( Akonadi::Item& aitem, const ItemStatus& stat )
 {
     Akonadi::Item::Flags flags;
     if ( !stat.testFlag( KRss::Unread ) )

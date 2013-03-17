@@ -51,7 +51,10 @@ enum ItemStatusFlag {
 };
 Q_DECLARE_FLAGS( ItemStatus, ItemStatusFlag )
 
+KRSS_EXPORT
 ItemStatus itemStatus( const Akonadi::Item& item );
+
+KRSS_EXPORT
 void setItemStatus( Akonadi::Item& aitem, const ItemStatus& stat );
 
 class KRSS_EXPORT Item
