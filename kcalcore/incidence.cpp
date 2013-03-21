@@ -289,6 +289,14 @@ bool Incidence::equals( const IncidenceBase &incidence ) const
     stringCompare( schedulingID(), i2->schedulingID() );
 }
 
+QString Incidence::instanceIdentifier() const
+{
+  if (hasRecurrenceId()) {
+    return uid()+recurrenceId().toString();
+  }
+  return uid();
+}
+
 void Incidence::recreate()
 {
   const KDateTime nowUTC = KDateTime::currentUtcDateTime();
