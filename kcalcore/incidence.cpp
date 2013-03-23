@@ -1037,8 +1037,6 @@ KDateTime Incidence::recurrenceId() const
 void Incidence::setRecurrenceId( const KDateTime &recurrenceId )
 {
   if ( !mReadOnly ) {
-    //dtStart MUST be the same as the recurrenceId
-    setDtStart( recurrenceId );
     update();
     d->mRecurrenceId = recurrenceId;
     setFieldDirty( FieldRecurrenceId );
