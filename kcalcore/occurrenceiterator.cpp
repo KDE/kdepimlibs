@@ -31,6 +31,7 @@
 
 #include "occurrenceiterator.h"
 #include "calendar.h"
+#include "calfilter.h"
 
 #include <KDebug>
 #include <QDate>
@@ -65,6 +66,29 @@ class KCalCore::OccurrenceIterator::Private
     QListIterator<Occurrence> occurrenceIt;
     Occurrence current;
 
+    /*
+     * KCalCore::CalFilter can't handle individual occurrences.
+     * When filtering completed to-dos, the CalFilter doesn't hide them if it's a recurring to-do.
+     */
+    bool occurrenceIsHidden(const Calendar &calendar, const Incidence::Ptr &inc, const KDateTime &occurrenceDate)
+    {
+      if ((inc->type() == Incidence::TypeTodo) &&
+        calendar.filter() && (calendar.filter()->criteria() & KCalCore::CalFilter::HideCompletedTodos )) {
+        if (inc->recurs()) {
+          const Todo::Ptr todo = inc.staticCast<Todo>();
+          if (todo && (occurrenceDate < todo->dtDue())) {
+            return true;
+          }
+        } else if (inc->hasRecurrenceId()) {
+          const Todo::Ptr mainTodo = calendar.todo(inc->uid());
+          if (mainTodo && mainTodo->isCompleted()) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     void setupIterator(const Calendar &calendar, const Incidence::List &incidences) {
       foreach (const Incidence::Ptr &inc, incidences) {
         if (inc->hasRecurrenceId()) {
@@ -77,13 +101,17 @@ class KCalCore::OccurrenceIterator::Private
           }
           const DateTimeList occurrences = inc->recurrence()->timesInInterval(start, end);
           foreach (const KDateTime &occ, occurrences) {
+            KDateTime occurrenceDate(occ);
+            Incidence::Ptr incidence(inc);
             if (recurrenceIds.contains(occ)) {
             //TODO exclude exceptions where the start/end is not within (so the occurrence of the recurrence is omitted, but no exception is added
-              const KCalCore::Incidence::Ptr &exception = recurrenceIds.value(occ);
-              occurrenceList.append(Private::Occurrence(exception, exception->dtStart()));
-            } else {
-              occurrenceList.append(Private::Occurrence(inc, occ));
+              incidence = recurrenceIds.value(occ);
+              occurrenceDate = incidence->dtStart();
             }
+            if (occurrenceIsHidden(calendar, incidence, occurrenceDate)) {
+              continue;
+            }
+            occurrenceList.append(Private::Occurrence(incidence, occurrenceDate));
           }
         } else {
           //TODO deal with non recurring events?
@@ -99,15 +127,6 @@ static uint qHash(const KDateTime &dt)
   return qHash(dt.toString());
 }
 
-static Incidence::List toIncidences(const Event::List &events)
-{
-  Incidence::List incidences;
-  foreach (const Event::Ptr &event, events) {
-      incidences << event;
-  }
-  return incidences;
-}
-
 /**
  * Right now there is little point in the iterator, but:
  * With an iterator it should be possible to solve this more memory efficiently and with immediate results at the beginning of the selected timeframe.
@@ -120,8 +139,17 @@ OccurrenceIterator::OccurrenceIterator( const Calendar &calendar, const KDateTim
 {
   d->start = start;
   d->end = end;
-  //FIXME only takes events into account
-  const Incidence::List incidences = toIncidences(calendar.rawEvents(start.date(), end.date(), start.timeSpec()));
+  Event::List events = calendar.rawEvents(start.date(), end.date(), start.timeSpec());
+  kDebug() << "events " << events.size();
+  if (calendar.filter()) {
+    calendar.filter()->apply(&events);
+  }
+  Todo::List todos = calendar.rawTodos(start.date(), end.date(), start.timeSpec());
+  kDebug() << "todos " << todos.size();
+  if (calendar.filter()) {
+    calendar.filter()->apply(&todos);
+  }
+  const Incidence::List incidences = KCalCore::Calendar::mergeIncidenceList(events, todos, Journal::List());
   d->setupIterator(calendar, incidences);
 }
 

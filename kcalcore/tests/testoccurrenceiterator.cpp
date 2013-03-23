@@ -18,8 +18,10 @@
 #include "testoccurrenceiterator.h"
 #include "occurrenceiterator.h"
 #include "memorycalendar.h"
+#include <calfilter.h>
 
 #include <qtest_kde.h>
+#include <kdebug.h>
 QTEST_KDEMAIN( TestOccurrenceIterator, NoGUI )
 
 void TestOccurrenceIterator::testIterationWithExceptions()
@@ -76,4 +78,69 @@ void TestOccurrenceIterator::testIterationWithExceptions()
 //     qDebug();
   }
   QCOMPARE(occurrence, 3);
+}
+
+void TestOccurrenceIterator::testEventsAndTodos()
+{
+  KCalCore::MemoryCalendar calendar(KDateTime::UTC);
+
+  KDateTime start(QDate(2013, 03, 10), QTime(10, 0, 0), KDateTime::UTC);
+  KDateTime end(QDate(2013, 03, 10), QTime(11, 0, 0), KDateTime::UTC);
+
+  KDateTime actualEnd(QDate(2013, 03, 13), QTime(11, 0, 0), KDateTime::UTC);
+
+  KCalCore::Event::Ptr event(new KCalCore::Event());
+  event->setUid("event");
+  event->setDtStart(start);
+  event->recurrence()->setDaily(1);
+  event->recurrence()->setDuration(2);
+  calendar.addEvent(event);
+
+  KCalCore::Todo::Ptr todo(new KCalCore::Todo());
+  todo->setUid("todo");
+  todo->setDtDue(start);
+  todo->recurrence()->setDaily(1);
+  todo->recurrence()->setDuration(2);
+  calendar.addTodo(todo);
+
+  KCalCore::OccurrenceIterator rIt( calendar, start, actualEnd );
+  QList<KDateTime> expectedTodoOccurrences;
+  expectedTodoOccurrences << start << start.addDays(1);
+  QList<KDateTime> expectedEventOccurrences;
+  expectedEventOccurrences << start << start.addDays(1);
+  while ( rIt.hasNext() ) {
+    rIt.next();
+    if (rIt.incidence()->type() == KCalCore::Incidence::TypeTodo) {
+      QCOMPARE(expectedTodoOccurrences.removeAll(rIt.occurrenceStartDate()), 1);
+    } else {
+      QCOMPARE(expectedEventOccurrences.removeAll(rIt.occurrenceStartDate()), 1);
+    }
+  }
+  QCOMPARE(expectedTodoOccurrences.size(), 0);
+  QCOMPARE(expectedEventOccurrences.size(), 0);
+}
+
+void TestOccurrenceIterator::testFilterCompletedTodos()
+{
+  KCalCore::MemoryCalendar calendar(KDateTime::UTC);
+  calendar.filter()->setCriteria(KCalCore::CalFilter::HideCompletedTodos);
+
+  KDateTime start(QDate(2013, 03, 10), QTime(10, 0, 0), KDateTime::UTC);
+  KDateTime end(QDate(2013, 03, 10), QTime(11, 0, 0), KDateTime::UTC);
+
+  KDateTime actualEnd(QDate(2013, 03, 13), QTime(11, 0, 0), KDateTime::UTC);
+
+  KCalCore::Todo::Ptr todo(new KCalCore::Todo());
+  todo->setUid("todo");
+  todo->setDtDue(start);
+  todo->setDtStart(start);
+  todo->recurrence()->setDaily(1);
+  todo->recurrence()->setDuration(2);
+  //Yes, recurring todos are weird... setting this says that all occurrences until this one have been completed, and thus should be skipped.
+  //that's what kontact did, so it's what we test now.
+  todo->setDtRecurrence(start.addDays(2));
+  calendar.addTodo(todo);
+
+  KCalCore::OccurrenceIterator rIt( calendar, start, actualEnd );
+  QVERIFY(!rIt.hasNext());
 }
