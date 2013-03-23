@@ -714,6 +714,7 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
 
   //FIXME thisAndFuture
   newInc->setRecurrenceId( recurrenceId );
+  newInc->setDtStart(recurrenceId);
 
   // Calculate and set the new end of the incidence
   KDateTime end;
