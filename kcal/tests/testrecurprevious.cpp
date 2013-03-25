@@ -98,9 +98,9 @@ int main( int argc, char **argv )
       if ( !dt.isValid() ) {
         if ( viewSpec.isValid() ) {
           dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ), viewSpec );
-	} else {
+        } else {
           dt = KDateTime( QDate( 2011, 1, 1 ), QTime( 0, 0, 1 ) );
-	}
+        }
       }
       else dt = dt.addYears( 2 );
       kDebug() << "-------------------------------------------";
