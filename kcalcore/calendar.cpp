@@ -698,8 +698,8 @@ bool Calendar::deleteIncidence( const Incidence::Ptr &incidence )
 }
 
 Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
-                                               const KDateTime &recurrenceId,
-                                               bool thisAndFuture )
+                                          const KDateTime &recurrenceId,
+                                          bool thisAndFuture )
 {
   Q_UNUSED(thisAndFuture);
   if ( !incidence || !incidence->recurs() ) {
@@ -737,6 +737,7 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
     end = end.addSecs( offset );
   }
 
+  // TODO: use Incidence::setDateTime() to avoid downcasting
   if ( end.isValid() ) {
     if ( incidence->type() == Incidence::TypeEvent ) {
       newInc.staticCast<Event>()->setDtEnd( end );
