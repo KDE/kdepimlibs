@@ -78,10 +78,10 @@ int main( int argc, char **argv )
 
   KDateTime::Spec viewSpec;
   if ( !cal.load( input ) ) return 1;
-	QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
-	if ( !tz.isEmpty() ) {
+      QString tz = cal.nonKDECustomProperty( "X-LibKCal-Testsuite-OutTZ" );
+      if ( !tz.isEmpty() ) {
           viewSpec = KDateTime::Spec( KSystemTimeZones::zone( tz ) );
-	}
+      }
 
   Incidence::List inc = cal.incidences();
 
