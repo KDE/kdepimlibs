@@ -76,7 +76,7 @@ void TransportListView::editItem( QTreeWidgetItem *item, int column )
 
 void TransportListView::commitData( QWidget *editor )
 {
-  if ( selectedItems().size() < 1 ) {
+  if ( selectedItems().isEmpty() ) {
     // transport was deleted by someone else???
     kDebug() << "No selected item.";
     return;
