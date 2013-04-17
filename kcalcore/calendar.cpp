@@ -717,33 +717,17 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
   newInc->setDtStart(recurrenceId); // TODO: what if it's a TO-DO ? Use a DateTimeRole and Incidence::setDateTime for this
 
   // Calculate and set the new end of the incidence
-  KDateTime end;
-  if ( incidence->type() == Incidence::TypeEvent ) {
-    const Event::Ptr ev = newInc.staticCast<Event>();
-    if ( ev->hasEndDate() ) {
-      end = ev->dtEnd();
-    }
-  } else if ( incidence->type() == Incidence::TypeTodo ) {
-    const Todo::Ptr td = newInc.staticCast<Todo>();
-    if ( td->hasDueDate() ) {
-      end = td->dtDue();
-    }
-  }
-  if ( incidence->dtStart().isDateOnly() ) {
-    int offset = incidence->dtStart().daysTo( recurrenceId );
-    end = end.addDays( offset );
-  } else {
-    qint64 offset = incidence->dtStart().secsTo_long( recurrenceId );
-    end = end.addSecs( offset );
-  }
+  KDateTime end = incidence->dateTime( IncidenceBase::RoleEnd );
 
-  // TODO: use Incidence::setDateTime() to avoid downcasting
   if ( end.isValid() ) {
-    if ( incidence->type() == Incidence::TypeEvent ) {
-      newInc.staticCast<Event>()->setDtEnd( end );
-    } else if ( incidence->type() == Incidence::TypeTodo ) {
-      newInc.staticCast<Todo>()->setDtDue( end, true );
+    if ( incidence->dtStart().isDateOnly() ) {
+      int offset = incidence->dtStart().daysTo( recurrenceId );
+      end = end.addDays( offset );
+    } else {
+      qint64 offset = incidence->dtStart().secsTo_long( recurrenceId );
+      end = end.addSecs( offset );
     }
+    incidence->setDateTime( end, IncidenceBase::RoleEnd );
   }
   return newInc;
 }
