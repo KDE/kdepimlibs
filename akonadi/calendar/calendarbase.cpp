@@ -61,6 +61,7 @@ CalendarBasePrivate::~CalendarBasePrivate()
 void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
+  Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
   mItemById.insert( item.id(), item );
   KCalCore::Incidence::Ptr incidence= item.payload<KCalCore::Incidence::Ptr>();
 
