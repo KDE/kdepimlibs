@@ -714,7 +714,7 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
 
   //FIXME thisAndFuture
   newInc->setRecurrenceId( recurrenceId );
-  newInc->setDtStart(recurrenceId); // TODO: what if it's a TO-DO ? Use a DateTimeRole and Incidence::setDateTime for this
+  newInc->setDtStart(recurrenceId);
 
   // Calculate and set the new end of the incidence
   KDateTime end = incidence->dateTime( IncidenceBase::RoleEnd );
