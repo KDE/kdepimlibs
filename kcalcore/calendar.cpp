@@ -698,8 +698,8 @@ bool Calendar::deleteIncidence( const Incidence::Ptr &incidence )
 }
 
 Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
-                                               const KDateTime &recurrenceId,
-                                               bool thisAndFuture )
+                                          const KDateTime &recurrenceId,
+                                          bool thisAndFuture )
 {
   Q_UNUSED(thisAndFuture);
   if ( !incidence || !incidence->recurs() ) {
@@ -714,7 +714,7 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
 
   //FIXME thisAndFuture
   newInc->setRecurrenceId( recurrenceId );
-  newInc->setDtStart(recurrenceId);
+  newInc->setDtStart(recurrenceId); // TODO: what if it's a TO-DO ? Use a DateTimeRole and Incidence::setDateTime for this
 
   // Calculate and set the new end of the incidence
   KDateTime end;
@@ -737,6 +737,7 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
     end = end.addSecs( offset );
   }
 
+  // TODO: use Incidence::setDateTime() to avoid downcasting
   if ( end.isValid() ) {
     if ( incidence->type() == Incidence::TypeEvent ) {
       newInc.staticCast<Event>()->setDtEnd( end );
