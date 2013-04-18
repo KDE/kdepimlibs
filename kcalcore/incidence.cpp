@@ -544,8 +544,11 @@ QString Incidence::relatedTo( RelType relType ) const
 Recurrence *Incidence::recurrence() const
 {
   if ( !d->mRecurrence ) {
+    if (!dtStart().isValid()) {
+      kWarning() << "A recurrence requires a valid dtStart";
+    }
     d->mRecurrence = new Recurrence();
-    d->mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
+    d->mRecurrence->setStartDateTime( dateTime( RoleRecurrenceStart ) );
     d->mRecurrence->setAllDay( allDay() );
     d->mRecurrence->setRecurReadOnly( mReadOnly );
     d->mRecurrence->addObserver( const_cast<KCalCore::Incidence*>( this ) );
