@@ -98,7 +98,7 @@ void TestOccurrenceIterator::testEventsAndTodos()
 
   KCalCore::Todo::Ptr todo(new KCalCore::Todo());
   todo->setUid("todo");
-  todo->setDtDue(start);
+  todo->setDtStart(start);
   todo->recurrence()->setDaily(1);
   todo->recurrence()->setDuration(2);
   calendar.addTodo(todo);
@@ -143,4 +143,29 @@ void TestOccurrenceIterator::testFilterCompletedTodos()
 
   KCalCore::OccurrenceIterator rIt( calendar, start, actualEnd );
   QVERIFY(!rIt.hasNext());
+}
+
+void TestOccurrenceIterator::testAllDayEvents()
+{
+  KCalCore::MemoryCalendar calendar(KDateTime::UTC);
+
+  KDateTime start(QDate(2013, 03, 10), KDateTime::UTC);
+  KDateTime actualEnd(QDate(2013, 03, 13), QTime(11, 0, 0), KDateTime::UTC);
+
+  KCalCore::Event::Ptr event(new KCalCore::Event());
+  event->setUid("event");
+  event->setDtStart(start);
+  event->recurrence()->setDaily(1);
+  event->recurrence()->setDuration(2);
+  calendar.addEvent(event);
+
+  KCalCore::OccurrenceIterator rIt( calendar, start, actualEnd );
+  QList<KDateTime> expectedEventOccurrences;
+  expectedEventOccurrences << start << start.addDays(1);
+  while ( rIt.hasNext() ) {
+    rIt.next();
+    kDebug() << rIt.occurrenceStartDate();
+    QCOMPARE(expectedEventOccurrences.removeAll(rIt.occurrenceStartDate()), 1);
+  }
+  QCOMPARE(expectedEventOccurrences.size(), 0);
 }
