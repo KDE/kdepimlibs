@@ -39,9 +39,9 @@ class TransportComboBoxPrivate
 TransportComboBox::TransportComboBox( QWidget *parent )
   : KComboBox( parent ), d( new TransportComboBoxPrivate )
 {
-  fillComboBox();
+  QMetaObject::invokeMethod(this, "updateComboboxList");
   connect( TransportManager::self(), SIGNAL(transportsChanged()),
-           SLOT(fillComboBox()) );
+           SLOT(updateComboboxList()) );
 }
 
 TransportComboBox::~TransportComboBox()
@@ -71,18 +71,22 @@ TransportBase::EnumType::type TransportComboBox::transportType() const
   return static_cast<TransportBase::EnumType::type>( transtype );
 }
 
+void TransportComboBox::updateComboboxList()
+{
+  fillComboBox();
+}
+
 void TransportComboBox::fillComboBox()
 {
   const int oldTransport = currentTransportId();
   clear();
-  d->transports.clear();
 
   int defaultId = 0;
   if ( !TransportManager::self()->isEmpty() ) {
-    QStringList listNames = TransportManager::self()->transportNames();
-    QList<int> listIds = TransportManager::self()->transportIds();
+    const QStringList listNames = TransportManager::self()->transportNames();
+    const QList<int> listIds = TransportManager::self()->transportIds();
     addItems( listNames );
-    d->transports << listIds;
+    setTransportList(listIds);
     defaultId = TransportManager::self()->defaultTransportId();
   }
 
@@ -93,3 +97,7 @@ void TransportComboBox::fillComboBox()
   }
 }
 
+void TransportComboBox::setTransportList(const QList<int> &transportList)
+{
+  d->transports = transportList;
+}
