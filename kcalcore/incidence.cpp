@@ -386,7 +386,6 @@ void Incidence::setDtStart( const KDateTime &dt )
 {
   if ( d->mRecurrence ) {
     d->mRecurrence->setStartDateTime( dt );
-    d->mRecurrence->setAllDay( allDay() );
   }
   IncidenceBase::setDtStart( dt );
 }
