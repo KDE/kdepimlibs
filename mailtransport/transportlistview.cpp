@@ -81,7 +81,7 @@ void TransportListView::commitData( QWidget *editor )
     kDebug() << "No selected item.";
     return;
   }
-  QTreeWidgetItem *item = selectedItems()[0];
+  QTreeWidgetItem *item = selectedItems().first();
   QLineEdit *edit = dynamic_cast<QLineEdit*>( editor ); // krazy:exclude=qclasses
   Q_ASSERT( edit ); // original code had if
 
