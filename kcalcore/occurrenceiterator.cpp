@@ -99,13 +99,16 @@ class KCalCore::OccurrenceIterator::Private
           foreach (const Incidence::Ptr &exception, calendar.instances(inc)) {
             recurrenceIds.insert(exception->recurrenceId(), exception);
           }
+          const bool isAllDay = inc->allDay();
           const DateTimeList occurrences = inc->recurrence()->timesInInterval(start, end);
           foreach (const KDateTime &occ, occurrences) {
             KDateTime occurrenceDate(occ);
+            //timesInInterval generates always date-times, which is not what we want for all-day events
+            occurrenceDate.setDateOnly(isAllDay);
             Incidence::Ptr incidence(inc);
-            if (recurrenceIds.contains(occ)) {
+            if (recurrenceIds.contains(occurrenceDate)) {
             //TODO exclude exceptions where the start/end is not within (so the occurrence of the recurrence is omitted, but no exception is added
-              incidence = recurrenceIds.value(occ);
+              incidence = recurrenceIds.value(occurrenceDate);
               occurrenceDate = incidence->dtStart();
             }
             if (occurrenceIsHidden(calendar, incidence, occurrenceDate)) {
