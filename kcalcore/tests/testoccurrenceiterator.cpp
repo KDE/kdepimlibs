@@ -18,7 +18,7 @@
 #include "testoccurrenceiterator.h"
 #include "occurrenceiterator.h"
 #include "memorycalendar.h"
-#include <calfilter.h>
+#include "calfilter.h"
 
 #include <qtest_kde.h>
 #include <kdebug.h>
@@ -110,6 +110,7 @@ void TestOccurrenceIterator::testEventsAndTodos()
   expectedEventOccurrences << start << start.addDays(1);
   while ( rIt.hasNext() ) {
     rIt.next();
+    kDebug() << rIt.occurrenceStartDate();
     if (rIt.incidence()->type() == KCalCore::Incidence::TypeTodo) {
       QCOMPARE(expectedTodoOccurrences.removeAll(rIt.occurrenceStartDate()), 1);
     } else {
