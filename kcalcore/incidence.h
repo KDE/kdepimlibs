@@ -701,6 +701,10 @@ class KCALCORE_EXPORT Incidence
     */
     KDateTime recurrenceId() const;
 
+    void setThisAndFuture( bool );
+
+    bool thisAndFuture() const;
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%  Alarm-related methods
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
