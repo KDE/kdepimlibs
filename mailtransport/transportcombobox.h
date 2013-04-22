@@ -62,6 +62,17 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     */
     TransportBase::EnumType::type transportType() const;
 
+protected:
+    void setTransportList(const QList<int> &transportList);
+
+public Q_SLOTS:
+    /**
+     * @since 4.11
+     * Because of binary compatibility constraints, fillComboBox()
+     * is private. Therefore it must dynamically detect and call this slot.
+     */
+    void updateComboboxList();
+
   private Q_SLOTS:
     void fillComboBox();
 
