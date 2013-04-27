@@ -712,8 +712,8 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
   //Recurring exceptions are not support for now
   newInc->clearRecurrence();
 
-  //FIXME thisAndFuture
   newInc->setRecurrenceId( recurrenceId );
+  newInc->setThisAndFuture( thisAndFuture );
   newInc->setDtStart(recurrenceId);
 
   // Calculate and set the new end of the incidence
