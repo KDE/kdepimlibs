@@ -227,3 +227,29 @@ void TestOccurrenceIterator::testWithExceptionThisAndFuture()
   }
   QCOMPARE(occurrence, 3);
 }
+
+void TestOccurrenceIterator::testSubDailyRecurrences()
+{
+  KCalCore::MemoryCalendar calendar(KDateTime::UTC);
+
+  KDateTime start(QDate(2013, 03, 10), QTime(10, 0, 0), KDateTime::UTC);
+  KDateTime actualEnd(QDate(2013, 03, 10), QTime(13, 0, 0), KDateTime::UTC);
+
+  KCalCore::Event::Ptr event(new KCalCore::Event());
+  event->setUid("event");
+  event->setDtStart(start);
+  event->recurrence()->setHourly(1);
+  event->recurrence()->setDuration(2);
+  calendar.addEvent(event);
+
+  KCalCore::OccurrenceIterator rIt( calendar, start, actualEnd );
+  QList<KDateTime> expectedEventOccurrences;
+  expectedEventOccurrences << start << start.addSecs(60*60);
+  while ( rIt.hasNext() ) {
+    rIt.next();
+    kDebug() << rIt.occurrenceStartDate();
+    QCOMPARE(expectedEventOccurrences.removeAll(rIt.occurrenceStartDate()), 1);
+  }
+  QCOMPARE(expectedEventOccurrences.size(), 0);
+
+}
