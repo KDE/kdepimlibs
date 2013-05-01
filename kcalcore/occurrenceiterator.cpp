@@ -126,7 +126,7 @@ class KCalCore::OccurrenceIterator::Private
             }
           }
         } else {
-          //TODO deal with non recurring events?
+          occurrenceList << Private::Occurrence(inc, inc->dtStart());
         }
       }
       occurrenceIt = QListIterator<Private::Occurrence>(occurrenceList);
