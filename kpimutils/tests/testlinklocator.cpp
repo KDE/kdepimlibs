@@ -111,7 +111,6 @@ void LinkLocatorTest::testGetUrl()
 {
   QStringList brackets;
   brackets << "" << "";   // no brackets
-  brackets << "(" << ")";
   brackets << "<" << ">";
   brackets << "[" << "]";
   brackets << "\"" << "\"";
@@ -338,6 +337,14 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::newRow( "dotAtEnd" ) << "Look at this file: www.example.com/test.cpp." << 0x01
                               << "Look at this file: <a href=\"http://www.example.com/test.cpp\">"
                                  "www.example.com/test.cpp</a>.";
+
+  // Bug 313719 - URL in parenthesis
+  QTest::newRow("url-in-parenthesis-1") << "KDE (website http://www.kde.org)" << 0x01
+                                        << "KDE (website <a href=\"http://www.kde.org\">http://www.kde.org</a>)";
+  QTest::newRow("url-in-parenthesis-2") << "KDE website (http://www.kde.org)" << 0x01
+                                        << "KDE website (<a href=\"http://www.kde.org\">http://www.kde.org</a>)";
+  QTest::newRow("url-in-parenthesis-3") << "bla (http://www.kde.org - section 5.2)" << 0x01
+                                        << "bla (<a href=\"http://www.kde.org\">http://www.kde.org</a> - section 5.2)";
 }
 
 void LinkLocatorTest::testHtmlConvert()
