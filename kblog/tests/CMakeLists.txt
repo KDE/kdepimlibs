@@ -15,8 +15,8 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
 
 set(testgdata_SRCS testgdata.cpp )
 
-
-kde4_add_unit_test(testgdata TESTNAME kblog-testgdata ${testgdata_SRCS})
+# FIXME: disabled as unit test, www.blogger.com apparently changed their API
+kde4_add_executable(testgdata ${testgdata_SRCS})
 
 target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 
