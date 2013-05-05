@@ -111,7 +111,6 @@ void LinkLocatorTest::testGetUrl()
 {
   QStringList brackets;
   brackets << "" << "";   // no brackets
-  brackets << "(" << ")";
   brackets << "<" << ">";
   brackets << "[" << "]";
   brackets << "\"" << "\"";
@@ -300,11 +299,11 @@ void LinkLocatorTest::testHtmlConvert_data()
                          " <u>_groupes de mots_</u> à mettre en forme…";
   QTest::newRow( "punctation-bug" ) << "Ce texte *a l'air* de _fonctionner_, à condition"
                                        " d’utiliser le guillemet ASCII." << 0x09
-                                       << "Ce texte <b>a l'air</b> de <u>fonctionner</u>, à"
+                                       << "Ce texte <b>*a l'air*</b> de <u>_fonctionner_</u>, à"
                                           " condition d’utiliser le guillemet ASCII.";
   QTest::newRow( "punctation-bug" ) << "Un répertoire /est/ un *dossier* où on peut mettre des"
-                                       " *fichiers*." << 0x09 << "Un répertoire <i>est</i> un"
-                                       " <b>dossier</b> où on peut mettre des <b>fichiers</b>.";
+                                       " *fichiers*." << 0x09 << "Un répertoire <i>/est/</i> un"
+                                       " <b>*dossier*</b> où on peut mettre des <b>*fichiers*</b>.";
   QTest::newRow( "punctation-bug" ) << "*BLA BLA BLA BLA*." << 0x09 << "<b>BLA BLA BLA BLA</b>.";
   QTest::newRow( "" ) << "Je vais tenter de repérer des faux positif*" << 0x09
                       << "Je vais tenter de repérer des faux positif*";
@@ -338,6 +337,14 @@ void LinkLocatorTest::testHtmlConvert_data()
   QTest::newRow( "dotAtEnd" ) << "Look at this file: www.example.com/test.cpp." << 0x01
                               << "Look at this file: <a href=\"http://www.example.com/test.cpp\">"
                                  "www.example.com/test.cpp</a>.";
+
+  // Bug 313719 - URL in parenthesis
+  QTest::newRow("url-in-parenthesis-1") << "KDE (website http://www.kde.org)" << 0x01
+                                        << "KDE (website <a href=\"http://www.kde.org\">http://www.kde.org</a>)";
+  QTest::newRow("url-in-parenthesis-2") << "KDE website (http://www.kde.org)" << 0x01
+                                        << "KDE website (<a href=\"http://www.kde.org\">http://www.kde.org</a>)";
+  QTest::newRow("url-in-parenthesis-3") << "bla (http://www.kde.org - section 5.2)" << 0x01
+                                        << "bla (<a href=\"http://www.kde.org\">http://www.kde.org</a> - section 5.2)";
 }
 
 void LinkLocatorTest::testHtmlConvert()
