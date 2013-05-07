@@ -121,7 +121,7 @@ QString KTNEFProperty::formatValue( const QVariant &value, bool beautify )
     }
   }
   //else if ( value.type() == QVariant::DateTime )
-  //	return value.toDateTime().toString();
+  //   return value.toDateTime().toString();
   return value.toString();
 }
 
