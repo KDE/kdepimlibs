@@ -688,7 +688,8 @@ class KCALCORE_EXPORT Incidence
     bool hasRecurrenceId() const;
 
     /**
-      Set the incidences recurrenceId.
+      Set the incidences recurrenceId. This field indicates that this is an exception to a recurring incidence.
+      The uid of this incidence MUST be the same as the one of the recurring main incidence.
       @param recurrenceId is the incidence recurrenceId to set
       @see recurrenceId().
     */
@@ -701,8 +702,19 @@ class KCALCORE_EXPORT Incidence
     */
     KDateTime recurrenceId() const;
 
-    void setThisAndFuture( bool );
+    /**
+      Set to true if the exception also applies to all future occurrences.
+      This option is only relevant if the incidence has a recurrenceId set.
+      @param thisAndFuture value
+      @see thisAndFuture(), setRecurrenceId()
+    */
+    void setThisAndFuture( bool thisAndFuture );
 
+    /**
+      Returns true if the exception also applies to all future occurrences.
+      @return incidences thisAndFuture value
+      @see setThisAndFuture()
+    */
     bool thisAndFuture() const;
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
