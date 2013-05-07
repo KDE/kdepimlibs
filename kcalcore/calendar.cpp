@@ -701,8 +701,8 @@ Incidence::Ptr Calendar::createException( const Incidence::Ptr &incidence,
                                           const KDateTime &recurrenceId,
                                           bool thisAndFuture )
 {
-  Q_UNUSED(thisAndFuture);
-  if ( !incidence || !incidence->recurs() ) {
+  Q_ASSERT( recurrenceId.isValid() );
+  if ( !incidence || !incidence->recurs() || !recurrenceId.isValid() ) {
     return Incidence::Ptr();
   }
 
