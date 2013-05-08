@@ -683,7 +683,7 @@ class KCALCORE_EXPORT Incidence
 
     /**
       Returns true if the incidence has recurrenceId, otherwise return false.
-      @see setHasRecurrenceID(), setRecurrenceId(KDateTime)
+      @see setRecurrenceId(KDateTime)
     */
     bool hasRecurrenceId() const;
 
