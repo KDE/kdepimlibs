@@ -291,7 +291,9 @@ bool Incidence::equals( const IncidenceBase &incidence ) const
     secrecy() == i2->secrecy() &&
     priority() == i2->priority() &&
     stringCompare( location(), i2->location() ) &&
-    stringCompare( schedulingID(), i2->schedulingID() );
+    stringCompare( schedulingID(), i2->schedulingID() ) &&
+    recurrenceId() == i2->recurrenceId() &&
+    thisAndFuture() == i2->thisAndFuture();
 }
 
 QString Incidence::instanceIdentifier() const
