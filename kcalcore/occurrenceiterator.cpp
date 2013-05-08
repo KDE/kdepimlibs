@@ -168,6 +168,7 @@ OccurrenceIterator::OccurrenceIterator( const Calendar &calendar, const KDateTim
 OccurrenceIterator::OccurrenceIterator(const Calendar& calendar, const Incidence::Ptr& incidence, const KDateTime& start, const KDateTime& end)
   : d( new KCalCore::OccurrenceIterator::Private( this ) )
 {
+  Q_ASSERT( incidence.isValid() );
   d->start = start;
   d->end = end;
   d->setupIterator(calendar, Incidence::List() << incidence);
