@@ -138,6 +138,7 @@ class KCALCORE_EXPORT Incidence
       Returns a unique identifier for a specific instance of an incidence.
 
       Due to the recurrence-id, the uid is not unique for a KCalCore::Incidence.
+      @since 4.11
     */
     QString instanceIdentifier() const;
 
@@ -707,6 +708,7 @@ class KCALCORE_EXPORT Incidence
       This option is only relevant if the incidence has a recurrenceId set.
       @param thisAndFuture value
       @see thisAndFuture(), setRecurrenceId()
+      @since 4.11
     */
     void setThisAndFuture( bool thisAndFuture );
 
@@ -714,6 +716,7 @@ class KCALCORE_EXPORT Incidence
       Returns true if the exception also applies to all future occurrences.
       @return incidences thisAndFuture value
       @see setThisAndFuture()
+      @since 4.11
     */
     bool thisAndFuture() const;
 
