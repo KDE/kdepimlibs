@@ -305,10 +305,10 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
   QVariant value;
   QString  str;
 
-  stream_ >> i;		// i <- attribute type & name
+  stream_ >> i;                // i <- attribute type & name
   tag = ( i & 0x0000FFFF );
   type = ( ( i & 0xFFFF0000 ) >> 16 );
-  stream_ >> i;		// i <- data length
+  stream_ >> i;                // i <- data length
   checkCurrent( tag );
   switch ( tag ) {
   case attATTACHTITLE:
@@ -323,7 +323,7 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
     value = QString( "< size=%1 >" ).arg( i );
     kDebug() << "Attachment Data: size=" << i;
     break;
-  case attATTACHMENT:	// try to get attachment info
+  case attATTACHMENT:  // try to get attachment info
     i += device_->pos();
     readMAPIProperties( current_->properties(), current_ );
     device_->seek( i );
@@ -364,7 +364,7 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
              << hex << tag << ", length=" << dec << i;
     break;
   }
-  stream_ >> u;	// u <- checksum
+  stream_ >> u;        // u <- checksum
   // add TNEF attribute
   current_->addAttribute( tag, type, value, true );
   //kDebug() << "stream:" << device_->pos();
