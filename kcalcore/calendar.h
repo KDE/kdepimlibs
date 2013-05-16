@@ -455,11 +455,11 @@ class KCALCORE_EXPORT Calendar : public QObject, public CustomProperties,
     virtual Incidence::List rawIncidences() const;
 
     /**
-      Returns an unfiltered list of all possible instances for this recurring Incidence.
+      Returns an unfiltered list of all exceptions of this recurring incidence.
 
       @param incidence incidence to check
 
-      @return the list of all unfiltered Incidences.
+      @return the list of all unfiltered exceptions.
     */
     virtual Incidence::List instances( const Incidence::Ptr &incidence ) const;
 
@@ -675,10 +675,26 @@ class KCALCORE_EXPORT Calendar : public QObject, public CustomProperties,
       from the recurring Incidences after @a date.
 
       @return a pointer to a new recurring Incidence if @a single is false.
+      @deprecated Use createException()
     */
-    Incidence::Ptr dissociateOccurrence( const Incidence::Ptr &incidence, const QDate &date,
+    KDE_DEPRECATED Incidence::Ptr dissociateOccurrence( const Incidence::Ptr &incidence, const QDate &date,
                                          const KDateTime::Spec &spec,
                                          bool single = true );
+    /**
+      Creates an exception for an occurrence from a recurring Incidence.
+
+      The returned exception is not automatically inserted into the calendar.
+
+      @param incidence is a pointer to a recurring Incidence.
+      @param recurrenceId specifies the specific occurrence for which the exception applies
+      @param thisAndFuture specifies if the exception applies only this specific occcurrence or also to all future occurrences
+
+      @return a pointer to a new exception incidence with @param recurrenceId set.
+      @since 4.11
+    */
+    static Incidence::Ptr createException( const Incidence::Ptr &incidence,
+                                               const KDateTime &recurrenceId,
+                                               bool thisAndFuture = false );
 
   // Event Specific Methods //
 

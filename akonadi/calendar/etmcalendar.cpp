@@ -324,16 +324,16 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() ) {
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );
-      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid() );
+      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
       if ( !existingIncidence ) {
         // The item changed it's UID, update our maps.
         // The Google resource, for example, changes the UID when we create incidences.
         handleUidChange( item, newIncidence->uid() );
-        existingIncidence = q->incidence( newIncidence->uid() );
+        existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
         Q_ASSERT( existingIncidence );
       }
 

@@ -70,6 +70,7 @@ set(kcalcore_LIB_SRCS ${libversit_SRCS}
   incidencebase.cpp
   journal.cpp
   memorycalendar.cpp
+  occurrenceiterator.cpp
   period.cpp
   person.cpp
   recurrence.cpp
@@ -126,6 +127,7 @@ install(FILES
   journal.h
   kcalcore_export.h
   memorycalendar.h
+  occurrenceiterator.h
   period.h
   person.h
   recurrence.h
