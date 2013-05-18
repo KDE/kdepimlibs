@@ -47,7 +47,7 @@ namespace CalHelper {
 
   /**
     Determine if the specified incidence is likely a Kolab incidence
-    owned by the the user.
+    owned by the user.
 
     @param calendar is a pointer to a valid Calendar object.
     @param incidence is a pointer to an Incidence object.
@@ -59,7 +59,7 @@ namespace CalHelper {
   KCAL_EXPORT_DEPRECATED bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
 
   /**
-    Determine if the specified incidence is likely owned by the the user,
+    Determine if the specified incidence is likely owned by the user,
     independent of the Resource type.
 
     @param calendar is a pointer to a valid Calendar object.
