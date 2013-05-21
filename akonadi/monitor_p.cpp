@@ -113,20 +113,15 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
 {
   NotificationMessageV2::Operation op = msg.operation();
 
-  // Newly delivered ModifyFlags notifications will be converted to
-  // itemChanged(item, "FLAGS") for legacy clients.
-  if ( op == NotificationMessageV2::ModifyFlags &&
-       ( allowModifyFlagsConversion && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) )
-  {
-    return false;
-  }
-
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0
                                              && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
     || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
+        // Newly delivered ModifyFlags notifications will be converted to
+        // itemChanged(item, "FLAGS") for legacy clients.
+    || ( op == NotificationMessageV2::ModifyFlags && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 ) )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
                                            && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0
@@ -257,7 +252,6 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
 
   // corresponding signal is not connected
   if ( isLazilyIgnored( msg, allowModifyFlagsConversion ) ) {
-    kDebug() << this <<  "\tlazily ignored";
     return false;
   }
 
@@ -464,12 +458,12 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  )
+int MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  )
 {
   // We have to split moves into insert or remove if the source or destination
   // is not monitored.
   if ( msg.operation() != NotificationMessageV2::Move ) {
-    return NotificationMessageV2::appendAndCompress( notificationQueue, msg );
+    return NotificationMessageV2::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
   }
 
   bool sourceWatched = false;
@@ -489,11 +483,12 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notifi
       destWatched = isCollectionMonitored( msg.parentDestCollection() );
   }
 
-  if ( !sourceWatched && !destWatched )
-    return false;
+  if ( !sourceWatched && !destWatched ) {
+    return 0;
+  }
 
   if ( ( sourceWatched && destWatched ) || ( !collectionMoveTranslationEnabled && msg.type() == NotificationMessageV2::Collections ) ) {
-    return NotificationMessageV2::appendAndCompress( notificationQueue, msg );
+    return NotificationMessageV2::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
   }
 
   if ( sourceWatched )
@@ -502,7 +497,7 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notifi
     NotificationMessageV2 removalMessage = msg;
     removalMessage.setOperation( NotificationMessageV2::Remove );
     removalMessage.setParentDestCollection( -1 );
-    return NotificationMessageV2::appendAndCompress( notificationQueue, removalMessage );
+    return NotificationMessageV2::appendAndCompress( notificationQueue, removalMessage ) ? 1 : 0;
   }
 
   // Transform into an insertion
@@ -510,7 +505,15 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notifi
   insertionMessage.setOperation( NotificationMessageV2::Add );
   insertionMessage.setParentCollection( msg.parentDestCollection() );
   insertionMessage.setParentDestCollection( -1 );
-  return NotificationMessageV2::appendAndCompress( notificationQueue, insertionMessage );
+  // We don't support batch insertion, so we have to do it one by one
+  const NotificationMessageV2::List split = splitMessage( insertionMessage, false );
+  int appended = 0;
+  Q_FOREACH (const NotificationMessageV2 &insertion, split ) {
+    if ( NotificationMessageV2::appendAndCompress( notificationQueue, insertion ) ) {
+      ++appended;
+    }
+  }
+  return appended;
 }
 
 /*
@@ -541,9 +544,9 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
           || msg.type() == NotificationMessageV2::Collections ) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
-        const bool appended = translateAndCompress( pendingNotifications, msg );
-        if ( appended ) {
-          ++appendedMessages;
+        const int appended = translateAndCompress( pendingNotifications, msg );
+        if ( appended > 0 ) {
+          appendedMessages += appended;
           // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
           if ( pendingNotifications.count() != oldSize + 1 )
             ++erasedMessages;
