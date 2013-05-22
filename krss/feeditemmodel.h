@@ -60,7 +60,7 @@ public:
     };
 
     enum ItemRoles {
-        SortRole=EntityTreeModel::UserRole,
+        SortRole=FetchErrorStringRole + 1,
         IsUnreadRole,
         IsReadRole,
         IsDeletedRole,
