@@ -156,7 +156,8 @@ void Todo::setDtDue( const KDateTime &dtDue, bool first )
     d->mDtDue = dtDue;
   }
 
-  if ( recurs() && ( !dtStart().isValid() || dtDue < recurrence()->startDateTime() ) ) {
+  if ( recurs() && dtDue.isValid() && ( !dtStart().isValid() || dtDue < recurrence()->startDateTime() ) ) {
+    kDebug() << "To-do recurrences are now calculated against DTSTART. Fixing legacy to-do.";
     setDtStart( dtDue );
   }
 
@@ -181,7 +182,7 @@ KDateTime Todo::dtDue( bool first ) const
 
 bool Todo::hasDueDate() const
 {
-  return d->mDtDue.isValid() || d-> mDtRecurrence.isValid();
+  return d->mDtDue.isValid();
 }
 
 void Todo::setHasDueDate( bool f )
@@ -200,7 +201,7 @@ void Todo::setHasDueDate( bool f )
 
 bool Todo::hasStartDate() const
 {
-  return IncidenceBase::dtStart().isValid();
+  return IncidenceBase::dtStart().isValid() || d->mDtRecurrence.isValid();
 }
 
 void Todo::setHasStartDate( bool f )
@@ -423,7 +424,7 @@ bool Todo::isOverdue() const
 void Todo::setAllDay( bool allday )
 {
   if ( allday != allDay() && !mReadOnly ) {
-    if ( hasDueDate() && dtDue().isValid() ) {
+    if ( hasDueDate() ) {
       setFieldDirty( FieldDtDue );
     }
     Incidence::setAllDay( allday );

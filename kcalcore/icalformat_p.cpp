@@ -1136,7 +1136,6 @@ Todo::Ptr ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist 
     { // due date/time
       KDateTime kdt = readICalDateTimeProperty( p, tzlist );
       todo->setDtDue( kdt, true );
-      todo->setHasDueDate( true );
       todo->setAllDay( kdt.isDateOnly() );
       break;
     }
@@ -1156,7 +1155,7 @@ Todo::Ptr ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist 
     case ICAL_DTSTART_PROPERTY:
       // Flag that todo has start date. Value is read in by readIncidence().
       if ( todo->comments().filter( "NoStartDate" ).count() ) {
-        todo->setHasStartDate( false );
+        todo->setDtStart( KDateTime() );
       } else {
         todo->setHasStartDate( true );
       }
