@@ -1,9 +1,5 @@
 project(kdepimlibs)
 
-# set_package_properties appeared in cmake 2.8.6
-# TODO: Remove when kdelibs >= 4.10 will be required
-cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
-
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -24,8 +20,7 @@ endif()
 
 set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-# Exception is made for kdepimlibs 4.10: The feature_summary port implicitly requires kdelibs 4.9.4 and CMake 2.8.6
-find_package(KDE4 4.9.4 REQUIRED)
+find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
