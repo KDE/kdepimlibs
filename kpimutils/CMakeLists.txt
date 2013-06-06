@@ -13,6 +13,7 @@ set(kpimutils_LIB_SRCS
   spellingfilter.cpp
   kfileio.cpp
   processes.cpp
+  progressindicatorwidget.cpp
 )
 
 # network access helper
@@ -49,4 +50,5 @@ install(FILES
   supertrait.h
   processes.h
   networkaccesshelper.h
+  progressindicatorwidget.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils COMPONENT Devel)
