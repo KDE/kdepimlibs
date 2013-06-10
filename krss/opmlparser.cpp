@@ -180,7 +180,7 @@ Akonadi::Collection ParsedFeed::toAkonadiCollection() const
     feed.setDescription( d->description );
     feed.setFeedType( d->type );
     feed.setTitle( title() );
-    feed.setName( title() + KRandom::randomString( 8 ) );
+    feed.setName( title() );
     feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
     feed.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Collection::AddIfMissing )->setIconName( QLatin1String("application-rss+xml") );
     if ( attribute( QLatin1String("useCustomFetchInterval") ) == QLatin1String("true") )
@@ -310,7 +310,7 @@ static QString mimeType()
 
 Akonadi::Collection ParsedFolder::toAkonadiCollection() const {
     KRss::FeedCollection folder;
-    folder.setName( title() + KRandom::randomString( 8 ) );
+    folder.setName( title() );
     folder.setTitle( title() );
     folder.setIsFolder( true );
     folder.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << mimeType() );
