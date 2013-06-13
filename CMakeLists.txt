@@ -93,7 +93,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   set_package_properties(SharedMimeInfo PROPERTIES DESCRIPTION "shared-mime-info" URL "http://freedesktop.org/wiki/Software/shared-mime-info" TYPE REQUIRED PURPOSE "Information about filetypes")
 
 
-  set(SDO_MIN_VERSION 0.10)
+  set(SDO_MIN_VERSION 0.11)
   set(SOPRANO_MIN_VERSION 2.9)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
