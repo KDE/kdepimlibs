@@ -97,7 +97,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   set(SOPRANO_MIN_VERSION 2.9)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
-  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
+  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
 
   find_package(Soprano)
   if (NOT WINCE)
