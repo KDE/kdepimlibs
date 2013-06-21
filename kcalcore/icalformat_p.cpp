@@ -255,6 +255,7 @@ icalcomponent *ICalFormatImpl::writeTodo( const Todo::Ptr &todo, ICalTimeZones *
     if ( icalcomponent_count_properties( vtodo, ICAL_STATUS_PROPERTY ) ) {
       icalproperty *p = icalcomponent_get_first_property( vtodo, ICAL_STATUS_PROPERTY );
       icalcomponent_remove_property( vtodo, p );
+      icalproperty_free( p );
     }
     icalcomponent_add_property( vtodo, icalproperty_new_status( ICAL_STATUS_COMPLETED ) );
   }
@@ -1182,6 +1183,7 @@ Todo::Ptr ICalFormatImpl::readTodo( icalcomponent *vtodo, ICalTimeZones *tzlist 
     d->mCompat->fixEmptySummary( todo );
   }
 
+  todo->resetDirtyFields();
   return todo;
 }
 
@@ -1259,6 +1261,7 @@ Event::Ptr ICalFormatImpl::readEvent( icalcomponent *vevent, ICalTimeZones *tzli
     d->mCompat->fixEmptySummary( event );
   }
 
+  event->resetDirtyFields();
   return event;
 }
 
@@ -1321,6 +1324,7 @@ FreeBusy::Ptr ICalFormatImpl::readFreeBusy( icalcomponent *vfreebusy )
   }
   freebusy->addPeriods( periods );
 
+  freebusy->resetDirtyFields();
   return freebusy;
 }
 
@@ -1330,6 +1334,7 @@ Journal::Ptr ICalFormatImpl::readJournal( icalcomponent *vjournal,
   Journal::Ptr journal( new Journal );
   readIncidence( vjournal, journal, tzlist );
 
+  journal->resetDirtyFields();
   return journal;
 }
 
@@ -2624,6 +2629,7 @@ bool ICalFormatImpl::populate( const Calendar::Ptr &cal, icalcomponent *calendar
       }
       implementationVersion = nvalue;
       icalcomponent_remove_property( calendar, p );
+      icalproperty_free( p );
     }
     p = icalcomponent_get_next_property( calendar, ICAL_X_PROPERTY );
   }
