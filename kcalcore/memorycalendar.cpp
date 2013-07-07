@@ -56,7 +56,6 @@ class KCalCore::MemoryCalendar::Private
     }
 
     MemoryCalendar *q;
-    QString mFileName;                     // filename where calendar is stored
     CalFormat *mFormat;                    // calendar format
     QString mIncidenceBeingUpdated;        //  Instance identifier of Incidence currently beeing updated
 
@@ -126,7 +125,6 @@ MemoryCalendar::~MemoryCalendar()
 void MemoryCalendar::close()
 {
   setObserversEnabled( false );
-  d->mFileName.clear();
 
   deleteAllEvents();
   deleteAllTodos();
@@ -152,7 +150,8 @@ bool MemoryCalendar::deleteIncidence( const Incidence::Ptr &incidence )
     d->mIncidencesByIdentifier.remove( incidence->instanceIdentifier() );
     setModified( true );
     notifyIncidenceDeleted( incidence );
-    d->mDeletedIncidences[type].insert( uid, incidence );
+    if ( deletionTracking() )
+      d->mDeletedIncidences[type].insert( uid, incidence );
 
     const KDateTime dt = incidence->dateTime( Incidence::RoleCalendarHashing );
     if ( dt.isValid() ) {
@@ -196,6 +195,7 @@ void MemoryCalendar::Private::deleteAllIncidences( const Incidence::IncidenceTyp
   while ( i.hasNext() ) {
     i.next();
     q->notifyIncidenceDeleted( i.value() );
+    i.value()->unRegisterObserver( q );
   }
   mIncidences[incidenceType].clear();
   mIncidencesForDate[incidenceType].clear();
@@ -227,6 +227,10 @@ MemoryCalendar::Private::deletedIncidence( const QString &uid,
                                            const KDateTime &recurrenceId,
                                            const IncidenceBase::IncidenceType type ) const
 {
+  if ( !q->deletionTracking() ) {
+    return Incidence::Ptr();
+  }
+
   QList<Incidence::Ptr> values = mDeletedIncidences[type].values( uid );
   QList<Incidence::Ptr>::const_iterator it;
   for ( it = values.constBegin(); it != values.constEnd(); ++it ) {
@@ -359,6 +363,10 @@ Todo::List MemoryCalendar::rawTodos( TodoSortField sortField,
 Todo::List MemoryCalendar::deletedTodos( TodoSortField sortField,
                                          SortDirection sortDirection ) const
 {
+  if ( !deletionTracking() ) {
+    return Todo::List();
+  }
+
   Todo::List todoList;
   QHashIterator<QString, Incidence::Ptr >i( d->mDeletedIncidences[Incidence::TypeTodo] );
   while ( i.hasNext() ) {
@@ -713,6 +721,10 @@ Event::List MemoryCalendar::rawEvents( EventSortField sortField,
 Event::List MemoryCalendar::deletedEvents( EventSortField sortField,
                                            SortDirection sortDirection ) const
 {
+  if ( !deletionTracking() ) {
+    return Event::List();
+  }
+
   Event::List eventList;
   QHashIterator<QString, Incidence::Ptr>i( d->mDeletedIncidences[Incidence::TypeEvent] );
   while ( i.hasNext() ) {
@@ -786,6 +798,10 @@ Journal::List MemoryCalendar::rawJournals( JournalSortField sortField,
 Journal::List MemoryCalendar::deletedJournals( JournalSortField sortField,
                                                SortDirection sortDirection ) const
 {
+  if ( !deletionTracking() ) {
+    return Journal::List();
+  }
+
   Journal::List journalList;
   QHashIterator<QString, Incidence::Ptr>i( d->mDeletedIncidences[Incidence::TypeJournal] );
   while ( i.hasNext() ) {
