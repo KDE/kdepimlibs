@@ -522,7 +522,10 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
 {
   const bool wasLocked = d->mFileLocked;
   if ( !wasLocked ) {
-    lock();
+    if (!lock()) {
+       kDebug() << "Failed to lock";
+       return QByteArray();
+    }
   }
 
   const quint64 offset = entry.messageOffset();
