@@ -829,7 +829,7 @@ ICalTimeZone ICalTimeZoneSource::parse( icalcomponent *vtimezone )
   for ( icalcomponent *c = icalcomponent_get_first_component( vtimezone, ICAL_ANY_COMPONENT );
         c;  c = icalcomponent_get_next_component( vtimezone, ICAL_ANY_COMPONENT ) )
   {
-    int prevoff;
+    int prevoff = 0;
     KTimeZone::Phase phase;
     QList<QDateTime> times;
     icalcomponent_kind kind = icalcomponent_isa( c );
