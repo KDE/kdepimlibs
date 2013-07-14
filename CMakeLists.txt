@@ -2,7 +2,6 @@ project(kdepimlibs)
 
 # Temporary: Make sure we use the right CMake Version
 cmake_minimum_required(VERSION 2.8.10.2 FATAL_ERROR)
-
 # Enable CMake's Automoc
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOMOC_RELAXED_MODE ON)
@@ -53,8 +52,8 @@ string(REPLACE "-pedantic-errors" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 ############### The kdepimlibs version ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
-set(KDEPIMLIBS_VERSION_MINOR 10)
-set(KDEPIMLIBS_VERSION_PATCH 64)
+set(KDEPIMLIBS_VERSION_MINOR 11)
+set(KDEPIMLIBS_VERSION_PATCH 40)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
@@ -82,6 +81,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" OFF "_default_mobile_ui" OFF)
 option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 #option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
+option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
 
 ############### Load the CTest options ###############
 # Setting DART_TESTING_TIMEOUT has no effect on the tests timeout,
@@ -114,7 +114,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.8.51")
+  set(Akonadi_MIN_VERSION "1.9.80")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 
@@ -128,11 +128,11 @@ if (NOT KDEPIM_ONLY_KLEO)
   set_package_properties(SharedMimeInfo PROPERTIES DESCRIPTION "shared-mime-info" URL "http://freedesktop.org/wiki/Software/shared-mime-info" TYPE REQUIRED PURPOSE "Information about filetypes")
 
 
-  set(SDO_MIN_VERSION 0.10)
-  set(SOPRANO_MIN_VERSION 2.7.56)
+  set(SDO_MIN_VERSION 0.11)
+  set(SOPRANO_MIN_VERSION 2.9)
 
   find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
-  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://oscaf.sourceforge.net" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
+  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
 
   find_package(Soprano)
   if (NOT WINCE)
@@ -256,7 +256,10 @@ endif()
 macro_optional_add_subdirectory(doc)
 
 # All done, let's display what we found...
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+feature_summary(WHAT ALL
+                     INCLUDE_QUIET_PACKAGES
+                     FATAL_ON_MISSING_REQUIRED_PACKAGES
+               )
 
 ############### Here we install some extra stuff  ###############
 

@@ -28,6 +28,15 @@
 </keywordset>
 </articleinfo>
 
+<!-- Revision 39e72ce9
+ID: 39e72ce9fc6760727154edf2c29be8656cebe67d
+ Added by Sergio Luis Martins 12 months ago
+Remove KResources kcm from systemsettings.
+It's deprecated and should not be used, and it's confusing users.
+It can now be used through kcmshell4 though, if you still need it.
+kresources
+  kresources.desktop (diff)
+  -->
 <para>This module is a configuration tool for managing the resources used by different &kde; applications.
 It allows you to add, deleted or modify the resources for <guilabel>Alarms</guilabel>, 
 <guilabel>Calendar</guilabel>, <guilabel>Notes</guilabel> and <guilabel>Contacts</guilabel>.</para>
@@ -65,7 +74,7 @@ One of these resources is marked as the standard resource.</para>
 <row>
 <entry>Notes</entry>
 <entry><simplelist type="inline"><member>&knotes;</member></simplelist></entry>
-<entry><ulink url="help:/knotes/configure-resources.html">&knotes; resources</ulink></entry>
+<entry>&knotes; resources</entry>
 </row>
 <row>
 <entry>Contacts</entry>

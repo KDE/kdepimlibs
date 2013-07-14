@@ -130,7 +130,7 @@ int lzfu_decompress( QIODevice *input, QIODevice *output )
                  OFFSET( blkhdr ), wlength, LENGTH( blkhdr ), blkhdr );
 #endif
         //if ( offset >= wlength ) {
-        //	break;
+        //     break;
         //}
 #ifdef DO_DEBUG
         fprintf( stdout, "block : " );

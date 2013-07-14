@@ -587,8 +587,11 @@ void MessageTest::testOutlookAttachmentNaming()
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
 {
-  QFile file( MAIL_DATA_DIR"/" + mailFile );
+  QFile file( TEST_DATA_DIR"/mails/" + mailFile );
   const bool ok = file.open( QIODevice::ReadOnly );
+  if ( !ok ) {
+    qWarning() << file.fileName() << "not found";
+  }
   Q_ASSERT( ok );
   const QByteArray data = KMime::CRLFtoLF( file.readAll() );
   Q_ASSERT( !data.isEmpty() );

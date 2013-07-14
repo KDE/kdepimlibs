@@ -44,31 +44,31 @@
 #define atpWORD     0x0007
 #define atpDWORD    0x0008
 
-#define attDATESTART      0x0006
-#define attDATEEND        0x0007
-#define attAIDOWNER       0x0008
-#define attREQUESTRES     0x0009
-#define attFROM           0x8000
-#define attSUBJECT        0x8004
-#define attDATESENT       0x8005
-#define attDATERECD       0x8006
-#define attMSGSTATUS      0x8007
-#define attMSGCLASS       0x8008
-#define attMSGID          0x8009
-#define attBODY           0x800c
-#define attMSGPRIORITY    0x800d
-#define attATTACHDATA	  0x800f	/* Attachment Data */
-#define attATTACHTITLE	  0x8010	/* Attachment File Name */
-#define attATTACHMETAFILE 0x8011
+#define attDATESTART        0x0006
+#define attDATEEND          0x0007
+#define attAIDOWNER         0x0008
+#define attREQUESTRES       0x0009
+#define attFROM             0x8000
+#define attSUBJECT          0x8004
+#define attDATESENT         0x8005
+#define attDATERECD         0x8006
+#define attMSGSTATUS        0x8007
+#define attMSGCLASS         0x8008
+#define attMSGID            0x8009
+#define attBODY             0x800c
+#define attMSGPRIORITY      0x800d
+#define attATTACHDATA       0x800f        /* Attachment Data */
+#define attATTACHTITLE      0x8010        /* Attachment File Name */
+#define attATTACHMETAFILE   0x8011
 #define attATTACHCREATEDATE 0x8012
-#define attATTACHMODDATE  0x8013
-#define attDATEMODIFIED   0x8020
-#define attATTACHRENDDATA 0x9002
-#define attMAPIPROPS      0x9003
-#define attRECIPTABLE     0x9004
-#define attATTACHMENT	  0x9005	/* Attachment properties (?) */
-#define attTNEFVERSION    0x9006
-#define attOEMCODEPAGE    0x9007
+#define attATTACHMODDATE    0x8013
+#define attDATEMODIFIED     0x8020
+#define attATTACHRENDDATA   0x9002
+#define attMAPIPROPS        0x9003
+#define attRECIPTABLE       0x9004
+#define attATTACHMENT       0x9005        /* Attachment properties (?) */
+#define attTNEFVERSION      0x9006
+#define attOEMCODEPAGE      0x9007
 
 /* These are found in TNEF documentation, but have so far not been implemented
 #define attATTACHCREATEDATE        0x0000
@@ -94,30 +94,30 @@
 #define MSGFLAG_HASATTACH  0x00000010
 
 // supported MAPI types
-#define	MAPI_TYPE_NONE		0x0000
-#define	MAPI_TYPE_UINT16	0x0002
-#define	MAPI_TYPE_ULONG		0x0003
-#define	MAPI_TYPE_FLOAT		0x0004
-#define	MAPI_TYPE_DOUBLE	0x0005
+#define MAPI_TYPE_NONE      0x0000
+#define MAPI_TYPE_UINT16    0x0002
+#define MAPI_TYPE_ULONG     0x0003
+#define MAPI_TYPE_FLOAT     0x0004
+#define MAPI_TYPE_DOUBLE    0x0005
 #define MAPI_TYPE_BOOLEAN   0x000b
 #define MAPI_TYPE_OBJECT    0x000d
-#define	MAPI_TYPE_TIME		0x0040
-#define	MAPI_TYPE_STRING8	0x001e
-#define	MAPI_TYPE_USTRING	0x001f
-#define	MAPI_TYPE_BINARY	0x0102
+#define MAPI_TYPE_TIME      0x0040
+#define MAPI_TYPE_STRING8   0x001e
+#define MAPI_TYPE_USTRING   0x001f
+#define MAPI_TYPE_BINARY    0x0102
 #define MAPI_TYPE_VECTOR    0x1000
 
 // supported MAPI tags
-#define	MAPI_TAG_INDEX		    0x0e21
-#define	MAPI_TAG_SIZE		    0x0e20
-#define	MAPI_TAG_FILENAME	    0x3707
-#define	MAPI_TAG_DISPLAYNAME    0x3001
+#define MAPI_TAG_INDEX          0x0e21
+#define MAPI_TAG_SIZE           0x0e20
+#define MAPI_TAG_FILENAME       0x3707
+#define MAPI_TAG_DISPLAYNAME    0x3001
 #define MAPI_TAG_DATA           0x3701
 #define MAPI_TAG_ATTACHENCODING 0x3702
-#define	MAPI_TAG_EXTENSION	    0x3703
+#define MAPI_TAG_EXTENSION      0x3703
 #define MAPI_TAG_ATTACHMETHOD   0x3705
 #define MAPI_TAG_RENDERINGPOS   0x370b
-#define	MAPI_TAG_MIMETAG	    0x370e
+#define MAPI_TAG_MIMETAG        0x370e
 #define MAPI_TAG_ATTACHFLAGS    0x3714
 
 #define MAPI_IID_IMessage 0x00020307

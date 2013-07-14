@@ -147,7 +147,7 @@ class KMBOX_EXPORT MBox
      * unlock the file after reading the entry.
      *
      * @param entry The entry in the mbox file.
-     * @return Message for the given entry or 0 if the the file could not be locked
+     * @return Message for the given entry or 0 if the file could not be locked
      *         or the entry offset > fileSize.
      *
      * @see lock(), unlock()
