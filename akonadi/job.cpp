@@ -133,8 +133,20 @@ void JobPrivate::signalCreationToJobTracker()
       argumentList << QLatin1String( mSession->sessionId() )
                    << QString::number(reinterpret_cast<quintptr>( q ), 16)
                    << ( mParentJob ? QString::number( reinterpret_cast<quintptr>( mParentJob ), 16) : QString() )
-                   << QString::fromLatin1( q->metaObject()->className() );
+                   << QString::fromLatin1( q->metaObject()->className() )
+                   << jobDebuggingString();
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobCreated" ), argumentList);
+  }
+}
+
+void JobPrivate::signalStartedToJobTracker()
+{
+  Q_Q( Job );
+  if ( s_jobtracker ) {
+      // if there's a job tracker running, tell it a job started
+      QList<QVariant> argumentList;
+      argumentList << QString::number(reinterpret_cast<quintptr>( q ), 16);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobStarted" ), argumentList);
   }
 }
 
@@ -152,13 +164,7 @@ void JobPrivate::startQueued()
   emit q->aboutToStart( q );
   q->doStart();
   QTimer::singleShot( 0, q, SLOT(startNext()) );
-
-  // if there's a job tracker running, tell it a job started
-  if ( s_jobtracker ) {
-      QList<QVariant> argumentList;
-      argumentList << QString::number(reinterpret_cast<quintptr>( q ), 16);
-      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobStarted" ), argumentList);
-  }
+  QMetaObject::invokeMethod( q, "signalStartedToJobTracker", Qt::QueuedConnection );
 }
 
 void JobPrivate::lostConnection()
