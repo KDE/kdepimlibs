@@ -52,6 +52,8 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
   d_ptr->init();
   d_ptr->connectToNotificationManager();
 
+  d_ptr->notificationSource->enableServerSideMonitor( true );
+
   ChangeMediator::registerMonitor(this);
 }
 //@endcond
@@ -74,10 +76,13 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
     d->collections.removeAll( collection );
     d->cleanOldNotifications();
   }
+
+  d->notificationSource->setCollectionMonitored( collection.id(), monitored );
+
   emit collectionMonitored( collection, monitored );
 }
 
-void Monitor::setItemMonitored( const Item & item, bool monitored )
+void Monitor::setItemMonitored( const Item &item, bool monitored )
 {
   Q_D( Monitor );
   if ( monitored ) {
@@ -86,10 +91,13 @@ void Monitor::setItemMonitored( const Item & item, bool monitored )
     d->items.remove( item.id() );
     d->cleanOldNotifications();
   }
+
+  d->notificationSource->setItemMonitored( item.id(), monitored );
+
   emit itemMonitored( item,  monitored );
 }
 
-void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored )
+void Monitor::setResourceMonitored( const QByteArray &resource, bool monitored )
 {
   Q_D( Monitor );
   if ( monitored ) {
@@ -98,6 +106,9 @@ void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored 
     d->resources.remove( resource );
     d->cleanOldNotifications();
   }
+
+  d->notificationSource->setResourceMonitored( resource, monitored );
+
   emit resourceMonitored( resource, monitored );
 }
 
@@ -111,6 +122,8 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
     d->cleanOldNotifications();
   }
 
+  d->notificationSource->setMimeTypeMonitored( mimetype, monitored );
+
   emit mimeTypeMonitored( mimetype, monitored );
 }
 
@@ -123,6 +136,8 @@ void Akonadi::Monitor::setAllMonitored( bool monitored )
     d->cleanOldNotifications();
   }
 
+  d->notificationSource->setAllMonitored( monitored );
+
   emit allMonitored( monitored );
 }
 
@@ -131,6 +146,8 @@ void Monitor::ignoreSession(Session * session)
   Q_D( Monitor );
   d->sessions << session->sessionId();
   connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
+
+  d->notificationSource->setSessionIgnored( session->sessionId(), true );
 }
 
 void Monitor::fetchCollection(bool enable)

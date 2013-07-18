@@ -77,7 +77,7 @@ bool MonitorPrivate::connectToNotificationManager()
   delete notificationSource;
   notificationSource = 0;
 
-  notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
+  notificationSource = qobject_cast<org::freedesktop::Akonadi::NotificationSource*>( dependenciesFactory->createNotificationSource(q_ptr) );
 
   if (!notificationSource)
     return false;
@@ -533,41 +533,39 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   foreach ( const NotificationMessageV2 &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
-    if ( acceptNotification( msg, true ) ) {
-      bool needsSplit = true;
-      bool supportsBatch = false;
+    bool needsSplit = true;
+    bool supportsBatch = false;
 
-      checkBatchSupport( msg, needsSplit, supportsBatch );
+    checkBatchSupport( msg, needsSplit, supportsBatch );
 
-      if ( supportsBatch
-          || ( !needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags )
-          || msg.type() == NotificationMessageV2::Collections ) {
-        // Make sure the batch msg is always queued before the split notifications
-        const int oldSize = pendingNotifications.size();
-        const int appended = translateAndCompress( pendingNotifications, msg );
-        if ( appended > 0 ) {
-          appendedMessages += appended;
-          // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
-          if ( pendingNotifications.count() != oldSize + 1 )
-            ++erasedMessages;
-        } else
-          ++modifiedMessages;
-      } else if ( needsSplit ) {
-        // If it's not queued at least make sure we fetch all the items from split
-        // notifications in one go.
-        itemCache->ensureCached( msg.uids(), mItemFetchScope );
-      }
+    if ( supportsBatch
+        || ( !needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags )
+        || msg.type() == NotificationMessageV2::Collections ) {
+      // Make sure the batch msg is always queued before the split notifications
+      const int oldSize = pendingNotifications.size();
+      const int appended = translateAndCompress( pendingNotifications, msg );
+      if ( appended > 0 ) {
+        appendedMessages += appended;
+        // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
+        if ( pendingNotifications.count() != oldSize + 1 )
+          ++erasedMessages;
+      } else
+        ++modifiedMessages;
+    } else if ( needsSplit ) {
+      // If it's not queued at least make sure we fetch all the items from split
+      // notifications in one go.
+      itemCache->ensureCached( msg.uids(), mItemFetchScope );
+    }
 
-      // if the message contains more items, but we need to emit single-item notification,
-      // split the message into one message per item and queue them
-      // if the message contains only one item, but batches are not supported
-      // (and thus neither is flagsModified), splitMessage() will convert the
-      // notification to regular Modify with "FLAGS" part changed
-      if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
-        const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
-        pendingNotifications << split.toList();
-        appendedMessages += split.count();
-      }
+    // if the message contains more items, but we need to emit single-item notification,
+    // split the message into one message per item and queue them
+    // if the message contains only one item, but batches are not supported
+    // (and thus neither is flagsModified), splitMessage() will convert the
+    // notification to regular Modify with "FLAGS" part changed
+    if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
+      const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
+      pendingNotifications << split.toList();
+      appendedMessages += split.count();
     }
   }
 

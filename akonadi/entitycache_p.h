@@ -39,7 +39,6 @@
 class KJob;
 
 typedef QList<Akonadi::Entity::Id> EntityIdList;
-Q_DECLARE_METATYPE( EntityIdList )
 
 namespace Akonadi {
 
