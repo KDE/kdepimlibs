@@ -42,6 +42,8 @@ Monitor::Monitor( QObject *parent ) :
 {
   d_ptr->init();
   d_ptr->connectToNotificationManager();
+
+  d_ptr->notificationSource->enableServerSideMonitor( true );
 }
 
 //@cond PRIVATE
