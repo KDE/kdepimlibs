@@ -43,10 +43,11 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     return 0;
   }
 
-  QDBusObjectPath p = manager->subscribe( KGlobal::mainComponent().componentName() );
+  QDBusObjectPath p = manager->subscribeV2( KGlobal::mainComponent().componentName(), true );
   const bool validError = manager->lastError().isValid();
   delete manager;
   if ( validError ) {
+    kWarning() << manager->lastError().name() << manager->lastError().message();
     // :TODO: What to do?
     return 0;
   }
