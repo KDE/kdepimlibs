@@ -60,8 +60,6 @@ Monitor::~Monitor()
 {
   ChangeMediator::unregisterMonitor(this);
 
-  // :TODO: Unsubscribe from the notification manager. That means having some kind of reference
-  // counting on the server side.
   delete d_ptr;
 }
 
