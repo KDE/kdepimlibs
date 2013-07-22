@@ -66,14 +66,15 @@ Monitor::~Monitor()
 void Monitor::setCollectionMonitored( const Collection &collection, bool monitored )
 {
   Q_D( Monitor );
-  if ( monitored ) {
+  if ( !d->collections.contains( collection ) && monitored ) {
     d->collections << collection;
-  } else {
-    d->collections.removeAll( collection );
-    d->cleanOldNotifications();
+    d->notificationSource->setCollectionMonitored( collection.id(), true );
+  } else if ( !monitored ) {
+    if ( d->collections.removeAll( collection ) ) {
+      d->cleanOldNotifications();
+      d->notificationSource->setCollectionMonitored( collection.id(), false );
+    }
   }
-
-  d->notificationSource->setCollectionMonitored( collection.id(), monitored );
 
   emit collectionMonitored( collection, monitored );
 }
@@ -81,14 +82,15 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
 void Monitor::setItemMonitored( const Item &item, bool monitored )
 {
   Q_D( Monitor );
-  if ( monitored ) {
+  if ( !d->items.contains( item.id() ) && monitored ) {
     d->items.insert( item.id() );
-  } else {
-    d->items.remove( item.id() );
-    d->cleanOldNotifications();
+    d->notificationSource->setItemMonitored( item.id(), true );
+  } else if ( !monitored ) {
+    if ( d->items.remove( item.id() ) ) {
+      d->cleanOldNotifications();
+      d->notificationSource->setItemMonitored( item.id(), false );
+    }
   }
-
-  d->notificationSource->setItemMonitored( item.id(), monitored );
 
   emit itemMonitored( item,  monitored );
 }
@@ -96,14 +98,15 @@ void Monitor::setItemMonitored( const Item &item, bool monitored )
 void Monitor::setResourceMonitored( const QByteArray &resource, bool monitored )
 {
   Q_D( Monitor );
-  if ( monitored ) {
+  if ( !d->resources.contains( resource) && monitored ) {
     d->resources.insert( resource );
-  } else {
-    d->resources.remove( resource );
-    d->cleanOldNotifications();
+    d->notificationSource->setResourceMonitored( resource, true );
+  } else if ( !monitored ) {
+    if ( d->resources.remove( resource ) ) {
+      d->cleanOldNotifications();
+      d->notificationSource->setResourceMonitored( resource, false );
+    }
   }
-
-  d->notificationSource->setResourceMonitored( resource, monitored );
 
   emit resourceMonitored( resource, monitored );
 }
@@ -111,14 +114,15 @@ void Monitor::setResourceMonitored( const QByteArray &resource, bool monitored )
 void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 {
   Q_D( Monitor );
-  if ( monitored ) {
+  if ( !d->mimetypes.contains( mimetype ) && monitored ) {
     d->mimetypes.insert( mimetype );
-  } else {
-    d->mimetypes.remove( mimetype );
-    d->cleanOldNotifications();
+    d->notificationSource->setMimeTypeMonitored( mimetype, true );
+  } else if ( !monitored ) {
+    if ( d->mimetypes.remove( mimetype ) ) {
+      d->cleanOldNotifications();
+      d->notificationSource->setMimeTypeMonitored( mimetype, false );
+    }
   }
-
-  d->notificationSource->setMimeTypeMonitored( mimetype, monitored );
 
   emit mimeTypeMonitored( mimetype, monitored );
 }
@@ -126,6 +130,10 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
   Q_D( Monitor );
+  if ( d->monitorAll == monitored ) {
+    return;
+  }
+
   d->monitorAll = monitored;
 
   if ( !monitored ) {
@@ -137,22 +145,24 @@ void Akonadi::Monitor::setAllMonitored( bool monitored )
   emit allMonitored( monitored );
 }
 
-void Monitor::ignoreSession(Session * session)
+void Monitor::ignoreSession( Session * session )
 {
   Q_D( Monitor );
-  d->sessions << session->sessionId();
-  connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
 
-  d->notificationSource->setSessionIgnored( session->sessionId(), true );
+  if ( !d->sessions.contains( session->sessionId() )) {
+    d->sessions << session->sessionId();
+    connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
+    d->notificationSource->setSessionIgnored( session->sessionId(), true );
+  }
 }
 
-void Monitor::fetchCollection(bool enable)
+void Monitor::fetchCollection( bool enable )
 {
   Q_D( Monitor );
   d->fetchCollection = enable;
 }
 
-void Monitor::fetchCollectionStatistics(bool enable)
+void Monitor::fetchCollectionStatistics( bool enable )
 {
   Q_D( Monitor );
   d->fetchCollectionStatistics = enable;
