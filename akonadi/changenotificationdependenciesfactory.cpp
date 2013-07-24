@@ -44,7 +44,7 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     return 0;
   }
 
-  const QString name = QString::fromLatin1( "%1-%2-%3" ).arg(
+  const QString name = QString::fromLatin1( "%1_%2_%3" ).arg(
       KGlobal::mainComponent().componentName(),
       QString::number( QCoreApplication::applicationPid() ),
       KRandom::randomString( 6 ) );
