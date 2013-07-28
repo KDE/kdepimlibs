@@ -51,4 +51,3 @@ QStringList mCategories( "funny" );
 QString mSummary = "A simple summary.";
 
 #endif
-

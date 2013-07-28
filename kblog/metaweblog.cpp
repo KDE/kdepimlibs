@@ -170,7 +170,6 @@ void MetaWeblogPrivate::saveCategories()
   file.close();
 }
 
-
 void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                             const QVariant &id )
 {
