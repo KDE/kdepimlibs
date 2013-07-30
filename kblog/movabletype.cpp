@@ -215,7 +215,6 @@ void MovableTypePrivate::slotTriggerFetchPost()
   mFetchPostCache.clear();
 }
 
-
 MovableTypePrivate::MovableTypePrivate()
 {
   kDebug();

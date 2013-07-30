@@ -40,7 +40,9 @@ class ItemFetchScopePrivate : public QSharedData
         mCacheOnly( false ),
         mCheckCachedPayloadPartsOnly( false ),
         mFetchMtime( true ),
-        mIgnoreRetrievalErrors( false )
+        mIgnoreRetrievalErrors( false ),
+        mFetchRid( true ),
+        mFetchGid( false )
     {
     }
 
@@ -57,6 +59,8 @@ class ItemFetchScopePrivate : public QSharedData
       mFetchMtime = other.mFetchMtime;
       mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
       mChangedSince = other.mChangedSince;
+      mFetchRid = other.mFetchRid;
+      mFetchGid = other.mFetchGid;
     }
 
   public:
@@ -70,6 +74,8 @@ class ItemFetchScopePrivate : public QSharedData
     bool mFetchMtime;
     bool mIgnoreRetrievalErrors;
     KDateTime mChangedSince;
+    bool mFetchRid;
+    bool mFetchGid;
 };
 
 }

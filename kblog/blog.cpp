@@ -144,4 +144,3 @@ BlogPrivate::~BlogPrivate()
 {
   kDebug() << "~BlogPrivate()";
 }
-

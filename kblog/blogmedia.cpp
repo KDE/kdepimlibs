@@ -130,4 +130,3 @@ BlogMedia &BlogMedia::operator=( const BlogMedia &m )
 }
 
 } //namespace KBlog
-

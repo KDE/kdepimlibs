@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
-  Author: Sergio Martins <sergio.martins@kdab.com> 
+  Author: Sergio Martins <sergio.martins@kdab.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -60,7 +60,7 @@ void TimesInIntervalTest::test()
   end.setTime( QTime( 23, 59, 59 ) );
   dateList = event->recurrence()->timesInInterval( start, end );
   QVERIFY( dateList.count() == 1 );
-  
+
   //------------------------------------------------------------------------------------------------
   // Test daily recurrence that only lasts X days
   const int recurrenceDuration = 3;

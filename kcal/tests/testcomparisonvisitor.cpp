@@ -64,7 +64,7 @@ void ComparisonVisitorTest::testEventComparison()
 
   // create a copy of the reference incidence
   Event event( reference );
-  
+
   IncidenceBase *baseReference = &reference;
   IncidenceBase *baseIncidence = &event;
 
