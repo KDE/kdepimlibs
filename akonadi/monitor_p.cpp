@@ -253,11 +253,6 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
   if ( msg.entities().count() == 0 )
     return false;
 
-  // corresponding signal is not connected
-  if ( isLazilyIgnored( msg, allowModifyFlagsConversion ) ) {
-    return false;
-  }
-
   // user requested everything
   if ( monitorAll && msg.type() != NotificationMessageV2::InvalidType)
     return true;
@@ -538,6 +533,10 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
     updatePendingStatistics( msg );
     bool needsSplit = true;
     bool supportsBatch = false;
+
+    if ( isLazilyIgnored( msg, true ) ) {
+      continue;
+    }
 
     checkBatchSupport( msg, needsSplit, supportsBatch );
 
