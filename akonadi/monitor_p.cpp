@@ -118,10 +118,13 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0
                                              && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
     || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
-    || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
+    || ( op == NotificationMessageV2::ModifyFlags &&
+         ( q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0
         // Newly delivered ModifyFlags notifications will be converted to
         // itemChanged(item, "FLAGS") for legacy clients.
-    || ( op == NotificationMessageV2::ModifyFlags && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 ) )
+          && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
+          )
+       )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
                                            && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0
@@ -546,11 +549,15 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
       const int appended = translateAndCompress( pendingNotifications, msg );
       if ( appended > 0 ) {
         appendedMessages += appended;
-        // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
-        if ( pendingNotifications.count() != oldSize + 1 )
-          ++erasedMessages;
-      } else
+      } else {
         ++modifiedMessages;
+      }
+      // translateAndCompress can remove an existing "modify" when msg is a "delete".
+      // Or it can merge two ModifyFlags and return false.
+      // We need to detect such removals, for ChangeRecorder.
+      if ( pendingNotifications.count() != oldSize + appended ) {
+        ++erasedMessages; // this count isn't exact, but it doesn't matter
+      }
     } else if ( needsSplit ) {
       // If it's not queued at least make sure we fetch all the items from split
       // notifications in one go.
@@ -570,7 +577,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   }
 
   // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
-  if ( appendedMessages > 0 || modifiedMessages > 0 ) {
+  if ( appendedMessages > 0 || modifiedMessages > 0 || erasedMessages > 0 ) {
     if ( erasedMessages > 0 )
       notificationsErased();
     else

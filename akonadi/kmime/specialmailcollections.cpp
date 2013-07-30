@@ -114,6 +114,15 @@ bool SpecialMailCollections::registerCollection( Type type, const Collection &co
   return SpecialCollections::registerCollection( enumToType( type ), collection );
 }
 
+bool SpecialMailCollections::unregisterCollection( const Collection &collection )
+{
+  if (collection != Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash )) {
+    return SpecialCollections::unregisterCollection( collection );
+  } else {
+    return false;
+  }
+}
+
 bool SpecialMailCollections::hasDefaultCollection( Type type ) const
 {
   return SpecialCollections::hasDefaultCollection( enumToType( type ) );

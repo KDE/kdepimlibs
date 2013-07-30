@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Thomas McGuire <mcguire@kde.org>
+    Author: Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,34 +16,39 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef RESOURCESCHEDULERTEST_H
-#define RESOURCESCHEDULERTEST_H
+
+#ifndef GIDEXTRACTORINTERFACE_H
+#define GIDEXTRACTORINTERFACE_H
 
 #include <QtCore/QObject>
-#include <QtCore/QVariant>
 
-class ResourceSchedulerTest : public QObject
+namespace Akonadi {
+
+class Item;
+
+/**
+ * @short An interface to extract the GID of an object contained in an akonadi item.
+ *
+ * @author Christian Mollekopf <mollekopf@kolabsys.com>
+ * @since 4.11
+ */
+class GidExtractorInterface
 {
-  Q_OBJECT
   public:
-    explicit ResourceSchedulerTest( QObject *parent = 0 );
-
-  public Q_SLOTS:
-    void customTask( const QVariant &argument );
-    void customTaskNoArg();
-
-  private Q_SLOTS:
-
-    void testTaskComparision();
-    void testChangeReplaySchedule();
-    void testCustomTask();
-    void testCompression();
-    void testSyncCompletion();
-    void testPriorities();
-
-  private:
-    int mCustomCallCount;
-    QVariant mLastArgument;
+    /**
+     * Destructor.
+     */
+    virtual ~GidExtractorInterface() {}
+    /**
+     * Extracts the globally unique id of @p item
+     *
+     * If you want to clear the gid from the database return QString("").
+     */
+    virtual QString extractGid( const Item &item ) const = 0;
 };
+
+}
+
+Q_DECLARE_INTERFACE( Akonadi::GidExtractorInterface, "org.freedesktop.Akonadi.GidExtractorInterface/1.0" )
 
 #endif

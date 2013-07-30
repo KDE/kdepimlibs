@@ -39,7 +39,6 @@ namespace KIO
 
 namespace KBlog {
 
-
 class WordpressBuggyPrivate : public MovableTypePrivate
 {
   public:

@@ -373,4 +373,3 @@ QString BlogPostPrivate::cleanRichText( QString richText ) const
 }
 
 } // namespace KBlog
-

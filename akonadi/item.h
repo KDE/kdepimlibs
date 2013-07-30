@@ -296,6 +296,20 @@ class AKONADI_EXPORT Item : public Entity
     QString mimeType() const;
 
     /**
+     * Sets the @p gid of the entity.
+     *
+     * @since 4.12
+     */
+    void setGid( const QString &gid );
+
+    /**
+     * Returns the gid of the entity.
+     *
+     * @since 4.12
+     */
+    QString gid() const;
+
+    /**
      * Returns a list of metatype-ids, describing the different
      * variants of payload that are currently contained in this item.
      *
@@ -417,6 +431,7 @@ class AKONADI_EXPORT Item : public Entity
     //@cond PRIVATE
     friend class ItemCreateJob;
     friend class ItemModifyJob;
+    friend class ItemModifyJobPrivate;
     friend class ItemSync;
     friend class ProtocolHelper;
     PayloadBase* payloadBase() const;
@@ -563,7 +578,9 @@ Item::tryToClone( T * ret, const int * ) const
           std::auto_ptr<PayloadBase> npb( new Payload<T>( nt ) );
           addPayloadBaseVariant( PayloadType::sharedPointerId, metaTypeId, npb  );
           // and return it
-          if ( ret ) *ret = nt;
+          if ( ret ) {
+            *ret = nt;
+          }
           return true;
       }
   }
