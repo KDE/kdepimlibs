@@ -18,7 +18,8 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include <QtCore/QMap>
+#include <akonadi/servermanager.h>
+
 #include <QtCore/QObject>
 #include <QStringList>
 #include <QDBusConnection>
@@ -26,6 +27,7 @@
 class QIODevice;
 class KProcess;
 class QSignalMapper;
+class KJob;
 
 class SetupTest : public QObject
 {
@@ -35,9 +37,18 @@ class SetupTest : public QObject
   public:
     SetupTest();
     ~SetupTest();
+
+    /**
+      Sets the instance identifier for the Akonadi session.
+      Call this before using any other Akonadi API!
+    */
+    void setupInstanceId();
     bool startAkonadiDaemon();
     void stopAkonadiDaemon();
     QString basePath() const;
+
+    /// Identifier used for the Akonadi session
+    QString instanceId() const;
 
   public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
@@ -51,39 +62,29 @@ class SetupTest : public QObject
     void serverExited(int exitCode);
 
   private Q_SLOTS:
-    void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void resourceSynchronized( const QString &agentId );
+    void serverStateChanged( Akonadi::ServerManager::State state );
     void slotAkonadiDaemonProcessFinished( int exitCode );
+    void agentCreationResult(KJob* job);
+    void synchronizationResult(KJob* job);
 
   private:
-    bool clearEnvironment();
-    QMap<QString, QString> environment() const;
-    int addDBusToEnvironment( QIODevice &device );
-    void generateDBusConfigFile( const QString& path );
-    int startDBusDaemon();
-    void stopDBusDaemon( int dbusPid );
-    void registerWithInternalDBus( const QString &address );
     void setupAgents();
+    void copyXdgDirectory( const QString &src, const QString &dst );
+    void copyKdeHomeDirectory( const QString &src, const QString &dst );
     void copyDirectory( const QString &src, const QString &dst );
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
-    void shutdownKde();
-
-  private slots:
-    void synchronizeResources();
+    bool isSetupDone() const;
+    void setupFailed();
 
   private:
     KProcess *mAkonadiDaemonProcess;
-    int mDBusDaemonPid;
-    QDBusConnection mInternalBus;
-    QStringList mPendingAgents;
-    QStringList mPendingResources;
-    QStringList mPendingSyncs;
     bool mShuttingDown;
-    QSignalMapper *mSyncMapper;
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;
+    int mSetupJobCount;
+    int mExitCode;
 };
 
 #endif
