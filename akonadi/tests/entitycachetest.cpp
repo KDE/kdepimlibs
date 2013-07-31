@@ -25,8 +25,6 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE(QList<Akonadi::Entity::Id>)
-
 class EntityCacheTest : public QObject
 {
   Q_OBJECT
