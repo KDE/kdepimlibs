@@ -51,6 +51,7 @@ MonitorPrivate::MonitorPrivate( ChangeNotificationDependenciesFactory *dependenc
   collectionMoveTranslationEnabled( true ),
   useRefCounting( false )
 {
+
 }
 
 void MonitorPrivate::init()
@@ -90,8 +91,25 @@ bool MonitorPrivate::connectToNotificationManager()
 
 void MonitorPrivate::serverStateChanged(ServerManager::State state)
 {
-  if ( state == ServerManager::Running )
+  if ( state == ServerManager::Running ) {
     connectToNotificationManager();
+    notificationSource->setAllMonitored( monitorAll );
+    Q_FOREACH ( const Collection &col, collections ) {
+      notificationSource->setCollectionMonitored( col.id(), true );
+    }
+    Q_FOREACH ( const Entity::Id id, items ) {
+      notificationSource->setItemMonitored( id, true );
+    }
+    Q_FOREACH ( const QByteArray &resource, resources ) {
+      notificationSource->setResourceMonitored( resource, true );
+    }
+    Q_FOREACH ( const QByteArray &session, sessions ) {
+      notificationSource->setSessionIgnored( session, true );
+    }
+    Q_FOREACH ( const QString &mimeType, mimetypes ) {
+      notificationSource->setMimeTypeMonitored( mimeType, true );
+    }
+  }
 }
 
 void MonitorPrivate::invalidateCollectionCache( qint64 id )
