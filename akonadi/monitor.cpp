@@ -42,7 +42,6 @@ Monitor::Monitor( QObject *parent ) :
 {
   d_ptr->init();
   d_ptr->connectToNotificationManager();
-  ignoreSession( Session::defaultSession() );
 }
 
 //@cond PRIVATE
@@ -52,7 +51,6 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
 {
   d_ptr->init();
   d_ptr->connectToNotificationManager();
-  ignoreSession( Session::defaultSession() );
 
   ChangeMediator::registerMonitor(this);
 }
