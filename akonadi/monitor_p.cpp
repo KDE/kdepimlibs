@@ -95,19 +95,19 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
     connectToNotificationManager();
     notificationSource->setAllMonitored( monitorAll );
     Q_FOREACH ( const Collection &col, collections ) {
-      notificationSource->setCollectionMonitored( col.id(), true );
+      notificationSource->setMonitoredCollection( col.id(), true );
     }
     Q_FOREACH ( const Entity::Id id, items ) {
-      notificationSource->setItemMonitored( id, true );
+      notificationSource->setMonitoredItem( id, true );
     }
     Q_FOREACH ( const QByteArray &resource, resources ) {
-      notificationSource->setResourceMonitored( resource, true );
+      notificationSource->setMonitoredResource( resource, true );
     }
     Q_FOREACH ( const QByteArray &session, sessions ) {
-      notificationSource->setSessionIgnored( session, true );
+      notificationSource->setIgnoredSession( session, true );
     }
     Q_FOREACH ( const QString &mimeType, mimetypes ) {
-      notificationSource->setMimeTypeMonitored( mimeType, true );
+      notificationSource->setMonitoredMimeType( mimeType, true );
     }
   }
 }
