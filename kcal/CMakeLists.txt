@@ -13,9 +13,9 @@ endif()
 
 include (ConfigureChecks.cmake)
 
-if(KDE4_BUILD_TESTS)
-  add_definitions(-DCOMPILING_TESTS)
-endif()
+#if(KDE4_BUILD_TESTS)
+# add_definitions(-DCOMPILING_TESTS)
+#endif()
 
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
