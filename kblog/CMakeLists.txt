@@ -2,7 +2,7 @@ project(kblog)
 
 include_directories(${Boost_INCLUDE_DIR})
 
-add_subdirectory( tests )
+#add_subdirectory( tests )
 
 ########### next target ###############
 
