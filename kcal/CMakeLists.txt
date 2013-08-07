@@ -13,9 +13,9 @@ endif()
 
 include (ConfigureChecks.cmake)
 
-if(KDE4_BUILD_TESTS)
-  add_definitions(-DCOMPILING_TESTS)
-endif()
+#if(KDE4_BUILD_TESTS)
+# add_definitions(-DCOMPILING_TESTS)
+#endif()
 
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
@@ -142,7 +142,7 @@ target_link_libraries(kcal_localdir ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} kca
 install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif()
 
-add_subdirectory( tests )
+#add_subdirectory( tests )
 
 ########### install files ###############
 
