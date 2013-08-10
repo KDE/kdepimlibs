@@ -94,7 +94,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   case Transport::EnumType::Akonadi:
   {
     kWarning() << "Tried to configure an Akonadi transport.";
-    d->configWidget = new QLabel( i18n( "This transport cannot be configured." ), this );
+    d->configWidget = new QLabel( i18n( "This outgoing account cannot be configured." ), this );
     break;
   }
   default:
