@@ -29,40 +29,40 @@ class UrlInfo;
 class MBoxFile
 {
 public:
-	/**
-	 * Constructor
-	 * @param info The urlinfo which must be used
-	 * @param parent The MBoxProtocol parent instance, used to throw errors.
-	 */
-	MBoxFile( const UrlInfo* info, MBoxProtocol* parent );
+    /**
+     * Constructor
+     * @param info The urlinfo which must be used
+     * @param parent The MBoxProtocol parent instance, used to throw errors.
+     */
+    MBoxFile( const UrlInfo* info, MBoxProtocol* parent );
 
-	/**
-	 * Empty destructor
-	 */
-	~MBoxFile();
-
-protected:
-	/**
-	 * When implemented, this function handles the locking of the file.
-	 * @return true if the locking was done successfully.
-	 */
-	bool lock();
-
-	/**
-	 * When implemented, this function unlocks the file.
-	 */
-	void unlock();
+    /**
+     * Empty destructor
+     */
+    ~MBoxFile();
 
 protected:
-	/**
-	 * This can be used to get information about the file.
-	 * The file specified here is the file that must be used.
-	 */
-	const UrlInfo* const m_info;
+    /**
+     * When implemented, this function handles the locking of the file.
+     * @return true if the locking was done successfully.
+     */
+    bool lock();
 
-	/**
-	 * A instance of the parent protocol, meant to throw errors if neccesairy.
-	 */
-	MBoxProtocol* const m_mbox;
+    /**
+     * When implemented, this function unlocks the file.
+     */
+    void unlock();
+
+protected:
+    /**
+     * This can be used to get information about the file.
+     * The file specified here is the file that must be used.
+     */
+    const UrlInfo* const m_info;
+
+    /**
+     * A instance of the parent protocol, meant to throw errors if neccesairy.
+     */
+    MBoxProtocol* const m_mbox;
 };
 #endif

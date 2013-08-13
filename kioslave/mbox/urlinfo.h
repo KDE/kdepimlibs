@@ -25,58 +25,59 @@ class QString;
 class UrlInfo
 {
 public:
-	/**
-	 * This enum is used to determe the url type.
-	 */
-	enum UrlType { invalid = 0, message = 1, directory = 2 };
+    /**
+     * This enum is used to determe the url type.
+     */
+    enum UrlType { invalid = 0, message = 1, directory = 2 };
 
-	/**
-	 * Constructor
-	 *
-	 * @param url The url: this url is used to split the location data off.
-	 * @param type The possible types of the url
-	 */
-	explicit UrlInfo( const KUrl &url, const UrlType type = (UrlType)( message | directory ) );
+    /**
+     * Constructor
+     *
+     * @param url The url: this url is used to split the location data off.
+     * @param type The possible types of the url
+     */
+    explicit UrlInfo( const KUrl &url, const UrlType type = (UrlType)( message | directory ) );
 
-	/**
-	 * Destructor
-	 */
-	~UrlInfo();
+    /**
+     * Destructor
+     */
+    ~UrlInfo();
 
-	/**
-	 * Returns the type of the url
-	 * @return the type of the url
-	 */
-	UrlType type() const { return m_type; }
+    /**
+     * Returns the type of the url
+     * @return the type of the url
+     */
+    UrlType type() const { return m_type; }
 
-	/**
-	 * @return the mimetype of the url
-	 */
-	QString mimetype() const;
+    /**
+     * @return the mimetype of the url
+     */
+    QString mimetype() const;
 
-	/**
-	 * @return The location of the mbox-file
-	 */
-	QString filename() const;
-	/**
-	 * @return The id given in the url.
-	 */
-	QString id() const;
+    /**
+     * @return The location of the mbox-file
+     */
+    QString filename() const;
+    /**
+     * @return The id given in the url.
+     */
+    QString id() const;
 
-	/**
-	 * @return the while url as QString
-	 */
-	QString url() const;
-private:
-	void calculateInfo( const KUrl& url, const UrlType type );
-
-	bool isDirectory( const KUrl& url );
-	bool isMessage( const KUrl& url );
+    /**
+     * @return the while url as QString
+     */
+    QString url() const;
 
 private:
-	UrlType m_type;
-	QString *m_filename;
-	QString *m_id;
+    void calculateInfo( const KUrl& url, const UrlType type );
+
+    bool isDirectory( const KUrl& url );
+    bool isMessage( const KUrl& url );
+
+private:
+    UrlType m_type;
+    QString *m_filename;
+    QString *m_id;
 };
 
 #endif

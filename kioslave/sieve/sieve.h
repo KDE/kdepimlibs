@@ -31,105 +31,105 @@ class KUrl;
 class kio_sieveResponse
 {
 public:
-	enum responses { NONE, KEY_VAL_PAIR, ACTION, QUANTITY };
+    enum responses { NONE, KEY_VAL_PAIR, ACTION, QUANTITY };
 
-	kio_sieveResponse();
+    kio_sieveResponse();
 
-	const uint& getType() const;
+    const uint& getType() const;
 
-	const QByteArray& getAction() const;
-	uint getQuantity() const;
-	const QByteArray& getKey() const;
-	const QByteArray& getVal() const;
-	const QByteArray& getExtra() const;
+    const QByteArray& getAction() const;
+    uint getQuantity() const;
+    const QByteArray& getKey() const;
+    const QByteArray& getVal() const;
+    const QByteArray& getExtra() const;
 
-	void setQuantity(const uint& quantity);
-	void setAction(const QByteArray& newAction);
-	void setKey(const QByteArray& newKey);
-	void setVal(const QByteArray& newVal);
-	void setExtra(const QByteArray& newExtra);
+    void setQuantity(const uint& quantity);
+    void setAction(const QByteArray& newAction);
+    void setKey(const QByteArray& newKey);
+    void setVal(const QByteArray& newVal);
+    void setExtra(const QByteArray& newExtra);
 
-	void clear();
+    void clear();
 
 protected:
-	uint		rType;
-	uint		quantity;
-	QByteArray      key;
-	QByteArray	val;
-	QByteArray	extra;
+    uint       rType;
+    uint       quantity;
+    QByteArray key;
+    QByteArray val;
+    QByteArray extra;
 };
 
 class kio_sieveProtocol : public KIO::TCPSlaveBase
 {
 
 public:
-	enum connectionModes { NORMAL, CONNECTION_ORIENTED };
-	enum Results { OK, NO, BYE, OTHER };
+    enum connectionModes { NORMAL, CONNECTION_ORIENTED };
+    enum Results { OK, NO, BYE, OTHER };
 
-	kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
-	virtual ~kio_sieveProtocol();
+    kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
+    virtual ~kio_sieveProtocol();
 
-	virtual void mimetype(const KUrl& url);
-	virtual void get(const KUrl& url);
-	virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
-	virtual void del(const KUrl &url, bool isfile);
+    virtual void mimetype(const KUrl& url);
+    virtual void get(const KUrl& url);
+    virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
+    virtual void del(const KUrl &url, bool isfile);
 
-	virtual void listDir(const KUrl& url);
-	virtual void chmod(const KUrl& url, int permissions);
-	virtual void urlStat(const KUrl& url);
+    virtual void listDir(const KUrl& url);
+    virtual void chmod(const KUrl& url, int permissions);
+    virtual void urlStat(const KUrl& url);
 
-	virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &pass);
-	virtual void openConnection();
-	virtual void closeConnection();
-	//virtual void slave_status();
+    virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &pass);
+    virtual void openConnection();
+    virtual void closeConnection();
+    //virtual void slave_status();
 
-	/**
-	 * Special commands supported by this slave:
-	 * 1 - activate script
-	 * 2 - deactivate (all - only one active at any one time) scripts
-	 * 3 - request capabilities, returned as metadata
-	 */
-	virtual void special(const QByteArray &data);
-	bool activate(const KUrl& url);
-	bool deactivate();
+    /**
+     * Special commands supported by this slave:
+     * 1 - activate script
+     * 2 - deactivate (all - only one active at any one time) scripts
+     * 3 - request capabilities, returned as metadata
+     */
+    virtual void special(const QByteArray &data);
+    bool activate(const KUrl& url);
+    bool deactivate();
 
 protected:
-	bool connect(bool useTLSIfAvailable = true);
-	bool authenticate();
-	void disconnect(bool forcibly = false);
-	void changeCheck( const KUrl &url );
+    bool connect(bool useTLSIfAvailable = true);
+    bool authenticate();
+    void disconnect(bool forcibly = false);
+    void changeCheck( const KUrl &url );
 
-	bool sendData(const QByteArray &data);
-	bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray() );
-	bool operationSuccessful();
-	int operationResult();
+    bool sendData(const QByteArray &data);
+    bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray() );
+    bool operationSuccessful();
+    int operationResult();
 
-	bool parseCapabilities(bool requestCapabilities = false);
-	bool saslInteract( void *in, KIO::AuthInfo &ai );
+    bool parseCapabilities(bool requestCapabilities = false);
+    bool saslInteract( void *in, KIO::AuthInfo &ai );
 
-	// IOSlave global data
-	uint				m_connMode;
+    // IOSlave global data
+    uint              m_connMode;
 
-	// Host-specific data
-	QStringList			m_sasl_caps;
-	bool				m_supportsTLS;
+    // Host-specific data
+    QStringList       m_sasl_caps;
+    bool              m_supportsTLS;
 
-	// Global server respose class
-	kio_sieveResponse	r;
+    // Global server respose class
+    kio_sieveResponse r;
 
-	// connection details
-	QString				m_sServer;
-	QString				m_sUser;
-	QString				m_sPass;
-	QString				m_sAuth;
-	bool				m_shouldBeConnected;
-        bool                            m_allowUnencrypted;
-	quint16				m_port;
+    // connection details
+    QString           m_sServer;
+    QString           m_sUser;
+    QString           m_sPass;
+    QString           m_sAuth;
+    bool              m_shouldBeConnected;
+    bool              m_allowUnencrypted;
+    quint16           m_port;
 
 private:
-	bool requestCapabilitiesAfterStartTLS() const;
+    bool requestCapabilitiesAfterStartTLS() const;
 
-	QString m_implementation;
+    QString m_implementation;
 };
 
 #endif

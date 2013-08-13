@@ -34,45 +34,45 @@ class UrlInfo;
 class Stat
 {
 public:
-	/**
-	 * Empty constructor
-	 */
-	Stat()  {}
+    /**
+     * Empty constructor
+     */
+    Stat()  {}
 
-	/**
-	 * Emtpy destructor
-	 */
-	~Stat() {}
+    /**
+     * Emtpy destructor
+     */
+    ~Stat() {}
 
-	/**
-	 * This functions gives information with a given UrlInfo.
-	 * @param info The file information
-	 * @return The information of the file as destribed in UrlInfo.
-	 */
-	static KIO::UDSEntry stat( const UrlInfo& info );
-	/**
-	 * This function gives information with a given ReadMBox and UrlInfo.
-	 * Through this, it is possible to ask the stats of the next message,
-	 * without reopening the mbox-file.
-	 * @param mbox The ReadMBox instance, used to search the mbox-email in.
-	 * @param info The url information.
-	 * @return The requesteds information.
-	 */
-	static KIO::UDSEntry stat( ReadMBox& mbox, const UrlInfo& info );
+    /**
+     * This functions gives information with a given UrlInfo.
+     * @param info The file information
+     * @return The information of the file as destribed in UrlInfo.
+     */
+    static KIO::UDSEntry stat( const UrlInfo& info );
+    /**
+     * This function gives information with a given ReadMBox and UrlInfo.
+     * Through this, it is possible to ask the stats of the next message,
+     * without reopening the mbox-file.
+     * @param mbox The ReadMBox instance, used to search the mbox-email in.
+     * @param info The url information.
+     * @return The requesteds information.
+     */
+    static KIO::UDSEntry stat( ReadMBox& mbox, const UrlInfo& info );
 
-	/**
-	 * This function gets the stats of a given mbox-file in an UDSEntry.
-	 * @param info The location of the mbox-file.
-	 * @return A list of Atoms.
-	 */
-	static KIO::UDSEntry statDirectory( const UrlInfo& info );
+    /**
+     * This function gets the stats of a given mbox-file in an UDSEntry.
+     * @param info The location of the mbox-file.
+     * @return A list of Atoms.
+     */
+    static KIO::UDSEntry statDirectory( const UrlInfo& info );
 
-	/**
-	 * This function gets the stats of a geven mbox-message in a UDSEntry.
-	 * @param info The url of the mbox-message.
-	 * @return Information shipped in an UDSEntry.
-	 */
-	static KIO::UDSEntry statMessage( const UrlInfo& info );
+    /**
+     * This function gets the stats of a geven mbox-message in a UDSEntry.
+     * @param info The url of the mbox-message.
+     * @return Information shipped in an UDSEntry.
+     */
+    static KIO::UDSEntry statMessage( const UrlInfo& info );
 };
 
 #endif
