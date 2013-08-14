@@ -33,50 +33,50 @@ class KUrl;
 class MBoxProtocol : public KIO::SlaveBase
 {
 public:
-	/**
-	 * Constructor, for the parameters,  See KIO::SlaveBase
-	 */
-	MBoxProtocol( const QByteArray&, const QByteArray& );
-	/**
-	 * Empty destructor
-	 */
-	virtual ~MBoxProtocol();
+    /**
+     * Constructor, for the parameters,  See KIO::SlaveBase
+     */
+    MBoxProtocol( const QByteArray&, const QByteArray& );
+    /**
+     * Empty destructor
+     */
+    virtual ~MBoxProtocol();
 
-	/**
-	 * This functions is used when an user or a program wants to
-	 * get a file from a mbox-file
-	 * @param url The url which points to the virtual file to get
-	 */
-	virtual void get( const KUrl& url );
+    /**
+     * This functions is used when an user or a program wants to
+     * get a file from a mbox-file
+     * @param url The url which points to the virtual file to get
+     */
+    virtual void get( const KUrl& url );
 
-	/**
-	 * This functions gives a listing back.
-	 * @param url The url to the mbox-file.
-	 */
-	virtual void listDir( const KUrl& url );
+    /**
+     * This functions gives a listing back.
+     * @param url The url to the mbox-file.
+     */
+    virtual void listDir( const KUrl& url );
 
-	/**
-	 * This functions gives general properties about a mbox-file,
-	 * or mbox-email back.
-	 */
-	virtual void stat( const KUrl& url );
+    /**
+     * This functions gives general properties about a mbox-file,
+     * or mbox-email back.
+     */
+    virtual void stat( const KUrl& url );
 
-	/**
-	 * This functions determinate the mimetype of a given mbox-file or mbox-email.
-	 * @param url The url to get the mimetype from
-	 */
-	virtual void mimetype( const KUrl& url );
+    /**
+     * This functions determinate the mimetype of a given mbox-file or mbox-email.
+     * @param url The url to get the mimetype from
+     */
+    virtual void mimetype( const KUrl& url );
 
-	/**
-	 * Through this functions, other class which have an instance to this
-	 * class (classes which are part of kio_mbox) can emit an error with
-	 * this function
-	 * @param errno The error number to be thrown
-	 * @param arg The argument of the error message of the error number.
-	 */
-	void emitError( int _errno, const QString& arg );
+    /**
+     * Through this functions, other class which have an instance to this
+     * class (classes which are part of kio_mbox) can emit an error with
+     * this function
+     * @param errno The error number to be thrown
+     * @param arg The argument of the error message of the error number.
+     */
+    void emitError( int _errno, const QString& arg );
 private:
-	bool m_errorState;
+    bool m_errorState;
 };
 
 #endif
