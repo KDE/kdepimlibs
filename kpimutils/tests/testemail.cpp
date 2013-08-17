@@ -461,18 +461,18 @@ void EMailTest::testCheckSplitEmailAddrList_data()
   QTest::addColumn<QStringList>( "expResult" );
 
   QTest::newRow( "" ) << "kloecker@kde.org (Kloecker, Ingo)"
-                      << ( QStringList() << "kloecker@kde.org (Kloecker, Ingo)" );
+                      << ( QStringList() << QLatin1String("kloecker@kde.org (Kloecker, Ingo)") );
   QTest::newRow( "" ) << "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>"
                       << ( QStringList()
-                           << "Matt Douhan <matt@fruitsalad.org>"
-                           << "Foo Bar <foo@bar.com>" );
+                           << QLatin1String("Matt Douhan <matt@fruitsalad.org>")
+                           << QLatin1String("Foo Bar <foo@bar.com>") );
   QTest::newRow( "" ) << "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>"
                       << ( QStringList()
-                           << "\"Matt, Douhan\" <matt@fruitsalad.org>"
-                           << "Foo Bar <foo@bar.com>" );
+                           << QLatin1String("\"Matt, Douhan\" <matt@fruitsalad.org>")
+                           << QLatin1String("Foo Bar <foo@bar.com>") );
   QTest::newRow( "" ) << "\"Lastname\\, Firstname\" <firstname.lastname@example.com>"
                       << ( QStringList()
-                           << "\"Lastname\\, Firstname\" <firstname.lastname@example.com>" );
+                           << QLatin1String("\"Lastname\\, Firstname\" <firstname.lastname@example.com>") );
 }
 
 void EMailTest::testNormalizeAddressesAndEncodeIDNs()

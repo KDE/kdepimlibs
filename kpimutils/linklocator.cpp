@@ -116,14 +116,14 @@ QString LinkLocator::getUrl()
 
       /*if ( beforeUrl == '(' ) {
         afterUrl = ')';
-      } else */if ( beforeUrl == '[' ) {
-        afterUrl = ']';
-      } else if ( beforeUrl == '<' ) {
-        afterUrl = '>';
-      } else if ( beforeUrl == '>' ) { // for e.g. <link>http://.....</link>
-        afterUrl = '<';
-      } else if ( beforeUrl == '"' ) {
-        afterUrl = '"';
+      } else */if ( beforeUrl == QLatin1Char('[') ) {
+        afterUrl = QLatin1Char(']');
+      } else if ( beforeUrl == QLatin1Char('<') ) {
+        afterUrl = QLatin1Char('>');
+      } else if ( beforeUrl == QLatin1Char('>') ) { // for e.g. <link>http://.....</link>
+        afterUrl = QLatin1Char('<');
+      } else if ( beforeUrl == QLatin1Char('"') ) {
+        afterUrl = QLatin1Char('"');
       }
     }
 
@@ -145,7 +145,7 @@ QString LinkLocator::getUrl()
 
     if ( isEmptyUrl( url ) || ( url.length() > maxUrlLen() ) ) {
       mPos = start;
-      url = "";
+      url.clear();
     } else {
       --mPos;
     }
@@ -157,7 +157,7 @@ QString LinkLocator::getUrl()
   //       even though that is not wanted. So work around that here.
   //       Most real-life URLs hopefully don't end with dots or commas.
   QList<QChar> wordBoundaries;
-  wordBoundaries << '.' << ',' << ':' << '!' << '?' << ')' << '>';
+  wordBoundaries << QLatin1Char('.') << QLatin1Char(',') << QLatin1Char(':') << QLatin1Char('!') << QLatin1Char('?') << QLatin1Char(')') << QLatin1Char('>');
   if ( url.length() > 1 ) {
     do {
       if ( wordBoundaries.contains( url.at( url.length() - 1 ) ) ) {
@@ -177,7 +177,7 @@ bool LinkLocator::atUrl() const
 {
   // the following characters are allowed in a dot-atom (RFC 2822):
   // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-  const QString allowedSpecialChars = QString( ".!#$%&'*+-/=?^_`{|}~" );
+  const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
 
   // the character directly before the URL must not be a letter, a number or
   // any other character allowed in a dot-atom (RFC 2822).
@@ -189,19 +189,19 @@ bool LinkLocator::atUrl() const
 
   QChar ch = mText[mPos];
   return
-    ( ch == 'h' && ( mText.mid( mPos, 7 ) == QLatin1String( "http://" ) ||
+    ( ch == QLatin1Char('h') && ( mText.mid( mPos, 7 ) == QLatin1String( "http://" ) ||
                      mText.mid( mPos, 8 ) == QLatin1String( "https://" ) ) ) ||
-    ( ch == 'v' && mText.mid( mPos, 6 ) == QLatin1String( "vnc://" ) ) ||
-    ( ch == 'f' && ( mText.mid( mPos, 7 ) == QLatin1String( "fish://" ) ||
+    ( ch == QLatin1Char('v') && mText.mid( mPos, 6 ) == QLatin1String( "vnc://" ) ) ||
+    ( ch == QLatin1Char('f') && ( mText.mid( mPos, 7 ) == QLatin1String( "fish://" ) ||
                      mText.mid( mPos, 6 ) == QLatin1String( "ftp://" ) ||
                      mText.mid( mPos, 7 ) == QLatin1String( "ftps://" ) ) ) ||
-    ( ch == 's' && ( mText.mid( mPos, 7 ) == QLatin1String( "sftp://" ) ||
+    ( ch == QLatin1Char('s') && ( mText.mid( mPos, 7 ) == QLatin1String( "sftp://" ) ||
                      mText.mid( mPos, 6 ) == QLatin1String( "smb://" ) ) ) ||
-    ( ch == 'm' && mText.mid( mPos, 7 ) == QLatin1String( "mailto:" ) ) ||
-    ( ch == 'w' && mText.mid( mPos, 4 ) == QLatin1String( "www." ) ) ||
-    ( ch == 'f' && ( mText.mid( mPos, 4 ) == QLatin1String( "ftp." ) ||
+    ( ch == QLatin1Char('m') && mText.mid( mPos, 7 ) == QLatin1String( "mailto:" ) ) ||
+    ( ch == QLatin1Char('w') && mText.mid( mPos, 4 ) == QLatin1String( "www." ) ) ||
+    ( ch == QLatin1Char('f') && ( mText.mid( mPos, 4 ) == QLatin1String( "ftp." ) ||
                      mText.mid( mPos, 7 ) == QLatin1String( "file://" ) ) )||
-    ( ch == 'n' && mText.mid( mPos, 5 ) == QLatin1String( "news:" ) );
+    ( ch == QLatin1Char('n') && mText.mid( mPos, 5 ) == QLatin1String( "news:" ) );
 }
 
 bool LinkLocator::isEmptyUrl( const QString &url ) const
@@ -226,18 +226,18 @@ QString LinkLocator::getEmailAddress()
 {
   QString address;
 
-  if ( mText[mPos] == '@' ) {
+  if ( mText[mPos] == QLatin1Char('@') ) {
     // the following characters are allowed in a dot-atom (RFC 2822):
     // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-    const QString allowedSpecialChars = QString( ".!#$%&'*+-/=?^_`{|}~" );
+    const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
 
     // determine the local part of the email address
     int start = mPos - 1;
     while ( start >= 0 && mText[start].unicode() < 128 &&
             ( mText[start].isLetterOrNumber() ||
-              mText[start] == '@' || // allow @ to find invalid email addresses
+              mText[start] == QLatin1Char('@') || // allow @ to find invalid email addresses
               allowedSpecialChars.indexOf( mText[start] ) != -1 ) ) {
-      if ( mText[start] == '@' ) {
+      if ( mText[start] == QLatin1Char('@') ) {
         return QString(); // local part contains '@' -> no email address
       }
       --start;
@@ -256,13 +256,13 @@ QString LinkLocator::getEmailAddress()
     int end = mPos + 1;
     while ( end < (int)mText.length() &&
             ( mText[end].isLetterOrNumber() ||
-              mText[end] == '@' || // allow @ to find invalid email addresses
-              mText[end] == '.' ||
-              mText[end] == '-' ) ) {
-      if ( mText[end] == '@' ) {
+              mText[end] == QLatin1Char('@') || // allow @ to find invalid email addresses
+              mText[end] == QLatin1Char('.') ||
+              mText[end] == QLatin1Char('-') ) ) {
+      if ( mText[end] == QLatin1Char('@') ) {
         return QString(); // domain part contains '@' -> no email address
       }
-      if ( mText[end] == '.' ) {
+      if ( mText[end] == QLatin1Char('.') ) {
         dotPos = qMin( dotPos, end ); // remember index of first dot in domain
       }
       ++end;
@@ -300,28 +300,27 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
   QChar ch;
   int x;
   bool startOfLine = true;
-  QString emoticon;
 
   for ( locator.mPos = 0, x = 0; locator.mPos < (int)locator.mText.length();
         locator.mPos++, x++ ) {
     ch = locator.mText[locator.mPos];
     if ( flags & PreserveSpaces ) {
-      if ( ch == ' ' ) {
+      if ( ch == QLatin1Char(' ') ) {
         if ( locator.mPos + 1 < locator.mText.length() ) {
-          if ( locator.mText[locator.mPos + 1] != ' ' ) {
+          if ( locator.mText[locator.mPos + 1] != QLatin1Char(' ') ) {
 
             // A single space, make it breaking if not at the start or end of the line
-            const bool endOfLine = locator.mText[locator.mPos + 1] == '\n';
+            const bool endOfLine = locator.mText[locator.mPos + 1] == QLatin1Char('\n');
             if ( !startOfLine && !endOfLine ) {
-              result += ' ';
+              result += QLatin1Char(' ');
             } else {
-              result += "&nbsp;";
+              result += QLatin1String("&nbsp;");
             }
           } else {
 
             // Whitespace of more than one space, make it all non-breaking
-            while ( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == ' ' ) {
-              result += "&nbsp;";
+            while ( locator.mPos < locator.mText.length() && locator.mText[locator.mPos] == QLatin1Char(' ') ) {
+              result += QLatin1String("&nbsp;");
               locator.mPos++;
               x++;
             }
@@ -332,16 +331,16 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
           }
         } else {
           // Last space in the text, it is non-breaking
-          result += "&nbsp;";
+          result += QLatin1String("&nbsp;");
         }
 
         if ( startOfLine ) {
           startOfLine = false;
         }
         continue;
-      } else if ( ch == '\t' ) {
+      } else if ( ch == QLatin1Char('\t') ) {
         do {
-          result += "&nbsp;";
+          result += QLatin1String("&nbsp;");
           x++;
         } while ( ( x & 7 ) != 0 );
         x--;
@@ -349,53 +348,53 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
         continue;
       }
     }
-    if ( ch == '\n' ) {
-      result += "<br />\n"; // Keep the \n, so apps can figure out the quoting levels correctly.
+    if ( ch == QLatin1Char('\n') ) {
+      result += QLatin1String("<br />\n"); // Keep the \n, so apps can figure out the quoting levels correctly.
       startOfLine = true;
       x = -1;
       continue;
     }
 
     startOfLine = false;
-    if ( ch == '&' ) {
-      result += "&amp;";
-    } else if ( ch == '"' ) {
-      result += "&quot;";
-    } else if ( ch == '<' ) {
-      result += "&lt;";
-    } else if ( ch == '>' ) {
-      result += "&gt;";
+    if ( ch == QLatin1Char('&') ) {
+      result += QLatin1String("&amp;");
+    } else if ( ch == QLatin1Char('"') ) {
+      result += QLatin1String("&quot;");
+    } else if ( ch == QLatin1Char('<') ) {
+      result += QLatin1String("&lt;");
+    } else if ( ch == QLatin1Char('>') ) {
+      result += QLatin1String("&gt;");
     } else {
       const int start = locator.mPos;
       if ( !( flags & IgnoreUrls ) ) {
         str = locator.getUrl();
         if ( !str.isEmpty() ) {
           QString hyperlink;
-          if ( str.left( 4 ) == "www." ) {
-            hyperlink = "http://" + str;
-          } else if ( str.left( 4 ) == "ftp." ) {
-            hyperlink = "ftp://" + str;
+          if ( str.left( 4 ) == QLatin1String("www.") ) {
+            hyperlink = QLatin1String("http://") + str;
+          } else if ( str.left( 4 ) == QLatin1String("ftp.") ) {
+            hyperlink = QLatin1String("ftp://") + str;
           } else {
             hyperlink = str;
           }
 
-          result += "<a href=\"" + hyperlink + "\">" + Qt::escape( str ) + "</a>";
+          result += QLatin1String("<a href=\"") + hyperlink + QLatin1String("\">") + Qt::escape( str ) + QLatin1String("</a>");
           x += locator.mPos - start;
           continue;
         }
         str = locator.getEmailAddress();
         if ( !str.isEmpty() ) {
           // len is the length of the local part
-          int len = str.indexOf( '@' );
+          int len = str.indexOf( QLatin1Char('@') );
           QString localPart = str.left( len );
 
           // remove the local part from the result (as '&'s have been expanded to
           // &amp; we have to take care of the 4 additional characters per '&')
           result.truncate( result.length() -
-                           len - ( localPart.count( '&' ) * 4 ) );
+                           len - ( localPart.count( QLatin1Char('&') ) * 4 ) );
           x -= len;
 
-          result += "<a href=\"mailto:" + str + "\">" + str + "</a>";
+          result += QLatin1String("<a href=\"mailto:") + str + QLatin1String("\">") + str + QLatin1String("</a>");
           x += str.length() - 1;
           continue;
         }
@@ -414,11 +413,11 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
 
   if ( flags & ReplaceSmileys ) {
     QStringList exclude;
-    exclude << "(c)" << "(C)" << "&gt;:-(" << "&gt;:(" << "(B)" << "(b)" << "(P)" << "(p)";
-    exclude << "(O)" << "(o)" << "(D)" << "(d)" << "(E)" << "(e)" << "(K)" << "(k)";
-    exclude << "(I)" << "(i)" << "(L)" << "(l)" << "(8)" << "(T)" << "(t)" << "(G)";
-    exclude << "(g)" << "(F)" << "(f)" << "(H)";
-    exclude << "8)" << "(N)" << "(n)" << "(Y)" << "(y)" << "(U)" << "(u)" << "(W)" << "(w)";
+    exclude << QLatin1String("(c)") << QLatin1String("(C)") << QLatin1String("&gt;:-(") << QLatin1String("&gt;:(") << QLatin1String("(B)") << QLatin1String("(b)") << QLatin1String("(P)") << QLatin1String("(p)");
+    exclude << QLatin1String("(O)") << QLatin1String("(o)") << QLatin1String("(D)") << QLatin1String("(d)") << QLatin1String("(E)") << QLatin1String("(e)") << QLatin1String("(K)")<< QLatin1String("(k)");
+    exclude << QLatin1String("(I)") << QLatin1String("(i)") << QLatin1String("(L)") << QLatin1String("(l)") << QLatin1String("(8)") << QLatin1String("(T)") << QLatin1String("(t)") << QLatin1String("(G)");
+    exclude << QLatin1String("(g)") << QLatin1String("(F)") << QLatin1String("(f)") << QLatin1String("(H)");
+    exclude << QLatin1String("8)") << QLatin1String("(N)") << QLatin1String("(n)") << QLatin1String("(Y)") << QLatin1String("(y)" )<< QLatin1String("(U)") << QLatin1String("(u)") << QLatin1String("(W)") << QLatin1String("(w)");
     static QString cachedEmoticonsThemeName;
     if ( cachedEmoticonsThemeName.isEmpty() ) {
       cachedEmoticonsThemeName = KEmoticons::currentThemeName();
@@ -444,7 +443,7 @@ QString LinkLocator::pngToDataUrl( const QString &iconPath )
 
   QByteArray ba = pngFile.readAll();
   pngFile.close();
-  return QString::fromLatin1( "data:image/png;base64,%1" ).arg( ba.toBase64().constData() );
+  return QString::fromLatin1( "data:image/png;base64,%1" ).arg( QLatin1String(ba.toBase64().constData()) );
 }
 
 QString LinkLocator::highlightedText()
@@ -455,12 +454,12 @@ QString LinkLocator::highlightedText()
   }
 
   const QChar ch = mText[mPos];
-  if ( ch != '/' && ch != '*' && ch != '_' && ch != '-' ) {
+  if ( ch != QLatin1Char('/') && ch != QLatin1Char('*') && ch != QLatin1Char('_') && ch != QLatin1Char('-') ) {
     return QString();
   }
 
   QRegExp re =
-    QRegExp( QString( "\\%1((\\w+)([\\s-']\\w+)*( ?[,.:\\?!;])?)\\%2" ).arg( ch ).arg( ch ) );
+    QRegExp( QString::fromLatin1( "\\%1((\\w+)([\\s-']\\w+)*( ?[,.:\\?!;])?)\\%2" ).arg( ch ).arg( ch ) );
   re.setMinimal( true );
   if ( re.indexIn( mText, mPos ) == mPos ) {
     int length = re.matchedLength();
@@ -471,13 +470,13 @@ QString LinkLocator::highlightedText()
     mPos += length - 1;
     switch ( ch.toLatin1() ) {
     case '*':
-      return "<b>*" + re.cap( 1 ) + "*</b>";
+      return QLatin1String("<b>*") + re.cap( 1 ) + QLatin1String("*</b>");
     case '_':
-      return "<u>_" + re.cap( 1 ) + "_</u>";
+      return QLatin1String("<u>_") + re.cap( 1 ) + QLatin1String("_</u>");
     case '/':
-      return "<i>/" + re.cap( 1 ) + "/</i>";
+      return QLatin1String("<i>/") + re.cap( 1 ) + QLatin1String("/</i>");
     case '-':
-      return "<strike>-" + re.cap( 1 ) + "-</strike>";
+      return QLatin1String("<strike>-") + re.cap( 1 ) + QLatin1String("-</strike>");
     }
   }
   return QString();
