@@ -147,7 +147,7 @@ bool kByteArrayToFile( const QByteArray &aBuffer, const QString &aFileName,
       // make a backup copy
       // TODO: use KSaveFile::backupFile()
       QString bakName = aFileName;
-      bakName += '~';
+      bakName += QLatin1Char('~');
       QFile::remove( bakName );
       if ( !QDir::current().rename( aFileName, bakName ) ) {
         // failed to rename file
@@ -218,7 +218,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   KDE_struct_stat statbuffer;
 
   if ( !fiToCheck.exists() ) {
-    error.append( i18n( "%1 does not exist", toCheck ) + '\n' );
+    error.append( i18n( "%1 does not exist", toCheck ) + QLatin1Char('\n') );
   }
 
   // check the access bit of a folder.
@@ -230,7 +230,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     if ( !g.isReadable() ) {
       if ( chmod( toCheckEnc, statbuffer.st_mode + S_IXUSR ) != 0 ) {
         error.append( i18n( "%1 is not accessible and that is "
-                            "unchangeable.", toCheck ) + '\n' );
+                            "unchangeable.", toCheck ) + QLatin1Char('\n') );
       } else {
         kDebug() << "Changed access bit for" << toCheck;
       }
@@ -251,7 +251,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
       // Lets try changing it.
       if ( chmod( toCheckEnc, statbuffer.st_mode + S_IRUSR ) != 0 ) {
         error.append( i18n( "%1 is not readable and that is unchangeable.",
-                            toCheck ) + '\n' );
+                            toCheck ) + QLatin1Char('\n') );
       } else {
         kDebug() << "Changed the read bit for" << toCheck;
       }
@@ -266,7 +266,7 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
 
       // Lets try changing it.
       if ( chmod ( toCheckEnc, statbuffer.st_mode + S_IWUSR ) != 0 ) {
-        error.append( i18n( "%1 is not writable and that is unchangeable.", toCheck ) + '\n' );
+        error.append( i18n( "%1 is not writable and that is unchangeable.", toCheck ) + QLatin1Char('\n') );
       } else {
         kDebug() << "Changed the write bit for" << toCheck;
       }
@@ -280,12 +280,11 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
     // First check if the folder is readable for us. If not, we get
     // some ugly crashes.
     if ( !g.isReadable() ) {
-      error.append( i18n( "Folder %1 is inaccessible.", toCheck ) + '\n' );
+      error.append( i18n( "Folder %1 is inaccessible.", toCheck ) + QLatin1Char('\n') );
     } else {
       foreach ( const QFileInfo &fi, g.entryInfoList() ) {
-        QString newToCheck = toCheck + '/' + fi.fileName();
-        QFileInfo fiNewToCheck( newToCheck );
-        if ( fi.fileName() != "." && fi.fileName() != ".." ) {
+        QString newToCheck = toCheck + QLatin1Char('/') + fi.fileName();
+        if ( fi.fileName() != QLatin1String(".") && fi.fileName() != QLatin1String("..") ) {
           error.append (
             checkAndCorrectPermissionsIfPossible( newToCheck, recursive,
                                                   wantItReadable, wantItWritable ) );
@@ -333,7 +332,7 @@ bool removeDirAndContentsRecursively( const QString & path )
 
   Q_FOREACH ( const QFileInfo &fi, list ) {
     if ( fi.isDir() ) {
-      if ( fi.fileName() != "." && fi.fileName() != ".." ) {
+      if ( fi.fileName() != QLatin1String(".") && fi.fileName() != QLatin1String("..") ) {
         success = success && removeDirAndContentsRecursively( fi.absoluteFilePath() );
       }
     } else {

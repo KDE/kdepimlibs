@@ -39,82 +39,82 @@ void LinkLocatorTest::testGetEmailAddress()
   QVERIFY( ll1.getEmailAddress().isEmpty() );
 
   // no '@' at scan position
-  LinkLocator ll2( "foo@bar.baz", 0 );
+  LinkLocator ll2( QLatin1String("foo@bar.baz"), 0 );
   QVERIFY( ll2.getEmailAddress().isEmpty() );
 
   // '@' in local part
-  LinkLocator ll3( "foo@bar@bar.baz", 7 );
+  LinkLocator ll3( QLatin1String("foo@bar@bar.baz"), 7 );
   QVERIFY( ll3.getEmailAddress().isEmpty() );
 
   // empty local part
-  LinkLocator ll4( "@bar.baz", 0 );
+  LinkLocator ll4( QLatin1String("@bar.baz"), 0 );
   QVERIFY( ll4.getEmailAddress().isEmpty() );
-  LinkLocator ll5( ".@bar.baz", 1 );
+  LinkLocator ll5( QLatin1String(".@bar.baz"), 1 );
   QVERIFY( ll5.getEmailAddress().isEmpty() );
-  LinkLocator ll6( " @bar.baz", 1 );
+  LinkLocator ll6( QLatin1String(" @bar.baz"), 1 );
   QVERIFY( ll6.getEmailAddress().isEmpty() );
-  LinkLocator ll7( ".!#$%&'*+-/=?^_`{|}~@bar.baz",
+  LinkLocator ll7( QLatin1String(".!#$%&'*+-/=?^_`{|}~@bar.baz"),
                    strlen( ".!#$%&'*+-/=?^_`{|}~" ) );
   QVERIFY( ll7.getEmailAddress().isEmpty() );
 
   // allowed special chars in local part of address
-  LinkLocator ll8( "a.!#$%&'*+-/=?^_`{|}~@bar.baz",
+  LinkLocator ll8( QLatin1String("a.!#$%&'*+-/=?^_`{|}~@bar.baz"),
                    strlen( "a.!#$%&'*+-/=?^_`{|}~" ) );
-  QVERIFY( ll8.getEmailAddress() == "a.!#$%&'*+-/=?^_`{|}~@bar.baz" );
+  QVERIFY( ll8.getEmailAddress() == QLatin1String("a.!#$%&'*+-/=?^_`{|}~@bar.baz") );
 
   // '@' in domain part
-  LinkLocator ll9 ( "foo@bar@bar.baz", 3 );
+  LinkLocator ll9 ( QLatin1String("foo@bar@bar.baz"), 3 );
   QVERIFY( ll9.getEmailAddress().isEmpty() );
 
   // domain part without dot
-  LinkLocator lla( "foo@bar", 3 );
+  LinkLocator lla( QLatin1String("foo@bar"), 3 );
   QVERIFY( lla.getEmailAddress().isEmpty() );
-  LinkLocator llb( "foo@bar.", 3 );
+  LinkLocator llb( QLatin1String("foo@bar."), 3 );
   QVERIFY( llb.getEmailAddress().isEmpty() );
-  LinkLocator llc( ".foo@bar", 4 );
+  LinkLocator llc( QLatin1String(".foo@bar"), 4 );
   QVERIFY( llc.getEmailAddress().isEmpty() );
-  LinkLocator lld( "foo@bar ", 3 );
+  LinkLocator lld( QLatin1String("foo@bar "), 3 );
   QVERIFY( lld.getEmailAddress().isEmpty() );
-  LinkLocator lle( " foo@bar", 4 );
+  LinkLocator lle( QLatin1String(" foo@bar"), 4 );
   QVERIFY( lle.getEmailAddress().isEmpty() );
-  LinkLocator llf( "foo@bar-bar", 3 );
+  LinkLocator llf( QLatin1String("foo@bar-bar"), 3 );
   QVERIFY( llf.getEmailAddress().isEmpty() );
 
   // empty domain part
-  LinkLocator llg( "foo@", 3 );
+  LinkLocator llg( QLatin1String("foo@"), 3 );
   QVERIFY( llg.getEmailAddress().isEmpty() );
-  LinkLocator llh( "foo@.", 3 );
+  LinkLocator llh( QLatin1String("foo@."), 3 );
   QVERIFY( llh.getEmailAddress().isEmpty() );
-  LinkLocator lli( "foo@-", 3 );
+  LinkLocator lli( QLatin1String("foo@-"), 3 );
   QVERIFY( lli.getEmailAddress().isEmpty() );
 
   // simple address
-  LinkLocator llj( "foo@bar.baz", 3 );
-  QVERIFY( llj.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator llk( "foo@bar.baz.", 3 );
-  QVERIFY( llk.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator lll( ".foo@bar.baz", 4 );
-  QVERIFY( lll.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator llm( "foo@bar.baz-", 3 );
-  QVERIFY( llm.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator lln( "-foo@bar.baz", 4 );
-  QVERIFY( lln.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator llo( "foo@bar.baz ", 3 );
-  QVERIFY( llo.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator llp( " foo@bar.baz", 4 );
-  QVERIFY( llp.getEmailAddress() == "foo@bar.baz" );
-  LinkLocator llq( "foo@bar-bar.baz", 3 );
-  QVERIFY( llq.getEmailAddress() == "foo@bar-bar.baz" );
+  LinkLocator llj( QLatin1String("foo@bar.baz"), 3 );
+  QVERIFY( llj.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator llk( QLatin1String("foo@bar.baz."), 3 );
+  QVERIFY( llk.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator lll( QLatin1String(".foo@bar.baz"), 4 );
+  QVERIFY( lll.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator llm( QLatin1String("foo@bar.baz-"), 3 );
+  QVERIFY( llm.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator lln( QLatin1String("-foo@bar.baz"), 4 );
+  QVERIFY( lln.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator llo( QLatin1String("foo@bar.baz "), 3 );
+  QVERIFY( llo.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator llp( QLatin1String(" foo@bar.baz"), 4 );
+  QVERIFY( llp.getEmailAddress() == QLatin1String("foo@bar.baz") );
+  LinkLocator llq( QLatin1String("foo@bar-bar.baz"), 3 );
+  QVERIFY( llq.getEmailAddress() == QLatin1String("foo@bar-bar.baz") );
 }
 
 void LinkLocatorTest::testGetUrl()
 {
   QStringList brackets;
-  brackets << "" << "";   // no brackets
-  brackets << "<" << ">";
-  brackets << "[" << "]";
-  brackets << "\"" << "\"";
-  brackets << "<link>" << "</link>";
+  brackets << QLatin1String("") << QLatin1String("");   // no brackets
+  brackets << QLatin1String("<") <<QLatin1String( ">");
+  brackets << QLatin1String("[" )<< QLatin1String("]");
+  brackets << QLatin1String("\"") << QLatin1String("\"");
+  brackets << QLatin1String("<link>") << QLatin1String("</link>");
 
   for ( int i = 0; i < brackets.count(); i += 2 ) {
     testGetUrl2( brackets[ i ], brackets[ i + 1 ] );
@@ -124,32 +124,32 @@ void LinkLocatorTest::testGetUrl()
 void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
 {
   QStringList schemas;
-  schemas << "http://";
-  schemas << "https://";
-  schemas << "vnc://";
-  schemas << "fish://";
-  schemas << "ftp://";
-  schemas << "ftps://";
-  schemas << "sftp://";
-  schemas << "smb://";
-  schemas << "file://";
+  schemas << QLatin1String("http://");
+  schemas << QLatin1String("https://");
+  schemas << QLatin1String("vnc://");
+  schemas << QLatin1String("fish://");
+  schemas << QLatin1String("ftp://");
+  schemas << QLatin1String("ftps://");
+  schemas << QLatin1String("sftp://");
+  schemas << QLatin1String("smb://");
+  schemas << QLatin1String("file://");
 
   QStringList urls;
-  urls << "www.kde.org";
-  urls << "user@www.kde.org";
-  urls << "user:pass@www.kde.org";
-  urls << "user:pass@www.kde.org:1234";
-  urls << "user:pass@www.kde.org:1234/sub/path";
-  urls << "user:pass@www.kde.org:1234/sub/path?a=1";
-  urls << "user:pass@www.kde.org:1234/sub/path?a=1#anchor";
-  urls << "user:pass@www.kde.org:1234/sub/\npath  \n /long/  path \t  ?a=1#anchor";
-  urls << "user:pass@www.kde.org:1234/sub/path/special(123)?a=1#anchor";
-  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
-  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
-  urls << "user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
-  urls << "user:pass@www.kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
-  urls << "user:pass@www.kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
-          "\n\t  \n\t   a=1#anchor[bla]";
+  urls << QLatin1String("www.kde.org");
+  urls << QLatin1String("user@www.kde.org");
+  urls << QLatin1String("user:pass@www.kde.org");
+  urls << QLatin1String("user:pass@www.kde.org:1234");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path?a=1");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path?a=1#anchor");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/\npath  \n /long/  path \t  ?a=1#anchor");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path/special(123)?a=1#anchor");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla");
+  urls << QLatin1String("user:pass@www.kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]");
+  urls << QLatin1String("user:pass@www.kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]");
+  urls << QLatin1String("user:pass@www.kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
+          "\n\t  \n\t   a=1#anchor[bla]");
 
   foreach ( const QString &schema, schemas ) {
     foreach ( QString url, urls ) { //krazy:exclude=foreach
@@ -160,7 +160,7 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
       }
 
       // if the url contains a whitespace, it must be enclosed with brackets
-      if ( ( url.contains( '\n' ) || url.contains( '\t' ) || url.contains( ' ' ) ) &&
+      if ( ( url.contains( QLatin1Char('\n') ) || url.contains( QLatin1Char('\t') ) || url.contains( QLatin1Char(' ') ) ) &&
            left.isEmpty() ) {
         continue;
       }
@@ -170,9 +170,9 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
       QString gotUrl = ll.getUrl();
 
       // we want to have the url without whitespace
-      url.remove( ' ' );
-      url.remove( '\n' );
-      url.remove( '\t' );
+      url.remove( QLatin1Char(' ') );
+      url.remove( QLatin1Char('\n') );
+      url.remove( QLatin1Char('\t') );
 
       bool ok = ( gotUrl == ( schema + url ) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (schema + url);
@@ -184,20 +184,20 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
   }
 
   QStringList urlsWithoutSchema;
-  urlsWithoutSchema << ".kde.org";
-  urlsWithoutSchema << ".kde.org:1234/sub/path";
-  urlsWithoutSchema << ".kde.org:1234/sub/path?a=1";
-  urlsWithoutSchema << ".kde.org:1234/sub/path?a=1#anchor";
-  urlsWithoutSchema << ".kde.org:1234/sub/path/special(123)?a=1#anchor";
-  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor";
-  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla";
-  urlsWithoutSchema << ".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]";
-  urlsWithoutSchema << ".kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]";
-  urlsWithoutSchema << ".kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
-                       "\n\t  \n\t   a=1#anchor[bla]";
+  urlsWithoutSchema << QLatin1String(".kde.org");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path?a=1");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path?a=1#anchor");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path/special(123)?a=1#anchor");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/sub/path:with:colon/special(123)?a=1#anchor[bla]");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/\nsub/path:with:colon/\nspecial(123)?\na=1#anchor[bla]");
+  urlsWithoutSchema << QLatin1String(".kde.org:1234/  \n  sub/path:with:colon/  \n\t   \t   special(123)?"
+                       "\n\t  \n\t   a=1#anchor[bla]");
 
   QStringList starts;
-  starts << "www" << "ftp" << "news:www";
+  starts << QLatin1String("www") << QLatin1String("ftp") << QLatin1String("news:www");
 
   foreach ( const QString &start, starts ) {
     foreach ( QString url, urlsWithoutSchema ) { //krazy:exclude=foreach
@@ -208,7 +208,7 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
       }
 
       // if the url contains a whitespace, it must be enclosed with brackets
-      if ( ( url.contains( '\n' ) || url.contains( '\t' ) || url.contains( ' ' ) ) &&
+      if ( ( url.contains( QLatin1Char('\n') ) || url.contains( QLatin1Char('\t') ) || url.contains( QLatin1Char(' ') ) ) &&
            left.isEmpty() ) {
         continue;
       }
@@ -218,9 +218,9 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
       QString gotUrl = ll.getUrl();
 
       // we want to have the url without whitespace
-      url.remove( ' ' );
-      url.remove( '\n' );
-      url.remove( '\t' );
+      url.remove( QLatin1Char(' ') );
+      url.remove( QLatin1Char('\n') );
+      url.remove( QLatin1Char('\t') );
 
       bool ok = ( gotUrl == ( start + url ) );
       //qDebug() << "check:" << (ok ? "OK" : "NOK") << test << "=>" << (start + url);
@@ -232,7 +232,7 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
   }
 
   // test max url length
-  QString url = "http://www.kde.org/this/is/a_very_loooooong_url/test/test/test";
+  QString url = QLatin1String("http://www.kde.org/this/is/a_very_loooooong_url/test/test/test");
   {
     LinkLocator ll( url );
     ll.setMaxUrlLen( 10 );
@@ -256,7 +256,7 @@ void LinkLocatorTest::testGetUrl2( const QString &left, const QString &right )
 
   // mailto
   {
-    QString addr = "mailto:test@kde.org";
+    QString addr = QLatin1String("mailto:test@kde.org");
     QString test( left + addr + right );
     LinkLocator ll( test, left.length() );
 

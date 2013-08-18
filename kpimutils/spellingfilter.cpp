@@ -119,7 +119,7 @@ void SpellingFilter::TextCensor::censorQuotations( const QString &quotePrefix )
       // Replace quotation with spaces
       int len = mPos - start;
       QString spaces;
-      spaces.fill( ' ', len );
+      spaces.fill( QLatin1Char(' '), len );
       mText.replace( start, len, spaces );
     }
   }
@@ -140,7 +140,7 @@ void SpellingFilter::TextCensor::censorUrls()
       int start = mPos - url.length();
 
       // Replace url with spaces
-      url.fill( ' ' );
+      url.fill( QLatin1Char(' ') );
       mText.replace( start, url.length(), url );
     }
   }
@@ -159,7 +159,7 @@ void SpellingFilter::TextCensor::censorEmailAddresses()
         int start = mPos - address.length();
 
         // Replace address with spaces
-        address.fill( ' ' );
+        address.fill( QLatin1Char(' ') );
         mText.replace( start, address.length(), address );
       }
     }
@@ -175,7 +175,7 @@ void SpellingFilter::TextCensor::censorString( const QString &s )
     if ( mPos != -1 ) {
       // Replace string with spaces
       QString spaces;
-      spaces.fill( ' ', s.length() );
+      spaces.fill( QLatin1Char(' '), s.length() );
       mText.replace( mPos, s.length(), spaces );
       mPos += s.length();
     }
@@ -195,12 +195,12 @@ bool SpellingFilter::TextCensor::atLineStart() const
 {
   return
     ( mPos == 0 && mText.length() > 0 ) ||
-    ( mText[mPos - 1] == '\n' );
+    ( mText[mPos - 1] == QLatin1Char('\n') );
 }
 
 void SpellingFilter::TextCensor::skipLine()
 {
-  mPos = mText.indexOf( '\n', mPos );
+  mPos = mText.indexOf( QLatin1Char('\n'), mPos );
   if ( mPos == -1 ) {
     mPos = mText.length();
   } else {
