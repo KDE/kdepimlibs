@@ -1,5 +1,5 @@
 /*
-    Author: Christian Mollekopf <mollekopf@kolabsys.com>
+    Author: (2013) Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -45,7 +45,7 @@ class GidExtractor
      * If the item has no GID set, and the item has a payload, the GID is extracted using extractGid().
      * If the item has no GID set and no payload, a default constructed QString is returned.
      */
-    static QString getGid( const Item &item, bool ignorePayload = false );
+    static QString getGid( const Item &item );
 };
 
 }

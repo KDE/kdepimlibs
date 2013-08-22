@@ -1,5 +1,5 @@
 /*
-    Author: Christian Mollekopf <mollekopf@kolabsys.com>
+    Author: (2013) Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -36,13 +36,13 @@ QString GidExtractor::extractGid( const Item &item )
   return QString();
 }
 
-QString GidExtractor::getGid( const Item &item, bool ignorePayload )
+QString GidExtractor::getGid( const Item &item )
 {
   const QString gid = item.gid();
   if ( !gid.isNull() ) {
     return gid;
   }
-  if ( ignorePayload ) {
+  if ( item.loadedPayloadParts().isEmpty() ) {
     return QString();
   }
   return extractGid( item );
