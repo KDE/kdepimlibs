@@ -54,12 +54,12 @@ void StatusItem::Private::init()
     QDomNode node = root.firstChild();
     while ( !node.isNull() ) {
         const QString key = node.toElement().tagName();
-        if ( key == "user" || key == "sender" || key == "recipient" ) {
+        if ( key == QLatin1String("user") || key == QLatin1String("sender") || key == QLatin1String("recipient") ) {
             QDomNode node2 = node.firstChild();
             while ( !node2.isNull() ) {
                 const QString key2 = node2.toElement().tagName();
                 const QString val2 = node2.toElement().text();
-                status[ key + "_-_" + key2 ] = val2;
+                status[ key + QLatin1String("_-_") + key2 ] = val2;
                 node2 = node2.nextSibling();
             }
         } else {
@@ -70,13 +70,13 @@ void StatusItem::Private::init()
     }
     //kDebug() << status;
 
-    dateTime = QDateTime::fromString( status.value( "created_at" ).toLower().mid( 4 ),
-                                      "MMM dd H:mm:ss +0000 yyyy" );
+    dateTime = QDateTime::fromString( status.value( QLatin1String("created_at") ).toLower().mid( 4 ),
+                                      QLatin1String("MMM dd H:mm:ss +0000 yyyy") );
     dateTime.setTimeSpec( Qt::UTC );
     dateTime = dateTime.toLocalTime();
 
     if ( !dateTime.isValid() ) {
-        kDebug() << "Unable to parse" << status.value( "created_at" ).toLower().mid( 4 );
+        kDebug() << "Unable to parse" << status.value( QLatin1String("created_at") ).toLower().mid( 4 );
     }
     //kDebug() << dateTime;
 }
@@ -117,7 +117,7 @@ void StatusItem::setData( const QByteArray &data )
 
 qlonglong StatusItem::id() const
 {
-    return d->status.value( "id" ).toLongLong();
+    return d->status.value( QLatin1String("id") ).toLongLong();
 }
 
 QByteArray StatusItem::data() const
@@ -139,7 +139,7 @@ QString StatusItem::text() const
 {
     using KPIMUtils::LinkLocator;
     int flags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText | LinkLocator::ReplaceSmileys;
-    return KPIMUtils::LinkLocator::convertToHtml( d->status.value( "text" ), flags );
+    return KPIMUtils::LinkLocator::convertToHtml( d->status.value( QLatin1String("text") ), flags );
 }
 
 QDateTime StatusItem::date() const

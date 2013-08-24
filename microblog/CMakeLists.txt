@@ -1,6 +1,8 @@
 project(microblog)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5328)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories (${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR} ${QT_INCLUDES})
 
