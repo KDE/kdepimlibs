@@ -92,8 +92,8 @@ QString IdMapper::identifier() const
 QString IdMapper::filename()
 {
   QString file = d->path;
-  if ( !file.endsWith( '/' ) ) {
-    file += '/';
+  if ( !file.endsWith( QLatin1Char('/') ) ) {
+    file += QLatin1Char('/');
   }
   file += d->identifier;
 
@@ -114,7 +114,7 @@ bool IdMapper::load()
   QString line;
   while ( !ts.atEnd() ) {
     line = ts.readLine( 1024 );
-    QStringList parts = line.split( "\x02\x02", QString::KeepEmptyParts );
+    QStringList parts = line.split( QLatin1String("\x02\x02"), QString::KeepEmptyParts );
     // sanity check; the uidmap file could be corrupted and
     // QList doesn't like accessing invalid indexes
     if ( parts.count() == 3 ) {
@@ -144,7 +144,7 @@ bool IdMapper::save()
     if ( d->fingerprintMap.contains( it.key() ) ) {
       fingerprint = d->fingerprintMap[ it.key() ];
     }
-    content += it.key() + "\x02\x02" + it.value().toString() + "\x02\x02" + fingerprint + "\r\n";
+    content += it.key() + QLatin1String("\x02\x02") + it.value().toString() + QLatin1String("\x02\x02") + fingerprint + QLatin1String("\r\n");
   }
   QTextStream ts( &file );
   ts << content;
@@ -217,7 +217,7 @@ QString IdMapper::asString() const
     if ( d->fingerprintMap.contains( it.key() ) ) {
       fp = d->fingerprintMap[ it.key() ];
     }
-    content += it.key() + '\t' + it.value().toString() + '\t' + fp + "\r\n";
+    content += it.key() + QLatin1Char('\t') + it.value().toString() + QLatin1Char('\t') + fp + QLatin1String("\r\n");
   }
 
   return content;

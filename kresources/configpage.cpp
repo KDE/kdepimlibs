@@ -201,7 +201,7 @@ ConfigPage::ConfigPage( QWidget *parent )
 
   d->mLastItem = 0;
 
-  d->mConfigGroup = new KConfigGroup( new KConfig( "kcmkresourcesrc" ), "General" );
+  d->mConfigGroup = new KConfigGroup( new KConfig( QLatin1String("kcmkresourcesrc") ), "General" );
 
   load();
 }
@@ -231,22 +231,22 @@ void ConfigPage::load()
 
   // KDE-3.3 compatibility code: get families from the plugins
   QStringList compatFamilyNames;
-  const KService::List plugins = KServiceTypeTrader::self()->query( "KResources/Plugin" );
+  const KService::List plugins = KServiceTypeTrader::self()->query( QLatin1String("KResources/Plugin") );
   KService::List::ConstIterator it = plugins.begin();
   KService::List::ConstIterator end = plugins.end();
   for ( ; it != end; ++it ) {
-    const QString family = ( *it )->property( "X-KDE-ResourceFamily" ).toString();
+    const QString family = ( *it )->property( QLatin1String("X-KDE-ResourceFamily") ).toString();
     if ( compatFamilyNames.indexOf( family ) == -1 ) {
       compatFamilyNames.append( family );
     }
   }
 
-  const KService::List managers = KServiceTypeTrader::self()->query( "KResources/Manager" );
+  const KService::List managers = KServiceTypeTrader::self()->query( QLatin1String("KResources/Manager") );
   KService::List::ConstIterator m_it;
   for ( m_it = managers.begin(); m_it != managers.end(); ++m_it ) {
-    QString displayName = ( *m_it )->property( "Name" ).toString();
+    QString displayName = ( *m_it )->property( QLatin1String("Name") ).toString();
     familyDisplayNames.append( displayName );
-    QString family = ( *m_it )->property( "X-KDE-ResourceFamily" ).toString();
+    QString family = ( *m_it )->property( QLatin1String("X-KDE-ResourceFamily") ).toString();
     if ( !family.isEmpty() ) {
       compatFamilyNames.removeAll( family );
       d->mFamilyMap.append( family );
@@ -378,7 +378,7 @@ void ConfigPage::slotAdd()
     return;
   }
 
-  resource->setResourceName( type + "-resource" );
+  resource->setResourceName( type + QLatin1String("-resource") );
 
   ConfigDialog dlg( this, d->mFamily, resource );
 

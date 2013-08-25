@@ -78,20 +78,20 @@ Factory *Factory::self( const QString &resourceFamily )
     mSelves->insert( resourceFamily, factory );
 
     // Akonadi migration
-    KConfig config( "kres-migratorrc" );
+    KConfig config( QLatin1String("kres-migratorrc") );
     KConfigGroup migrationCfg( &config, "Migration" );
     const bool enabled = migrationCfg.readEntry( "Enabled", false );
     const bool setupClientBrige = migrationCfg.readEntry( "SetupClientBridge", true );
-    const int currentVersion = migrationCfg.readEntry( "Version-" + resourceFamily, 0 );
+    const int currentVersion = migrationCfg.readEntry( QLatin1String("Version-") + resourceFamily, 0 );
     const int targetVersion = migrationCfg.readEntry( "TargetVersion", 0 );
     if ( enabled && currentVersion < targetVersion ) {
       kDebug() << "Performing Akonadi migration. Good luck!";
       KProcess proc;
-      QStringList args = QStringList() << "--interactive-on-change" << "--type" << resourceFamily;
+      QStringList args = QStringList() << QLatin1String("--interactive-on-change") << QLatin1String("--type") << resourceFamily;
       if ( !setupClientBrige ) {
-        args << "--omit-client-bridge";
+        args << QLatin1String("--omit-client-bridge");
       }
-      proc.setProgram( "kres-migrator", args );
+      proc.setProgram( QLatin1String("kres-migrator"), args );
       proc.start();
       bool result = proc.waitForStarted();
       if ( result ) {
@@ -99,7 +99,7 @@ Factory *Factory::self( const QString &resourceFamily )
       }
       if ( result && proc.exitCode() == 0 ) {
         kDebug() << "Akonadi migration has been successful";
-        migrationCfg.writeEntry( "Version-" + resourceFamily, targetVersion );
+        migrationCfg.writeEntry( QLatin1String("Version-") + resourceFamily, targetVersion );
         migrationCfg.sync();
       } else if ( !result || proc.exitCode() != 1 ) {
         // exit code 1 means it is already running, so we are probably called by a migrator instance
@@ -128,12 +128,12 @@ void Factory::reloadConfig()
   d->mTypeMap.clear();
   const KService::List plugins =
     KServiceTypeTrader::self()->query(
-      "KResources/Plugin",
-      QString( "[X-KDE-ResourceFamily] == '%1'" ).arg( d->mResourceFamily ) );
+      QLatin1String("KResources/Plugin"),
+      QString::fromLatin1( "[X-KDE-ResourceFamily] == '%1'" ).arg( d->mResourceFamily ) );
 
   KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    const QVariant type = ( *it )->property( "X-KDE-ResourceType" );
+    const QVariant type = ( *it )->property( QLatin1String("X-KDE-ResourceType") );
     if ( !type.toString().isEmpty() ) {
       d->mTypeMap.insert( type.toString(), *it );
     }
