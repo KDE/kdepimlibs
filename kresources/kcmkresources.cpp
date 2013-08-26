@@ -36,7 +36,7 @@ KCMKResources::KCMKResources( QWidget *parent, const QVariantList &l )
   : KCModule( ResourcesFactory::componentData(), parent, QVariantList() )
 {
   Q_UNUSED( l );
-  KGlobal::locale()->insertCatalog( "libkresources" );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkresources") );
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
   mConfigPage = new KRES::ConfigPage( this );

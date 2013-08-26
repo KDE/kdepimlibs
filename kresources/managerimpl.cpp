@@ -72,16 +72,16 @@ ManagerImpl::ManagerImpl( ManagerNotifier *notifier, const QString &family )
   d->mId = KRandom::randomString( 8 );
 
   // Register with D-Bus
-  QDBusConnection::sessionBus().registerService( "org.kde.KResourcesManager" );
+  QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.KResourcesManager") );
 
-  QDBusConnection::sessionBus().connect( "", dBusPath,
-                                         "org.kde.KResourcesManager", "signalKResourceAdded",
+  QDBusConnection::sessionBus().connect( QString(), dBusPath,
+                                         QLatin1String("org.kde.KResourcesManager"), QLatin1String("signalKResourceAdded"),
       this, SLOT(dbusKResourceAdded(QString,QString)));
-  QDBusConnection::sessionBus().connect( "", dBusPath,
-                                         "org.kde.KResourcesManager", "signalKResourceModified",
+  QDBusConnection::sessionBus().connect( QString(), dBusPath,
+                                         QLatin1String("org.kde.KResourcesManager"), QLatin1String("signalKResourceModified"),
       this, SLOT(dbusKResourceModified(QString,QString)));
-  QDBusConnection::sessionBus().connect( "", dBusPath,
-                                         "org.kde.KResourcesManager", "signalKResourceDeleted",
+  QDBusConnection::sessionBus().connect( QString(), dBusPath,
+                                         QLatin1String("org.kde.KResourcesManager"), QLatin1String("signalKResourceDeleted"),
       this, SLOT(dbusKResourceDeleted(QString,QString)));
 }
 
@@ -170,7 +170,7 @@ void ManagerImpl::writeConfig( KConfig *cfg )
   if ( d->mStandard ) {
     group.writeEntry( "Standard", d->mStandard->identifier() );
   } else {
-    group.writeEntry( "Standard", "" );
+      group.writeEntry( "Standard", QString() );
   }
 
   group.sync();
@@ -234,7 +234,7 @@ void ManagerImpl::setStandardResource( Resource *resource )
   d->mStandard = resource;
 }
 
-// DCOP asynchronous functions
+// DBUS asynchronous functions
 
 void ManagerImpl::dbusKResourceAdded( const QString &managerId,
                                       const QString &resourceId )
@@ -312,7 +312,8 @@ QStringList ManagerImpl::resourceNames()
   QStringList result;
 
   Resource::List::ConstIterator it;
-  for ( it = d->mResources.constBegin(); it != d->mResources.constEnd(); ++it ) {
+  Resource::List::ConstIterator end(d->mResources.constEnd());
+  for ( it = d->mResources.constBegin(); it != end; ++it ) {
     result.append( ( *it )->resourceName() );
   }
   return result;
@@ -350,7 +351,7 @@ Resource *ManagerImpl::readResourceConfig( const QString &identifier,
     return 0;
   }
 
-  KConfigGroup group = d->mConfig->group( "Resource_" + identifier );
+  KConfigGroup group = d->mConfig->group( QLatin1String("Resource_") + identifier );
 
   QString type = group.readEntry( "ResourceType" );
   QString name = group.readEntry( "ResourceName" );
@@ -390,7 +391,7 @@ void ManagerImpl::writeResourceConfig( Resource *resource, bool checkActive )
     createStandardConfig();
   }
 
-  KConfigGroup group( d->mConfig, "Resource_" + key );
+  KConfigGroup group( d->mConfig, QLatin1String("Resource_") + key );
   resource->writeConfig( group );
 
   group = d->mConfig->group( "General" );
@@ -453,7 +454,7 @@ void ManagerImpl::removeResource( Resource *resource )
     group.writeEntry( "Standard", "" );
   }
 
-  d->mConfig->deleteGroup( "Resource_" + resource->identifier() );
+  d->mConfig->deleteGroup( QLatin1String("Resource_") + resource->identifier() );
   group.sync();
 }
 
@@ -471,6 +472,6 @@ Resource *ManagerImpl::getResource( const QString &identifier )
 QString ManagerImpl::defaultConfigFile( const QString &family )
 {
   return KStandardDirs::locateLocal( "config",
-                                     QString( "kresources/%1/stdrc" ).arg( family ) );
+                                     QString::fromLatin1( "kresources/%1/stdrc" ).arg( family ) );
 }
 

@@ -75,7 +75,7 @@ Resource::Resource()
   d->mOpenCount = 0;
   d->mIsOpen = false;
 
-  d->mType = "type";
+  d->mType = QLatin1String("type");
   d->mName = i18n( "resource" );
   d->mReadOnly = false;
   d->mActive = true;
