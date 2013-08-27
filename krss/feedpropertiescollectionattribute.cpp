@@ -109,7 +109,7 @@ void FeedPropertiesCollectionAttribute::setDescription( const QString &descripti
 
 bool FeedPropertiesCollectionAttribute::fetchError() const
 {
-    return !m_properties.value("FetchError").isEmpty();
+    return !m_properties.value( QLatin1String("FetchError") ).isEmpty();
 }
 
 void FeedPropertiesCollectionAttribute::setFetchError( bool error )
@@ -210,13 +210,13 @@ static QString ArchiveModeKey = QLatin1String("ArchiveModeKey");
 FeedPropertiesCollectionAttribute::ArchiveMode FeedPropertiesCollectionAttribute::archiveMode() const
 {
     const QString str = m_properties.value( ArchiveModeKey );
-    if (str == "keepAllItems")
+    if (str == QLatin1String("keepAllItems"))
         return KeepAllItems;
-    else if (str == "disableArchiving")
+    else if (str == QLatin1String("disableArchiving"))
         return DisableArchiving;
-    else if (str == "limitItemNumber")
+    else if (str == QLatin1String("limitItemNumber"))
         return LimitItemNumber;
-    else if (str == "limitItemAge")
+    else if (str == QLatin1String("limitItemAge"))
         return LimitItemAge;
     else
         return GlobalDefault;
