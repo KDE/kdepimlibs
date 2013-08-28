@@ -66,7 +66,7 @@ void MovableType::listRecentPosts( int number )
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
-      "metaWeblog.getRecentPosts", args,
+      QLatin1String("metaWeblog.getRecentPosts"), args,
       this, SLOT(slotListRecentPosts(QList<QVariant>,QVariant)),
       this, SLOT(slotError(int,QString,QVariant)),
       QVariant( number ) );
@@ -81,7 +81,7 @@ void MovableType::listTrackBackPings( KBlog::BlogPost *post )
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = post;
   d->mXmlRpcClient->call(
-    "mt.getTrackbackPings", args,
+    QLatin1String("mt.getTrackbackPings"), args,
     this, SLOT(slotListTrackbackPings(QList<QVariant>,QVariant)),
     this, SLOT(slotError(int,QString,QVariant)),
     QVariant( i ) );
@@ -250,7 +250,7 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
     serverID = result[0].toString();
   }
   if ( result[0].type() == QVariant::Int ) {
-    serverID = QString( "%1" ).arg( result[0].toInt() );
+    serverID = QString::fromLatin1( "%1" ).arg( result[0].toInt() );
   }
   post->setPostId( serverID );
   if ( mSilentCreationList.contains(  post ) )
