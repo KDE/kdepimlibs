@@ -39,6 +39,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
+#include <QTreeView>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -174,6 +175,12 @@ void ETMCalendarPrivate::setupFilteredETM()
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
+
+#ifdef AKONADI_CALENDAR_DEBUG_MODEL
+  QTreeView *view = new QTreeView;
+  view->setModel( mFilteredETM );
+  view->show();
+#endif
 }
 
 ETMCalendarPrivate::~ETMCalendarPrivate()
@@ -389,25 +396,20 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );
       IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-      if ( !existingIncidence ) {
-        if ( !mItemById.contains( item.id() ) ) {
-          // We don't know about this one because it was discarded. For example, not having DTSTART.
-          return;
-        }
-
-        // The item changed it's UID, update our maps.
-        // The Google resource, for example, changes the UID when we create incidences.
+      if ( existingIncidence ) {
+        *(existingIncidence.data()) = *( newIncidence.data() );
+        mItemsByCollection.insert( item.storageCollectionId(), item );
+      } else if ( mItemById.contains( item.id() ) ) {
+        // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
         handleUidChange( item, newIncidence->instanceIdentifier() );
         existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-        Q_ASSERT( existingIncidence );
+        mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+        mItemsByCollection.insert( item.storageCollectionId(), item );
+      } else {
+        // We don't know about this one because it was discarded, for example because of not having DTSTART
       }
-
-      // The item needs updating too, revision changed.
-      mItemById.insert( item.id(), item );
-      mItemsByCollection.insert( item.storageCollectionId(), item );
-
-      *(existingIncidence.data()) = *( newIncidence.data() );
     }
+
     ++row;
     i = i.sibling( row, topLeft.column() );
   }
