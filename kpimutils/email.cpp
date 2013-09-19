@@ -336,6 +336,11 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
     return TooFewAts;
   }
 
+  int dotCount = aStr.count( QLatin1Char('.'));
+  if (dotCount == 0) {
+      return TooFewDots;
+  }
+
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
 
@@ -418,6 +423,17 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
             }
           }
           break;
+        case '.' :
+          if ( !inQuotedString ) {
+            if ( index == 0 ) {  // Missing local part
+              return MissingLocalPart;
+            } else if ( index == strlen-1 ) {
+              return MissingDomainPart;
+            }
+          } else if ( inQuotedString ) {
+            --dotCount;
+          }
+          break;
         }
         break;
       }
@@ -457,9 +473,11 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
         case '@' :
           if ( inQuotedString ) {
             --atCount;
-            if ( atCount == 1 ) {
-              tooManyAtsFlag = false;
-            }
+          }
+          break;
+        case '.' :
+          if ( inQuotedString ) {
+            --dotCount;
           }
           break;
         case '>' :
@@ -478,6 +496,10 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
         break;
       }
     }
+  }
+
+  if ( dotCount == 0 && !inQuotedString ) {
+    return TooFewDots;
   }
 
   if ( atCount == 0 && !inQuotedString ) {
@@ -516,6 +538,7 @@ KPIMUtils::EmailParseResult KPIMUtils::isValidAddressList( const QString &aStr,
   QStringList::const_iterator it = list.begin();
   EmailParseResult errorCode = AddressOk;
   for ( it = list.begin(); it != list.end(); ++it ) {
+      qDebug()<<" *it"<<(*it);
     errorCode = isValidAddress( *it );
     if ( errorCode != AddressOk ) {
       badAddr = ( *it );
@@ -579,6 +602,12 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
   case InvalidDisplayName :
     return i18n( "The email address you have entered is not valid because it "
                  "contains an invalid display name." );
+  case TooFewDots :
+    return i18n( "The email address you entered is not valid because it "
+                   "does not contain a \'.\'. "
+                   "You will not create valid messages if you do not "
+                   "change your address." );
+
   }
   return i18n( "Unknown problem with email address" );
 }

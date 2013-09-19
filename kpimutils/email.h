@@ -75,7 +75,8 @@ namespace KPIMUtils {
     UnbalancedQuote,    /**< Quotes (single or double) not matched */
     NoAddressSpec,
     DisallowedChar,     /**< An invalid character detected in address */
-    InvalidDisplayName  /**< An invalid displayname detected in address */
+    InvalidDisplayName,  /**< An invalid displayname detected in address */
+    TooFewDots /**< Missing \. in address */
   };
 
   /** Split a comma separated list of email addresses.
