@@ -31,6 +31,7 @@ public:
      * @since 4.12
      */
     explicit ProgressIndicatorLabel(const QString &labelStr, QWidget *parent = 0);
+    explicit ProgressIndicatorLabel(QWidget *parent = 0);
     ~ProgressIndicatorLabel();
 
     void setActiveLabel(const QString &label);

@@ -72,6 +72,12 @@ ProgressIndicatorLabel::ProgressIndicatorLabel(const QString &label, QWidget *pa
 {
 }
 
+ProgressIndicatorLabel::ProgressIndicatorLabel(QWidget *parent)
+    : QWidget(parent),
+      d(new ProgressIndicatorLabelPrivate(QString(), this))
+{
+}
+
 ProgressIndicatorLabel::~ProgressIndicatorLabel()
 {
     delete d;
