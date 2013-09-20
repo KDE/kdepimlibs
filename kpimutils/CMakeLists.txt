@@ -16,6 +16,7 @@ set(kpimutils_LIB_SRCS
   kfileio.cpp
   processes.cpp
   progressindicatorwidget.cpp
+  progressindicatorlabel.cpp
 )
 
 # network access helper
@@ -53,4 +54,5 @@ install(FILES
   processes.h
   networkaccesshelper.h
   progressindicatorwidget.h
+  progressindicatorlabel.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils COMPONENT Devel)

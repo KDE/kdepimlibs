@@ -38,6 +38,7 @@ public:
     void startAnimation();
     void stopAnimation();
 
+
 private Q_SLOTS:
     void slotTimerDone();
 
@@ -63,6 +64,7 @@ private:
     friend class ProgressIndicatorWidgetPrivate;
     ProgressIndicatorWidgetPrivate * const d;
 };
+
 }
 
 #endif // PROGRESSINDICATORWIDGET_H
