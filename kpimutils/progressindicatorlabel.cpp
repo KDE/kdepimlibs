@@ -24,8 +24,9 @@ namespace KPIMUtils {
 class ProgressIndicatorLabelPrivate
 {
 public:
-    ProgressIndicatorLabelPrivate(ProgressIndicatorLabel *qq)
-        : q(qq)
+    ProgressIndicatorLabelPrivate(const QString &_label, ProgressIndicatorLabel *qq)
+        : labelStr(_label),
+          q(qq)
     {
         QHBoxLayout *lay = new QHBoxLayout;
         lay->setMargin(0);
@@ -40,6 +41,13 @@ public:
     {
     }
 
+    void setActiveLabel(const QString &str)
+    {
+        if (indicator->isActive()) {
+            label->setText(str);
+        }
+    }
+
     void start()
     {
         indicator->start();
@@ -52,15 +60,15 @@ public:
         label->clear();
     }
 
-    QLabel *label;
     QString labelStr;
+    QLabel *label;
     ProgressIndicatorWidget *indicator;
     ProgressIndicatorLabel *q;
 };
 
-ProgressIndicatorLabel::ProgressIndicatorLabel(QWidget *parent)
+ProgressIndicatorLabel::ProgressIndicatorLabel(const QString &label, QWidget *parent)
     : QWidget(parent),
-      d(new ProgressIndicatorLabelPrivate(this))
+      d(new ProgressIndicatorLabelPrivate(label, this))
 {
 }
 
@@ -79,9 +87,9 @@ void ProgressIndicatorLabel::stop()
     d->stop();
 }
 
-void ProgressIndicatorLabel::setLabel(const QString &label)
+void ProgressIndicatorLabel::setActiveLabel(const QString &label)
 {
-    d->labelStr = label;
+    d->setActiveLabel(label);
 }
 
 }

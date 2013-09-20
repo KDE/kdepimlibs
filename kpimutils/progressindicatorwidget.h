@@ -35,6 +35,8 @@ public:
     explicit IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent = 0);
     ~IndicatorProgress();
 
+    bool isActive() const;
+
     void startAnimation();
     void stopAnimation();
 
@@ -47,6 +49,7 @@ private:
     KPixmapSequence mProgressPix;
     QTimer *mProgressTimer;
     ProgressIndicatorWidget *mIndicator;
+    bool mIsActive;
 };
 
 class KPIMUTILS_EXPORT ProgressIndicatorWidget : public QLabel
@@ -55,6 +58,12 @@ class KPIMUTILS_EXPORT ProgressIndicatorWidget : public QLabel
 public:
     explicit ProgressIndicatorWidget(QWidget *parent = 0);
     ~ProgressIndicatorWidget();
+
+public:
+    /**
+     * @since 4.12
+     */
+    bool isActive() const;
 
 public Q_SLOTS:
     void start();

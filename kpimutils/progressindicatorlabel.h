@@ -30,10 +30,10 @@ public:
     /**
      * @since 4.12
      */
-    explicit ProgressIndicatorLabel(QWidget *parent = 0);
+    explicit ProgressIndicatorLabel(const QString &labelStr, QWidget *parent = 0);
     ~ProgressIndicatorLabel();
 
-    void setLabel(const QString &label);
+    void setActiveLabel(const QString &label);
 
 public Q_SLOTS:
     void start();
