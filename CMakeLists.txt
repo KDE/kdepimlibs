@@ -26,6 +26,8 @@ include(MacroLibrary)
 include(KDEPlatformProfile)
 include(FeatureSummary)
 
+set(CMAKE_AUTOMOC ON)
+
 # Used by options
 include(CMakeDependentOption)
 
