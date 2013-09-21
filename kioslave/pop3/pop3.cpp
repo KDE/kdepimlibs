@@ -43,7 +43,6 @@ extern "C" {
 #include <sasl/sasl.h>
 }
 
-#include <QtCore/QBool>
 #include <QCoreApplication>
 #include <QByteArray>
 #include <QRegExp>
