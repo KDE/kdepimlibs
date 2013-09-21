@@ -27,6 +27,7 @@ include(KDEPlatformProfile)
 include(FeatureSummary)
 
 set(CMAKE_AUTOMOC ON)
+seT(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
 # Used by options
 include(CMakeDependentOption)
