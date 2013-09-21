@@ -31,9 +31,9 @@ TodoPurger::Private::Private(TodoPurger *q)
     : m_changer(0)
     , m_currentChangeId(-1)
     , m_ignoredItems(0)
+    , m_calendarOwnership(true)
     , q(q)
 {
-
 }
 
 void TodoPurger::Private::onCalendarLoaded(bool success, const QString &message)
@@ -42,6 +42,8 @@ void TodoPurger::Private::onCalendarLoaded(bool success, const QString &message)
         deleteTodos();
     } else {
         m_lastError = message;
+        if (m_calendarOwnership)
+            m_calendar.clear();
         emit q->todosPurged(false, 0, 0);
     }
 }
@@ -53,20 +55,28 @@ void TodoPurger::Private::onItemsDeleted(int changeId, const QVector<Entity::Id>
         return; // Not ours.
 
     m_lastError = message;
+    if (m_calendarOwnership)
+        m_calendar.clear();
     emit q->todosPurged(result == IncidenceChanger::ResultCodeSuccess, deletedItems.count(), m_ignoredItems);
 }
 
 void TodoPurger::Private::deleteTodos()
 {
+    if (!m_changer)
+        q->setIncidenceChager(new IncidenceChanger(this));
+
     m_changer->startAtomicOperation(i18n("Purging completed to-dos"));
     Akonadi::Item::List items = m_calendar->items();
     Akonadi::Item::List toDelete;
     m_ignoredItems = 0;
     foreach (const Akonadi::Item &item, items) {
         KCalCore::Todo::Ptr todo = CalendarUtils::incidence(item).dynamicCast<KCalCore::Todo>();
-        if (!todo)
+
+        if (!todo || !todo->isCompleted()) {
             continue;
-        if (treeIsComplete(todo)) {
+        }
+
+        if (treeIsDeletable(todo)) {
             toDelete.append(item);
         } else {
             m_ignoredItems++;
@@ -74,22 +84,22 @@ void TodoPurger::Private::deleteTodos()
     }
 
     if (toDelete.isEmpty()) {
-        emit q->todosPurged(true, 0, 0);
+        if (m_calendarOwnership)
+            m_calendar.clear();
+        emit q->todosPurged(true, 0, m_ignoredItems);
     } else {
-        if (!m_changer)
-            q->setIncidenceChager(new IncidenceChanger(this));
-
-        m_changer->deleteIncidences(toDelete);
+        m_currentChangeId = m_changer->deleteIncidences(toDelete);
+        Q_ASSERT(m_currentChangeId > 0);
     }
 
     m_changer->endAtomicOperation();
 }
 
-bool TodoPurger::Private::treeIsComplete(const KCalCore::Todo::Ptr &todo)
+bool TodoPurger::Private::treeIsDeletable(const KCalCore::Todo::Ptr &todo)
 {
     Q_ASSERT(todo);
 
-    if (!todo->isCompleted())
+    if (!todo->isCompleted() || todo->isReadOnly())
         return false;
 
     KCalCore::Incidence::List childs = m_calendar->childIncidences(todo->uid());
@@ -102,7 +112,7 @@ bool TodoPurger::Private::treeIsComplete(const KCalCore::Todo::Ptr &todo)
         if (!childTodo)
             return false; // This never happens
 
-        if (!treeIsComplete(childTodo))
+        if (!treeIsDeletable(childTodo))
             return false;
     }
 
@@ -133,6 +143,7 @@ void TodoPurger::setIncidenceChager(IncidenceChanger *changer)
 void TodoPurger::setCalendar(const CalendarBase::Ptr &calendar)
 {
     d->m_calendar = calendar;
+    d->m_calendarOwnership = calendar.isNull();
 }
 
 void TodoPurger::purgeCompletedTodos()
@@ -145,4 +156,9 @@ void TodoPurger::purgeCompletedTodos()
         d->m_calendar = FetchJobCalendar::Ptr(new FetchJobCalendar(this));
         connect(d->m_calendar.data(), SIGNAL(loadFinished(bool,QString)), d, SLOT(onCalendarLoaded(bool,QString)));
     }
+}
+
+QString TodoPurger::lastError() const
+{
+    return d->m_lastError;
 }

@@ -52,10 +52,28 @@ class AddTransportDialog::Private
       Enables the OK button if a type is selected.
     */
     void updateOkButton(); // slot
+    void writeConfig();
+    void readConfig();
 
     AddTransportDialog *const q;
     ::Ui::AddTransportDialog ui;
 };
+
+
+void AddTransportDialog::Private::writeConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AddTransportDialog" );
+  group.writeEntry( "Size", q->size() );
+}
+
+void AddTransportDialog::Private::readConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AddTransportDialog" );
+  const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
+  if ( sizeDialog.isValid() ) {
+    q->resize( sizeDialog );
+  }
+}
 
 TransportType AddTransportDialog::Private::selectedType() const
 {
@@ -111,10 +129,12 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
            this, SLOT(accept()) );
   connect( d->ui.name, SIGNAL(textChanged(QString)),
            this, SLOT(updateOkButton()) );
+  d->readConfig();
 }
 
 AddTransportDialog::~AddTransportDialog()
 {
+  d->writeConfig();
   delete d;
 }
 

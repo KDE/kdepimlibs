@@ -20,6 +20,7 @@
 #ifndef TODOPURGER_H
 #define TODOPURGER_H
 
+#include "akonadi-calendar_export.h"
 #include "calendarbase.h"
 
 #include <QObject>
@@ -34,7 +35,7 @@ class IncidenceChanger;
 * @author Sérgio Martins <iamsergio@gmail.com>
 * @since 4.12
 */
-class TodoPurger : public QObject
+class AKONADI_CALENDAR_EXPORT TodoPurger : public QObject
 {
     Q_OBJECT
 public:
@@ -71,7 +72,8 @@ Q_SIGNALS:
      * Emitted when purging completed to-dos finished.
      * @param success    True if the operation could be completed. @see lastError()
      * @param numDeleted Number of to-dos that were deleted.
-     * @param numIgnored Number of to-dos that weren't deleted because they have uncomplete childs.
+     * @param numIgnored Number of completed to-dos that weren't deleted because they are read-only
+     *                   or have uncomplete or read-only children.
      */
     void todosPurged(bool success, int numDeleted, int numIgnored);
 

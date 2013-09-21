@@ -39,9 +39,10 @@ public:
     CalendarBase::Ptr m_calendar;
     int m_currentChangeId;
     int m_ignoredItems;
+    bool m_calendarOwnership; // If false it's not ours.
 
     void deleteTodos();
-    bool treeIsComplete(const KCalCore::Todo::Ptr &todo);
+    bool treeIsDeletable(const KCalCore::Todo::Ptr &todo);
 
 public Q_SLOTS:
     void onCalendarLoaded(bool success, const QString &message);
