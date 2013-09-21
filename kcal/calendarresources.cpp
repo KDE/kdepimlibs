@@ -32,7 +32,7 @@
   @author Reinhold Kainhofer \<reinhold@kainhofer.com\>
 */
 
-#include "calendarresources.moc"
+#include "calendarresources.h"
 #include "incidence.h"
 #include "journal.h"
 #include "resourcecalendar.h"

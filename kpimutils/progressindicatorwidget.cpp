@@ -114,4 +114,3 @@ bool ProgressIndicatorWidget::isActive() const
 
 }
 
-#include "progressindicatorwidget.moc"

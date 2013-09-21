@@ -42,4 +42,4 @@ void NetworkAccessHelper::releaseConnection()
 {
 }
 
-#include "networkaccesshelper.moc"
+#include "moc_networkaccesshelper.cpp"
