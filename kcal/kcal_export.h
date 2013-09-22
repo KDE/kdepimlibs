@@ -44,21 +44,6 @@
 #  endif
 # endif
 
-#ifdef COMPILING_TESTS
-#ifndef KCAL_TEST_EXPORT
-# if defined(KDEPIM_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KCAL_TEST_EXPORT
-# elif defined(MAKE_KCAL_TEST_LIB)
-   /* We are building this library */
-#  define KCAL_TEST_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define KCAL_TEST_EXPORT KDE_IMPORT
-# endif
-#endif
-#endif /* COMPILING_TESTS */
-
 /**
   @namespace KCal
 
