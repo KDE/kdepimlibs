@@ -6,6 +6,11 @@ add_definitions(
   -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
 )
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/kresources
+  ${CMAKE_BINARY_DIR}/kresources
+)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 ########### next target ###############

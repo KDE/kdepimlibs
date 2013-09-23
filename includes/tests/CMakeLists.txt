@@ -31,11 +31,32 @@ endmacro()
 include_directories(
   # HACK: akonadi/calendar has a generated header. We need to go up 3 directories level
   ${CMAKE_BINARY_DIR}/akonadi/calendar/tests
-  ${CMAKE_SOURCE_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi/contact
+  ${CMAKE_BINARY_DIR}/akonadi/calendar
+  ${CMAKE_BINARY_DIR}/akonadi/kcal
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/akonadi/notes
+  ${CMAKE_BINARY_DIR}/akonadi/socialutils
   ${CMAKE_BINARY_DIR}/kabc
-  ${CMAKE_SOURCE_DIR}/kcalutils
-  ${CMAKE_BINARY_DIR}/kcal
   ${CMAKE_BINARY_DIR}/kalarmcal
+  ${CMAKE_BINARY_DIR}/kcal
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/kcalutils
+  ${CMAKE_BINARY_DIR}/kholidays
+  ${CMAKE_BINARY_DIR}/kimap
+  ${CMAKE_BINARY_DIR}/kldap
+  ${CMAKE_BINARY_DIR}/kontactinterface
+  ${CMAKE_BINARY_DIR}/kmbox
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kpimidentities
+  ${CMAKE_BINARY_DIR}/kpimtextedit
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kresources
+  ${CMAKE_BINARY_DIR}/ktnef
+  ${CMAKE_BINARY_DIR}/mailtransport
+  ${CMAKE_BINARY_DIR}/microblog
+  ${CMAKE_BINARY_DIR}/syndication
   ${Boost_INCLUDE_DIR}
 )
 

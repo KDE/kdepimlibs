@@ -4,6 +4,10 @@ include(CheckTimezone)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 ########### next target ###############
 
 set(kmime_LIB_SRCS
