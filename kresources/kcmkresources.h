@@ -22,7 +22,7 @@
 #ifndef KRESOURCES_KCMKRESOURCES_H
 #define KRESOURCES_KCMKRESOURCES_H
 
-#include <kresources_export.h>
+#include <kcmkresources_export.h>
 #include <kcmodule.h>
 
 namespace KRES {

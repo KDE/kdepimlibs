@@ -63,6 +63,7 @@ install(FILES
   factory.h
   idmapper.h
   kresources_export.h
+  kcmkresources_export.h
   manager.h
   managerimpl.h
   resource.h
