@@ -30,6 +30,7 @@
 #define KCAL_CALSTORAGE_H
 
 #include "kcal_export.h"
+#include <qglobal.h>
 
 namespace KCal {
 
