@@ -344,7 +344,7 @@ class KCAL_DEPRECATED_EXPORT IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::timeToString()
     */
-    virtual KDE_DEPRECATED QString dtStartTimeStr(
+    virtual KCAL_DEPRECATED QString dtStartTimeStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -358,7 +358,7 @@ class KCAL_DEPRECATED_EXPORT IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::dateToString()
     */
-    virtual KDE_DEPRECATED QString dtStartDateStr(
+    virtual KCAL_DEPRECATED QString dtStartDateStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -372,7 +372,7 @@ class KCAL_DEPRECATED_EXPORT IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    virtual KDE_DEPRECATED QString dtStartStr(
+    virtual KCAL_DEPRECATED QString dtStartStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**

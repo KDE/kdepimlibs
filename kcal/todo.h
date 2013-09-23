@@ -124,7 +124,7 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::timeToString()
     */
-    KDE_DEPRECATED QString dtDueTimeStr(
+    KCAL_DEPRECATED QString dtDueTimeStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -137,7 +137,7 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::dateToString()
     */
-    KDE_DEPRECATED QString dtDueDateStr(
+    KCAL_DEPRECATED QString dtDueDateStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -150,7 +150,7 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    KDE_DEPRECATED QString dtDueStr(
+    KCAL_DEPRECATED QString dtDueStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -215,14 +215,14 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::timeToString()
     */
-    KDE_DEPRECATED QString dtStartTimeStr(
+    KCAL_DEPRECATED QString dtStartTimeStr(
       bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartTimeStr()
     */
-    virtual KDE_DEPRECATED QString dtStartTimeStr(
+    virtual KCAL_DEPRECATED QString dtStartTimeStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -240,14 +240,14 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::dateToString()
     */
-    KDE_DEPRECATED QString dtStartDateStr(
+    KCAL_DEPRECATED QString dtStartDateStr(
       bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartDateStr()
     */
-    virtual KDE_DEPRECATED QString dtStartDateStr(
+    virtual KCAL_DEPRECATED QString dtStartDateStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -265,14 +265,14 @@ class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 
       @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    KDE_DEPRECATED QString dtStartStr(
+    KCAL_DEPRECATED QString dtStartStr(
       bool shortfmt, bool first, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
       @copydoc
       IncidenceBase::dtStartStr()
     */
-    virtual KDE_DEPRECATED QString dtStartStr(
+    virtual KCAL_DEPRECATED QString dtStartStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**

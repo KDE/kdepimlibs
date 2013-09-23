@@ -222,7 +222,7 @@ namespace IncidenceFormatter
     @deprecated use formatICalInvitationNoHtml(const QString &,Calendar *,
                                                InvitationFormatterHelper *,const QString &) instead.
   */
-  KCAL_DEPRECATED_EXPORT QString KDE_DEPRECATED formatICalInvitationNoHtml(
+  KCAL_DEPRECATED_EXPORT QString formatICalInvitationNoHtml(
     QString invitation, Calendar *calendar, InvitationFormatterHelper *helper );
 
   /**

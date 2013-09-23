@@ -300,7 +300,7 @@ class KCAL_DEPRECATED_EXPORT ResourceCached : public ResourceCalendar,
 
       @param journal is a pointer to the Journal to insert.
     */
-    virtual KDE_DEPRECATED bool addJournal( Journal *journal );
+    virtual KCAL_DEPRECATED bool addJournal( Journal *journal );
 
     /**
       Remove a Journal from the calendar

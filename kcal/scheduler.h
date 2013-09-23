@@ -163,7 +163,7 @@ class KCAL_DEPRECATED_EXPORT Scheduler
       @deprecated: Use the other acceptTransaction() instead
       KDE5: Remove me, make email an optional argument in the other overload
      */
-    bool KDE_DEPRECATED acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
+    bool KCAL_DEPRECATED acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
                                            ScheduleMessage::Status status );
 
     /**
@@ -216,11 +216,11 @@ class KCAL_DEPRECATED_EXPORT Scheduler
       @deprecated: Use the other overload instead
       KDE5: remove me
      */
-    bool KDE_DEPRECATED acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    bool KCAL_DEPRECATED acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
                         const QString &email );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
-    KDE_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    KCAL_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status,
                        const QString & attendee );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );

@@ -69,7 +69,7 @@ class KCAL_DEPRECATED_EXPORT Person
 
       @deprecated use fromFullName() instead.
     */
-    KDE_CONSTRUCTOR_DEPRECATED explicit Person( const QString &fullName );
+    KCAL_DEPRECATED explicit Person( const QString &fullName );
 
     /**
       Constructs a person with the name @p name and email address @p email.
