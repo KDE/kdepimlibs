@@ -29,7 +29,7 @@ else()
   set(kpimutils_LIB_SRCS ${kpimutils_LIB_SRCS} networkaccesshelper_fake.cpp)
 endif()
 
-kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
+add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
 generate_export_header(kpimutils)
 
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KEMOTICONS_LIBS} kmime)

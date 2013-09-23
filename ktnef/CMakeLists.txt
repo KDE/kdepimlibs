@@ -40,7 +40,7 @@ add_definitions(
   -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
 )
 
-kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
+add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 generate_export_header(ktnef)
 
 if(KDEPIM_NO_KCAL)

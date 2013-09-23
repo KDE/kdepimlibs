@@ -11,7 +11,7 @@ set(kmbox_LIB_SRCS
 
 add_subdirectory(tests)
 
-kde4_add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
+add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
 generate_export_header(kmbox)
 
 include_directories(

@@ -109,7 +109,7 @@ endif()
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
-kde4_add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
+add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
 generate_export_header(kcal)
 
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kabc kpimutils ${LIBICAL_LIBRARIES})

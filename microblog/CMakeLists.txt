@@ -14,7 +14,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kpimutils
 )
 
-kde4_add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
+add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
 generate_export_header(microblog)
 
 target_link_libraries(microblog ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )

@@ -31,7 +31,7 @@ set(kresources_LIB_SRCS
 qt4_add_dbus_adaptor(kresources_LIB_SRCS
   org.kde.KResourcesManager.xml managerimpl.h KRES::ManagerImpl)
 
-kde4_add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
+add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
 generate_export_header(kresources)
 
 target_link_libraries(kresources ${KDE4_KIO_LIBS})

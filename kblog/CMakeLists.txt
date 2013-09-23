@@ -37,7 +37,7 @@ add_definitions(
 )
 
 
-kde4_add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
+add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
 generate_export_header(kblog)
 
 target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )

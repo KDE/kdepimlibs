@@ -89,7 +89,7 @@ endif()
 
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
-kde4_add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
+add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
 generate_export_header(mailtransport)
 target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime)
 if(MAILTRANSPORT_INPROCESS_SMTP)

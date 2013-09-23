@@ -28,7 +28,7 @@ set(kmime_LIB_SRCS
    kautodeletehash.cpp )
 
 
-kde4_add_library(kmime ${LIBRARY_TYPE} ${kmime_LIB_SRCS})
+add_library(kmime ${LIBRARY_TYPE} ${kmime_LIB_SRCS})
 generate_export_header(kmime)
 
 target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )

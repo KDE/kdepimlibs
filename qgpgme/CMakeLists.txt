@@ -41,7 +41,7 @@ if ( _any_gpgme_found )
         ${_qgpgme_extra_src}
    )
 
-   kde4_add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
+   add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
    generate_export_header(qgpgme)
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
