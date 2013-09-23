@@ -15,6 +15,13 @@ add_subdirectory(tests)
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5324)
 add_definitions(-DUSES_DEPRECATED_MAILTRANSPORT_API) # for transportmanager
+add_definitions(
+  -DMAILTRANSPORT_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DMAILTRANSPORT_DEPRECATED_EXPORT=MAILTRANSPORT_EXPORT
+)
 
 if(MAILTRANSPORT_INPROCESS_SMTP)
   add_definitions("-DMAILTRANSPORT_INPROCESS_SMTP")

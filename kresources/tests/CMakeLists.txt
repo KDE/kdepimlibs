@@ -1,4 +1,10 @@
-add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+add_definitions(
+  -DKRESOURCES_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
