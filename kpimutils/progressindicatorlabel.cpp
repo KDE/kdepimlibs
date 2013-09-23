@@ -100,4 +100,3 @@ void ProgressIndicatorLabel::setActiveLabel(const QString &label)
 
 }
 
-#include "progressindicatorlabel.moc"

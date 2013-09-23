@@ -45,7 +45,7 @@ namespace KCal {
   This class represents a person, with a name and an email address.
   It supports the "FirstName LastName\ <mail@domain\>" format.
 */
-class KCAL_EXPORT_DEPRECATED Person
+class KCAL_DEPRECATED_EXPORT Person
 {
   public:
     /**
@@ -69,7 +69,7 @@ class KCAL_EXPORT_DEPRECATED Person
 
       @deprecated use fromFullName() instead.
     */
-    KDE_CONSTRUCTOR_DEPRECATED explicit Person( const QString &fullName );
+    KCAL_DEPRECATED explicit Person( const QString &fullName );
 
     /**
       Constructs a person with the name @p name and email address @p email.

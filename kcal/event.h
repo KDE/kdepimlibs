@@ -38,7 +38,7 @@ namespace KCal {
   @brief
   This class provides an Event in the sense of RFC2445.
 */
-class KCAL_EXPORT_DEPRECATED Event : public Incidence
+class KCAL_DEPRECATED_EXPORT Event : public Incidence
 {
   public:
     /**
@@ -139,7 +139,7 @@ class KCAL_EXPORT_DEPRECATED Event : public Incidence
 
       @deprecated use IncidenceFormatter::timeToString()
     */
-    KDE_DEPRECATED QString dtEndTimeStr(
+    KCAL_DEPRECATED QString dtEndTimeStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -152,7 +152,7 @@ class KCAL_EXPORT_DEPRECATED Event : public Incidence
 
       @deprecated use IncidenceFormatter::dateToString()
     */
-    KDE_DEPRECATED QString dtEndDateStr(
+    KCAL_DEPRECATED QString dtEndDateStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -165,7 +165,7 @@ class KCAL_EXPORT_DEPRECATED Event : public Incidence
 
       @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    KDE_DEPRECATED QString dtEndStr(
+    KCAL_DEPRECATED QString dtEndStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**

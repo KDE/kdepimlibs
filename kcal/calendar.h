@@ -116,7 +116,7 @@ enum JournalSortField {
   visible in the Calendar.  Do <em>Not</em> attempt to 'delete' any Incidence
   object you get from Calendar -- use the delete...() methods.
 */
-class KCAL_EXPORT_DEPRECATED Calendar : public QObject, public CustomProperties,
+class KCAL_DEPRECATED_EXPORT Calendar : public QObject, public CustomProperties,
                              public IncidenceBase::IncidenceObserver
 {
   Q_OBJECT
@@ -963,7 +963,7 @@ class KCAL_EXPORT_DEPRECATED Calendar : public QObject, public CustomProperties,
 
       The CalendarObserver class.
     */
-    class KCAL_EXPORT_DEPRECATED CalendarObserver //krazy:exclude=dpointer
+    class KCAL_DEPRECATED_EXPORT CalendarObserver //krazy:exclude=dpointer
     {
       public:
         /**

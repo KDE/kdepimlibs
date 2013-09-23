@@ -2,6 +2,8 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/
         ${QT_QTDBUS_INCLUDE_DIR}
         ${Boost_INCLUDE_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}/akonadi
+        ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kmime
 )
 
 add_subdirectory( tests )
@@ -32,6 +34,16 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
   )
 endmacro()
+
+add_definitions(
+  -DAKONADI_DEPRECATED=
+  -DAKONADI_KMIME_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DAKONADI_DEPRECATED_EXPORT=AKONADI_EXPORT
+  -DAKONADI_KMIME_DEPRECATED_EXPORT=AKONADI_KMIME_EXPORT
+)
 
 ########### next target ###############
 
@@ -71,7 +83,25 @@ endif()
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC specialmailcollectionssettings.kcfgc )
 install( FILES specialmailcollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
-kde4_add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
+include_directories(
+  ${CMAKE_BINARY_DIR}/kmime
+)
+
+add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-kmime PROPERTY DEFINE_SYMBOL akonadi_kmime)
+endif()
+generate_export_header(akonadi-kmime
+  BASE_NAME akonadi_kmime
+  EXPORT_FILE_NAME akonadi-kmime_export.h
+)
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_KMIME_TEST_EXPORT AKONADI_KMIME_EXPORT)
+endif()
+configure_file(akonadi-kmimeprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmimeprivate_export.h"
+)
 
 target_link_libraries( akonadi-kmime akonadi-kde kmime ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
 set_target_properties( akonadi-kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
@@ -86,7 +116,7 @@ install( FILES
   specialmailcollectionsrequestjob.h
   specialmailcollectionsdiscoveryjob.h
   standardmailactionmanager.h
-  akonadi-kmime_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
   messagefolderattribute.h
   messagemodel.h
   messageparts.h

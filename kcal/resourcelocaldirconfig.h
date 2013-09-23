@@ -36,7 +36,7 @@ namespace KCal {
 
   @see ResourceLocalDir
 */
-class KCAL_EXPORT_DEPRECATED ResourceLocalDirConfig : public KRES::ConfigWidget
+class KCAL_DEPRECATED_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
 {
   Q_OBJECT
   public:

@@ -45,7 +45,7 @@ namespace KCal {
   The period can be defined by either a start time and an end time or
   by a start time and a duration.
 */
-class KCAL_EXPORT_DEPRECATED FreeBusyPeriod : public Period
+class KCAL_DEPRECATED_EXPORT FreeBusyPeriod : public Period
 {
   public:
    /**

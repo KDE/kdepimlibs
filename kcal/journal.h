@@ -40,7 +40,7 @@ namespace KCal {
   @brief
   Provides a Journal in the sense of RFC2445.
 */
-class KCAL_EXPORT_DEPRECATED Journal : public Incidence
+class KCAL_DEPRECATED_EXPORT Journal : public Incidence
 {
   public:
     /**

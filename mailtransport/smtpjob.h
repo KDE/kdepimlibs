@@ -48,7 +48,7 @@ class SmtpSession;
 
   @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT_DEPRECATED SmtpJob : public TransportJob
+class MAILTRANSPORT_DEPRECATED_EXPORT SmtpJob : public TransportJob
 {
   Q_OBJECT
   public:

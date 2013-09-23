@@ -55,7 +55,7 @@ class FreeBusyCache;
   This class provides an encapsulation of a scheduling message.
   It associates an incidence with an iTIPMethod and status information.
 */
-class KCAL_EXPORT_DEPRECATED ScheduleMessage
+class KCAL_DEPRECATED_EXPORT ScheduleMessage
 {
   public:
     /**
@@ -117,7 +117,7 @@ class KCAL_EXPORT_DEPRECATED ScheduleMessage
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class KCAL_EXPORT_DEPRECATED Scheduler
+class KCAL_DEPRECATED_EXPORT Scheduler
 {
   public:
     /**
@@ -163,7 +163,7 @@ class KCAL_EXPORT_DEPRECATED Scheduler
       @deprecated: Use the other acceptTransaction() instead
       KDE5: Remove me, make email an optional argument in the other overload
      */
-    bool KDE_DEPRECATED acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
+    bool KCAL_DEPRECATED acceptTransaction( IncidenceBase *incidence, iTIPMethod method,
                                            ScheduleMessage::Status status );
 
     /**
@@ -216,11 +216,11 @@ class KCAL_EXPORT_DEPRECATED Scheduler
       @deprecated: Use the other overload instead
       KDE5: remove me
      */
-    bool KDE_DEPRECATED acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    bool KCAL_DEPRECATED acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
                         const QString &email );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
-    KDE_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    KCAL_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status,
                        const QString & attendee );
     bool acceptDeclineCounter( IncidenceBase *, ScheduleMessage::Status status );

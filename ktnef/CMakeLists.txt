@@ -24,7 +24,24 @@ set(ktnef_LIB_SRCS
   formatter.cpp
 )
 
-kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
+include_directories(
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/kcalutils
+  ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kcal
+  ${CMAKE_BINARY_DIR}/kpimutils
+)
+
+add_definitions(
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
+
+add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
+generate_export_header(ktnef)
 
 if(KDEPIM_NO_KCAL)
   target_link_libraries(ktnef ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
@@ -42,7 +59,7 @@ install(TARGETS ktnef EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_
 
 install(FILES
   formatter.h
-  ktnef_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/ktnef_export.h
   ktnefattach.h
   ktnefdefs.h
   ktnefmessage.h

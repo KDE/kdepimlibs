@@ -21,6 +21,7 @@
 
 #include "../etmcalendar.h"
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
@@ -38,7 +39,7 @@ using namespace KCalCore;
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 
-void ETMCalendarTest::createIncidence( const QString &uid )
+void ETMCalendarTest::createIncidence(const QString &uid)
 {
     Item item;
     item.setMimeType( Event::eventMimeType() );
@@ -49,6 +50,31 @@ void ETMCalendarTest::createIncidence( const QString &uid )
     item.setPayload<KCalCore::Incidence::Ptr>( incidence );
     ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
     AKVERIFYEXEC( job );
+}
+
+void ETMCalendarTest::createTodo(const QString &uid, const QString &parentUid)
+{
+    Item item;
+    item.setMimeType(Todo::todoMimeType());
+    Todo::Ptr todo = Todo::Ptr(new Todo());
+    todo->setUid(uid);
+
+    todo->setRelatedTo(parentUid);
+
+    todo->setSummary(QLatin1String("summary"));
+
+    item.setPayload<KCalCore::Incidence::Ptr>(todo);
+    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+    mIncidencesToAdd++;
+    mIncidencesToChange++;
+    AKVERIFYEXEC(job);
+}
+
+void ETMCalendarTest::deleteIncidence(const QString &uid)
+{
+    ItemDeleteJob *job = new ItemDeleteJob(mCalendar->item(uid));
+    mIncidencesToDelete++;
+    AKVERIFYEXEC(job);
 }
 
 void ETMCalendarTest::fetchCollection()
@@ -71,6 +97,9 @@ void ETMCalendarTest::fetchCollection()
 void ETMCalendarTest:: initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
+    mIncidencesToAdd = 0;
+    mIncidencesToChange = 0;
+    mIncidencesToDelete = 0;
 
     qRegisterMetaType<QSet<QByteArray> >("QSet<QByteArray>");
     fetchCollection();
@@ -149,6 +178,7 @@ void ETMCalendarTest::testIncidencesModified()
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
     QCOMPARE( mCalendar->incidence( uid )->summary(), tr( "foo33" ) );
+    QVERIFY( item.revision() == mCalendar->item( item.id() ).revision() - 1 );
 }
 
 void ETMCalendarTest::testIncidencesDeleted()
@@ -221,9 +251,7 @@ void ETMCalendarTest::calendarIncidenceAdded( const Incidence::Ptr &incidence )
     Q_UNUSED( incidence );
     Q_ASSERT( incidence );
     --mIncidencesToAdd;
-    if ( mIncidencesToAdd == 0 ) {
-        QTestEventLoop::instance().exitLoop();
-    }
+    checkExitLoop();
 }
 
 void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & )
@@ -234,21 +262,97 @@ void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & 
 void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence )
 {
     --mIncidencesToChange;
-    if ( mIncidencesToChange == 0 ) {
-        mLastChangedUid = incidence->uid();
-        QTestEventLoop::instance().exitLoop();
-    }
+    checkExitLoop();
 }
-
 
 void ETMCalendarTest::calendarIncidenceDeleted( const Incidence::Ptr &incidence )
 {
     --mIncidencesToDelete;
     mLastDeletedUid = incidence->uid();
-    if ( mIncidencesToDelete == 0 ) {
+    checkExitLoop();
+}
+
+void ETMCalendarTest::testSubTodos()
+{
+    mIncidencesToAdd = 0;
+    mIncidencesToChange = 0;
+    mIncidencesToDelete = 0;
+
+    createTodo(tr("ta"), QString());
+    createTodo(tr("tb"), QString());
+    createTodo(tr("tb.1"), tr("tb"));
+    createTodo(tr("tb.1.1"), tr("tb.1"));
+    createTodo(tr("tb.2"), tr("tb"));
+    createTodo(tr("tb.3"), tr("tb"));
+    waitForIt();
+
+    QVERIFY(mCalendar->childIncidences(tr("ta")).isEmpty());
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
+    QCOMPARE(mCalendar->childIncidences(tr("tb.1")).count(), 1);
+    QVERIFY(mCalendar->childIncidences(tr("tb.1.1")).isEmpty());
+    QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
+
+    // Kill a child
+    deleteIncidence(tr("tb.3"));
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
+    QCOMPARE(mCalendar->childItems(tr("tb")).count(), 2);
+    QVERIFY(!mCalendar->incidence(tr("tb.3")));
+
+    // Move a top-level to-do to a new parent
+    Incidence::Ptr ta = mCalendar->incidence(tr("ta"));
+    Item ta_item = mCalendar->item(tr("ta"));
+    ta_item.setPayload(ta);
+    QVERIFY(ta);
+    ta->setRelatedTo(tr("tb"));
+    mIncidencesToChange = 1;
+
+    ItemModifyJob *job = new ItemModifyJob(ta_item);
+    AKVERIFYEXEC(job);
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
+
+    // Move it to another parent now
+    ta = mCalendar->incidence(tr("ta"));
+    ta_item = mCalendar->item(tr("ta"));
+    ta->setRelatedTo(tr("tb.2"));
+    ta_item.setPayload(ta);
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(ta_item);
+    AKVERIFYEXEC(job);
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
+    QCOMPARE(mCalendar->childIncidences(tr("tb.2")).count(), 1);
+
+    // Now unparent it
+    ta = mCalendar->incidence(tr("ta"));
+    ta_item = mCalendar->item(tr("ta"));
+    ta->setRelatedTo(QString());
+    ta_item.setPayload(ta);
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(ta_item);
+    AKVERIFYEXEC(job);
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
+    QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
+}
+
+void ETMCalendarTest::waitForIt()
+{
+    QTestEventLoop::instance().enterLoop(10);
+    QVERIFY(!QTestEventLoop::instance().timeout());
+}
+
+void ETMCalendarTest::checkExitLoop()
+{
+    //qDebug() << "checkExitLoop: current state: " << mIncidencesToDelete << mIncidencesToAdd << mIncidencesToChange;
+    if (mIncidencesToDelete == 0 && mIncidencesToAdd == 0 && mIncidencesToChange == 0) {
         QTestEventLoop::instance().exitLoop();
     }
 }
-
 
 QTEST_AKONADIMAIN( ETMCalendarTest, GUI )

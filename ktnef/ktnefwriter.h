@@ -39,6 +39,7 @@ class QDateTime;
 class QStringList;
 
 #include "ktnef_export.h"
+#include <qglobal.h>
 
 namespace KTnef {
 

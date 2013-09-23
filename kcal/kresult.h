@@ -106,7 +106,7 @@ namespace KCal {
       ...
       if ( !load() ) error();
 */
-class KCAL_EXPORT_DEPRECATED KResult
+class KCAL_DEPRECATED_EXPORT KResult
 {
   public:
     /**
@@ -257,7 +257,7 @@ class KCAL_EXPORT_DEPRECATED KResult
   @brief
   Convenience class for creating a KResult of type Ok.
 */
-class KCAL_EXPORT_DEPRECATED KResultOk : public KResult
+class KCAL_DEPRECATED_EXPORT KResultOk : public KResult
 {
   public:
     /**
@@ -276,7 +276,7 @@ class KCAL_EXPORT_DEPRECATED KResultOk : public KResult
   @brief
   Convenience class for creating a KResult of type InProgress.
 */
-class KCAL_EXPORT_DEPRECATED KResultInProgress : public KResult
+class KCAL_DEPRECATED_EXPORT KResultInProgress : public KResult
 {
   public:
     /**
@@ -295,7 +295,7 @@ class KCAL_EXPORT_DEPRECATED KResultInProgress : public KResult
   @brief
   Convenience class for creating a KResult of type Error.
 */
-class KCAL_EXPORT_DEPRECATED KResultError : public KResult
+class KCAL_DEPRECATED_EXPORT KResultError : public KResult
 {
   public:
     /**

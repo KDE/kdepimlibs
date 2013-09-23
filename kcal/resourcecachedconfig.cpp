@@ -23,6 +23,7 @@
 #include <khbox.h>
 #include <klocalizedstring.h>
 #include <kdebug.h>
+#include "resourcecachedconfig.h"
 
 #include <QLayout>
 #include <QRadioButton>
@@ -34,7 +35,6 @@
 #include <QButtonGroup>
 #include <QGroupBox>
 
-#include "resourcecachedconfig.moc"
 
 using namespace KCal;
 

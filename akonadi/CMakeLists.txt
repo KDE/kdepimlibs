@@ -8,8 +8,6 @@ if(CMAKE_COMPILE_GCOV)
 endif()
 
 if (KDE4_BUILD_TESTS)
-   # only with this macro the AKONADI_TESTS_EXPORT macro will do something
-   add_definitions(-DCOMPILING_TESTS)
 add_subdirectory( tests )
 endif()
 
@@ -27,6 +25,10 @@ endif()
 
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
 add_subdirectory( kabc )
 add_subdirectory( kcal )
 add_subdirectory( kmime )
@@ -36,13 +38,12 @@ add_subdirectory( notes )
 add_subdirectory( socialutils )
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
   ${QJSON_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/../kmime
   ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
 
@@ -251,7 +252,31 @@ else()
   )
 endif()
 
-kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
+add_definitions(
+  -DAKONADI_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DAKONADI_DEPRECATED_EXPORT=AKONADI_EXPORT
+)
+
+add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-kde PROPERTY DEFINE_SYMBOL akonadi_kde)
+endif()
+generate_export_header(akonadi-kde BASE_NAME akonadi)
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_TESTS_EXPORT AKONADI_EXPORT)
+endif()
+configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_TESTS_EXPORT AKONADI_EXPORT)
+endif()
+configure_file(akonadiprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h"
+)
 
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
@@ -268,7 +293,7 @@ install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_
 ########### install files ###############
 
 install( FILES
-  akonadi_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi_export.h
   agentactionmanager.h
   agentbase.h
   agentfactory.h

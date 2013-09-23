@@ -53,7 +53,7 @@ struct VObject;
 
 namespace KCal {
 
-class KCAL_EXPORT_DEPRECATED VCalFormat : public CalFormat
+class KCAL_DEPRECATED_EXPORT VCalFormat : public CalFormat
 {
   public:
     VCalFormat();

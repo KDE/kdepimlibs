@@ -134,6 +134,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     const QString parentUid = incidence->relatedTo();
     if ( !parentUid.isEmpty() ) {
       mParentUidToChildrenUid[parentUid].append( incidence->uid() );
+      mUidToParent.insert( uid, parentUid );
     }
   }
   // Must be the last one due to re-entrancy
@@ -167,10 +168,12 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
     mItemsByCollection.remove( item.storageCollectionId(), item );
 
     if ( !incidence->hasRecurrenceId() ) {
-      mParentUidToChildrenUid.remove( incidence->uid() );
+      const QString uid = incidence->uid();
       const QString parentUid = incidence->relatedTo();
+      mParentUidToChildrenUid.remove( uid );
       if ( !parentUid.isEmpty() ) {
-        mParentUidToChildrenUid[parentUid].removeAll( incidence->uid() );
+        mParentUidToChildrenUid[parentUid].removeAll( uid );
+        mUidToParent.remove( uid );
       }
     }
     // Must be the last one due to re-entrancy
@@ -309,6 +312,37 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   // The actual operation of updating the UID must be done with observers enabled so
   // FieldUid gets dirty.
   newIncidence->setUid( newUid );
+}
+
+void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+
+  if ( incidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
+    return;
+  }
+
+  const QString originalParentUid = mUidToParent.value( incidence->uid() );
+  const QString newParentUid = incidence->relatedTo();
+
+  if ( originalParentUid == newParentUid ) {
+    return; // nothing changed
+  }
+
+  if ( !originalParentUid.isEmpty() ) {
+    // Remove this child from it's old parent:
+    Q_ASSERT( mParentUidToChildrenUid.contains( originalParentUid ) );
+    mParentUidToChildrenUid[originalParentUid].removeAll( incidence->uid() );
+  }
+
+  mUidToParent.remove( incidence->uid() );
+
+  if ( !newParentUid.isEmpty() ) {
+    // Deliver this child to it's new parent:
+    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( incidence->uid() ) );
+    mParentUidToChildrenUid[newParentUid].append( incidence->uid() );
+    mUidToParent.insert( incidence->uid(), newParentUid );
+  }
 }
 
 CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )
@@ -594,5 +628,5 @@ void CalendarBase::endBatchAdding()
   KCalCore::MemoryCalendar::endBatchAdding();
 }
 
-#include "calendarbase.moc"
-#include "calendarbase_p.moc"
+#include "moc_calendarbase.cpp"
+#include "moc_calendarbase_p.cpp"

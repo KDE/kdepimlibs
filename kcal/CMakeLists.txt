@@ -2,9 +2,17 @@ project(kcal)
 
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5800)
-add_definitions(-DWANT_DEPRECATED_KCAL_API)
-add_definitions(-DWANT_DEPRECATED_KABC_API)
-add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+add_definitions(
+  -DKRESOURCES_DEPRECATED=
+  -DKABC_DEPRECATED=
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+  -DKABC_DEPRECATED_EXPORT=KABC_EXPORT
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
 
 # Workaround a SIC change in libical 0.46
 if(USE_ICAL_0_46)
@@ -13,10 +21,6 @@ endif()
 
 include (ConfigureChecks.cmake)
 
-#if(KDE4_BUILD_TESTS)
-# add_definitions(-DCOMPILING_TESTS)
-#endif()
-
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
   ${LIBICAL_INCLUDE_DIRS}/libical
@@ -24,6 +28,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kresources
   ${KDE4_INCLUDE_DIR}
 )
 
@@ -103,7 +109,8 @@ endif()
 
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
-kde4_add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
+add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
+generate_export_header(kcal)
 
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kabc kpimutils ${LIBICAL_LIBRARIES})
 target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kabc)
@@ -179,7 +186,7 @@ install( FILES
         incidence.h
         incidenceformatter.h
         journal.h
-        kcal_export.h
+        ${CMAKE_CURRENT_BINARY_DIR}/kcal_export.h
         kcalversion.h
         listbase.h
         period.h

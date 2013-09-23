@@ -13,13 +13,14 @@ option(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/akonadi
-    ${CMAKE_CURRENT_SOURCE_DIR}/../
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}/../
-    ${Boost_INCLUDE_DIR}
-    ${AKONADI_INCLUDE_DIR}
-    ${AKONADI_INCLUDE_DIR}/akonadi/private
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${AKONADI_INCLUDE_DIR}
+  ${AKONADI_INCLUDE_DIR}/akonadi/private
+  ${Boost_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/kmime
 )
 
 # add testrunner (application for managing a self-contained test
@@ -58,7 +59,7 @@ set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.N
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
-kde4_add_library(akonaditestfake STATIC
+add_library(akonaditestfake STATIC
   ${akonaditestfake_srcs}
   fakeakonadiservercommand.cpp
   fakesession.cpp

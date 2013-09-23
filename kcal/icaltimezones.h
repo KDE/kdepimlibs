@@ -61,7 +61,7 @@ class ICalTimeZoneDataPrivate;
  * @short Represents a collection of iCalendar time zones
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT_DEPRECATED ICalTimeZones
+class KCAL_DEPRECATED_EXPORT ICalTimeZones
 {
   public:
     /**
@@ -139,7 +139,7 @@ class KCAL_EXPORT_DEPRECATED ICalTimeZones
  * @see ICalTimeZoneSource, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT_DEPRECATED ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer
+class KCAL_DEPRECATED_EXPORT ICalTimeZone : public KTimeZone  //krazy:exclude=dpointer
                                                    //(no d-pointer for KTimeZone derived classes)
 {
   public:
@@ -255,7 +255,7 @@ class KCAL_EXPORT_DEPRECATED ICalTimeZone : public KTimeZone  //krazy:exclude=dp
  * @ingroup timezones
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT_DEPRECATED ICalTimeZoneBackend : public KTimeZoneBackend
+class KCAL_DEPRECATED_EXPORT ICalTimeZoneBackend : public KTimeZoneBackend
 {
   public:
     /** Implements ICalTimeZone::ICalTimeZone(). */
@@ -325,7 +325,7 @@ class KCAL_EXPORT_DEPRECATED ICalTimeZoneBackend : public KTimeZoneBackend
  * @see ICalTimeZone, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT_DEPRECATED ICalTimeZoneSource : public KTimeZoneSource
+class KCAL_DEPRECATED_EXPORT ICalTimeZoneSource : public KTimeZoneSource
 {
   public:
     /**
@@ -431,7 +431,7 @@ class KCAL_EXPORT_DEPRECATED ICalTimeZoneSource : public KTimeZoneSource
  * @see ICalTimeZone, ICalTimeZoneSource
  * @author David Jarvie <software@astrojar.org.uk>.
  */
-class KCAL_EXPORT_DEPRECATED ICalTimeZoneData : public KTimeZoneData
+class KCAL_DEPRECATED_EXPORT ICalTimeZoneData : public KTimeZoneData
 {
   friend class ICalTimeZoneSource;
 

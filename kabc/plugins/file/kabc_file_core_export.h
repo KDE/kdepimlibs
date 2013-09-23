@@ -1,7 +1,6 @@
 /*
-  This file is part of the kholidays library.
-
-  Copyright (C) 2007 David Faure <faure@kde.org>
+  This file is part of the kabc library.
+  Copyright (c) 2006-2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,27 +18,22 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KHOLIDAYS_EXPORT_H
-#define KHOLIDAYS_EXPORT_H
+#ifndef KABC_FILE_CORE_EXPORT_H
+#define KABC_FILE_CORE_EXPORT_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef KHOLIDAYS_EXPORT
+#ifndef KABC_FILE_CORE_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KHOLIDAYS_EXPORT
-# elif defined(MAKE_KHOLIDAYS_LIB)
+#  define KABC_FILE_CORE_EXPORT
+# elif defined(MAKE_KABC_FILE_CORE_LIB)
    /* We are building this library */
-#  define KHOLIDAYS_EXPORT KDE_EXPORT
+#  define KABC_FILE_CORE_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KHOLIDAYS_EXPORT KDE_IMPORT
+#  define KABC_FILE_CORE_EXPORT KDE_IMPORT
 # endif
 #endif
-
-# ifndef KHOLIDAYS_EXPORT_DEPRECATED
-#  define KHOLIDAYS_EXPORT_DEPRECATED KDE_DEPRECATED KHOLIDAYS_EXPORT
-# endif
 
 #endif

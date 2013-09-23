@@ -1,5 +1,5 @@
 /*
-  This file is part of kdepimlibs.
+  This file is part of the kresources library.
   Copyright (c) 2006 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
@@ -18,33 +18,33 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMIME_EXPORT_H
-#define KMIME_EXPORT_H
+#ifndef KCMKRESOURCES_EXPORT_H
+#define KCMKRESOURCES_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KMIME_EXPORT
+#ifndef KCM_KRESOURCES_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KMIME_EXPORT
-# elif defined(MAKE_KMIME_LIB)
+#  define KCM_KRESOURCES_EXPORT
+# elif defined(MAKE_KCM_KRESOURCES_LIB)
    /* We are building this library */
-#  define KMIME_EXPORT KDE_EXPORT
+#  define KCM_KRESOURCES_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KMIME_EXPORT KDE_IMPORT
+#  define KCM_KRESOURCES_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef KMIME_EXPORT_DEPRECATED
-#  define KMIME_EXPORT_DEPRECATED KDE_DEPRECATED KMIME_EXPORT
+#ifndef KCM_KRESOURCES_EXPORT_DEPRECATED
+# if !defined( WANT_DEPRECATED_KRESOURCE_API )
+#   define KCM_KRESOURCES_EXPORT_DEPRECATED KDE_DEPRECATED KCM_KRESOURCES_EXPORT
+#   define KCM_KRESOURCES_DEPRECATED_EXPORT KDE_DEPRECATED KCM_KRESOURCES_EXPORT
+#   define KCM_KRESOURCES_DEPRECATED KDE_DEPRECATED
+# else
+#   define KCM_KRESOURCES_EXPORT_DEPRECATED KCM_KRESOURCES_EXPORT
+#   define KCM_KRESOURCES_DEPRECATED_EXPORT KCM_KRESOURCES_EXPORT
 # endif
-
-/**
-  @namespace KMime
-
-  @brief
-  Contains all the KMIME library global classes, objects, and functions.
-*/
+#endif
 
 #endif

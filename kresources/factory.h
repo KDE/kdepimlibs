@@ -70,7 +70,7 @@ namespace KRES {
 
   \endcode
 */
-class KRESOURCES_EXPORT_DEPRECATED Factory
+class KRESOURCES_DEPRECATED_EXPORT Factory
 {
   public:
 

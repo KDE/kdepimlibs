@@ -391,29 +391,40 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
-      Q_ASSERT( newIncidence );
-      Q_ASSERT( !newIncidence->uid().isEmpty() );
-      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-      if ( existingIncidence ) {
-        *(existingIncidence.data()) = *( newIncidence.data() );
-        mItemsByCollection.insert( item.storageCollectionId(), item );
-      } else if ( mItemById.contains( item.id() ) ) {
-        // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
-        handleUidChange( item, newIncidence->instanceIdentifier() );
-        existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-        mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
-        mItemsByCollection.insert( item.storageCollectionId(), item );
-      } else {
-        // We don't know about this one because it was discarded, for example because of not having DTSTART
-      }
-    }
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() )
+      updateItem( item );
 
     ++row;
     i = i.sibling( row, topLeft.column() );
   }
+
   emit q->calendarChanged();
+}
+
+void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
+{
+  Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+  Q_ASSERT( newIncidence );
+  Q_ASSERT( !newIncidence->uid().isEmpty() );
+  IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+
+  if ( existingIncidence ) {
+    *(existingIncidence.data()) = *( newIncidence.data() );
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+    mItemsByCollection.insert( item.storageCollectionId(), item );
+
+    // Check if RELATED-TO changed, updating parenting information
+    handleParentChanged( existingIncidence.staticCast<KCalCore::Incidence>() );
+
+  } else if ( mItemById.contains( item.id() ) ) {
+    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
+    handleUidChange( item, newIncidence->instanceIdentifier() );
+    existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+    mItemsByCollection.insert( item.storageCollectionId(), item );
+  } else {
+    // We don't know about this one because it was discarded, for example because of not having DTSTART
+  }
 }
 
 void ETMCalendarPrivate::onRowsInsertedInFilteredModel( const QModelIndex &index,
@@ -581,5 +592,5 @@ bool ETMCalendar::collectionFilteringEnabled() const
   return d->mCollectionFilteringEnabled;
 }
 
-#include "etmcalendar.moc"
-#include "etmcalendar_p.moc"
+#include "moc_etmcalendar.cpp"
+#include "moc_etmcalendar_p.cpp"

@@ -99,7 +99,7 @@ class FreeBusy;
   and Incidence contains all additional properties that are common to
   Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
-class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
+class KCAL_DEPRECATED_EXPORT IncidenceBase : public CustomProperties
 {
   public:
     /**
@@ -109,7 +109,7 @@ class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
       on the concrete types of calendar components, without changing the
       calendar component classes.
     */
-    class KCAL_EXPORT_DEPRECATED Visitor //krazy:exclude=dpointer
+    class KCAL_DEPRECATED_EXPORT Visitor //krazy:exclude=dpointer
     {
       public:
         /** Destruct Incidence::Visitor */
@@ -344,7 +344,7 @@ class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::timeToString()
     */
-    virtual KDE_DEPRECATED QString dtStartTimeStr(
+    virtual KCAL_DEPRECATED QString dtStartTimeStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -358,7 +358,7 @@ class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::dateToString()
     */
-    virtual KDE_DEPRECATED QString dtStartDateStr(
+    virtual KCAL_DEPRECATED QString dtStartDateStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**
@@ -372,7 +372,7 @@ class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
 
       @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    virtual KDE_DEPRECATED QString dtStartStr(
+    virtual KCAL_DEPRECATED QString dtStartStr(
       bool shortfmt = true, const KDateTime::Spec &spec = KDateTime::Spec() ) const;
 
     /**

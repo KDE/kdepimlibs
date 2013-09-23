@@ -6,14 +6,22 @@ include_directories(${KDE4_KIO_INCLUDES})
 add_definitions(${QDBUS_DEFINITIONS} -DKDE_DEFAULT_DEBUG_AREA=5700)
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
-add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
-add_definitions(-DWANT_DEPRECATED_KABC_API)
+add_definitions(
+  -DKRESOURCES_DEPRECATED=
+  -DKABC_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+  -DKABC_DEPRECATED_EXPORT=KABC_EXPORT
+)
 
 # these apply also for all subdirs
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/vcardparser
+  ${CMAKE_BINARY_DIR}/kresources
 )
 
 # kabc/vcardparser/Makefile.am: vcards
@@ -86,7 +94,8 @@ if(NOT KDEPIM_NO_KRESOURCES)
   )
 endif()
 
-kde4_add_library(kabc ${LIBRARY_TYPE} ${kabc_LIB_SRCS})
+add_library(kabc ${LIBRARY_TYPE} ${kabc_LIB_SRCS})
+generate_export_header(kabc)
 
 target_link_libraries(kabc ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS})
 target_link_libraries(kabc LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
@@ -106,7 +115,7 @@ install(TARGETS kabc EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_A
 
 install(FILES countrytransl.map DESTINATION ${DATA_INSTALL_DIR}/kabc)
 install(FILES
-  kabc_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kabc_export.h
   address.h
   addressee.h
   addresseedialog.h

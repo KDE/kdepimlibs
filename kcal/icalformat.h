@@ -49,7 +49,7 @@ class FreeBusy;
   loading/saving/converting iCalendar format data into the internal
   representation as Calendar and Incidences.
 */
-class KCAL_EXPORT_DEPRECATED ICalFormat : public CalFormat
+class KCAL_DEPRECATED_EXPORT ICalFormat : public CalFormat
 {
   public:
     /**

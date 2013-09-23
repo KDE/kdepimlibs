@@ -1,6 +1,6 @@
 /*
-  This file is part of kdepimlibs.
-  Copyright (c) 2006 Allen Winter <winter@kde.org>
+  This file is part of the kabc library.
+  Copyright (c) 2006-2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,33 +18,22 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KTNEF_EXPORT_H
-#define KTNEF_EXPORT_H
+#ifndef KABC_LDAPKIO_EXPORT_H
+#define KABC_LDAPKIO_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KTNEF_EXPORT
+#ifndef KABC_LDAPKIO_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KTNEF_EXPORT
-# elif defined(MAKE_KTNEF_LIB)
+#  define KABC_LDAPKIO_EXPORT
+# elif defined(MAKE_KABC_LDAPKIO_LIB)
    /* We are building this library */
-#  define KTNEF_EXPORT KDE_EXPORT
+#  define KABC_LDAPKIO_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KTNEF_EXPORT KDE_IMPORT
+#  define KABC_LDAPKIO_EXPORT KDE_IMPORT
 # endif
 #endif
-
-# ifndef KTNEF_EXPORT_DEPRECATED
-#  define KTNEF_EXPORT_DEPRECATED KDE_DEPRECATED KTNEF_EXPORT
-# endif
-
-/**
- * @namespace KTnef
- *
- * @brief
- * Contains all the KTNEF library global classes, objects, and functions.
- */
 
 #endif

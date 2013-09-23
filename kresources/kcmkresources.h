@@ -22,14 +22,14 @@
 #ifndef KRESOURCES_KCMKRESOURCES_H
 #define KRESOURCES_KCMKRESOURCES_H
 
-#include <kresources_export.h>
+#include <kcmkresources_export.h>
 #include <kcmodule.h>
 
 namespace KRES {
   class ConfigPage;
 }
 
-class KCM_KRESOURCES_EXPORT_DEPRECATED KCMKResources : public KCModule
+class KCM_KRESOURCES_DEPRECATED_EXPORT KCMKResources : public KCModule
 {
   Q_OBJECT
 

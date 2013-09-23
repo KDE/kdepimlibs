@@ -5,7 +5,13 @@ add_subdirectory(tests)
 include_directories(${KDE4_KIO_INCLUDES})
 
 add_definitions(${QDBUS_DEFINITIONS} -DKDE_DEFAULT_DEBUG_AREA=5650)
-add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+add_definitions(
+  -DKRESOURCES_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
@@ -25,7 +31,8 @@ set(kresources_LIB_SRCS
 qt4_add_dbus_adaptor(kresources_LIB_SRCS
   org.kde.KResourcesManager.xml managerimpl.h KRES::ManagerImpl)
 
-kde4_add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
+add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
+generate_export_header(kresources)
 
 target_link_libraries(kresources ${KDE4_KIO_LIBS})
 
@@ -62,7 +69,8 @@ install(FILES
   configwidget.h
   factory.h
   idmapper.h
-  kresources_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kresources_export.h
+  kcmkresources_export.h
   manager.h
   managerimpl.h
   resource.h

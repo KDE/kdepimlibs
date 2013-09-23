@@ -30,6 +30,7 @@
 #define KCAL_CALSTORAGE_H
 
 #include "kcal_export.h"
+#include <qglobal.h>
 
 namespace KCal {
 
@@ -42,7 +43,7 @@ class Calendar;
   This is the base class for calendar storage. It provides an interface for the
   loading and saving of calendars.
 */
-class KCAL_EXPORT_DEPRECATED CalStorage
+class KCAL_DEPRECATED_EXPORT CalStorage
 {
   public:
     /**

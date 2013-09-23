@@ -51,7 +51,7 @@ namespace KCal {
 
   @since 4.3
  */
-class KCAL_EXPORT_DEPRECATED AssignmentVisitor : public IncidenceBase::Visitor
+class KCAL_DEPRECATED_EXPORT AssignmentVisitor : public IncidenceBase::Visitor
 {
   public:
     /**

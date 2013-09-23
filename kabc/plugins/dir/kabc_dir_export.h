@@ -1,6 +1,6 @@
 /*
-  This file is part of kdepimlibs.
-  Copyright (c) 2004-2006 Szombathelyi György <gyurco@freemail.hu>
+  This file is part of the kabc library.
+  Copyright (c) 2006-2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -18,21 +18,21 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KLDAP_EXPORT_H
-#define KLDAP_EXPORT_H
+#ifndef KABC_DIR_EXPORT_H
+#define KABC_DIR_EXPORT_H
 
 #include <kdemacros.h>
 
-#ifndef KLDAP_EXPORT
+#ifndef KABC_DIR_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KLDAP_EXPORT
-# elif defined(MAKE_KLDAP_LIB)
+#  define KABC_DIR_EXPORT
+# elif defined(MAKE_KABC_DIRECTORY_LIB)
    /* We are building this library */
-#  define KLDAP_EXPORT KDE_EXPORT
+#  define KABC_DIR_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KLDAP_EXPORT KDE_IMPORT
+#  define KABC_DIR_EXPORT KDE_IMPORT
 # endif
 #endif
 

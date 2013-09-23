@@ -1,7 +1,6 @@
 /*
-  This file is part of the KDE Kontact Plugin Interface Library.
-
-  Copyright (C) 2007 David Faure <faure@kde.org>
+  This file is part of the kabc library.
+  Copyright (c) 2006-2007 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,22 +18,21 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KONTACTINTERFACE_EXPORT_H
-#define KONTACTINTERFACE_EXPORT_H
+#ifndef KABC_NET_EXPORT_H
+#define KABC_NET_EXPORT_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef KONTACTINTERFACE_EXPORT
+#ifndef KABC_NET_EXPORT
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
-#  define KONTACTINTERFACE_EXPORT
-# elif defined(MAKE_KONTACTINTERFACE_LIB)
+#  define KABC_NET_EXPORT
+# elif defined(MAKE_KABC_NET_LIB)
    /* We are building this library */
-#  define KONTACTINTERFACE_EXPORT KDE_EXPORT
+#  define KABC_NET_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KONTACTINTERFACE_EXPORT KDE_IMPORT
+#  define KABC_NET_EXPORT KDE_IMPORT
 # endif
 #endif
 

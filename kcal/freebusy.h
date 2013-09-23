@@ -47,7 +47,7 @@ class Calendar;
 
   A free/busy is a collection of Periods (@see Period).
 */
-class KCAL_EXPORT_DEPRECATED FreeBusy : public IncidenceBase
+class KCAL_DEPRECATED_EXPORT FreeBusy : public IncidenceBase
 {
   public:
     /**

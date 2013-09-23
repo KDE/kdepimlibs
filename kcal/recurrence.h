@@ -88,7 +88,7 @@ class RecurrenceRule;
   the specified type. The add* and the other set* methods will change only
   the first recurrence rule, but leave the others untouched.
 */
-class KCAL_EXPORT_DEPRECATED Recurrence : public RecurrenceRule::RuleObserver
+class KCAL_DEPRECATED_EXPORT Recurrence : public RecurrenceRule::RuleObserver
 {
   public:
     class RecurrenceObserver

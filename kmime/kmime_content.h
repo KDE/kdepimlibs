@@ -291,7 +291,7 @@ class KMIME_EXPORT Content
       @deprecated Use KMime::HeaderParsing::extractFirstHeader().
       @param head is a QByteArray containing the header data.
     */
-    KDE_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
+    KMIME_DEPRECATED Headers::Generic *getNextHeader( QByteArray &head );
 
     /**
       Extracts and removes the next header from @p head.
@@ -301,7 +301,7 @@ class KMIME_EXPORT Content
       @param head is a QByteArray containing the header data.
     */
     // KDE5: Remove this. This method has nothing to do with *this object.
-    KDE_DEPRECATED Headers::Generic *nextHeader( QByteArray &head );
+    KMIME_DEPRECATED Headers::Generic *nextHeader( QByteArray &head );
 
     /**
       Tries to find a @p type header in the Content and returns it.
@@ -309,7 +309,7 @@ class KMIME_EXPORT Content
       @deprecated Use headerByType( const char * )
     */
     // KDE5: Make non-virtual.
-    KDE_DEPRECATED virtual Headers::Base *getHeaderByType( const char *type );
+    KMIME_DEPRECATED virtual Headers::Base *getHeaderByType( const char *type );
 
     /**
       Returns the first header of type @p type, if it exists.  Otherwise returns 0.
@@ -787,13 +787,13 @@ class KMIME_EXPORT Content
       @param name the header type to find
       @deprecated Use KMime::extractHeader() directly instead.
     */
-    KDE_DEPRECATED QByteArray rawHeader( const char *name ) const;
+    KMIME_DEPRECATED QByteArray rawHeader( const char *name ) const;
 
     /**
       Returns a list of raw strings representing all header of type @p name.
       @deprecated Use KMime::extractHeaders() directly instead.
     */
-    KDE_DEPRECATED QList<QByteArray> rawHeaders( const char *name ) const;
+    KMIME_DEPRECATED QList<QByteArray> rawHeaders( const char *name ) const;
 
     /**
       Returns whether this object holds text content.
@@ -805,7 +805,7 @@ class KMIME_EXPORT Content
       Returns the first header of type T, if it exists.
       @deprecated Use header() instead.
     */
-    template <class T> KDE_DEPRECATED T *headerInstance( T *ptr, bool create );
+    template <class T> KMIME_DEPRECATED T *headerInstance( T *ptr, bool create );
 
     /**
       The list of headers in this Content.
