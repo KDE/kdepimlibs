@@ -32,7 +32,7 @@ endif()
 
 if ( _any_gpgme_found )
 
-   include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
+   include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
 
    add_subdirectory( tests )
 
