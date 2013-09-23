@@ -14,6 +14,10 @@ endif()
 configure_file(imap4-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/imap4-config.h)
 
 include_directories(${imap4_optional_includes} ${Boost_INCLUDE_DIR})
+include_directories(
+  ${CMAKE_BINARY_DIR}/kimap
+  ${CMAKE_BINARY_DIR}/kmime
+)
 
 ########### next target ###############
 

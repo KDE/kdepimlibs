@@ -10,6 +10,7 @@ set(kxmlrpcclient_LIB_SRCS
 )
 
 kde4_add_library(kxmlrpcclient ${LIBRARY_TYPE} ${kxmlrpcclient_LIB_SRCS})
+generate_export_header(kxmlrpcclient)
 
 target_link_libraries(kxmlrpcclient ${KDE4_KIO_LIBS})
 
@@ -24,6 +25,6 @@ install(TARGETS kxmlrpcclient EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 
 install(FILES
   client.h
-  kxmlrpcclient_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kxmlrpcclient_export.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient COMPONENT Devel
 )

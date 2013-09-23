@@ -29,6 +29,8 @@ include(FeatureSummary)
 set(CMAKE_AUTOMOC ON)
 seT(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
+include(GenerateExportHeader)
+
 # Used by options
 include(CMakeDependentOption)
 

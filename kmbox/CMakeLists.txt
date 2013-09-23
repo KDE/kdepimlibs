@@ -12,6 +12,11 @@ set(kmbox_LIB_SRCS
 add_subdirectory(tests)
 
 kde4_add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
+generate_export_header(kmbox)
+
+include_directories(
+  ${CMAKE_BINARY_DIR}/kmime
+)
 
 target_link_libraries(kmbox
   ${KDE4_KDECORE_LIBS}
@@ -26,7 +31,7 @@ set_target_properties(kmbox PROPERTIES
 install(TARGETS kmbox EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  kmbox_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kmbox_export.h
   mbox.h
   mboxentry.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kmbox

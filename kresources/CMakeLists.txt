@@ -26,6 +26,7 @@ qt4_add_dbus_adaptor(kresources_LIB_SRCS
   org.kde.KResourcesManager.xml managerimpl.h KRES::ManagerImpl)
 
 kde4_add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
+generate_export_header(kresources)
 
 target_link_libraries(kresources ${KDE4_KIO_LIBS})
 
@@ -62,7 +63,7 @@ install(FILES
   configwidget.h
   factory.h
   idmapper.h
-  kresources_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kresources_export.h
   kcmkresources_export.h
   manager.h
   managerimpl.h

@@ -2,6 +2,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 include_directories(
   ${Boost_INCLUDE_DIR}
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/kmime
 )
 
 option(MAILTRANSPORT_INPROCESS_SMTP "false" "Use in-process SMTP instead of KIO slaves (note that this changes the mailtransport license from LGPL to GPL!)")
@@ -80,6 +83,7 @@ endif()
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 kde4_add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
+generate_export_header(mailtransport)
 target_link_libraries(mailtransport ${KDE4_KIO_LIBS} akonadi-kde akonadi-kmime kmime)
 if(MAILTRANSPORT_INPROCESS_SMTP)
   target_link_libraries(mailtransport ${SASL2_LIBRARIES} kpimutils)
@@ -104,7 +108,7 @@ if(NOT WINCE)
 endif()
 
 install(FILES
-  mailtransport_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_export.h
 
   transportjob.h
   sendmailjob.h

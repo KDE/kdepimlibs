@@ -1,6 +1,10 @@
 set(kio_ldap_PART_SRCS kio_ldap.cpp)
 
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/kldap
+)
+
 kde4_add_plugin(kio_ldap ${kio_ldap_PART_SRCS})
 
 target_link_libraries(kio_ldap  ${KDE4_KIO_LIBS} kldap)

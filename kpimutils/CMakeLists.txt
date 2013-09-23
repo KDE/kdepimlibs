@@ -6,7 +6,10 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(tests)
 
-include_directories(../kmime)
+include_directories(
+  ../kmime
+  ${CMAKE_CURRENT_BINARY_DIR}/../kmime
+)
 
 set(kpimutils_LIB_SRCS
   email.cpp
@@ -27,6 +30,7 @@ else()
 endif()
 
 kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
+generate_export_header(kpimutils)
 
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KEMOTICONS_LIBS} kmime)
 
@@ -44,7 +48,7 @@ install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 ########### install files ###############
 
 install(FILES
-  kpimutils_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kpimutils_export.h
   email.h
   emailvalidator.h
   linklocator.h

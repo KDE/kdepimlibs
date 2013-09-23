@@ -10,7 +10,12 @@ set(microblog_LIB_SRCS
    statusitem.cpp
    )
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+)
+
 kde4_add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
+generate_export_header(microblog)
 
 target_link_libraries(microblog ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )
 
@@ -20,5 +25,5 @@ install(TARGETS microblog EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 
 install( FILES
          statusitem.h
-         microblog_export.h
+         ${CMAKE_CURRENT_BINARY_DIR}/microblog_export.h
          DESTINATION ${INCLUDE_INSTALL_DIR}/microblog COMPONENT Devel)

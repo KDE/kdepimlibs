@@ -13,10 +13,6 @@ endif()
 
 include (ConfigureChecks.cmake)
 
-#if(KDE4_BUILD_TESTS)
-# add_definitions(-DCOMPILING_TESTS)
-#endif()
-
 include_directories(
   ${LIBICAL_INCLUDE_DIRS}
   ${LIBICAL_INCLUDE_DIRS}/libical
@@ -24,6 +20,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/kabc
   ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kresources
   ${KDE4_INCLUDE_DIR}
 )
 
@@ -104,6 +102,7 @@ endif()
 kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal ${LIBRARY_TYPE} ${kcal_LIB_SRCS})
+generate_export_header(kcal)
 
 target_link_libraries(kcal ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTXML_LIBRARY} kabc kpimutils ${LIBICAL_LIBRARIES})
 target_link_libraries(kcal LINK_INTERFACE_LIBRARIES kabc)
@@ -179,7 +178,7 @@ install( FILES
         incidence.h
         incidenceformatter.h
         journal.h
-        kcal_export.h
+        ${CMAKE_CURRENT_BINARY_DIR}/kcal_export.h
         kcalversion.h
         listbase.h
         period.h

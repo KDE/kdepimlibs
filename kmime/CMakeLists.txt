@@ -29,6 +29,7 @@ set(kmime_LIB_SRCS
 
 
 kde4_add_library(kmime ${LIBRARY_TYPE} ${kmime_LIB_SRCS})
+generate_export_header(kmime)
 
 target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
 
@@ -38,7 +39,7 @@ install(TARGETS kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_
 
 install( FILES
          boolflags.h
-         kmime_export.h
+         ${CMAKE_CURRENT_BINARY_DIR}/kmime_export.h
          kmime_charfreq.h
          kmime_codecs.h
          kmime_content.h

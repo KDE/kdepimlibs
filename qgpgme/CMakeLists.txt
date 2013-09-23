@@ -42,6 +42,7 @@ if ( _any_gpgme_found )
    )
 
    kde4_add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
+   generate_export_header(qgpgme)
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
    if(WINCE)
@@ -56,7 +57,7 @@ if ( _any_gpgme_found )
    install( TARGETS qgpgme EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
    install( FILES
-     qgpgme_export.h
+     ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_export.h
      ${_qgpgme_extra_headers}
      dataprovider.h 
      DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme COMPONENT Devel )
