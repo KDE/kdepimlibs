@@ -47,7 +47,7 @@ namespace KCal {
   This class provides the interfaces for a calendar resource. It makes use of
   the kresources framework.
 */
-class KCAL_EXPORT_DEPRECATED ResourceCalendar : public KRES::Resource
+class KCAL_DEPRECATED_EXPORT ResourceCalendar : public KRES::Resource
 {
   Q_OBJECT
   public:

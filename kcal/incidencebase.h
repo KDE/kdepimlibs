@@ -99,7 +99,7 @@ class FreeBusy;
   and Incidence contains all additional properties that are common to
   Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
-class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
+class KCAL_DEPRECATED_EXPORT IncidenceBase : public CustomProperties
 {
   public:
     /**
@@ -109,7 +109,7 @@ class KCAL_EXPORT_DEPRECATED IncidenceBase : public CustomProperties
       on the concrete types of calendar components, without changing the
       calendar component classes.
     */
-    class KCAL_EXPORT_DEPRECATED Visitor //krazy:exclude=dpointer
+    class KCAL_DEPRECATED_EXPORT Visitor //krazy:exclude=dpointer
     {
       public:
         /** Destruct Incidence::Visitor */

@@ -54,7 +54,7 @@ namespace KCal {
   This class is used to associate files (local or remote) or other resources
   with a Calendar Incidence.
 */
-class KCAL_EXPORT_DEPRECATED Attachment
+class KCAL_DEPRECATED_EXPORT Attachment
 {
   public:
     /**

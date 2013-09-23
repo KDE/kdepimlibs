@@ -48,7 +48,7 @@ class IdMapperPrivate;
   clear, but maps have categories. This is probably an
   adjoint functor, since adjoint functors are everywhere.
 */
-class KRESOURCES_EXPORT_DEPRECATED IdMapper
+class KRESOURCES_DEPRECATED_EXPORT IdMapper
 {
   public:
     /**

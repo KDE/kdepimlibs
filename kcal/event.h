@@ -38,7 +38,7 @@ namespace KCal {
   @brief
   This class provides an Event in the sense of RFC2445.
 */
-class KCAL_EXPORT_DEPRECATED Event : public Incidence
+class KCAL_DEPRECATED_EXPORT Event : public Incidence
 {
   public:
     /**

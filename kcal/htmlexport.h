@@ -41,7 +41,7 @@ class Todo;
 /**
   This class provides the functions to export a calendar as a HTML page.
 */
-class KCAL_EXPORT_DEPRECATED HtmlExport
+class KCAL_DEPRECATED_EXPORT HtmlExport
 {
   public:
     /**

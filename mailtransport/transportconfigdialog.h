@@ -37,7 +37,7 @@ class Transport;
  *
  * @deprecated Use TransportManager::configureTransport() instead.
  */
-class MAILTRANSPORT_EXPORT_DEPRECATED TransportConfigDialog : public KDialog
+class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public KDialog
 {
   Q_OBJECT
 

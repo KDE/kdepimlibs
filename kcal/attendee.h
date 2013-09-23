@@ -55,7 +55,7 @@ namespace KCal {
   (unique identifier) derived from a Calendar Incidence, Email Message,
   or any other thing you want.
 */
-class KCAL_EXPORT_DEPRECATED Attendee : private Person
+class KCAL_DEPRECATED_EXPORT Attendee : private Person
 {
   public:
     using Person::setEmail;

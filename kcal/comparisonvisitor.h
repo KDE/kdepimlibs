@@ -50,7 +50,7 @@ namespace KCal {
 
   @since 4.3
  */
-class KCAL_EXPORT_DEPRECATED ComparisonVisitor : public IncidenceBase::Visitor
+class KCAL_DEPRECATED_EXPORT ComparisonVisitor : public IncidenceBase::Visitor
 {
   public:
     /**

@@ -33,7 +33,7 @@ namespace KCal {
   This class implements the iTIP interface using the email interface specified
   as iMIP.
 */
-class KCAL_EXPORT_DEPRECATED IMIPScheduler : public Scheduler
+class KCAL_DEPRECATED_EXPORT IMIPScheduler : public Scheduler
 {
   public:
     explicit IMIPScheduler( Calendar * );

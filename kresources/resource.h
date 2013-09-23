@@ -72,7 +72,7 @@ class ConfigWidget;
   data. Subclasses of ResourceCalendar would implement this API for local files,
   remote files, specific calendar servers etc.
 */
-class KRESOURCES_EXPORT_DEPRECATED Resource : public QObject
+class KRESOURCES_DEPRECATED_EXPORT Resource : public QObject
 {
     friend class Factory;
     friend class ManagerImpl;
@@ -212,7 +212,7 @@ class KRESOURCES_EXPORT_DEPRECATED Resource : public QObject
     ResourcePrivate *const d;
 };
 
-class KRESOURCES_EXPORT_DEPRECATED PluginFactoryBase : public KPluginFactory
+class KRESOURCES_DEPRECATED_EXPORT PluginFactoryBase : public KPluginFactory
 {
   public:
     explicit PluginFactoryBase( const char *componentName=0,

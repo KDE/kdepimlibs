@@ -43,7 +43,7 @@ typedef SortableList<QTime> TimeList;
 /**
   This class represents a recurrence rule for a calendar incidence.
 */
-class KCAL_EXPORT_DEPRECATED RecurrenceRule
+class KCAL_DEPRECATED_EXPORT RecurrenceRule
 {
   public:
     class RuleObserver

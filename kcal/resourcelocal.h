@@ -43,7 +43,7 @@ namespace KCal {
 /**
   @brief Provides a calendar resource stored as a local file.
 */
-class KCAL_EXPORT_DEPRECATED ResourceLocal : public ResourceCached
+class KCAL_DEPRECATED_EXPORT ResourceLocal : public ResourceCached
 {
     Q_OBJECT
 

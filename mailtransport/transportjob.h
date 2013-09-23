@@ -38,7 +38,7 @@ class Transport;
 
   @deprecated Use MessageQueueJob for sending e-mail.
 */
-class MAILTRANSPORT_EXPORT_DEPRECATED TransportJob : public KCompositeJob
+class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
 {
   friend class TransportManager;
 

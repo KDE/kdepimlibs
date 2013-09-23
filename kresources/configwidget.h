@@ -44,7 +44,7 @@ namespace KRES {
 
   This class provides an abstract base class for configuration dialog.
 */
-class KRESOURCES_EXPORT_DEPRECATED ConfigWidget : public QWidget
+class KRESOURCES_DEPRECATED_EXPORT ConfigWidget : public QWidget
 {
     Q_OBJECT
   public:

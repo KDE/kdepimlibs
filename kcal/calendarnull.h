@@ -45,7 +45,7 @@ namespace KCal {
    pass a CalendarNull object instead of passing a 0 pointer and checking
    for 0 with each access.
 */
-class KCAL_EXPORT_DEPRECATED CalendarNull : public Calendar
+class KCAL_DEPRECATED_EXPORT CalendarNull : public Calendar
 {
   public:
     /**

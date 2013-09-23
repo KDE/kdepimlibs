@@ -40,7 +40,7 @@ class CalFormat;
   @brief
   This class provides a calendar stored as a local file.
 */
-class KCAL_EXPORT_DEPRECATED CalendarLocal : public Calendar
+class KCAL_DEPRECATED_EXPORT CalendarLocal : public Calendar
 {
   public:
     /**

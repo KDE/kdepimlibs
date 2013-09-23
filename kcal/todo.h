@@ -41,7 +41,7 @@ namespace KCal {
   @brief
   Provides a To-do in the sense of RFC2445.
 */
-class KCAL_EXPORT_DEPRECATED Todo : public Incidence
+class KCAL_DEPRECATED_EXPORT Todo : public Incidence
 {
   public:
     /**

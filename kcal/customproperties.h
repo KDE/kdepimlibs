@@ -49,7 +49,7 @@ namespace KCal {
   In keeping with RFC2445, property names must be composed only of the
   characters A-Z, a-z, 0-9 and '-'.
 */
-class KCAL_EXPORT_DEPRECATED CustomProperties
+class KCAL_DEPRECATED_EXPORT CustomProperties
 {
   public:
     /**

@@ -40,7 +40,7 @@ class CalendarLocal;
   This class provides a calendar resource using a local CalendarLocal object to
   cache the calendar data.
 */
-class KCAL_EXPORT_DEPRECATED ResourceCached : public ResourceCalendar,
+class KCAL_DEPRECATED_EXPORT ResourceCached : public ResourceCalendar,
                                               public KCal::Calendar::CalendarObserver
 {
   Q_OBJECT

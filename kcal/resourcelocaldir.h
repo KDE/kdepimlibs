@@ -30,7 +30,7 @@ namespace KCal {
   @brief
   This class provides a calendar stored as a file per incidence in a directory.
 */
-class KCAL_EXPORT_DEPRECATED ResourceLocalDir : public ResourceCached
+class KCAL_DEPRECATED_EXPORT ResourceLocalDir : public ResourceCached
 {
   Q_OBJECT
   friend class ResourceLocalDirConfig;

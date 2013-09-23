@@ -45,7 +45,7 @@ namespace KCal {
   This class represents a person, with a name and an email address.
   It supports the "FirstName LastName\ <mail@domain\>" format.
 */
-class KCAL_EXPORT_DEPRECATED Person
+class KCAL_DEPRECATED_EXPORT Person
 {
   public:
     /**

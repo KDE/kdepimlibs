@@ -56,7 +56,7 @@ namespace CalHelper {
     to the user in their Kolab resource; false otherwise.
     @since 4.4
   */
-  KCAL_EXPORT_DEPRECATED bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
+  KCAL_DEPRECATED_EXPORT bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
 
   /**
     Determine if the specified incidence is likely owned by the user,
@@ -69,7 +69,7 @@ namespace CalHelper {
     to the user; false otherwise.
     @since 4.4
   */
-  KCAL_EXPORT_DEPRECATED bool isMyCalendarIncidence( Calendar *calendar, Incidence *incidence );
+  KCAL_DEPRECATED_EXPORT bool isMyCalendarIncidence( Calendar *calendar, Incidence *incidence );
 
   /**
     Searches for the specified Incidence by UID, returning an Incidence pointer
@@ -82,7 +82,7 @@ namespace CalHelper {
     or the Incidence is found but is not owned by the user.
     @since 4.4
   */
-  KCAL_EXPORT_DEPRECATED Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
+  KCAL_DEPRECATED_EXPORT Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
 
   /**
     Determines if the Calendar is using a Groupware resource type.
@@ -92,7 +92,7 @@ namespace CalHelper {
     false otherwise.
     @since 4.4
   */
-  KCAL_EXPORT_DEPRECATED bool usingGroupware( Calendar *calendar );
+  KCAL_DEPRECATED_EXPORT bool usingGroupware( Calendar *calendar );
 }
 
 }

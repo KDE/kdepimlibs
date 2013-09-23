@@ -49,7 +49,7 @@ namespace KCal {
   seconds or in days. But it does make a difference when a duration is used to
   define a time period encompassing a daylight saving time change.
 */
-class KCAL_EXPORT_DEPRECATED Duration
+class KCAL_DEPRECATED_EXPORT Duration
 {
   public:
     /**

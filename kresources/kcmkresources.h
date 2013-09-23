@@ -29,7 +29,7 @@ namespace KRES {
   class ConfigPage;
 }
 
-class KCM_KRESOURCES_EXPORT_DEPRECATED KCMKResources : public KCModule
+class KCM_KRESOURCES_DEPRECATED_EXPORT KCMKResources : public KCModule
 {
   Q_OBJECT
 

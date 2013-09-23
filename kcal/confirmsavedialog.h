@@ -26,7 +26,7 @@
 
 namespace KCal {
 
-class KCAL_EXPORT_DEPRECATED ConfirmSaveDialog : public KDialog
+class KCAL_DEPRECATED_EXPORT ConfirmSaveDialog : public KDialog
 {
   public:
     ConfirmSaveDialog( const QString &destination, QWidget *parent );
