@@ -28,6 +28,15 @@ include_directories(
   ${CMAKE_BINARY_DIR}/syndication
 )
 
+add_definitions(
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
+
+
 kde4_add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
 generate_export_header(kblog)
 
