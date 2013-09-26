@@ -332,9 +332,21 @@ public:
 
   /**
     * Returns if we're using groupware communication.
+    * Default is false.
     * @see setGroupwareCommuniation()
     */
   bool groupwareCommunication() const;
+
+  /**
+   * Makes modifyIncidence() adjust recurrence parameters when modifying DTSTART.
+   */
+  void setAutoAdjustRecurrence( bool enable );
+
+  /**
+   * True if recurrence parameters are adjusted when modifying DTSTART.
+   * Default is true.
+   */
+  bool autoAdjustRecurrence() const;
 
   /**
     * Returns the collection that the last createIncidence() used.
