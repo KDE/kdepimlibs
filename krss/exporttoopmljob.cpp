@@ -176,4 +176,4 @@ void ExportToOpmlJob::Private::fetchFinished( KJob* j ) {
     q->emitResult();
 }
 
-#include "exporttoopmljob.moc"
+#include "moc_exporttoopmljob.cpp"

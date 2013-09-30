@@ -18,7 +18,7 @@
 #ifndef KRSS_FEEDPROPERTIESCOLLECTIONATTRIBUTE_H
 #define KRSS_FEEDPROPERTIESCOLLECTIONATTRIBUTE_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <akonadi/attribute.h>
 

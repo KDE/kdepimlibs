@@ -23,7 +23,7 @@
 #ifndef KRSS_ITEM_H
 #define KRSS_ITEM_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <akonadi/item.h>
 

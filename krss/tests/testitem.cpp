@@ -21,7 +21,7 @@
  */
 
 #include "testitem.h"
-#include "item.h"
+#include <krss/item.h>
 
 #include <KDateTime>
 

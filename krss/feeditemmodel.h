@@ -23,7 +23,7 @@
 #ifndef KRSS_FEEDITEMMODEL_H
 #define KRSS_FEEDITEMMODEL_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <akonadi/entitytreemodel.h>
 

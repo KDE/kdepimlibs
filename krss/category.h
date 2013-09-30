@@ -23,7 +23,7 @@
 #ifndef KRSS_CATEGORY_H
 #define KRSS_CATEGORY_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <QtCore/QSharedDataPointer>
 

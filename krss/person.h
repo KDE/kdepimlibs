@@ -23,7 +23,7 @@
 #ifndef KRSS_PERSON_H
 #define KRSS_PERSON_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <QtCore/QSharedDataPointer>
 

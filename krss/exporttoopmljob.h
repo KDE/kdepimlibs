@@ -23,13 +23,13 @@
 #ifndef KRSS_EXPORTTOOPMLJOB_H
 #define KRSS_EXPORTTOOPMLJOB_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include "akonadi/collection.h"
 #include <KJob>
 
 namespace KRss {
-  
+
 class KRSS_EXPORT ExportToOpmlJob : public KJob {
     Q_OBJECT
 public:

@@ -2,6 +2,11 @@
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/syndication
+)
+
 add_subdirectory(tests)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -20,16 +25,6 @@ set(krss_LIB_SRCS
    opmlparser.cpp
 )
 
-set(krss_LIB_HDRS
-   krss_export.h
-   enclosure.h
-   person.h
-   category.h
-   feeditemmodel.h
-   item.h
-)
-
-
 kde4_add_library(krss ${LIBRARY_TYPE} ${krss_LIB_SRCS})
 
 target_link_libraries(krss
@@ -40,6 +35,8 @@ target_link_libraries(krss
                       ${KDE4_KIO_LIBS}
 )
 
+generate_export_header(krss)
+
 set_target_properties(krss PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS krss EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -47,7 +44,7 @@ install(TARGETS krss EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_A
 ########### install files ###############
 
 install( FILES
-   krss_export.h
+   ${CMAKE_CURRENT_BINARY_DIR}/krss_export.h
    enclosure.h
    feedcollection.h
    feedpropertiescollectionattribute.h

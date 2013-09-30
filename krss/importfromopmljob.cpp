@@ -260,4 +260,4 @@ void ImportFromOpmlJob::setCreateCollections( bool create ) {
     d->createCollections = create;
 }
 
-#include "importfromopmljob.moc"
+#include "moc_importfromopmljob.cpp"

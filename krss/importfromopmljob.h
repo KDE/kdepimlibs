@@ -23,7 +23,7 @@
 #ifndef KRSS_IMPORTFROMOPMLJOB_H
 #define KRSS_IMPORTFROMOPMLJOB_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include "akonadi/collection.h"
 #include <KJob>

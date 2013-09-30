@@ -18,7 +18,7 @@
 #ifndef KRSS_FEEDCOLLECTION_H
 #define KRSS_FEEDCOLLECTION_H
 
-#include "krss_export.h"
+#include <krss/krss_export.h>
 
 #include <akonadi/collection.h>
 
