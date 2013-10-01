@@ -287,7 +287,7 @@ void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 
     Akonadi::Collection::Id id = items.first().storageCollectionId();
     if ( mPopulatedCollectionIds.contains( id ) ) {
-      // If the collection isn't populated yet, it will be send later
+      // If the collection isn't populated yet, it will be sent later
       // Saves some cpu cycles
       emit q->calendarChanged();
     }
@@ -403,27 +403,33 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
 
 void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
 {
-  Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+  Incidence::Ptr newIncidence = CalendarUtils::incidence( item );
   Q_ASSERT( newIncidence );
   Q_ASSERT( !newIncidence->uid().isEmpty() );
+  newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
   IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
 
+  if ( !existingIncidence && !mItemById.contains( item.id() ) ) {
+    // We don't know about this one because it was discarded, for example because of not having DTSTART
+    return;
+  }
+
+  mItemsByCollection.insert( item.storageCollectionId(), item );
+  Akonadi::Item oldItem = mItemById.value( item.id() );
+
   if ( existingIncidence ) {
-    *(existingIncidence.data()) = *( newIncidence.data() );
-    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
-    mItemsByCollection.insert( item.storageCollectionId(), item );
+    // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
+    Akonadi::Item updatedItem = item;
+    updatedItem.setPayload<KCalCore::Incidence::Ptr>( existingIncidence.staticCast<KCalCore::Incidence>() );
+    mItemById.insert( item.id(), updatedItem ); // The item needs updating too, revision changed.
 
     // Check if RELATED-TO changed, updating parenting information
-    handleParentChanged( existingIncidence.staticCast<KCalCore::Incidence>() );
-
-  } else if ( mItemById.contains( item.id() ) ) {
-    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
-    handleUidChange( item, newIncidence->instanceIdentifier() );
-    existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
-    mItemsByCollection.insert( item.storageCollectionId(), item );
+    handleParentChanged( newIncidence );
+    *(existingIncidence.data()) = *( newIncidence.data() );
   } else {
-    // We don't know about this one because it was discarded, for example because of not having DTSTART
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
+    handleUidChange( oldItem, item, newIncidence->instanceIdentifier() );
   }
 }
 
