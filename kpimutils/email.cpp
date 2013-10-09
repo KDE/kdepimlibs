@@ -325,7 +325,6 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
   // at this point to many @'s cannot bail out right away since
   // @ is allowed in qoutes, so we use a bool to keep track
   // and then make a judgment further down in the parser
-  // FIXME count only @ not in double quotes
 
   bool tooManyAtsFlag = false;
 
@@ -337,9 +336,6 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
   }
 
   int dotCount = aStr.count( QLatin1Char('.'));
-  if (dotCount == 0) {
-      return TooFewDots;
-  }
 
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create

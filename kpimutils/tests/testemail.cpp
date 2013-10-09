@@ -207,10 +207,10 @@ void EMailTest::testIsValidEmailAddress_data()
   QTest::newRow( "27" ) << "matt@jongel.fibbel.com" << AddressOk;
 
   // BUG 98720
-  QTest::newRow( "28" ) << "mailto:@mydomain" << TooFewDots;
+  QTest::newRow( "28" ) << "mailto:@mydomain" << DisallowedChar;
 
   // correct error msg when a comma is inside <>
-  QTest::newRow( "29" ) << "Matt Douhan <matt@fruitsalad,org>" << TooFewDots;
+  QTest::newRow( "29" ) << "Matt Douhan <matt@fruitsalad,org>" << UnexpectedComma;
 
   //several commentlevels
   QTest::newRow( "30" ) << "Matt Douhan (hey(jongel)fibbel) <matt@fruitsalad.org>" << AddressOk;
@@ -298,6 +298,9 @@ void EMailTest::testIsValidEmailAddress_data()
   QTest::newRow( "# in domain" ) << "dm3tt@db0zdf.#rpl.deu.eu" << AddressOk;
   QTest::newRow( "dot at the end" ) << "msadmin@guug.de." << AddressOk;
   QTest::newRow( "dot at the end with brackets" ) << "Martin Schulte <martin.schulte@guug.de.>" << AddressOk;
+
+  //TODO this should be a valid email address, but the checking for missing dots broke it.
+  // QTest::newRow( "valid email address without dots" ) << "user@localhost" << AddressOk;
 }
 
 void EMailTest::testIsValidAddressList()
