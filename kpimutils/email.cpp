@@ -424,13 +424,7 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
           }
           break;
         case '.' :
-          if ( !inQuotedString ) {
-            if ( index == 0 ) {  // Missing local part
-              return MissingLocalPart;
-            } else if ( index == strlen-1 ) {
-              return MissingDomainPart;
-            }
-          } else if ( inQuotedString ) {
+          if ( inQuotedString ) {
             --dotCount;
           }
           break;
@@ -473,6 +467,9 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
         case '@' :
           if ( inQuotedString ) {
             --atCount;
+          }
+          if ( atCount == 1 ) {
+            tooManyAtsFlag = false;
           }
           break;
         case '.' :
