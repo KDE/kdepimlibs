@@ -124,6 +124,14 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(QJSON)
   set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
 
+  if (KDE4_BUILD_TESTS)
+    find_package(Xsltproc)
+    set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
+
+    find_package(LibXml2)
+    set_package_properties(LibXml2 PROPERTIES DESCRIPTION "The LibXML2 library" URL "http://xmlsoft.org" TYPE OPTIONAL PURPOSE "Needed for building the knut Akonadi resource.")
+  endif()
+
 endif()
 
 ############### Needed commands before building anything ###############
