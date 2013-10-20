@@ -20,8 +20,11 @@
 
 #include "unittestbase.h"
 #include "helper.h"
+#include "../fetchjobcalendar.h"
 
+#include <kcalcore/event.h>
 #include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <akonadi/calendar/itiphandler.h>
 
@@ -38,8 +41,6 @@ UnitTestBase::UnitTestBase()
     qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >("QList<Akonadi::IncidenceChanger::ChangeType>");
     qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
-    qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
-
 
     mChanger = new IncidenceChanger(this);
     mChanger->setShowDialogsOnError(false);
@@ -59,6 +60,45 @@ void UnitTestBase::waitForIt()
 void UnitTestBase::stopWaiting()
 {
     QTestEventLoop::instance().exitLoop();
+}
+
+void UnitTestBase::createIncidence(const QString &uid)
+{
+    Item item;
+    item.setMimeType(KCalCore::Event::eventMimeType());
+    KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
+    incidence->setUid(uid);
+    incidence->setDtStart(KDateTime::currentUtcDateTime());
+    incidence->setSummary(QLatin1String("summary"));
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    QVERIFY(mCollection.isValid());
+    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+    QVERIFY(job->exec());
+}
+
+void UnitTestBase::verifyExists(const QString &uid, bool exists)
+{
+    FetchJobCalendar *calendar = new FetchJobCalendar();
+    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+    calendar->deleteLater();
+
+    QCOMPARE(calendar->incidence(uid) != 0, exists);
+}
+
+Akonadi::Item::List UnitTestBase::calendarItems()
+{
+    FetchJobCalendar *calendar = new FetchJobCalendar();
+    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+    calendar->deleteLater();
+    return calendar->items();
+}
+
+void UnitTestBase::onLoadFinished(bool success, const QString &)
+{
+    QVERIFY(success);
+    stopWaiting();
 }
 
 /** static */

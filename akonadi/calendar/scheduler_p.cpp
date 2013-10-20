@@ -36,11 +36,13 @@ struct Akonadi::Scheduler::Private
 {
   public:
     Private( Scheduler *qq ) : mFreeBusyCache( 0 )
+                             , mShowDialogs( true )
                              , q( qq )
     {
     }
 
     FreeBusyCache *mFreeBusyCache;
+    bool mShowDialogs;
     Scheduler *const q;
 };
 
@@ -55,6 +57,11 @@ Scheduler::~Scheduler()
 {
   delete mFormat;
   delete d;
+}
+
+void Scheduler::setShowDialogs( bool enable )
+{
+  d->mShowDialogs = enable;
 }
 
 void Scheduler::setFreeBusyCache( FreeBusyCache *c )
@@ -223,7 +230,10 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           // This isn't an update - the found incidence was modified more recently
           errorString = i18n( "This isn't an update. "
                               "The found incidence was modified more recently." );
-          kWarning() << errorString;
+          kWarning() << errorString
+                     << "; revision=" << existingIncidence->revision()
+                     << "; existing->lastModified=" << existingIncidence->lastModified()
+                     << "; update->lastModified=" << inc->lastModified();
           emit transactionFinished( ResultOutatedUpdate, errorString );
           return;
         }
@@ -255,7 +265,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   // Move the uid to be the schedulingID and make a unique UID
   inc->setSchedulingID( inc->uid(), CalFormat::createUniqueId() );
   // notify the user in case this is an update and we didn't find the to-be-updated incidence
-  if ( existingIncidences.count() == 0 && inc->revision() > 0 ) {
+  if ( d->mShowDialogs && existingIncidences.isEmpty() && inc->revision() > 0 ) {
     KMessageBox::information(
       0,
       i18nc( "@info",
@@ -357,7 +367,7 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
   }
 
   // in case we didn't find the to-be-removed incidence
-  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+  if ( d->mShowDialogs && existingIncidences.count() > 0 && inc->revision() > 0 ) {
     KMessageBox::error(
       0,
       i18nc( "@info",
@@ -506,8 +516,14 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
       incidence->updated();
-      calendar->modifyIncidence( incidence );
-      // success will be emitted in the handleModifyFinished() slot
+      const bool success = calendar->modifyIncidence( incidence );
+
+      if ( !success ) {
+        emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+      } else {
+        // success will be emitted in the handleModifyFinished() slot
+      }
+
       return;
     }
   } else {
@@ -567,6 +583,7 @@ void Scheduler::handleCreateFinished( bool success, const QString &errorMessage 
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
 {
+  kDebug() << "Modification finished. Success=" << success << errorMessage;
   emit transactionFinished( success ? ResultSuccess : ResultModifyingError, errorMessage );
 }
 

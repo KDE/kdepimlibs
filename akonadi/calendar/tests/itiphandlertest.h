@@ -41,6 +41,10 @@ private Q_SLOTS:
     void testProcessITIPMessage_data();
     void testProcessITIPMessage();
 
+    // Tests cenarios where we receive an update from the organizer:
+    void testProcessITIPMessageUpdate_data();
+    void testProcessITIPMessageUpdate();
+
 private:
     void waitForSignals();
 
@@ -48,10 +52,8 @@ public Q_SLOTS:
     void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
                                 const QString &errorMessage);
 
-    void onLoadFinished(bool success, const QString &errorMessage);
 private:
     int m_pendingItipMessageSignal;
-    int m_pendingLoadedSignal;
     Akonadi::ITIPHandler::Result m_expectedResult;
 };
 

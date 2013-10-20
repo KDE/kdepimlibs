@@ -62,6 +62,7 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 ITIPHandler::ITIPHandler( QObject *parent ) : QObject( parent )
                                             , d( new Private( this ) )
 {
+    qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
 }
 
 ITIPHandler::~ITIPHandler()
@@ -73,6 +74,9 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                                       const QString &iCal,
                                       const QString &action )
 {
+  kDebug() << "processiTIPMessage called with receiver=" << receiver
+           << "; action=" << action;
+
   if ( d->m_currentOperation != OperationNone ) {
     kFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
     return;
@@ -89,6 +93,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
 
   if ( d->m_calendarLoadError ) {
     d->m_currentOperation = OperationNone;
+    kError() << "Error loading calendar";
     emitiTipMessageProcessed( this, ResultError, i18n( "Error loading calendar." ) );
     return;
   }
@@ -155,13 +160,17 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-
-    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidence( d->m_incidence->instanceIdentifier() );
+    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidenceFromSchedulingID( d->m_incidence->instanceIdentifier() );
     if ( existingIncidence ) {
       d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     } else {
       // We don't have the incidence, nothing to cancel
+      kWarning() << "Couldn't find the incidence to delete.\n"
+                 << "You deleted it previously or didn't even accept the invitation it in the first place.\n"
+                 << "; uid=" << d->m_incidence->uid()
+                 << "; identifier=" << d->m_incidence->instanceIdentifier()
+                 << "; summary=" << d->m_incidence->summary();
       emitiTipMessageProcessed( this, ResultSuccess, QString() );
     }
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
