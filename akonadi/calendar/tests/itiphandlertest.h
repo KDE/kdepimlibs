@@ -25,6 +25,7 @@
 #include "unittestbase.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QObject>
 #include <QHash>
@@ -37,16 +38,26 @@ class ITIPHandlerTest : public UnitTestBase
 private Q_SLOTS:
     void initTestCase();
 
-    // Tests processing an incoming message
+    void testProcessITIPMessages_data();
+    void testProcessITIPMessages();
+
+    // Deprecated methods, use testProcessITIPMessages() for new stuff
     void testProcessITIPMessage_data();
     void testProcessITIPMessage();
 
-    // Tests cenarios where we receive an update from the organizer:
-    void testProcessITIPMessageUpdate_data();
-    void testProcessITIPMessageUpdate();
+    // Deprecated methods do test CANCEL.
+    void testProcessITIPMessageCancel_data();
+    void testProcessITIPMessageCancel();
 
 private:
     void waitForSignals();
+    void cleanup();
+    void createITIPHandler();
+    QString icalData(const QString &filename);
+    void processItip(const QString &icaldata, const QString &receiver,
+                     const QString &action, int expectedNumIncidences,
+                     Akonadi::Item::List &items);
+    KCalCore::Attendee::Ptr ourAttendee(const KCalCore::Incidence::Ptr &incidence) const;
 
 public Q_SLOTS:
     void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
@@ -55,6 +66,7 @@ public Q_SLOTS:
 private:
     int m_pendingItipMessageSignal;
     Akonadi::ITIPHandler::Result m_expectedResult;
+    Akonadi::ITIPHandler *m_itipHandler;
 };
 
 #endif
