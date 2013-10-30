@@ -199,11 +199,35 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     emitiTipMessageProcessed( this, ResultError, i18n( "Invalid action: %1", action ) );
   }
 
-  if ( d->m_uiDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
-    Akonadi::Item item;
-    item.setMimeType( d->m_incidence->mimeType() );
-    item.setPayload( KCalCore::Incidence::Ptr( d->m_incidence->clone() ) );
-    d->m_uiDelegate->requestIncidenceEditor( item );
+  if ( action.startsWith( QLatin1String( "counter" ) ) ) {
+    if ( d->m_uiDelegate ) {
+      Akonadi::Item item;
+      item.setMimeType( d->m_incidence->mimeType() );
+      item.setPayload( KCalCore::Incidence::Ptr( d->m_incidence->clone() ) );
+
+      // TODO_KDE5: This blocks because m_uiDelegate is not a QObject and can't emit a finished()
+      // signal. Make async in kde5
+      d->m_uiDelegate->requestIncidenceEditor( item );
+      KCalCore::Incidence::Ptr newIncidence;
+      if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+      }
+
+      if ( *newIncidence == *d->m_incidence ) {
+        emitiTipMessageProcessed( this, ResultCancelled, QString() );
+      } else {
+        ITIPHandlerHelper::SendResult result = d->m_helper->sendCounterProposal(d->m_incidence, newIncidence);
+        if ( result != ITIPHandlerHelper::ResultSuccess ) {
+          // It gives success in all paths, this never happens
+          emitiTipMessageProcessed( this, ResultError, i18n( "Error sending counter proposal") );
+          Q_ASSERT( false );
+        }
+      }
+    } else {
+      // This should never happen
+      kWarning() << "No UI delegate is set";
+      emitiTipMessageProcessed( this, ResultError, i18n( "Could not start editor to edit counter proposal" ) );
+    }
   }
 }
 
