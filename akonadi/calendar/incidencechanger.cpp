@@ -140,6 +140,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mBatchOperationInProgress = false;
   mAutoAdjustRecurrence = true;
   m_collectionFetchJob = 0;
+  m_invitationPolicy = InvitationPolicyAsk;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
@@ -418,7 +419,12 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
   bool result = true;
   if ( mGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget );  // TODO make async
-    if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+
+    if ( m_invitationPolicy == InvitationPolicySend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    } else if ( m_invitationPolicy == InvitationPolicyDontSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
+    } else if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
 
@@ -433,14 +439,19 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
           Incidence::Ptr incidence = CalendarUtils::incidence( item );
-          if ( !incidence->supportsGroupwareCommunication() )
+          if ( !incidence->supportsGroupwareCommunication() ) {
             continue;
-          status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
-          if ( change->atomicOperationId ) {
-            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
           }
-          result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
-          //TODO: with some status we want to break immediately
+          // We only send CANCEL if we're the organizer.
+          // If we're not, then we send REPLY with PartStat=Declined in handleInvitationsAfterChange()
+          if ( Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
+            status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
+            if ( change->atomicOperationId ) {
+              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+            }
+            result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
+            //TODO: with some status we want to break immediately
+          }
         }
       }
       break;
@@ -477,6 +488,17 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
 {
   if ( change->useGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
+
+    const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
+    const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
+    if ( alwaysSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    }
+
+    if ( neverSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
+    }
+
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
@@ -540,15 +562,15 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
           Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
           if ( newIncidence->supportsGroupwareCommunication() ) {
-            if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+            if ( !neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
               handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
             }
             const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                         oldIncidence,
                                                                         Akonadi::CalendarUtils::allEmails() );
             ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                              newIncidence,
-                                                                                              attendeeStatusChanged );
+                                                                                         newIncidence,
+                                                                                         attendeeStatusChanged );
 
             if ( change->atomicOperationId != 0 ) {
               mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
@@ -1001,7 +1023,17 @@ void IncidenceChanger::setAutoAdjustRecurrence( bool enable )
 
 bool IncidenceChanger::autoAdjustRecurrence() const
 {
-  return d->mAutoAdjustRecurrence;
+    return d->mAutoAdjustRecurrence;
+}
+
+void IncidenceChanger::setInvitationPolicy( IncidenceChanger::InvitationPolicy policy )
+{
+  d->m_invitationPolicy = policy;
+}
+
+IncidenceChanger::InvitationPolicy IncidenceChanger::invitationPolicy() const
+{
+  return d->m_invitationPolicy;
 }
 
 Akonadi::Collection IncidenceChanger::lastCollectionUsed() const
