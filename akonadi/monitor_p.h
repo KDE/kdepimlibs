@@ -28,61 +28,50 @@
 #include "item.h"
 #include "itemfetchscope.h"
 #include "job.h"
-#include <akonadi/private/notificationmessagev2_p.h>
-#include "entitycache_p.h"
 #include "servermanager.h"
-#include "changenotificationdependenciesfactory_p.h"
-#include "notificationsource_p.h"
+#include "session.h"
+
+#include <akonadi/private/idle_p.h>
 
 #include <kmimetype.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QtCore/QQueue>
 
 namespace Akonadi {
+
+class IdleJob;
 
 class Monitor;
 
 /**
  * @internal
  */
-class AKONADI_TESTS_EXPORT MonitorPrivate
-{
+class AKONADI_TESTS_EXPORT MonitorPrivate{
   public:
-    MonitorPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent );
-    virtual ~MonitorPrivate() {
-      delete dependenciesFactory;
-      delete collectionCache;
-      delete itemCache;
-    }
+    MonitorPrivate( Monitor *parent );
+    virtual ~MonitorPrivate();
+
     void init();
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    ChangeNotificationDependenciesFactory *dependenciesFactory;
-    NotificationSource* notificationSource;
-    Collection::List collections;
-    QSet<QByteArray> resources;
-    QSet<Item::Id> items;
-    QSet<QString> mimetypes;
+
+    IdleJob *idleJob;
     bool monitorAll;
-    QList<QByteArray> sessions;
+    Collection::List monitoredCollections;
+    QSet<Item::Id> monitoredItems;
+    QSet<QByteArray> monitoredResources;
+    QSet<QString> monitoredMimetypes;
+    QMap<Session*, QByteArray> ignoredSessions;
+
+    QQueue<IdleNotification> pendingNotifications;
+
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
     bool mFetchChangedOnly;
     Session *session;
-    CollectionCache *collectionCache;
-    ItemListCache *itemCache;
-
-    // The waiting list
-    QQueue<NotificationMessageV2> pendingNotifications;
-    // The messages for which data is currently being fetched
-    QQueue<NotificationMessageV2> pipeline;
-    // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
-    // The ordering [ pipeline ] [ pendingNotifications ] is kept at all times.
-    // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
-    // In a ChangeRecorder, the pipeline contains one item only, and not dequeued yet.
-    // [] [A B C] -> [A] [A B C] -> [] [A B C] -> (changeProcessed) [] [B C] -> [B] [B C] etc...
 
     bool fetchCollection;
     bool fetchCollectionStatistics;
@@ -92,71 +81,40 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     virtual void notificationsEnqueued( int ) {}
     virtual void notificationsErased() {}
 
-    // Virtual so it can be overridden in FakeMonitor.
-    virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessageV2 &msg ) const;
-    void dispatchNotifications();
-    void flushPipeline();
 
-    // Called when the monitored item/collection changes, checks if the queued messages
-    // are still accepted, if not they are removed
-    void cleanOldNotifications();
+    virtual void slotNotify( const Akonadi::IdleNotification &notification );
 
-    bool ensureDataAvailable( const NotificationMessageV2 &msg );
     /**
      * Sends out the change notification @p msg.
      * @param msg the change notification to send
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    virtual bool emitNotification( const NotificationMessageV2 &msg );
-    void updatePendingStatistics( const NotificationMessageV2 &msg );
-    void invalidateCaches( const NotificationMessageV2 &msg );
+    //virtual bool emitNotification( const NotificationMessageV2 &msg );
+    void updatePendingStatistics( const IdleNotification &msg );
+    void invalidateCaches( const IdleNotification &msg );
 
     /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
         needed to avoid the missing RID race on change replay.
     */
-    void invalidateCache( const Collection &col );
+    //void invalidateCache( const Collection &col );
 
-    /// Virtual so that ChangeRecorder can set it to 0 and handle the pipeline itself
-    virtual int pipelineSize() const;
 
     // private slots
-    void dataAvailable();
-    void slotSessionDestroyed( QObject* );
+    //void dataAvailable();
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
-
-    /**
-      Returns whether a message was appended to @p notificationQueue
-    */
-    int translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  );
-
-    virtual void slotNotify( const NotificationMessageV2::List &msgs );
+    void slotSessionDestroyed( QObject *session );
 
     /**
      * Sends out a change notification for an item.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitItemsNotification( const NotificationMessageV2 &msg, const Item::List &items = Item::List(),
-                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
+    bool emitItemsNotification( const IdleNotification& msg );
     /**
      * Sends out a change notification for a collection.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitCollectionNotification( const NotificationMessageV2 &msg, const Collection &col = Collection(),
-                                     const Collection &par = Collection(), const Collection &dest = Collection() );
-
-    void serverStateChanged( Akonadi::ServerManager::State state );
-
-    /**
-     * This method is called by the ChangeMediator to enforce an invalidation of the passed collection.
-     */
-    void invalidateCollectionCache( qint64 collectionId );
-
-    /**
-     * This method is called by the ChangeMediator to enforce an invalidation of the passed item.
-     */
-    void invalidateItemCache( qint64 itemId );
+    bool emitCollectionNotification( const IdleNotification &msg );
 
     /**
       @brief Class used to determine when to purge items in a Collection
@@ -169,6 +127,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       and to ensure that one Collection does not appear twice in the buffer.
 
       Check whether a Collection is buffered using the isBuffered method.
+
+      TODO: Maybe move the PurgeBuffer out of Monitor?
     */
     class PurgeBuffer
     {
@@ -213,51 +173,21 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
-    bool isLazilyIgnored( const NotificationMessageV2 & msg, bool allowModifyFlagsConversion = false ) const;
+    /*
+    bool isLazilyIgnored( Idle::Type type, Idle::Operation operation,
+                          const Collection &parentCollection,
+                          const Collection &parentDestCollection,
+                          bool allowModifyFlagsConversion = false ) const;
+    */
 
     /**
       Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
       listener that does not support batch operations. Sets @p batchSupported to True when
       there's at least one listener that supports batch operations.
     */
-    void checkBatchSupport( const NotificationMessageV2 &msg, bool &needsSplit, bool &batchSupported ) const;
+    void checkBatchSupport( const IdleNotification &msg, bool &needsSplit, bool &batchSupported ) const;
 
-    NotificationMessageV2::List splitMessage( const NotificationMessageV2 &msg, bool legacy ) const;
-
-    bool isCollectionMonitored( Collection::Id collection ) const
-    {
-      if (collection < 0)
-        return false;
-      if ( collections.contains( Collection( collection ) ) )
-        return true;
-      if ( collections.contains( Collection::root() ) )
-        return true;
-      return false;
-    }
-
-    bool isMimeTypeMonitored( const QString& mimetype ) const
-    {
-      if ( mimetypes.contains( mimetype ) )
-        return true;
-
-      KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
-      if ( mimeType.isNull() )
-        return false;
-
-      foreach ( const QString &mt, mimetypes ) {
-        if ( mimeType->is( mt ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const
-    {
-      if ( msg.operation() != NotificationMessageV2::Move )
-        return false;
-      return resources.contains( msg.destinationResource() );
-    }
+    QList<IdleNotification> splitMessage( const IdleNotification &msg, bool legacy ) const;
 
     void fetchStatistics( Collection::Id colId )
     {

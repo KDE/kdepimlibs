@@ -33,6 +33,7 @@ class Item;
 class ItemFetchScope;
 class MonitorPrivate;
 class Session;
+class IdleNotification;
 
 /**
  * @short Monitors an item or collection for changes.
@@ -302,17 +303,22 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
      * Sets the session used by the Monitor to communicate with the %Akonadi server.
      * If not set, the Akonadi::Session::defaultSession is used.
+     *
+     * @warning This method is deprecated as of 4.12 and the session is ignored.
+     *
      * @param session the session to be set
      * @since 4.4
      */
-    void setSession( Akonadi::Session *session );
+    AKONADI_DEPRECATED void setSession( Akonadi::Session *session );
 
     /**
      * Returns the Session used by the monitor to communicate with Akonadi.
      *
+     * @warning This method is deprecated as of 4.12 and always returns a null pointer
+     *
      * @since 4.4
      */
-    Session* session() const;
+    AKONADI_DEPRECATED Session* session() const;
 
     /**
      * Allows to enable/disable collection move translation. If enabled (the default), move
@@ -562,14 +568,10 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_DECLARE_PRIVATE( Monitor )
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV2::List& ) )
-    Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
-    Q_PRIVATE_SLOT( d_ptr, void serverStateChanged( Akonadi::ServerManager::State ) )
-    Q_PRIVATE_SLOT( d_ptr, void invalidateCollectionCache( qint64 ) )
-    Q_PRIVATE_SLOT( d_ptr, void invalidateItemCache( qint64 ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject *session ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const IdleNotification &notification ) )
 
     friend class ResourceBasePrivate;
     //@endcond

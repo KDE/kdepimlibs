@@ -20,10 +20,10 @@
 #include "monitor.h"
 #include "monitor_p.h"
 
-#include "changemediator_p.h"
 #include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "session.h"
+#include "idlejob_p.h"
 
 #include <kdebug.h>
 
@@ -38,10 +38,9 @@ using namespace Akonadi;
 
 Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
-    d_ptr( new MonitorPrivate( 0, this ) )
+    d_ptr( new MonitorPrivate( this ) )
 {
   d_ptr->init();
-  d_ptr->connectToNotificationManager();
 }
 
 //@cond PRIVATE
@@ -50,34 +49,27 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
     d_ptr( d )
 {
   d_ptr->init();
-  d_ptr->connectToNotificationManager();
-
-  ChangeMediator::registerMonitor(this);
 }
 //@endcond
 
 Monitor::~Monitor()
 {
-  ChangeMediator::unregisterMonitor(this);
-
   delete d_ptr;
 }
 
 void Monitor::setCollectionMonitored( const Collection &collection, bool monitored )
 {
   Q_D( Monitor );
-  if ( !d->collections.contains( collection ) && monitored ) {
-    d->collections << collection;
-    if ( d->notificationSource ) {
-      d->notificationSource->setMonitoredCollection( collection.id(), true );
-    }
-  } else if ( !monitored ) {
-    if ( d->collections.removeAll( collection ) ) {
-      d->cleanOldNotifications();
-      if ( d->notificationSource ) {
-        d->notificationSource->setMonitoredCollection( collection.id(), false );
-      }
-    }
+  if ( !collection.isValid() ) {
+    return;
+  }
+
+  if ( monitored ) {
+    d->idleJob->addMonitoredCollection( collection );
+    d->monitoredCollections << collection;
+  } else {
+    d->idleJob->removeMonitoredCollection( collection );
+    d->monitoredCollections.removeAll( collection );
   }
 
   emit collectionMonitored( collection, monitored );
@@ -86,18 +78,16 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
 void Monitor::setItemMonitored( const Item &item, bool monitored )
 {
   Q_D( Monitor );
-  if ( !d->items.contains( item.id() ) && monitored ) {
-    d->items.insert( item.id() );
-    if ( d->notificationSource ) {
-      d->notificationSource->setMonitoredItem( item.id(), true );
-    }
-  } else if ( !monitored ) {
-    if ( d->items.remove( item.id() ) ) {
-      d->cleanOldNotifications();
-      if ( d->notificationSource ) {
-        d->notificationSource->setMonitoredItem( item.id(), false );
-      }
-    }
+  if ( !item.isValid() ) {
+    return;
+  }
+
+  if ( monitored ) {
+    d->idleJob->addMonitoredItem( item.id() );
+    d->monitoredItems.insert( item.id() );
+  } else {
+    d->idleJob->removeMonitoredItem( item.id() );
+    d->monitoredItems.remove( item.id() );
   }
 
   emit itemMonitored( item,  monitored );
@@ -106,38 +96,28 @@ void Monitor::setItemMonitored( const Item &item, bool monitored )
 void Monitor::setResourceMonitored( const QByteArray &resource, bool monitored )
 {
   Q_D( Monitor );
-  if ( !d->resources.contains( resource) && monitored ) {
-    d->resources.insert( resource );
-    if ( d->notificationSource ) {
-      d->notificationSource->setMonitoredResource( resource, true );
-    }
-  } else if ( !monitored ) {
-    if ( d->resources.remove( resource ) ) {
-      d->cleanOldNotifications();
-      if ( d->notificationSource ) {
-        d->notificationSource->setMonitoredResource( resource, false );
-      }
-    }
+
+  if ( monitored ) {
+    d->idleJob->addMonitoredResource( resource );
+    d->monitoredResources.insert( resource );
+  } else {
+    d->idleJob->removeMonitoredResource( resource );
+    d->monitoredResources.remove( resource );
   }
 
   emit resourceMonitored( resource, monitored );
 }
 
-void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
+void Monitor::setMimeTypeMonitored( const QString &mimetype, bool monitored )
 {
   Q_D( Monitor );
-  if ( !d->mimetypes.contains( mimetype ) && monitored ) {
-    d->mimetypes.insert( mimetype );
-    if ( d->notificationSource ) {
-      d->notificationSource->setMonitoredMimeType( mimetype, true );
-    }
-  } else if ( !monitored ) {
-    if ( d->mimetypes.remove( mimetype ) ) {
-      d->cleanOldNotifications();
-      if ( d->notificationSource ) {
-        d->notificationSource->setMonitoredMimeType( mimetype, false );
-      }
-    }
+
+  if ( monitored ) {
+    d->idleJob->addMonitoredMimeType( mimetype );
+    d->monitoredMimetypes.insert( mimetype );
+  } else {
+    d->idleJob->removeMonitoredMimeType( mimetype );
+    d->monitoredMimetypes.remove( mimetype );
   }
 
   emit mimeTypeMonitored( mimetype, monitored );
@@ -146,20 +126,8 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
   Q_D( Monitor );
-  if ( d->monitorAll == monitored ) {
-    return;
-  }
 
-  d->monitorAll = monitored;
-
-  if ( !monitored ) {
-    d->cleanOldNotifications();
-  }
-
-  if ( d->notificationSource ) {
-    d->notificationSource->setAllMonitored( monitored );
-  }
-
+  d->idleJob->setAllMonitored( monitored );
   emit allMonitored( monitored );
 }
 
@@ -167,13 +135,9 @@ void Monitor::ignoreSession( Session * session )
 {
   Q_D( Monitor );
 
-  if ( !d->sessions.contains( session->sessionId() )) {
-    d->sessions << session->sessionId();
-    connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
-    if ( d->notificationSource ) {
-      d->notificationSource->setIgnoredSession( session->sessionId(), true );
-    }
-  }
+  d->idleJob->addIgnoredSession( session->sessionId() );
+  d->ignoredSessions.insert( session, session->sessionId() );
+  connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
 }
 
 void Monitor::fetchCollection( bool enable )
@@ -221,34 +185,34 @@ CollectionFetchScope& Monitor::collectionFetchScope()
 Akonadi::Collection::List Monitor::collectionsMonitored() const
 {
   Q_D( const Monitor );
-  return d->collections;
+  return d->monitoredCollections;
 }
 
 QList<Item::Id> Monitor::itemsMonitored() const
 {
   Q_D( const Monitor );
-  return d->items.toList();
+  return d->monitoredItems.toList();
 }
 
 QVector<Item::Id> Monitor::itemsMonitoredEx() const
 {
   Q_D( const Monitor );
   QVector<Item::Id> result;
-  result.reserve( d->items.size() );
-  qCopy( d->items.begin(), d->items.end(), std::back_inserter( result ) );
+  result.reserve( d->monitoredItems.size() );
+  qCopy( d->monitoredItems.begin(), d->monitoredItems.end(), std::back_inserter( result ) );
   return result;
 }
 
 QStringList Monitor::mimeTypesMonitored() const
 {
   Q_D( const Monitor );
-  return d->mimetypes.toList();
+  return d->monitoredMimetypes.toList();
 }
 
 QList<QByteArray> Monitor::resourcesMonitored() const
 {
   Q_D( const Monitor );
-  return d->resources.toList();
+  return d->monitoredResources.toList();
 }
 
 bool Monitor::isAllMonitored() const
@@ -257,25 +221,15 @@ bool Monitor::isAllMonitored() const
   return d->monitorAll;
 }
 
+// TODO Remove in KF5
 void Monitor::setSession( Akonadi::Session *session )
 {
-  Q_D( Monitor );
-  if (session == d->session)
-    return;
-
-  if (!session)
-    d->session = Session::defaultSession();
-  else
-    d->session = session;
-
-  d->itemCache->setSession(d->session);
-  d->collectionCache->setSession(d->session);
+  Q_UNUSED( session );
 }
 
 Session* Monitor::session() const
 {
-  Q_D( const Monitor );
-  return d->session;
+  return 0L;
 }
 
 void Monitor::setCollectionMoveTranslationEnabled( bool enabled )
