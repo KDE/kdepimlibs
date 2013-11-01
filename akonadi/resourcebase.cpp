@@ -42,8 +42,8 @@
 #include "itemmodifyjob_p.h"
 #include "session.h"
 #include "resourceselectjob_p.h"
-#include "monitor_p.h"
 #include "servermanager_p.h"
+#include "servermanager.h"
 #include "recursivemover_p.h"
 
 #include <kaboutdata.h>
@@ -687,9 +687,9 @@ void ResourceBase::changeCommitted( const Collection &collection )
 void ResourceBasePrivate::changeCommittedResult( KJob *job )
 {
   Q_Q( ResourceBase );
-  if ( job->error() )
+  if ( job->error() ) {
     emit q->error( i18nc( "@info", "Updating local collection failed: %1.", job->errorText() ) );
-  mChangeRecorder->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
+  }
   changeProcessed();
 }
 
