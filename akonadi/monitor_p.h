@@ -187,7 +187,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate{
     */
     void checkBatchSupport( const IdleNotification &msg, bool &needsSplit, bool &batchSupported ) const;
 
-    QList<IdleNotification> splitMessage( const IdleNotification &msg, bool legacy ) const;
+    QList<IdleNotification> splitNotification( const IdleNotification &msg, bool legacy ) const;
 
     void fetchStatistics( Collection::Id colId )
     {

@@ -77,9 +77,30 @@ void MonitorPrivate::init()
 
 void MonitorPrivate::slotNotify( const IdleNotification &notification )
 {
-  emitItemsNotification( notification );
-}
+  bool needsSplit = false, batchSupported = false;
 
+  checkBatchSupport( notification, needsSplit, batchSupported );
+
+  QList<IdleNotification> notifications;
+  if ( needsSplit ) {
+    notifications = splitNotification( notification, false );
+  }
+
+  if ( batchSupported ) {
+    notifications << notification;
+  }
+
+  Q_FOREACH ( const IdleNotification &notification, notifications ) {
+    // TODO: What about calling this via QTimer::singleShot() - would that improve
+    // responsiveness of apps during high-load?
+
+    if ( notification.type() == Idle::Item ) {
+      emitItemsNotification( notification );
+    } else {
+      emitCollectionNotification( notification );
+    }
+  }
+}
 
 void MonitorPrivate::checkBatchSupport(const IdleNotification& msg, bool &needsSplit, bool &batchSupported) const
 {
@@ -127,7 +148,7 @@ void MonitorPrivate::checkBatchSupport(const IdleNotification& msg, bool &needsS
   }
 }
 
-QList<IdleNotification> MonitorPrivate::splitMessage(const IdleNotification& msg, bool legacy) const
+QList<IdleNotification> MonitorPrivate::splitNotification(const IdleNotification& msg, bool legacy) const
 {
   QList<IdleNotification> list;
 
