@@ -38,6 +38,12 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
+#ifdef PLEASE_TEST_INVITATIONS
+# define RUNNING_UNIT_TESTS true
+#else
+# define RUNNING_UNIT_TESTS false
+#endif
+
 ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result )
 {
   //enum SendResult {
@@ -457,23 +463,41 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
-          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+        if ( change->originalItems.isEmpty() ) {
+          break;
+        }
 
-          if ( oldIncidence->supportsGroupwareCommunication() ) {
-            const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-            if ( !modify ) {
-              if ( newIncidence->type() == oldIncidence->type() ) {
-                IncidenceBase *i1 = newIncidence.data();
-                IncidenceBase *i2 = oldIncidence.data();
-                *i1 = *i2;
-              }
-              result = false;
-            }
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !oldIncidence->supportsGroupwareCommunication() ) {
+          break;
+        }
+
+        const bool weAreOrganizer = Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() );
+        if (RUNNING_UNIT_TESTS && !weAreOrganizer ) {
+          // This is a bit of a workaround when running tests. I don't want to show the
+          // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
+          // to emulate a "yes" and a "no" press.
+          if ( m_invitationPolicy == InvitationPolicySend ) {
+            return true;
+          } else if (m_invitationPolicy == InvitationPolicyDontSend) {
+            return false;
           }
         }
+
+        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+        if ( modify ) {
+          break;
+        }
+
+        if ( newIncidence->type() == oldIncidence->type() ) {
+          IncidenceBase *i1 = newIncidence.data();
+          IncidenceBase *i2 = oldIncidence.data();
+          *i1 = *i2;
+        }
+        result = false;
       }
       break;
       default:
@@ -557,25 +581,34 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
-          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
-          if ( newIncidence->supportsGroupwareCommunication() ) {
-            if ( !neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
-              handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
-            }
-            const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
-                                                                        oldIncidence,
-                                                                        Akonadi::CalendarUtils::allEmails() );
-            ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                         newIncidence,
-                                                                                         attendeeStatusChanged );
+        if ( change->originalItems.isEmpty() ) {
+          break;
+        }
 
-            if ( change->atomicOperationId != 0 ) {
-              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
-            }
-          }
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !newIncidence->supportsGroupwareCommunication() ||
+             !Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() ) ) {
+          // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
+          break;
+        }
+
+        if ( !neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+          handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+        }
+
+        const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                    oldIncidence,
+                                                                    Akonadi::CalendarUtils::allEmails() );
+
+        ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                     newIncidence,
+                                                                                     attendeeStatusChanged );
+
+        if ( change->atomicOperationId != 0 ) {
+          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
         }
       }
       break;
@@ -850,7 +883,13 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     return;
   }
 
-  handleInvitationsBeforeChange( change );
+  const bool userCancelled = !handleInvitationsBeforeChange( change );
+  if ( userCancelled ) {
+    // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
+    kDebug() << "User cancelled, giving up";
+    emitModifyFinished( q, changeId, newItem, ResultCodeUserCanceled, QString() );
+    return;
+  }
 
   QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
                                                  ConflictPreventer::self()->mLatestRevisionByItemId;
