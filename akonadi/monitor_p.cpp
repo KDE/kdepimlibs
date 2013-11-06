@@ -80,13 +80,14 @@ void MonitorPrivate::slotNotify( const IdleNotification &notification )
   bool needsSplit = false, batchSupported = false;
 
   checkBatchSupport( notification, needsSplit, batchSupported );
+  kDebug() << needsSplit << batchSupported;
 
   QList<IdleNotification> notifications;
   if ( needsSplit ) {
     notifications = splitNotification( notification, false );
   }
 
-  if ( batchSupported ) {
+  if ( !needsSplit || batchSupported ) {
     notifications << notification;
   }
 
@@ -154,6 +155,10 @@ QList<IdleNotification> MonitorPrivate::splitNotification(const IdleNotification
 
   IdleNotification baseMsg = msg;
   baseMsg.setItems( QList<Item>() );
+  if ( msg.operation() == Idle::ModifyFlags ) {
+    baseMsg.setOperation( Idle::Modify );
+    baseMsg.setChangedParts( QSet<QByteArray>() << "FLAGS" );
+  }
 
   Q_FOREACH( const Item &item, msg.items() ) {
     IdleNotification copy = baseMsg;
@@ -353,6 +358,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 
 bool MonitorPrivate::emitItemsNotification( const IdleNotification &msg )
 {
+  kDebug() << msg.type() << msg.operation();
   bool handled = false;
   switch ( msg.operation() ) {
     case Idle::Add:
