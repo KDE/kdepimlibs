@@ -22,6 +22,7 @@
 
 #include <akonadi/monitor.h>
 
+class KJob;
 class QSettings;
 
 namespace Akonadi {
@@ -116,6 +117,8 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( ChangeRecorder )
     //@endcond
+
+    Q_PRIVATE_SLOT( d_func(), void legacyNotificationsItemsFetched( KJob *job ) );
 };
 
 }

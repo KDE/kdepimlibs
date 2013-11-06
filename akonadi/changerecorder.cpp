@@ -26,7 +26,7 @@
 using namespace Akonadi;
 
 ChangeRecorder::ChangeRecorder( QObject * parent ) :
-    Monitor( new ChangeRecorderPrivate( 0, this ), parent )
+    Monitor( new ChangeRecorderPrivate( this ), parent )
 {
 }
 
@@ -57,6 +57,7 @@ void ChangeRecorder::replayNext()
 {
   Q_D( ChangeRecorder );
 
+  /*
   if ( !d->enableChangeRecording )
     return;
 
@@ -80,6 +81,7 @@ void ChangeRecorder::replayNext()
     // will be stuck forever in the ResourceScheduler.
     emit nothingToReplay();
   }
+  */
 }
 
 bool ChangeRecorder::isEmpty() const
@@ -105,6 +107,7 @@ void ChangeRecorder::changeProcessed()
 void ChangeRecorder::setChangeRecordingEnabled( bool enable )
 {
   Q_D( ChangeRecorder );
+  /*
   if ( d->enableChangeRecording == enable ) {
     return;
   }
@@ -115,6 +118,7 @@ void ChangeRecorder::setChangeRecordingEnabled( bool enable )
   } else {
     d->dispatchNotifications();
   }
+  */
 }
 
 QString Akonadi::ChangeRecorder::dumpNotificationListToString() const
@@ -123,3 +127,4 @@ QString Akonadi::ChangeRecorder::dumpNotificationListToString() const
   return d->dumpNotificationListToString();
 }
 
+#include "moc_changerecorder.cpp"

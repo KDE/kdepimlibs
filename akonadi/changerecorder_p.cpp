@@ -18,50 +18,51 @@
 */
 
 #include "changerecorder_p.h"
+#include "idlejob_p.h"
+#include "itemfetchjob.h"
+#include "protocolhelper_p.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
+#include <akonadi/private/notificationmessagev2_p.h>
+#include <boost/iterator/iterator_concepts.hpp>
 
 using namespace Akonadi;
 
-ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
-                                             ChangeRecorder *parent)
-  : MonitorPrivate( dependenciesFactory_, parent ),
-     settings( 0 ),
-     enableChangeRecording( true ),
+ChangeRecorderPrivate::ChangeRecorderPrivate( ChangeRecorder *parent )
+  : MonitorPrivate( parent ),
+    settings( 0 ),
+    enableChangeRecording( true ),
     m_lastKnownNotificationsCount( 0 ),
     m_startOffset( 0 ),
-    m_needFullSave( true )
+    m_needFullSave( true ),
+    m_fetchingLegacyNotifications( false )
 {
 }
 
-int ChangeRecorderPrivate::pipelineSize() const
-{
-  if ( enableChangeRecording )
-    return 0; // we fill the pipeline ourselves when using change recording
-  return MonitorPrivate::pipelineSize();
-}
-
-void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
+void ChangeRecorderPrivate::slotNotify( const Akonadi::IdleNotification &notification )
 {
   Q_Q( ChangeRecorder );
   const int oldChanges = pendingNotifications.size();
   // with change recording disabled this will automatically take care of dispatching notification messages and saving
-  MonitorPrivate::slotNotify( msgs );
+  MonitorPrivate::slotNotify( notification );
   if ( enableChangeRecording && pendingNotifications.size() != oldChanges ) {
     emit q->changesAdded();
   }
 }
 
-bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessageV2 &msg)
+/*
+bool ChangeRecorderPrivate::emitNotification( const Akonadi::IdleNotification &notification )
 {
-  const bool someoneWasListening = MonitorPrivate::emitNotification( msg );
-  if ( !someoneWasListening && enableChangeRecording )
+  const bool someoneWasListening = MonitorPrivate::emitNotification( notification );
+  if ( !someoneWasListening && enableChangeRecording ) {
     QMetaObject::invokeMethod( q_ptr, "replayNext", Qt::QueuedConnection ); // skip notifications no one was listening to
+  }
   return someoneWasListening;
 }
+*/
 
 // The QSettings object isn't actually used anymore, except for migrating old data
 // and it gives us the base of the filename to use. This is all historical.
@@ -72,82 +73,80 @@ QString ChangeRecorderPrivate::notificationsFileName() const
 
 void ChangeRecorderPrivate::loadNotifications()
 {
-    pendingNotifications.clear();
-    Q_ASSERT(pipeline.isEmpty());
-    pipeline.clear();
+  pendingNotifications.clear();
 
-    const QString changesFileName = notificationsFileName();
+  const QString changesFileName = notificationsFileName();
 
-    /**
-     * In an older version we recorded changes inside the settings object, however
-     * for performance reasons we changed that to store them in a separated file.
-     * If this file doesn't exists, it means we run the new version the first time,
-     * so we have to read in the legacy list of changes first.
-     */
-    if ( !QFile::exists( changesFileName ) ) {
-      QStringList list;
-      settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
-      const int size = settings->beginReadArray( QLatin1String( "change" ) );
-
-      for ( int i = 0; i < size; ++i ) {
-        settings->setArrayIndex( i );
-        NotificationMessageV2 msg;
-        msg.setSessionId( settings->value( QLatin1String( "sessionId" ) ).toByteArray() );
-        msg.setType( (NotificationMessageV2::Type)settings->value( QLatin1String( "type" ) ).toInt() );
-        msg.setOperation( (NotificationMessageV2::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
-        msg.addEntity( settings->value( QLatin1String( "uid" ) ).toLongLong(),
-                       settings->value( QLatin1String( "rid" ) ).toString(),
-                       QString(),
-                       settings->value( QLatin1String( "mimeType" ) ).toString() );
-        msg.setResource( settings->value( QLatin1String( "resource" ) ).toByteArray() );
-        msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
-        msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() );
-        list = settings->value( QLatin1String( "itemParts" ) ).toStringList();
-        QSet<QByteArray> itemParts;
-        Q_FOREACH( const QString &entry, list )
-          itemParts.insert( entry.toLatin1() );
-        msg.setItemParts( itemParts );
-        pendingNotifications << msg;
-      }
-
-      settings->endArray();
-
-      // save notifications to the new file...
-      saveNotifications();
-
-      // ...delete the legacy list...
-      settings->remove( QString() );
-      settings->endGroup();
-
-      // ...and continue as usually
-    }
-
+  /**
+    * In an older version we recorded changes inside the settings object, however
+    * for performance reasons we changed that to store them in a separated file.
+    * If this file doesn't exists, it means we run the new version the first time,
+    * so we have to read in the legacy list of changes first.
+    */
+  if ( !QFile::exists( changesFileName ) ) {
+    pendingNotifications = loadFromSettingsFile( settings );
+  } else {
     QFile file( changesFileName );
     if ( file.open( QIODevice::ReadOnly ) ) {
       m_needFullSave = false;
-      pendingNotifications = loadFrom( &file );
+      pendingNotifications = loadFromFile( &file );
     } else {
       m_needFullSave = true;
     }
+  }
+
+  if ( m_missingLegacyNotifications.isEmpty() ) {
     notificationsLoaded();
+  } else {
+    fetchItemsForLegacyNotifications( m_missingLegacyNotifications.keys() );
+  }
 }
+
+void ChangeRecorderPrivate::fetchItemsForLegacyNotifications( const QList< Entity::Id > &ids )
+{
+  Q_Q( ChangeRecorder );
+  ItemFetchJob *fetchJob = new ItemFetchJob( ids, q );
+  fetchJob->fetchScope().fetchFullPayload();
+  fetchJob->fetchScope().fetchAllAttributes();
+  QObject::connect( fetchJob, SIGNAL(finished(KJob*)),
+                    q_ptr, SLOT(legacyNotificationsItemsFetched(KJob*)) );
+}
+
+void ChangeRecorderPrivate::legacyNotificationsItemsFetched( KJob* job )
+{
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  Item::List items = fetchJob->items();
+
+  for ( int i = 0; i < items.count(); ++i ) {
+    const Item item = items.at( i );
+    IdleNotification ntf = m_missingLegacyNotifications.take( item.id() );
+    ntf.addItem( item );
+
+    // Replace the placeholder notification with the real one
+    pendingNotifications.replace( i, ntf );
+  }
+
+  m_missingLegacyNotifications.clear();
+  notificationsLoaded();
+}
+
 
 static const quint64 s_currentVersion = Q_UINT64_C(0x000200000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
+QQueue<IdleNotification> ChangeRecorderPrivate::loadFromFile( QIODevice *device )
 {
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  QByteArray sessionId, resource, destinationResource;
-  int type, operation, entityCnt;
-  quint64 uid, parentCollection, parentDestCollection;
-  QString remoteId, mimeType, remoteRevision;
-  QSet<QByteArray> itemParts, addedFlags, removedFlags;
+  QQueue<IdleNotification> list;
 
-  QQueue<NotificationMessageV2> list;
+  int operation, type;
+  Entity::Id collection, destinationCollection;
+  QByteArray resource, destinationResource;
+  QList<QByteArray> addedFlags, removedFlags, changedParts;
+  QList<Entity::Id> itemsIds;
 
   quint64 sizeAndVersion;
   stream >> sizeAndVersion;
@@ -165,74 +164,187 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
   m_needFullSave = startOffset > 0 || version == 0;
 
   for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
-    NotificationMessageV2 msg;
+    QQueue<IdleNotification> ntfs;
 
-    if ( version == 1 ) {
-      stream >> sessionId;
-      stream >> type;
-      stream >> operation;
-      stream >> uid;
-      stream >> remoteId;
-      stream >> resource;
-      stream >> parentCollection;
-      stream >> parentDestCollection;
-      stream >> mimeType;
-      stream >> itemParts;
-
-      if ( i < startOffset )
-        continue;
-
-      msg.setSessionId( sessionId );
-      msg.setType( static_cast<NotificationMessageV2::Type>( type ) );
-      msg.setOperation( static_cast<NotificationMessageV2::Operation>( operation ) );
-      msg.addEntity( uid, remoteId, QString(), mimeType );
-      msg.setResource( resource );
-      msg.setParentCollection( parentCollection );
-      msg.setParentDestCollection( parentDestCollection );
-      msg.setItemParts( itemParts );
-
-    } else if ( version == 2 ) {
-
-      NotificationMessageV2 msg;
-
-      stream >> sessionId;
-      stream >> type;
-      stream >> operation;
-      stream >> entityCnt;
-      for ( int j = 0; j < entityCnt; ++j ) {
-        stream >> uid;
-        stream >> remoteId;
-        stream >> remoteRevision;
-        stream >> mimeType;
-        msg.addEntity( uid, remoteId, remoteRevision, mimeType );
+    // Pre-IDLE notifications
+    if ( version < 3 ) {
+      if ( version == 1 ) {
+        ntfs = fromNotificationV1( stream );
+      } else if ( version == 2 ) {
+        ntfs = fromNotificationV2( stream );
       }
+
+      if ( i < startOffset ) {
+        continue;
+      }
+
+      list << ntfs;
+
+    // IDLE notifications
+    } else {
+      stream >> type;
+      stream >> operation;
+      stream >> collection;
       stream >> resource;
+      stream >> destinationCollection;
       stream >> destinationResource;
-      stream >> parentCollection;
-      stream >> parentDestCollection;
-      stream >> itemParts;
       stream >> addedFlags;
       stream >> removedFlags;
+      stream >> changedParts;
+      stream >> itemsIds;
 
-      if ( i < startOffset )
-        continue;
-
-      msg.setSessionId( sessionId );
-      msg.setType( static_cast<NotificationMessageV2::Type>( type ) );
-      msg.setOperation( static_cast<NotificationMessageV2::Operation>( operation ) );
+      IdleNotification msg;
+      msg.setType( static_cast<Idle::Type>( type ) );
+      msg.setOperation( static_cast<Idle::Operation>( operation ) );
+      msg.setSourceCollection( collection );
       msg.setResource( resource );
+      msg.setDestinationCollection( destinationCollection );
       msg.setDestinationResource( destinationResource );
-      msg.setParentCollection( parentCollection );
-      msg.setParentDestCollection( parentDestCollection );
-      msg.setItemParts( itemParts );
-      msg.setAddedFlags( addedFlags );
-      msg.setRemovedFlags( removedFlags );
+      msg.setAddedFlags( addedFlags.toSet() );
+      msg.setRemovedFlags( removedFlags.toSet() );
+      msg.setChangedParts( changedParts.toSet() );
 
-      list << msg;
+      Q_FOREACH ( Entity::Id id, itemsIds ) {
+        m_missingLegacyNotifications.insert( id, msg );
+      }
+
+      ntfs << msg;
     }
+
+    if ( i < startOffset ) {
+      continue;
+    }
+
+    list << ntfs;
   }
 
   return list;
+}
+
+QQueue< IdleNotification > ChangeRecorderPrivate::loadFromSettingsFile( QSettings *settings )
+{
+  QStringList list;
+  settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
+
+  QQueue<IdleNotification> notifications;
+
+  const int size = settings->beginReadArray( QLatin1String( "change" ) );
+  for ( int i = 0; i < size; ++i ) {
+    settings->setArrayIndex( i );
+    const Entity::Id id = settings->value( QLatin1String( "uid" ) ).toLongLong();
+
+    IdleNotification ntf;
+    // We kept Idle::Type and Idle::Operation compatible with NotificationMessageV2
+    ntf.setType( static_cast<Idle::Type>( settings->value( QLatin1String( "type" ) ).toInt() ) );
+    ntf.setOperation( static_cast<Idle::Operation>( settings->value( QLatin1String( "op" ) ).toInt() ) );
+    ntf.setResource( settings->value( QLatin1String( "resource" ) ).toByteArray() );
+    ntf.setSourceCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
+    ntf.setDestinationCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() ) ;
+    QSet<QByteArray> itemParts;
+    Q_FOREACH ( const QString &entry, list ) {
+      itemParts.insert( entry.toLatin1() );
+    }
+    ntf.setChangedParts( itemParts );
+
+    // Enqueue one empty notification for each item
+    notifications.enqueue( ntf );
+    m_missingLegacyNotifications.insert( id, ntf );
+  }
+  settings->endArray();
+
+  // ...delete the legacy list...
+  settings->remove( QString() );
+  settings->endGroup();
+
+  return notifications;
+}
+
+
+QQueue<IdleNotification> ChangeRecorderPrivate::fromNotificationV1( QDataStream& stream )
+{
+  QByteArray dummyBA, resource;
+  int operation, type;
+  quint64 uid, sourceCollection, destinationCollection;;
+  QString remoteId, mimeType;
+  QSet<QByteArray> parts;
+
+  stream >> dummyBA;
+  stream >> type;
+  stream >> operation;
+  stream >> uid;
+  stream >> remoteId;
+  stream >> resource;
+  stream >> sourceCollection;
+  stream >> destinationCollection;
+  stream >> mimeType;
+  stream >> parts;
+
+  IdleNotification ntf;
+  ntf.setType( static_cast<Idle::Type>( type ) );
+  ntf.setOperation( static_cast<Idle::Operation>( operation ) );
+  ntf.setResource( resource );
+  ntf.setSourceCollection( sourceCollection );
+  ntf.setDestinationCollection( destinationCollection );
+  ntf.setChangedParts( parts );
+
+  Item item( uid );
+  item.setRemoteId( remoteId );
+  item.setMimeType( mimeType );
+
+  ntf.addItem( item );
+
+  m_missingLegacyNotifications.insert( uid, ntf );
+
+  QQueue<IdleNotification> queue;
+  queue << ntf;
+  return queue;
+}
+
+QQueue<IdleNotification> ChangeRecorderPrivate::fromNotificationV2( QDataStream &stream )
+{
+  QByteArray dummyBA, resource, destinationResource;
+  int type, operation, entityCnt;
+  quint64 uid, parentCollection, destinationCollection;
+  QString dummyString;
+  QSet<QByteArray> parts, addedFlags, removedFlags;
+  QQueue<IdleNotification> notifications;
+  QList<Item::Id> itemsIds;
+
+  stream >> dummyBA;
+  stream >> type;
+  stream >> operation;
+  stream >> entityCnt;
+  for ( int j = 0; j < entityCnt; ++j ) {
+    stream >> uid;
+    stream >> dummyString;
+    stream >> dummyString;
+    stream >> dummyString;
+    itemsIds << uid;
+  }
+  stream >> resource;
+  stream >> destinationResource;
+  stream >> parentCollection;
+  stream >> destinationCollection;
+  stream >> parts;
+  stream >> addedFlags;
+  stream >> removedFlags;
+
+  IdleNotification ntf;
+  ntf.setType( static_cast<Idle::Type>( type ) );
+  ntf.setOperation( static_cast<Idle::Operation>( operation ) );
+  ntf.setResource( resource );
+  ntf.setDestinationResource( destinationResource );
+  ntf.setChangedParts( parts );
+  ntf.setAddedFlags( addedFlags );
+  ntf.setRemovedFlags( removedFlags );
+
+  Q_FOREACH ( Entity::Id uid, itemsIds ) {
+    m_missingLegacyNotifications.insert( uid, ntf );
+  }
+
+  notifications << ntf;
+
+  return notifications;
 }
 
 QString ChangeRecorderPrivate::dumpNotificationListToString() const
@@ -366,8 +478,9 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   return result;
 }
 
-void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessageV2 &msg)
+void ChangeRecorderPrivate::addToStream(QDataStream &stream, const IdleNotification &msg)
 {
+  /*
   stream << msg.sessionId();
   stream << int(msg.type());
   stream << int(msg.operation());
@@ -385,6 +498,7 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationM
   stream << msg.itemParts();
   stream << msg.addedFlags();
   stream << msg.removedFlags();
+  */
 }
 
 void ChangeRecorderPrivate::writeStartOffset()
@@ -446,7 +560,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
-    const NotificationMessageV2 msg = pendingNotifications.at( i );
+    const IdleNotification msg = pendingNotifications.at( i );
     addToStream( stream, msg );
   }
 }

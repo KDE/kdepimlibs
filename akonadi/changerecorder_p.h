@@ -23,37 +23,48 @@
 #include "akonadiprivate_export.h"
 #include "changerecorder.h"
 #include "monitor_p.h"
+#include "idlejob_p.h"
+
+//#include <akonadi/private/notificationmessagev2_p.h>
 
 namespace Akonadi {
 
 class ChangeRecorder;
-class ChangeNotificationDependenciesFactory;
 
 class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivate
 {
   public:
-    ChangeRecorderPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder* parent );
+    ChangeRecorderPrivate( ChangeRecorder* parent );
 
     Q_DECLARE_PUBLIC( ChangeRecorder )
     QSettings *settings;
     bool enableChangeRecording;
 
-    virtual int pipelineSize() const;
     virtual void notificationsEnqueued( int count );
     virtual void notificationsErased();
 
-    virtual void slotNotify( const NotificationMessageV2::List &msgs );
-    virtual bool emitNotification(const Akonadi::NotificationMessageV2& msg);
+    virtual void slotNotify( const IdleNotification &notification );
+
+    //virtual bool emitNotification(const Akonadi::NotificationMessageV2& msg);
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessageV2> loadFrom( QIODevice *device );
     QString dumpNotificationListToString() const;
-    void addToStream( QDataStream &stream, const NotificationMessageV2 &msg );
+    void addToStream( QDataStream &stream, const IdleNotification &msg );
     void saveNotifications();
     void saveTo( QIODevice *device );
-private:
+
+    QQueue<IdleNotification> loadFromFile( QIODevice *device );
+
+    void legacyNotificationsItemsFetched( KJob *job );
+  private:
+    QQueue<IdleNotification> loadFromSettingsFile( QSettings *settings );
+    QQueue<IdleNotification> fromNotificationV1( QDataStream &stream );
+    QQueue<IdleNotification> fromNotificationV2( QDataStream &stream );
+
+    void fetchItemsForLegacyNotifications( const QList<Entity::Id> &ids );
+
     void dequeueNotification();
     void notificationsLoaded();
     void writeStartOffset();
@@ -61,6 +72,8 @@ private:
     int m_lastKnownNotificationsCount; // just for invariant checking
     int m_startOffset; // number of saved notifications to skip
     bool m_needFullSave;
+    QMap<Entity::Id, IdleNotification> m_missingLegacyNotifications;
+    bool m_fetchingLegacyNotifications;
 };
 
 } // namespace Akonadi
