@@ -8,7 +8,7 @@ if(CMAKE_COMPILE_GCOV)
 endif()
 
 if (KDE4_BUILD_TESTS)
-add_subdirectory( tests )
+#add_subdirectory( tests )
 endif()
 
 add_definitions( ${AKONADI_DEFINITIONS} )
@@ -122,6 +122,7 @@ set( akonadikde_LIB_SRC
   favoritecollectionsmodel.cpp
   firstrun.cpp
   gid/gidextractor.cpp
+  idlejob.cpp
   indexpolicyattribute.cpp
   item.cpp
   itemcreatejob.cpp
