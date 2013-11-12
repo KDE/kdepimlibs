@@ -289,6 +289,7 @@ class ItemPrivate : public EntityPrivate
     mutable bool mConversionInProgress;
     int mRevision;
     Item::Flags mFlags;
+    Item::Tags mTags;
     Entity::Id mCollectionId;
     qint64 mSize;
     QDateTime mModificationTime;
@@ -296,8 +297,11 @@ class ItemPrivate : public EntityPrivate
     QString mGid;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
+    Item::Tags mAddedTags;
+    Item::Tags mDeletedTags;
     QSet<QByteArray> mCachedPayloadParts;
     bool mFlagsOverwritten : 1;
+    bool mTagsOverwritten : 1;
     bool mSizeChanged : 1;
     bool mClearPayload : 1;
 };

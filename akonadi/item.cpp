@@ -180,6 +180,49 @@ void Item::clearFlags()
   d->mFlagsOverwritten = true;
 }
 
+Item::Tags Akonadi::Item::tags() const
+{
+  return d_func()->mTags;
+}
+
+void Akonadi::Item::addTag( const QByteArray &name )
+{
+  Q_D( Item );
+  d->mTags.insert( name );
+  if ( !d->mTagsOverwritten ) {
+    if ( d->mDeletedTags.contains( name ) ) {
+      d->mDeletedTags.remove( name );
+    } else {
+      d->mAddedTags.insert( name );
+    }
+  }
+}
+
+void Akonadi::Item::removeTag( const QByteArray &name )
+{
+  Q_D( Item );
+  d->mTags.remove( name );
+  if ( !d->mTagsOverwritten ) {
+    if ( d->mAddedTags.contains( name ) ) {
+      d->mAddedTags.remove( name );
+    } else {
+      d->mDeletedTags.insert( name );
+    }
+  }
+}
+
+void Akonadi::Item::setTags( const Tags &tags )
+{
+  Q_D ( Item );
+  d->mTags = tags;
+  d->mTagsOverwritten = true;
+}
+
+bool Akonadi::Item::hasTag( const QByteArray &name ) const
+{
+  return d_func()->mTags.contains( name );
+}
+
 QDateTime Item::modificationTime() const
 {
   return d_func()->mModificationTime;

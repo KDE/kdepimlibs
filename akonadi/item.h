@@ -131,6 +131,16 @@ class AKONADI_EXPORT Item : public Entity
     typedef QSet<QByteArray> Flags;
 
     /**
+     * Describes a tag name
+     */
+    typedef QByteArray Tag;
+
+    /**
+     * Describes a set of tag names.
+     */
+    typedef QSet<QByteArray> Tags;
+
+    /**
      * Describes the part name that is used to fetch the
      * full payload of an item.
      */
@@ -213,6 +223,36 @@ class AKONADI_EXPORT Item : public Entity
      * Removes all flags from the item.
      */
     void clearFlags();
+
+    /**
+     * Returns all tags of this item.
+     */
+    Tags tags() const;
+
+    /**
+     * Returns whether the tag with given @p name is set in the item
+     */
+    bool hasTag( const QByteArray &name ) const;
+
+    /**
+     * Adds the tag with given @p name in the item.
+     */
+    void addTag( const QByteArray &name );
+
+    /**
+     * Removes tha tag with the given @p name from the item.
+     */
+    void removeTag( const QByteArray &name );
+
+    /**
+     * Overwrite all tags on the item by the given @p tags.
+     */
+    void setTags( const Tags &tags );
+
+    /**
+     * Removes all tags from the item.
+     */
+    void removeTags();
 
     /**
      * Sets the payload based on the canonical representation normally
