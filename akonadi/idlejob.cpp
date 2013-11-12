@@ -36,10 +36,12 @@ class IdleJobPrivate: public Akonadi::JobPrivate
     IdleJobPrivate( IdleJob *parent );
     virtual ~IdleJobPrivate();
 
-    QByteArray convertAndClearSet( const QByteArray &operation,
-                                   QList<Entity::Id> &set );
-    QByteArray convertAndClearSet( const QByteArray &operation,
-                                   QList<QByteArray> &set );
+    void convertAndClearSet( const QByteArray &operation,
+                             QList<Entity::Id> &set,
+                             QList<QByteArray> &filters );
+    void convertAndClearSet( const QByteArray &operation,
+                             QList<QByteArray> &set,
+                             QList<QByteArray> &filters );
     void scheduleFilterUpdate();
     void _k_updateFilter();
 
@@ -262,53 +264,65 @@ void IdleJobPrivate::scheduleFilterUpdate()
 }
 
 
-QByteArray IdleJobPrivate::convertAndClearSet( const QByteArray &operation,
-                                               QList<Entity::Id> &set )
+void IdleJobPrivate::convertAndClearSet( const QByteArray &operation,
+                                         QList<Entity::Id> &set,
+                                         QList<QByteArray> &filters )
 {
   if ( set.isEmpty() ) {
-    return QByteArray();
+    return;
   }
 
   ImapSet imapSet;
   imapSet.add( set );
-  const QByteArray r =  operation + " (" + imapSet.toImapSequenceSet() + ")";
+  filters << operation + " (" + imapSet.toImapSequenceSet() + ")";
   set.clear();
-  return r;
 }
 
-QByteArray IdleJobPrivate::convertAndClearSet( const QByteArray &operation,
-                                               QList<QByteArray> &set )
+void IdleJobPrivate::convertAndClearSet( const QByteArray &operation,
+                                         QList<QByteArray> &set,
+                                         QList<QByteArray> &filters )
 {
   if ( set.isEmpty() ) {
-    return QByteArray();
+    return;
   }
 
   kDebug() << operation;
-  const QByteArray r =  operation + " (" + ImapParser::join( set, " " ) + ")";
+  filters << operation + " (" + ImapParser::join( set, " " ) + ")";
   set.clear();
-  return r;
 }
 
 void IdleJobPrivate::_k_updateFilter()
 {
-  QByteArray command;
-  command += ' ' + convertAndClearSet( "+" AKONADI_PARAM_COLLECTIONS, addedCollections );
-  command += ' ' + convertAndClearSet( "-" AKONADI_PARAM_COLLECTIONS, removedCollections );
-  command += ' ' + convertAndClearSet( "+" AKONADI_PARAM_ITEMS, addedItems );
-  command += ' ' + convertAndClearSet( "-" AKONADI_PARAM_ITEMS, removedItems );
-  command += ' ' + convertAndClearSet( "+" AKONADI_PARAM_MIMETYPES, addedMimeTypes );
-  command += ' ' + convertAndClearSet( "-" AKONADI_PARAM_MIMETYPES, removedMimeTypes );
-  command += ' ' + convertAndClearSet( "+" AKONADI_PARAM_RESOURCES, addedResources );
-  command += ' ' + convertAndClearSet( "-" AKONADI_PARAM_RESOURCES, removedResources );
-  command += ' ' + convertAndClearSet( "+" AKONADI_PARAM_IGNOREDSESSIONS, addedSessions );
-  command += ' ' + convertAndClearSet( "-" AKONADI_PARAM_IGNOREDSESSIONS, removedSessions );
+  QList<QByteArray> filters;
+  convertAndClearSet( "+" AKONADI_PARAM_COLLECTIONS, addedCollections, filters );
+  convertAndClearSet( "-" AKONADI_PARAM_COLLECTIONS, removedCollections, filters );
+  convertAndClearSet( "+" AKONADI_PARAM_ITEMS, addedItems, filters );
+  convertAndClearSet( "-" AKONADI_PARAM_ITEMS, removedItems, filters );
+  convertAndClearSet( "+" AKONADI_PARAM_MIMETYPES, addedMimeTypes, filters );
+  convertAndClearSet( "-" AKONADI_PARAM_MIMETYPES, removedMimeTypes, filters );
+  convertAndClearSet( "+" AKONADI_PARAM_RESOURCES, addedResources, filters );
+  convertAndClearSet( "-" AKONADI_PARAM_RESOURCES, removedResources, filters );
+  convertAndClearSet( "+" AKONADI_PARAM_IGNOREDSESSIONS, addedSessions, filters );
+  convertAndClearSet( "-" AKONADI_PARAM_IGNOREDSESSIONS, removedSessions, filters );
 
-  if ( command.isEmpty() ) {
+  if ( filters.isEmpty() ) {
     return;
   }
 
-  kDebug() << "IDLE FILTER" << command;
-  static_cast<IdleJob*>( q_ptr )->sendData( "IDLE FILTER" + command );
+  const QByteArray command = "IDLE FILTER " + ImapParser::join( filters, " " );
+  kDebug() << command;
+  static_cast<IdleJob*>( q_ptr )->sendData( command );
+
+  addedCollections.clear();
+  removedCollections.clear();
+  addedItems.clear();
+  removedItems.clear();
+  addedMimeTypes.clear();
+  removedMimeTypes.clear();
+  addedResources.clear();
+  removedResources.clear();
+  addedSessions.clear();
+  removedSessions.clear();
 }
 
 IdleJob::IdleJob( Akonadi::Session *session )
@@ -329,6 +343,7 @@ void IdleJob::addMonitoredCollection( const Collection &collection )
   if ( !d->addedCollections.contains( collection.id() ) ) {
       d->addedCollections << collection.id();
   }
+  d->removedCollections.removeAll( collection.id() );
   d->scheduleFilterUpdate();
 }
 
@@ -348,6 +363,7 @@ void IdleJob::addMonitoredItem( Entity::Id item )
   if ( !d->addedItems.contains( item ) ) {
       d->addedItems << item;
   }
+  d->removedItems.removeAll( item );
   d->scheduleFilterUpdate();
 }
 
@@ -434,7 +450,7 @@ void IdleJob::doStart()
   connect( d->updateFilterTimer, SIGNAL(timeout()),
            this, SLOT(_k_updateFilter()) );
 
-  sendData("IDLE START CLIENTID " + d->session->sessionId());
+  sendData( "IDLE START CLIENTID \"" + d->session->sessionId() + "\"" );
 }
 
 void IdleJob::sendData( const QByteArray &data )
@@ -455,7 +471,7 @@ void IdleJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
     QList<QByteArray> list;
     QByteArray res;
     qint64 id;
-    bool ok =- false;
+    bool ok = false;
     int pos = 0;
 
     // UID
@@ -555,24 +571,7 @@ void IdleJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
     d->notification.addItem( item );
 
   } else if ( tag == "+" ) {
-    const int index = data.indexOf( "DONE" );
-    bool ok = false;
-    QList<QByteArray> list;
-    ImapParser::parseParenthesizedList( data, list, index + 4 );
-    if ( list.size() == 0 ) {
-      kWarning() << "Error while parsing number line '" << data << "'. Skipping this batch";
-      return;
-    }
-
-    const int batchSize = list.first().toInt( &ok );
-    const int msgCount = d->notification.items().count();
-    Q_ASSERT( batchSize == msgCount );
-    if ( batchSize != msgCount ) {
-      kWarning() << "Server claims batch contained" << batchSize << "notifications, but we got" << msgCount << ". Skipping this batch";
-      return;
-    }
-
-    kDebug() << "Emitting notification for" << msgCount << "items!";
+    kDebug() << d->session->sessionId() << "Emitting notification for" << d->notification.items().count() << "items!";
     Q_EMIT notify( d->notification );
     d->notification = IdleNotification();
   }
