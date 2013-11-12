@@ -329,6 +329,10 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
   command += " (UID COLLECTIONID FLAGS SIZE";
+  if ( fetchScope.fetchTags() ) {
+    //command += " " AKONADI_PARAM_TAGS
+    command += " TAGS";
+  }
   if ( fetchScope.fetchRemoteIdentification() )
     command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
   if ( fetchScope.fetchGid() )
@@ -418,6 +422,21 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
             convertedFlags.insert( flag );
         }
         item.setFlags( convertedFlags );
+      }
+    } else if ( key == "TAGS" ) {
+      QList<QByteArray> tags;
+      ImapParser::parseParenthesizedList( lineTokens[i + 1], tags );
+      if ( !tags.isEmpty() ) {
+        Item::Tags convertedTags;
+        convertedTags.reserve( tags.size() );
+        Q_FOREACH ( const QByteArray &tag, tags ) {
+          if ( valuePool ) {
+            convertedTags.insert( valuePool->tagPool.sharedValue( tag ) );
+          } else {
+            convertedTags.insert( tag );
+          }
+        }
+        item.setTags( convertedTags );
       }
     } else if ( key == "CACHEDPARTS" ) {
       QSet<QByteArray> partsSet;

@@ -325,6 +325,10 @@ class AKONADI_EXPORT ItemFetchScope
      */
     bool fetchRemoteIdentification() const;
 
+    void setFetchTags( bool fetchTags );
+
+    bool fetchTags() const;
+
   private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;
