@@ -38,6 +38,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QQueue>
+#include <QtCore/QPointer>
 
 namespace Akonadi {
 
@@ -58,7 +59,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate{
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
 
-    IdleJob *idleJob;
+    QPointer<IdleJob> idleJob;
     bool monitorAll;
     Collection::List monitoredCollections;
     QSet<Item::Id> monitoredItems;
@@ -81,6 +82,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate{
     virtual void notificationsEnqueued( int ) {}
     virtual void notificationsErased() {}
 
+    void slotIdleFinished( KJob *job );
 
     virtual void slotNotify( const Akonadi::IdleNotification &notification );
 

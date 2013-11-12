@@ -69,21 +69,39 @@ void MonitorPrivate::init()
   idleJob = new IdleJob( session );
   QObject::connect( idleJob, SIGNAL(notify(IdleNotification)),
                     q_ptr, SLOT(slotNotify(IdleNotification)) );
+  QObject::connect( idleJob, SIGNAL(finished(KJob*)),
+                    q_ptr, SLOT(slotIdleFinished(KJob*)) );
   /*
    * QObject::connect( job, SIGNAL(notify(IdleNotificiation)),
                 q_ptr, SLOT(emitCollectionNotification(IdleNotificiation)) );
   */
 }
 
+void MonitorPrivate::slotIdleFinished( KJob* job )
+{
+  Q_UNUSED( job );
+
+  if ( idleJob ) {
+    idleJob->deleteLater();
+  }
+
+  idleJob = new IdleJob( session );
+  QObject::connect( idleJob, SIGNAL(notify(IdleNotification)),
+                    q_ptr, SLOT(slotNotify(IdleNotification)) );
+  QObject::connect( idleJob, SIGNAL(finished(KJob*)),
+                    q_ptr, SLOT(slotIdleFinished(KJob*)) );
+}
+
+
 void MonitorPrivate::slotNotify( const IdleNotification &notification )
 {
   bool needsSplit = false, batchSupported = false;
 
   checkBatchSupport( notification, needsSplit, batchSupported );
-  kDebug() << needsSplit << batchSupported;
 
   QList<IdleNotification> notifications;
-  if ( needsSplit ) {
+  // !batchSupported -> convert ModifyFlags into Modify
+  if ( needsSplit || !batchSupported ) {
     notifications = splitNotification( notification, false );
   }
 
@@ -162,7 +180,7 @@ QList<IdleNotification> MonitorPrivate::splitNotification(const IdleNotification
 
   Q_FOREACH( const Item &item, msg.items() ) {
     IdleNotification copy = baseMsg;
-    copy.setItems(QList<Item>() << item );
+    copy.addItem( item );
     list << copy;
   }
 
@@ -358,8 +376,8 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 
 bool MonitorPrivate::emitItemsNotification( const IdleNotification &msg )
 {
-  kDebug() << msg.type() << msg.operation();
   bool handled = false;
+
   switch ( msg.operation() ) {
     case Idle::Add:
       if ( q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) > 0 ) {
@@ -376,14 +394,12 @@ bool MonitorPrivate::emitItemsNotification( const IdleNotification &msg )
         return true;
       }
       return false;
-    case Idle::ModifyFlags: {
-      int rc = q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+    case Idle::ModifyFlags:
       if ( q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) > 0 ) {
         emit q_ptr->itemsFlagsChanged( msg.items(), msg.addedFlags(), msg.removedFlags() );
         handled = true;
       }
       return handled;
-    }
     case Idle::Move:
       if ( q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) > 0 ) {
         Q_ASSERT( msg.items().count() == 1 );
