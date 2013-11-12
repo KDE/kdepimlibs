@@ -87,7 +87,7 @@ void ItemCreateJob::doStart()
   tags = d->mItem.tags().toList();
   QByteArray tagsCmd;
   if ( !tags.isEmpty() ) {
-    tagsCmd = " (" + ImapParser::join( tags, " " ) + ")";
+    tagsCmd = "TAGS (" + ImapParser::join( tags, " " ) + ")";
   }
 
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
