@@ -446,7 +446,16 @@ bool KTNEFParser::extractFile( const QString &filename ) const
 bool KTNEFParser::ParserPrivate::extractAttachmentTo( KTNEFAttach *att,
                                                       const QString &dirname )
 {
-  QString filename = dirname + '/' + att->name();
+  QString filename = dirname + '/';
+  if ( !att->fileName().isEmpty()) {
+    filename += att->fileName();
+  } else {
+    filename += att->name();
+  }
+  if ( filename.endsWith( '/') ) {
+    return false;
+  }
+
   if ( !device_->isOpen() ) {
     return false;
   }
