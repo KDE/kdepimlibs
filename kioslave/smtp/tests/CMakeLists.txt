@@ -25,7 +25,7 @@ set(test_commands_SRCS test_commands.cpp )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${SASL2_INCLUDE_DIR})
 kde4_add_unit_test(test_commands TESTNAME smtp-commands ${test_commands_SRCS})
 
-target_link_libraries(test_commands  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBRARY} ${SASL2_LIBRARIES})
+target_link_libraries(test_commands  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${SASL2_LIBRARIES})
 
 
 ########### next target ###############
