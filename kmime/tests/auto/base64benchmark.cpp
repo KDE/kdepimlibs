@@ -47,7 +47,7 @@ class Base64Benchmark : public QObject
       QTest::newRow( "1k" ) << fillByteArray( 1 << 10 ) << KCodecs::base64Encode( fillByteArray( 1 << 10 ), true );;
       QTest::newRow( "1M" ) << fillByteArray( 1 << 20 ) << KCodecs::base64Encode( fillByteArray( 1 << 20 ), true );;
     }
-  private slots:
+  private Q_SLOTS:
     void benchmarkKCodecDecode_data()
     {
       createTestSet();

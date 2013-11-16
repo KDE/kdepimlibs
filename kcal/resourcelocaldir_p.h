@@ -66,7 +66,7 @@ class ResourceLocalDir::Private : QObject
     QList<Incidence *> mDeletedIncidences;
     ResourceLocalDir *mResource;
 
-  signals:
+  Q_SIGNALS:
     void resourceChanged( ResourceCalendar * );
 
   protected Q_SLOTS:
