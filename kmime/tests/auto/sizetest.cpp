@@ -33,7 +33,7 @@ using namespace KMime::Headers::Generics;
 class SizeTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
 
     void testContent()
     {

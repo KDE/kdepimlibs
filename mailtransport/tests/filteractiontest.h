@@ -32,7 +32,7 @@ class FilterActionTest : public QObject
 {
   Q_OBJECT
 
-  private slots:
+  private Q_SLOTS:
     void initTestCase();
     void testMassModifyItem();
     void testMassModifyItems();

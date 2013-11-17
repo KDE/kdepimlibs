@@ -39,10 +39,10 @@ class TransportListView : public QTreeWidget
     // overloaded from QTreeWidget
     void editItem( QTreeWidgetItem *item, int column = 0 );
 
-  protected slots:
+  protected Q_SLOTS:
     void commitData( QWidget *editor );
 
-  private slots:
+  private Q_SLOTS:
     void fillTransportList();
 
 };

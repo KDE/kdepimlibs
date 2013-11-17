@@ -42,7 +42,7 @@ class MessageQueuer : public KVBox
   public:
     MessageQueuer();
 
-  private slots:
+  private Q_SLOTS:
     void sendNowClicked();
     void sendQueuedClicked();
     void sendOnDateClicked();

@@ -25,6 +25,7 @@
 #include "ui_addtransportdialog.h"
 
 #include <KDebug>
+#include <KGlobal>
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
