@@ -13,3 +13,4 @@ Makefile.in
 *.kdev4
 Doxyfile
 *.user
+*.orig
