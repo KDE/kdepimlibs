@@ -47,7 +47,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <boost/concept_check.hpp>
 
 using namespace KMime;
 
