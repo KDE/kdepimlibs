@@ -21,7 +21,7 @@ include_directories(
 target_link_libraries(kmbox
   ${KDE4_KDECORE_LIBS}
   kmime
-  kpimutils
+  kpimutils # TODO KF5 remove this
 )
 
 set_target_properties(kmbox PROPERTIES
