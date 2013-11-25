@@ -193,6 +193,15 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      */
     void changeCollectionDialogOptions( CollectionDialogOptions options );
 
+    /**
+      * @since 4.13
+      */
+    void setUseFolderByDefault( bool b );
+    /**
+      * @since 4.13
+      */
+    bool useFolderByDefault() const;
+
   private:
     //@cond PRIVATE
     class Private;
@@ -202,6 +211,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
     Q_PRIVATE_SLOT( d, void slotAddChildCollection() )
     Q_PRIVATE_SLOT( d, void slotCollectionCreationResult(KJob* job) )
+    Q_PRIVATE_SLOT( d, void slotFilterFixedString( const QString & ) )
     //@endcond
 };
 

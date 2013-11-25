@@ -35,6 +35,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QCheckBox>
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -70,6 +71,10 @@ class CollectionDialog::Private
       mView->header()->hide();
       layout->addWidget( mView );
 
+      mUseByDefault = new QCheckBox(i18n("Use folder by default"));
+      mUseByDefault->hide();
+      layout->addWidget(mUseByDefault);
+
       mParent->enableButton( KDialog::Ok, false );
 
       // setup models
@@ -94,15 +99,15 @@ class CollectionDialog::Private
       mRightsFilterModel = new EntityRightsFilterModel( mParent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
-      KRecursiveFilterProxyModel* filterCollection = new KRecursiveFilterProxyModel( mParent );
-      filterCollection->setDynamicSortFilter( true );
-      filterCollection->setSourceModel( mRightsFilterModel );
-      filterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
-      mView->setModel( filterCollection );
+      mFilterCollection = new KRecursiveFilterProxyModel( mParent );
+      mFilterCollection->setDynamicSortFilter( true );
+      mFilterCollection->setSourceModel( mRightsFilterModel );
+      mFilterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
+      mView->setModel( mFilterCollection );
 
       changeCollectionDialogOptions( options );
       mParent->connect( filterCollectionLineEdit, SIGNAL(textChanged(QString)),
-                        filterCollection, SLOT(setFilterFixedString(QString)) );
+                        mParent, SLOT(slotFilterFixedString(QString)) );
 
       mParent->connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                         mParent, SLOT(slotSelectionChanged()) );
@@ -110,7 +115,7 @@ class CollectionDialog::Private
       mParent->connect( mView, SIGNAL(doubleClicked(QModelIndex)),
                         mParent, SLOT(accept()) );
 
-      mSelectionHandler = new AsyncSelectionHandler( filterCollection, mParent );
+      mSelectionHandler = new AsyncSelectionHandler( mFilterCollection, mParent );
       mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
                         mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
     }
@@ -124,6 +129,12 @@ class CollectionDialog::Private
       mView->expandAll();
       mView->setCurrentIndex( index );
     }
+    void slotFilterFixedString( const QString &filter)
+    {
+      mFilterCollection->setFilterFixedString(filter); 
+      if (mKeepTreeExpanded)
+         mView->expandAll();
+    }
 
     CollectionDialog *mParent;
 
@@ -135,6 +146,8 @@ class CollectionDialog::Private
     QLabel *mTextLabel;
     bool mAllowToCreateNewChildCollection;
     bool mKeepTreeExpanded;
+    KRecursiveFilterProxyModel *mFilterCollection;
+    QCheckBox *mUseByDefault;
 
     void slotSelectionChanged();
     void slotAddChildCollection();
@@ -331,6 +344,17 @@ QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions options )
 {
   d->changeCollectionDialogOptions( options );
+}
+
+void CollectionDialog::setUseFolderByDefault( bool b )
+{
+  d->mUseByDefault->setChecked(b);
+  d->mUseByDefault->show();
+}
+
+bool CollectionDialog::useFolderByDefault() const
+{
+  return d->mUseByDefault->isChecked();
 }
 
 #include "moc_collectiondialog.cpp"
