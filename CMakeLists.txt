@@ -20,7 +20,7 @@ endif()
 
 set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-find_package(KDE4 4.11 REQUIRED)
+find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(KDEPlatformProfile)
