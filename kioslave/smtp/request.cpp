@@ -33,7 +33,6 @@
 
 #include <kurl.h>
 #include <QtCore/QUrl>
-#include <kcodecs.h>
 #include <kdebug.h>
 
 #include <assert.h>
