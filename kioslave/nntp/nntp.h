@@ -12,7 +12,6 @@
 #define _NNTP_H
 
 #include <kurl.h>
-#include <kio/global.h>
 #include <kio/tcpslavebase.h>
 
 #define MAX_PACKET_LEN 8192
