@@ -38,8 +38,10 @@ class NetworkAccessHelperPrivate;
  * Basically this is to prevent ifdef'ing all the classes that make use of
  * the NetworkingControl class that is only available in kdelibs from the
  * komobranch at the moment
+ *
+ * @deprecated This class is non-functional and will be removed in KF 5.
  */
-class KPIMUTILS_EXPORT NetworkAccessHelper
+class KPIMUTILS_DEPRECATED_EXPORT NetworkAccessHelper
   : public QObject
 {
   Q_OBJECT

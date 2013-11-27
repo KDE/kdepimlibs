@@ -20,23 +20,13 @@ set(kpimutils_LIB_SRCS
   processes.cpp
   progressindicatorwidget.cpp
   progressindicatorlabel.cpp
+  networkaccesshelper_fake.cpp
 )
-
-# network access helper
-if(WINCE)
-  set(kpimutils_LIB_SRCS ${kpimutils_LIB_SRCS} networkaccesshelper_wince.cpp)
-else()
-  set(kpimutils_LIB_SRCS ${kpimutils_LIB_SRCS} networkaccesshelper_fake.cpp)
-endif()
 
 add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
 generate_export_header(kpimutils)
 
 target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KEMOTICONS_LIBS} kmime)
-
-if(WINCE)
-  target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} ${KDE4_SOLID_LIBS} toolhelp)
-endif()
 
 set_target_properties(kpimutils PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}
