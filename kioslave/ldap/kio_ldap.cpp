@@ -32,6 +32,7 @@
 
 #include <netdb.h>
 #include <netinet/in.h>
+#include <sys/stat.h>
 
 using namespace KIO;
 using namespace KLDAP;

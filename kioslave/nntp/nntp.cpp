@@ -20,7 +20,6 @@
 
 #include <kcomponentdata.h>
 #include <kdebug.h>
-#include <kglobal.h>
 #include <klocalizedstring.h>
 
 #include <kio/ioslave_defaults.h>

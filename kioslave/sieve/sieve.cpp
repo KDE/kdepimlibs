@@ -34,7 +34,6 @@ extern "C" {
 #include <qregexp.h>
 #include <QSslSocket>
 
-#include <kdemacros.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
