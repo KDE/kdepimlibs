@@ -33,7 +33,6 @@
 #include <kio/global.h>
 #include <kio/sslui.h>
 #include <KLocalizedString>
-#include <kpimutils/networkaccesshelper.h>
 #include <KDebug>
 
 #include <QtCore/QQueue>
