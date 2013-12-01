@@ -35,4 +35,3 @@ void TestCategory::testDefaultValues()
 
 QTEST_KDEMAIN( TestCategory, NoGUI )
 
-#include "testcategory.moc"

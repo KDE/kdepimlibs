@@ -37,4 +37,3 @@ void TestEnclosure::testDefaultValues()
 
 QTEST_KDEMAIN( TestEnclosure, NoGUI )
 
-#include "testenclosure.moc"

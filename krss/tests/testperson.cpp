@@ -37,4 +37,3 @@ void TestPerson::testDefaultValues()
 
 QTEST_KDEMAIN( TestPerson, NoGUI )
 
-#include "testperson.moc"

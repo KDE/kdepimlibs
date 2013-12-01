@@ -52,4 +52,3 @@ void TestHelper::testAttributeSerialization()
 
 QTEST_KDEMAIN( TestHelper, NoGUI )
 
-#include "testhelper.moc"

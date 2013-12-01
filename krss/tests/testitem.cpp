@@ -91,4 +91,3 @@ void TestItem::testContentAndDescription()
 
 QTEST_KDEMAIN( TestItem, NoGUI )
 
-#include "testitem.moc"
