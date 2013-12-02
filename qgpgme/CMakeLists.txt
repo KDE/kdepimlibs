@@ -45,9 +45,6 @@ if ( _any_gpgme_found )
    generate_export_header(qgpgme)
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
-   if(WINCE)
-   target_link_libraries(qgpgme ${WCECOMPAT_LIBRARIES})
-   endif()
 
    set_target_properties( qgpgme PROPERTIES
      VERSION ${_qgpgme_version}

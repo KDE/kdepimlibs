@@ -13,11 +13,6 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 ############### search packages used by KDE ###############
 
-# cmake would not find kde for xcompile if that is not set
-if(WINCE)
-    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
-endif()
-
 set (QT_MIN_VERSION "4.8.0")
 # kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
 find_package(KDE4 4.11.3 REQUIRED)
@@ -105,12 +100,8 @@ if (NOT KDEPIM_ONLY_KLEO)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
 
   find_package(Soprano)
-  if (NOT WINCE)
-    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
-  else()
-    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE OPTIONAL PURPOSE "Storage of semantic data")
-  endif()
-  if (Soprano_FOUND AND NOT WINCE)
+  set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
+  if (Soprano_FOUND)
   include(SopranoAddOntology)
   endif()
 
@@ -152,11 +143,6 @@ if (KDEPIM_NO_KCAL)
   add_definitions(-DKDEPIM_NO_KCAL)
 endif()
 
-if(WINCE)
-  set(STATIC_LIBRARY ON)
-  add_definitions(-DKDELIBS_STATIC_LIBS)
-endif()
-
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   add_definitions(-DKDEPIM_STATIC_LIBS)
@@ -176,9 +162,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kabc)
   add_subdirectory(kalarmcal)
   if (NOT KDEPIM_NO_KCAL)
-    if (NOT WINCE)
     add_subdirectory(kblog)
-    endif()
     add_subdirectory(kcal)
   endif()
   add_subdirectory(kcalcore)
@@ -203,9 +187,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(mailtransport)
   add_subdirectory(microblog)
   add_subdirectory(syndication)
-  if (NOT WINCE)
   add_subdirectory(kontactinterface)
-  endif()
   # Build the CamelCase headers
   add_subdirectory(includes)
 endif()

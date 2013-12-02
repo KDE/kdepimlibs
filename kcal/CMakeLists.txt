@@ -82,15 +82,9 @@ set(kcal_LIB_SRCS ${libversit_SRCS}
   kresult.cpp
   assignmentvisitor.cpp
   comparisonvisitor.cpp
+  dndfactory.cpp
+  confirmsavedialog.cpp
 )
-
-if (NOT WINCE)
-  set(kcal_LIB_SRCS ${kcal_LIB_SRCS}
-    dndfactory.cpp
-    #disabled due to no QTreeWidget
-    confirmsavedialog.cpp
-  )
-endif()
 
 
 if (NOT KDEPIM_NO_KRESOURCES)
