@@ -43,6 +43,7 @@ class AgentSearchInterfacePrivate : public QObject
     QByteArray searchId;
 
   private Q_SLOTS:
+    void delayedInit();
     void collectionReceived( KJob *job );
 
   private:

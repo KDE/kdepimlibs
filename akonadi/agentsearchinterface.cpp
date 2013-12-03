@@ -25,6 +25,8 @@
 #include "searchadaptor.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
+#include "servermanager.h"
+#include "agentbase.h"
 
 using namespace Akonadi;
 
@@ -34,6 +36,17 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate( AgentSearchInterface* 
   new Akonadi__SearchAdaptor( this );
   DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Search" ),
                                                          this, QDBusConnection::ExportAdaptors );
+
+  QTimer::singleShot( 0, this, SLOT(delayedInit()) );
+}
+
+void AgentSearchInterfacePrivate::delayedInit()
+{
+  QDBusInterface iface( ServerManager::serviceName( ServerManager::Server ),
+                        QLatin1String( "/SearchManager" ),
+                        QLatin1String( "org.freedesktop.Akonadi.SearchManager" ),
+                        QDBusConnection::sessionBus(), this );
+  QDBusMessage msg = iface.call( QLatin1String( "registerInstance" ), dynamic_cast<AgentBase*>( q )->identifier() );
 }
 
 void AgentSearchInterfacePrivate::addSearch( const QString &query, const QString &queryLanguage, quint64 resultCollectionId )
