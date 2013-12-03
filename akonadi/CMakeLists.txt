@@ -161,6 +161,7 @@ set( akonadikde_LIB_SRC
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
   searchcreatejob.cpp
+  searchresultjob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp

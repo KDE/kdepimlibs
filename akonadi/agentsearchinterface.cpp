@@ -21,7 +21,10 @@
 #include "agentsearchinterface_p.h"
 #include "collection.h"
 #include "dbusconnectionpool.h"
+#include "searchresultjob_p.h"
 #include "searchadaptor.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 
 using namespace Akonadi;
 
@@ -43,6 +46,39 @@ void AgentSearchInterfacePrivate::removeSearch( quint64 resultCollectionId )
   q->removeSearch( Collection( resultCollectionId ) );
 }
 
+void AgentSearchInterfacePrivate::search( const QByteArray &searchId_,
+                                          const QString &query,
+                                          quint64 collectionId )
+{
+  searchId = searchId_;
+
+  CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base, this );
+  fetchJob->fetchScope().setAncestorRetrieval( CollectionFetchScope::All );
+  fetchJob->setProperty( "query", query );
+  connect( fetchJob, SIGNAL(finished(KJob*)), this, SLOT(collectionReceived(KJob*)) );
+}
+
+void AgentSearchInterfacePrivate::collectionReceived( KJob *job )
+{
+  CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
+  if ( fetchJob->error() ) {
+    kError() << fetchJob->errorString();
+    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), this );
+    return;
+  }
+
+  if ( fetchJob->collections().count() != 1) {
+    kDebug() << "Server requested search in invalid collection, or collection was removed in the meanwhile";
+    // Tell server we are done
+    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), this );
+    return;
+  }
+
+  const Collection collection = fetchJob->collections().first();
+  q->search( fetchJob->property( "query").toString(),
+             collection );
+}
+
 AgentSearchInterface::AgentSearchInterface() :
   d( new AgentSearchInterfacePrivate( this ) )
 {
@@ -51,6 +87,47 @@ AgentSearchInterface::AgentSearchInterface() :
 AgentSearchInterface::~AgentSearchInterface()
 {
   delete d;
+}
+
+void AgentSearchInterface::searchFinished( const QVector<qint64> result, ResultScope scope )
+{
+  if ( scope == Akonadi::AgentSearchInterface::Rid ) {
+    QVector<QByteArray> rids;
+    rids.reserve( result.size() );
+    Q_FOREACH ( qint64 rid, result ) {
+      rids << QByteArray::number( rid );
+    }
+
+    searchFinished( rids );
+    return;
+  }
+
+  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  resultJob->setResult( result );
+}
+
+void AgentSearchInterface::searchFinished( const ImapSet &result, ResultScope scope )
+{
+  if ( scope == Akonadi::AgentSearchInterface::Rid ) {
+    QVector<QByteArray> rids;
+    Q_FOREACH( const ImapInterval &interval, result.intervals() ) {
+      for ( int i = interval.begin(); i <= interval.end(); ++i ) {
+        rids << QByteArray::number( i );
+      }
+    }
+
+    searchFinished( rids );
+    return;
+  }
+
+  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  resultJob->setResult( result );
+}
+
+void AgentSearchInterface::searchFinished( const QVector<QByteArray> &result )
+{
+  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  resultJob->setResult( result );
 }
 
 #include "moc_agentsearchinterface_p.cpp"
