@@ -106,15 +106,15 @@ void SearchResultJob::doStart()
     command += AKONADI_CMD_UID;
   }
 
-  command += " SEARCH_RESULT " + d->searchId + ' ';
+  command += " SEARCH_RESULT " + d->searchId + " (";
 
   if ( !d->rid.isEmpty() ) {
-    command += "(" + ImapParser::join( d->rid.toList(), " " ) + ")";
+    command += ImapParser::join( d->rid.toList(), " " );
   } else if ( !d->uid.isEmpty() ) {
     command += d->uid.toImapSequenceSet();
-  } else {
-    command += AKONADI_PARAM_DONE;
   }
+
+  command += ")";
 
   d->writeData( command );
 }
