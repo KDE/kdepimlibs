@@ -40,10 +40,6 @@ using namespace KPIMUtils;
 #include <signal.h>
 #include <unistd.h>
 
-#ifdef Q_OS_WINCE
-#include <Tlhelp32.h>
-#endif
-
 #include <QtCore/QList>
 #include <QtCore/QtDebug>
 
@@ -65,7 +61,6 @@ PSID copySid( PSID from )
 // Copy from kdelibs/kinit/kinit_win.cpp
 static PSID getProcessOwner( HANDLE hProcess )
 {
-#ifndef _WIN32_WCE
   HANDLE hToken = NULL;
   PSID sid;
 
@@ -86,7 +81,6 @@ static PSID getProcessOwner( HANDLE hProcess )
       return sid;
     }
   }
-#endif
   return 0;
 }
 
@@ -138,11 +132,7 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
       kDebug() << "found PID: " << (int)pe32.th32ProcessID;
     }
   } while ( Process32Next( h, &pe32 ) );
-#ifndef _WIN32_WCE
   CloseHandle( h );
-#else
-  CloseToolhelp32Snapshot( h );
-#endif
 }
 
 bool KPIMUtils::otherProcessesExist( const QString &processName )
@@ -171,12 +161,10 @@ bool KPIMUtils::killProcesses( const QString &processName )
   int overallResult = 0;
   foreach ( int pid, pids ) {
     int result;
-#ifndef _WIN32_WCE
     result = kill( pid, SIGTERM );
     if ( result == 0 ) {
       continue;
     }
-#endif
     result = kill( pid, SIGKILL );
     if ( result != 0 ) {
       overallResult = result;
