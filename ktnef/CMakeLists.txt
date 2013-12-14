@@ -1,5 +1,7 @@
 project(ktnef)
 
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS KIO KDE4Support)
+
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 
 add_subdirectory(tests)
@@ -26,7 +28,7 @@ set(ktnef_LIB_SRCS
 
 kde4_add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 
-target_link_libraries(ktnef  ${KDE4_KIO_LIBS} kabc kcalcore kcalutils ${KDE4_KDE4SUPPORT_LIBS})
+target_link_libraries(ktnef KF5::KIOCore KF5::KDE4Support kabc kcalcore kcalutils)
 
 set_target_properties(ktnef PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}
