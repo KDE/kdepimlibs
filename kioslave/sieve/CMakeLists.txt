@@ -2,7 +2,7 @@
 include_directories( ${SASL2_INCLUDE_DIR}  )
 
 configure_file (sieve-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-config.h )
-
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ########### next target ###############
 
 set(kio_sieve_PART_SRCS sieve.cpp )
@@ -12,7 +12,7 @@ kde4_add_plugin(kio_sieve ${kio_sieve_PART_SRCS})
 
 
 
-target_link_libraries(kio_sieve  ${KDE4_KIO_LIBS} ${SASL2_LIBRARIES})
+target_link_libraries(kio_sieve KF5::KIOCore KF5::KDE4Support ${SASL2_LIBRARIES})
 
 install(TARGETS kio_sieve  DESTINATION ${PLUGIN_INSTALL_DIR})
 
