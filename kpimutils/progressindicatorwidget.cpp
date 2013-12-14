@@ -18,6 +18,7 @@
 #include "progressindicatorwidget.h"
 
 #include <QTimer>
+#include <KIconLoader>
 
 namespace KPIMUtils {
 
