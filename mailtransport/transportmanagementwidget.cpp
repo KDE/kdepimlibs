@@ -58,7 +58,8 @@ TransportManagementWidget::Private::Private( TransportManagementWidget *parent )
 TransportManagementWidget::TransportManagementWidget( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
-  KLocalizedString::insertCatalog( QString::fromLatin1( "libmailtransport" ) );
+#warning port insertCatalog
+//   KLocalizedString::insertCatalog( QString::fromLatin1( "libmailtransport" ) );
   d->ui.setupUi( this );
   d->updateButtonState();
 

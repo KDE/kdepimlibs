@@ -124,8 +124,9 @@ static void destroyStaticTransportManager() {
 TransportManager::TransportManager()
   : QObject(), d( new TransportManagerPrivate( this ) )
 {
-  KLocalizedString::insertCatalog( QLatin1String( "libmailtransport" ) );
-  KLocalizedString::insertCatalog( QLatin1String( "libakonadi-kmime" ) );
+#warning port to the new way of insertCatalog
+//   KLocalizedString::insertCatalog( QLatin1String( "libmailtransport" ) );
+//   KLocalizedString::insertCatalog( QLatin1String( "libakonadi-kmime" ) );
   qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
   d->appliedChange = false;
