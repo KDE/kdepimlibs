@@ -229,7 +229,7 @@ void Transport::usrReadConfig()
   }
 }
 
-void Transport::usrWriteConfig()
+bool Transport::usrWriteConfig()
 {
   if ( requiresAuthentication() && storePassword() && d->passwordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
@@ -257,12 +257,16 @@ void Transport::usrWriteConfig()
     d->passwordDirty = false;
   }
 
-  TransportBase::usrWriteConfig();
+  if (!TransportBase::usrWriteConfig()) {
+    return false;
+  }
   TransportManager::self()->emitChangesCommitted();
   if ( name() != d->oldName ) {
     emit TransportManager::self()->transportRenamed( id(), d->oldName, name() );
     d->oldName = name();
   }
+
+  return true;
 }
 
 void Transport::readPassword()
