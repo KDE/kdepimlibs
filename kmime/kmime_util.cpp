@@ -31,7 +31,7 @@
 #include "kmime_warning.h"
 
 #include <config-kmime.h>
-#include <kdefakes.h> // for strcasestr
+// #include <kdefakes.h> // for strcasestr
 #include <kglobal.h>
 #include <klocale.h>
 #include <klocalizedstring.h>
