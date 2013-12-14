@@ -1,5 +1,7 @@
 add_subdirectory( tests )
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5320 -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII )
+
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews Codecs KDE4Support)
 include(CheckTimezone)
 configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -30,7 +32,7 @@ set(kmime_LIB_SRCS
 
 kde4_add_library(kmime ${LIBRARY_TYPE} ${kmime_LIB_SRCS})
 
-target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kmime KF5::ItemViews KF5::Codecs KF5::KDE4Support)
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
