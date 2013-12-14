@@ -1,5 +1,7 @@
 project(kxmlrpcclient)
 
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS KIO KDE4Support)
+
 add_subdirectory(tests)
 
 ########### next target ###############
@@ -11,7 +13,7 @@ set(kxmlrpcclient_LIB_SRCS
 
 kde4_add_library(kxmlrpcclient ${LIBRARY_TYPE} ${kxmlrpcclient_LIB_SRCS})
 
-target_link_libraries(kxmlrpcclient ${KDE4_KIO_LIBS})
+target_link_libraries(kxmlrpcclient KF5::KIOCore KF5::KDE4Support)
 
 set_target_properties(kxmlrpcclient PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}
