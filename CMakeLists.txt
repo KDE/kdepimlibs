@@ -17,28 +17,13 @@ include(ECMOptionalAddSubdirectory)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
-find_package(Qt5Core REQUIRED NO_MODULE)
-
-find_package(Qt5Transitional REQUIRED MODULE COMPONENTS X11Extras)
-
-find_package(kdeqt5staging REQUIRED NO_MODULE)
+set(QT_REQUIRED_VERSION 5.2.0)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets DBus Network Xml Test)
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
-find_package(KF5 MODULE REQUIRED COMPONENTS CMake Compiler InstallDirs
-                                            KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons Solid
-                                            KConfig KAuth)
-
-find_package(ki18n REQUIRED NO_MODULE)
-find_package(kio REQUIRED NO_MODULE)
-find_package(kjs REQUIRED NO_MODULE)
-find_package(kguiaddons REQUIRED NO_MODULE)
-find_package(kde4support REQUIRED NO_MODULE)
-
-find_package(KDELibs4 REQUIRED NO_MODULE)
-
-include(ECMVersion)
-include(ECMWriteVersionHeader)
-
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS #CMake Compiler InstallDirs
+                                            IdleTime ItemModels WidgetsAddons WindowSystem Codecs Archive CoreAddons Solid
+                                            Config Auth I18n KIO JS GuiAddons KDE4Support)
 set_package_properties(ECM PROPERTIES
                        URL "https://projects.kde.org/extra-cmake-modules"
                        DESCRIPTION "Replacement for kdelibs cmake macros"
