@@ -40,8 +40,8 @@ string(REPLACE "-pedantic-errors" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 ############### The kdepimlibs version ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
-set(KDEPIMLIBS_VERSION_MINOR 11)
-set(KDEPIMLIBS_VERSION_PATCH 40)
+set(KDEPIMLIBS_VERSION_MINOR 70)
+set(KDEPIMLIBS_VERSION_PATCH 10)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 ############### search packages used by KDE ###############
