@@ -12,6 +12,7 @@ find_package(ECM 0.0.9 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
 include(KDEInstallDirs)
+include(ECMOptionalAddSubdirectory)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
@@ -255,7 +256,7 @@ endif()
 
 
 # doc must be a subdir of kdepimlibs
-macro_optional_add_subdirectory(doc)
+ecm_optional_add_subdirectory(doc)
 
 # All done, let's display what we found...
 feature_summary(WHAT ALL
