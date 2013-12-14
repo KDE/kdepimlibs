@@ -209,13 +209,13 @@ add_subdirectory(qgpgme)
 
 if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kabc)
-  add_subdirectory(kalarmcal)
+#   add_subdirectory(kalarmcal) #Depends on akonadi-kde
   if (NOT KDEPIM_NO_KCAL)
   endif()
   add_subdirectory(kcalcore)
   add_subdirectory(kblog)
   add_subdirectory(kcalutils)
-  add_subdirectory(akonadi) # depends on kabc is build
+#   add_subdirectory(akonadi) # depends on kabc is build
   add_subdirectory(kholidays)
   add_subdirectory(kimap)
   add_subdirectory(kioslave)
@@ -229,7 +229,7 @@ if (NOT KDEPIM_ONLY_KLEO)
   add_subdirectory(kpimtextedit)
   add_subdirectory(ktnef)
   add_subdirectory(kxmlrpcclient)
-  add_subdirectory(mailtransport)
+#   add_subdirectory(mailtransport) Can't have without Akonadi
   add_subdirectory(microblog)
   add_subdirectory(syndication)
   if (NOT WINCE)
