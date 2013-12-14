@@ -1,5 +1,7 @@
 project(kmbox)
 
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
+
 set(kmbox_LIB_SRCS
     mboxentry.cpp
     mbox_p.cpp
@@ -11,7 +13,7 @@ add_subdirectory(tests)
 kde4_add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
 
 target_link_libraries(kmbox
-  ${KDE4_KDECORE_LIBS}
+  KF5::CoreAddons
   kmime
   kpimutils
 )
