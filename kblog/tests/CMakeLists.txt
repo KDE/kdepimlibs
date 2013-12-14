@@ -9,7 +9,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${KDE4_KIO_INCLUDES} )
  
  kde4_add_unit_test(testblogger1 TESTNAME kblog-testblogger1 ${testblogger1_SRCS})
  
- target_link_libraries(testblogger1 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogger1 KF5::CoreAddons Qt5::Test kblog)
  
 # ########### next target ###############
 
@@ -18,7 +18,7 @@ set(testgdata_SRCS testgdata.cpp )
 # FIXME: disabled as unit test, www.blogger.com apparently changed their API
 kde4_add_executable(testgdata ${testgdata_SRCS})
 
-target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+target_link_libraries(testgdata KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -27,7 +27,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testmetaweblog TESTNAME kblog-testmetaweblog ${testmetaweblog_SRCS})
  
- target_link_libraries(testmetaweblog ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testmetaweblog KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -36,7 +36,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testmovabletype TESTNAME kblog-testmovabletype ${testmovabletype_SRCS})
  
- target_link_libraries(testmovabletype ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testmovabletype KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -45,7 +45,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testwordpressbuggy TESTNAME kblog-testwordpressbuggy ${testwordpressbuggy_SRCS})
  
- target_link_libraries(testwordpressbuggy ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testwordpressbuggy KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -54,7 +54,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
 #  
 #  kde4_add_unit_test(testlivejournal TESTNAME kblog-testlivejournal ${testlivejournal_SRCS})
 #  
-#  target_link_libraries(testlivejournal ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+#  target_link_libraries(testlivejournal KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -63,7 +63,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testblogpost TESTNAME kblog-testblogpost ${testblogpost_SRCS})
  
- target_link_libraries(testblogpost ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogpost KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -72,7 +72,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testblogmedia TESTNAME kblog-testblogmedia ${testblogmedia_SRCS})
  
- target_link_libraries(testblogmedia ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogmedia KF5::CoreAddons Qt5::Test kblog)
 
 # ########### next target ###############
  
@@ -81,7 +81,7 @@ target_link_libraries(testgdata ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
  
  kde4_add_unit_test(testblogcomment TESTNAME kblog-testblogcomment ${testblogcomment_SRCS})
  
- target_link_libraries(testblogcomment ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} kblog)
+ target_link_libraries(testblogcomment KF5::CoreAddons Qt5::Test kblog)
 
 
 

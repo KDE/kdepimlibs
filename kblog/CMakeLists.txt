@@ -1,5 +1,8 @@
 project(kblog)
 
+find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Test)
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons KIO)
+
 include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}"
   ${kcalcore_BINARY_DIR}
 )
@@ -24,7 +27,7 @@ set(kblog_LIB_SRCS
 
 kde4_add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
 
-target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcalcore )
+target_link_libraries(kblog kxmlrpcclient syndication kcalcore KF5::CoreAddons KF5::KIOCore)
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
