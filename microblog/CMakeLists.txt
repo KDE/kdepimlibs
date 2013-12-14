@@ -2,6 +2,9 @@ project(microblog)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5328)
 
+find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Xml)
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
+
 include_directories (${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR} ${QT_INCLUDES})
 
 set(microblog_LIB_SRCS
@@ -10,7 +13,7 @@ set(microblog_LIB_SRCS
 
 kde4_add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
 
-target_link_libraries(microblog ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )
+target_link_libraries(microblog KF5::CoreAddons Qt5::Xml kpimutils )
 
 set_target_properties(microblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
