@@ -1,5 +1,7 @@
 project(kpimutils)
 
+find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews Emoticons)
+
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5321)
 
 add_subdirectory(tests)
@@ -25,10 +27,10 @@ endif()
 
 kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
 
-target_link_libraries(kpimutils ${KDE4_KDEUI_LIBS} ${KDE4_KEMOTICONS_LIBS} kmime)
+target_link_libraries(kpimutils KF5::ItemViews KF5::Emoticons kmime)
 
 if(WINCE)
-  target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} ${KDE4_SOLID_LIBS} toolhelp)
+  target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} KF5::Solid toolhelp)
 endif()
 
 set_target_properties(kpimutils PROPERTIES
