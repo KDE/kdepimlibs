@@ -134,8 +134,8 @@ if (NOT KDEPIM_ONLY_KLEO)
   include(SopranoAddOntology)
   endif()
 
-  find_package(NepomukCore)
-  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+#  find_package(NepomukCore)
+#  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)
