@@ -1,4 +1,5 @@
 akonadi           Volker Krause <vkrause@kde.org>
+akonadi/calendar  Sergio Martins <iamsergio@gmail.com>
 gpgme++           Marc Mutz <mutz@kde.org>
 kabc              Tobias Koenig <tokoe@kde.org>
 kalarmcal         David Jarvie <djarvie@kde.org>
@@ -16,8 +17,8 @@ kmbox             Bertjan Broeksema <broeksema@kde.org>
 kmime             Volker Krause <vkrause@kde.org>
                   Marc Mutz <mutz@kde.org>
 kontactinterface  Allen Winter <winter@kde.org>
-kpimidentities    -
-kpimutils         -
+kpimidentities    Laurent Montel <montel@kde.org>
+kpimutils         Laurent Montel <montel@kde.org>
 kresources        Tobias Koenig <tokoe@kde.org>
 ktnef             Michael Goffioul <goffioul@imec.be>
 kxmlrpcclient     -
@@ -25,5 +26,4 @@ mailtransport     -
 microblog         Tom Albers <tomalbers@kde.nl>
 qgpgme            Marc Mutz <mutz@kde.org>
 syndication       Frank Osterfeld <frank.osterfeld@kdemail.net>
-kpimtextedit      Thomas McGuire <mcguire@kde.org>
-                  Stephen Kelly <steveire@gmail.com>
+kpimtextedit      Laurent Montel <montel@kde.org>

@@ -111,8 +111,8 @@ KCalCore::Journal::Ptr BlogPost::journal( const Blog &blog ) const
   QString username = blog.username();
   QString blogId = blog.blogId();
   // Generate unique ID. Should be unique enough...
-  QString id = "kblog-" + url + '-' + blogId  + '-' + username +
-      '-' + d_ptr->mPostId;
+  QString id = QLatin1String("kblog-") + url + QLatin1Char('-') + blogId  + QLatin1Char('-') + username +
+      QLatin1Char('-') + d_ptr->mPostId;
   KCalCore::Journal::Ptr journal( new KCalCore::Journal() );
   journal->setUid( id );
   journal->setSummary( d_ptr->mTitle );
@@ -354,18 +354,18 @@ BlogPost &BlogPost::operator=( const BlogPost &other )
 
 QString BlogPostPrivate::cleanRichText( QString richText ) const
 {
-  QRegExp getBodyContents( "<body[^>]*>(.*)</body>" );
+  QRegExp getBodyContents( QLatin1String("<body[^>]*>(.*)</body>") );
   if ( getBodyContents.indexIn( richText ) ) {
     // Get anything inside but excluding the body tags
     richText = getBodyContents.cap( 1 );
     // Get rid of any whitespace
-    richText.remove( QRegExp( "^\\s+" ) );
+    richText.remove( QRegExp( QLatin1String("^\\s+") ) );
   }
   // Get rid of styled paragraphs
-  richText.replace( QRegExp( "<p style=\"[^\"]*\">" ), "<p>" );
+  richText.replace( QRegExp( QLatin1String("<p style=\"[^\"]*\">" )), QLatin1String("<p>") );
 
   // If we're left with empty content then return a clean empty string
-  if ( richText == "<p></p>" ) {
+  if ( richText == QLatin1String("<p></p>") ) {
     richText.clear();
   }
 
@@ -373,4 +373,3 @@ QString BlogPostPrivate::cleanRichText( QString richText ) const
 }
 
 } // namespace KBlog
-

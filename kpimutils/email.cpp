@@ -37,7 +37,7 @@
 
 #include <kglobal.h>
 
-static const KCatalogLoader loader( "libkpimutils" );
+static const KCatalogLoader loader( QLatin1String("libkpimutils") );
 
 using namespace KPIMUtils;
 
@@ -325,16 +325,17 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
   // at this point to many @'s cannot bail out right away since
   // @ is allowed in qoutes, so we use a bool to keep track
   // and then make a judgment further down in the parser
-  // FIXME count only @ not in double quotes
 
   bool tooManyAtsFlag = false;
 
-  int atCount = aStr.count( '@' );
+  int atCount = aStr.count( QLatin1Char('@') );
   if ( atCount > 1 ) {
     tooManyAtsFlag = true;
   } else if ( atCount == 0 ) {
     return TooFewAts;
   }
+
+  int dotCount = aStr.count( QLatin1Char('.'));
 
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
@@ -418,6 +419,11 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
             }
           }
           break;
+        case '.' :
+          if ( inQuotedString ) {
+            --dotCount;
+          }
+          break;
         }
         break;
       }
@@ -457,9 +463,14 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
         case '@' :
           if ( inQuotedString ) {
             --atCount;
-            if ( atCount == 1 ) {
-              tooManyAtsFlag = false;
-            }
+          }
+          if ( atCount == 1 ) {
+            tooManyAtsFlag = false;
+          }
+          break;
+        case '.' :
+          if ( inQuotedString ) {
+            --dotCount;
           }
           break;
         case '>' :
@@ -478,6 +489,10 @@ EmailParseResult KPIMUtils::isValidAddress( const QString &aStr )
         break;
       }
     }
+  }
+
+  if ( dotCount == 0 && !inQuotedString ) {
+    return TooFewDots;
   }
 
   if ( atCount == 0 && !inQuotedString ) {
@@ -516,6 +531,7 @@ KPIMUtils::EmailParseResult KPIMUtils::isValidAddressList( const QString &aStr,
   QStringList::const_iterator it = list.begin();
   EmailParseResult errorCode = AddressOk;
   for ( it = list.begin(); it != list.end(); ++it ) {
+      qDebug()<<" *it"<<(*it);
     errorCode = isValidAddress( *it );
     if ( errorCode != AddressOk ) {
       badAddr = ( *it );
@@ -579,6 +595,12 @@ QString KPIMUtils::emailParseResultToString( EmailParseResult errorCode )
   case InvalidDisplayName :
     return i18n( "The email address you have entered is not valid because it "
                  "contains an invalid display name." );
+  case TooFewDots :
+    return i18n( "The email address you entered is not valid because it "
+                   "does not contain a \'.\'. "
+                   "You will not create valid messages if you do not "
+                   "change your address." );
+
   }
   return i18n( "Unknown problem with email address" );
 }
@@ -592,7 +614,7 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
     return false;
   }
 
-  int atChar = aStr.lastIndexOf( '@' );
+  int atChar = aStr.lastIndexOf( QLatin1Char('@') );
   QString domainPart = aStr.mid( atChar + 1 );
   QString localPart = aStr.left( atChar );
 
@@ -605,7 +627,7 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
 
   bool tooManyAtsFlag = false;
   bool inQuotedString = false;
-  int atCount = localPart.count( '@' );
+  int atCount = localPart.count( QLatin1Char('@') );
 
   unsigned int strlen = localPart.length();
   for ( unsigned int index = 0; index < strlen; index++ ) {
@@ -626,15 +648,15 @@ bool KPIMUtils::isValidSimpleAddress( const QString &aStr )
 
   QString addrRx;
 
-  if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
-    addrRx = "\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@";
+  if ( localPart[ 0 ] == QLatin1Char('\"') || localPart[ localPart.length()-1 ] == QLatin1Char('\"') ) {
+    addrRx = QLatin1String("\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@");
   } else {
-    addrRx = "[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@";
+    addrRx = QLatin1String("[a-zA-Z]*[~|{}`\\^?=/+*'&%$#!_\\w.-]*[~|{}`\\^?=/+*'&%$#!_a-zA-Z0-9-]@");
   }
-  if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
-    addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
+  if ( domainPart[ 0 ] == QLatin1Char('[') || domainPart[ domainPart.length()-1 ] == QLatin1Char(']') ) {
+    addrRx += QLatin1String("\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]");
   } else {
-    addrRx += "[\\w-#]+(\\.[\\w-#]+)*";
+    addrRx += QLatin1String("[\\w-#]+(\\.[\\w-#]+)*");
   }
   QRegExp rx( addrRx );
   return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
@@ -718,19 +740,19 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
   // skipping all '@' inside "(...)" comments:
   while ( i < len ) {
     c = aStr[i];
-    if ( '(' == c ) {
+    if ( QLatin1Char('(') == c ) {
       commentstack++;
     }
-    if ( ')' == c ) {
+    if ( QLatin1Char(')') == c ) {
       commentstack--;
     }
     bInComment = commentstack != 0;
-    if ( '"' == c && !bInComment ) {
+    if ( QLatin1Char('"') == c && !bInComment ) {
       bInQuotesOutsideOfEmail = !bInQuotesOutsideOfEmail;
     }
 
     if ( !bInComment && !bInQuotesOutsideOfEmail ) {
-      if ( '@' == c ) {
+      if ( QLatin1Char('@') == c ) {
         iAd = i;
         break; // found it
       }
@@ -744,14 +766,14 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
     // So we take everything that's left of the '<' as name and the rest as mail
     for ( i = 0; len > i; ++i ) {
       c = aStr[i];
-      if ( '<' != c ) {
+      if ( QLatin1Char('<') != c ) {
         name.append( c );
       } else {
         break;
       }
     }
     mail = aStr.mid( i + 1 );
-    if ( mail.endsWith( '>' ) ) {
+    if ( mail.endsWith( QLatin1Char('>') ) ) {
       mail.truncate( mail.length() - 1 );
     }
 
@@ -764,28 +786,28 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
     for ( i = iAd-1; 0 <= i; --i ) {
       c = aStr[i];
       if ( bInComment ) {
-        if ( '(' == c ) {
+        if ( QLatin1Char('(') == c ) {
           if ( !name.isEmpty() ) {
-            name.prepend( ' ' );
+            name.prepend( QLatin1Char(' ') );
           }
           bInComment = false;
         } else {
           name.prepend( c ); // all comment stuff is part of the name
         }
       } else if ( bInQuotesOutsideOfEmail ) {
-        if ( cQuotes == c ) {
+        if ( QLatin1Char(cQuotes) == c ) {
           bInQuotesOutsideOfEmail = false;
-        } else if ( c != '\\' ) {
+        } else if ( c != QLatin1Char('\\') ) {
           name.prepend( c );
         }
       } else {
         // found the start of this addressee ?
-        if ( ',' == c ) {
+        if ( QLatin1Char(',') == c ) {
           break;
         }
         // stuff is before the leading '<' ?
         if ( iMailStart ) {
-          if ( cQuotes == c ) {
+          if ( QLatin1Char(cQuotes) == c ) {
             bInQuotesOutsideOfEmail = true; // end of quoted text found
           } else {
             name.prepend( c );
@@ -797,12 +819,12 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
             break;
           case ')':
             if ( !name.isEmpty() ) {
-              name.prepend( ' ' );
+              name.prepend( QLatin1Char(' ') );
             }
             bInComment = true;
             break;
           default:
-            if ( ' ' != c ) {
+            if ( QLatin1Char(' ') != c ) {
               mail.prepend( c );
             }
           }
@@ -817,7 +839,7 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
       return false;
     }
 
-    mail.append( '@' );
+    mail.append( QLatin1Char('@') );
 
     // Loop forward until we find the end of the string
     // or a ',' that is outside of a comment
@@ -828,37 +850,37 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
     for ( i = iAd+1; len > i; ++i ) {
       c = aStr[i];
       if ( bInComment ) {
-        if ( ')' == c ) {
+        if ( QLatin1Char(')') == c ) {
           if ( --parenthesesNesting == 0 ) {
             bInComment = false;
             if ( !name.isEmpty() ) {
-              name.append( ' ' );
+              name.append( QLatin1Char(' ') );
             }
           } else {
             // nested ")", add it
-            name.append( ')' ); // name can't be empty here
+            name.append( QLatin1Char(')') ); // name can't be empty here
           }
         } else {
-          if ( '(' == c ) {
+          if ( QLatin1Char('(') == c ) {
             // nested "("
             ++parenthesesNesting;
           }
           name.append( c ); // all comment stuff is part of the name
         }
       } else if ( bInQuotesOutsideOfEmail ) {
-        if ( cQuotes == c ) {
+        if ( QLatin1Char(cQuotes) == c ) {
           bInQuotesOutsideOfEmail = false;
-        } else if ( c != '\\' ) {
+        } else if ( c != QLatin1Char('\\') ) {
           name.append( c );
         }
       } else {
         // found the end of this addressee ?
-        if ( ',' == c ) {
+        if ( QLatin1Char(',') == c ) {
           break;
         }
         // stuff is behind the trailing '>' ?
         if ( iMailEnd ) {
-          if ( cQuotes == c ) {
+          if ( QLatin1Char(cQuotes) == c ) {
             bInQuotesOutsideOfEmail = true; // start of quoted text found
           } else {
             name.append( c );
@@ -870,14 +892,14 @@ bool KPIMUtils::extractEmailAddressAndName( const QString &aStr,
             break;
           case '(':
             if ( !name.isEmpty() ) {
-              name.append( ' ' );
+              name.append( QLatin1Char(' ') );
             }
             if ( ++parenthesesNesting > 0 ) {
               bInComment = true;
             }
             break;
           default:
-            if ( ' ' != c ) {
+            if ( QLatin1Char(' ') != c ) {
               mail.append( c );
             }
           }
@@ -914,23 +936,23 @@ QString KPIMUtils::normalizedAddress( const QString &displayName,
   if ( realDisplayName.isEmpty() && comment.isEmpty() ) {
     return addrSpec;
   } else if ( comment.isEmpty() ) {
-    if ( !realDisplayName.startsWith( '\"' ) ) {
-      return quoteNameIfNecessary( realDisplayName ) + " <" + addrSpec + '>';
+    if ( !realDisplayName.startsWith( QLatin1Char('\"') ) ) {
+      return quoteNameIfNecessary( realDisplayName ) + QLatin1String(" <") + addrSpec + QLatin1Char('>');
     } else {
-      return realDisplayName + " <" + addrSpec + '>';
+      return realDisplayName + QLatin1String(" <") + addrSpec + QLatin1Char('>');
     }
   } else if ( realDisplayName.isEmpty() ) {
     QString commentStr = comment;
-    return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + '>';
+    return quoteNameIfNecessary( commentStr ) + QLatin1String(" <") + addrSpec + QLatin1Char('>');
   } else {
-    return realDisplayName + " (" + comment + ") <" + addrSpec + '>';
+    return realDisplayName + QLatin1String(" (") + comment +QLatin1String( ") <") + addrSpec + QLatin1Char('>');
   }
 }
 
 //-----------------------------------------------------------------------------
 QString KPIMUtils::fromIdn( const QString &addrSpec )
 {
-  const int atPos = addrSpec.lastIndexOf( '@' );
+  const int atPos = addrSpec.lastIndexOf( QLatin1Char('@') );
   if ( atPos == -1 ) {
     return addrSpec;
   }
@@ -946,12 +968,12 @@ QString KPIMUtils::fromIdn( const QString &addrSpec )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::toIdn( const QString &addrSpec )
 {
-  const int atPos = addrSpec.lastIndexOf( '@' );
+  const int atPos = addrSpec.lastIndexOf( QLatin1Char('@') );
   if ( atPos == -1 ) {
     return addrSpec;
   }
 
-  QString idn = KUrl::toAce( addrSpec.mid( atPos + 1 ) );
+  QString idn = QLatin1String(KUrl::toAce( addrSpec.mid( atPos + 1 )) );
   if ( idn.isEmpty() ) {
     return addrSpec;
   }
@@ -994,7 +1016,7 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
              << normalizedAddressList.join( ", " )
              << "\"";
   */
-  return normalizedAddressList.join( ", " );
+  return normalizedAddressList.join( QLatin1String(", ") );
 }
 
 //-----------------------------------------------------------------------------
@@ -1029,7 +1051,7 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
              << normalizedAddressList.join( ", " )
              << "\"";
   */
-  return normalizedAddressList.join( ", " );
+  return normalizedAddressList.join( QLatin1String(", ") );
 }
 
 //-----------------------------------------------------------------------------
@@ -1045,11 +1067,11 @@ static QString escapeQuotes( const QString &str )
   escaped.reserve( 2 * str.length() );
   unsigned int len = 0;
   for ( int i = 0; i < str.length(); ++i, ++len ) {
-    if ( str[i] == '"' ) { // unescaped doublequote
-      escaped[len] = '\\';
+    if ( str[i] == QLatin1Char('"') ) { // unescaped doublequote
+      escaped[len] = QLatin1Char('\\');
       ++len;
-    } else if ( str[i] == '\\' ) { // escaped character
-      escaped[len] = '\\';
+    } else if ( str[i] == QLatin1Char('\\') ) { // escaped character
+      escaped[len] = QLatin1Char('\\');
       ++len;
       ++i;
       if ( i >= str.length() ) { // handle trailing '\' gracefully
@@ -1067,12 +1089,12 @@ QString KPIMUtils::quoteNameIfNecessary( const QString &str )
 {
   QString quoted = str;
 
-  QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+  QRegExp needQuotes( QLatin1String("[^ 0-9A-Za-z\\x0080-\\xFFFF]") );
   // avoid double quoting
-  if ( ( quoted[0] == '"' ) && ( quoted[quoted.length() - 1] == '"' ) ) {
-    quoted = "\"" + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + "\"";
+  if ( ( quoted[0] == QLatin1Char('"') ) && ( quoted[quoted.length() - 1] ==QLatin1Char( '"') ) ) {
+    quoted = QLatin1String("\"") + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + QLatin1String("\"");
   } else if ( quoted.indexOf( needQuotes ) != -1 ) {
-    quoted = "\"" + escapeQuotes( quoted ) + "\"";
+    quoted = QLatin1String("\"") + escapeQuotes( quoted ) + QLatin1String("\"");
   }
 
   return quoted;
@@ -1082,13 +1104,13 @@ KUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
 {
   const QByteArray encodedPath = KMime::encodeRFC2047String( mailbox, "utf-8" );
   KUrl mailtoUrl;
-  mailtoUrl.setProtocol( "mailto" );
-  mailtoUrl.setPath( encodedPath );
+  mailtoUrl.setProtocol( QLatin1String("mailto") );
+  mailtoUrl.setPath( QLatin1String(encodedPath) );
   return mailtoUrl;
 }
 
 QString KPIMUtils::decodeMailtoUrl( const KUrl &mailtoUrl )
 {
-  Q_ASSERT( mailtoUrl.protocol().toLower() == "mailto" );
+  Q_ASSERT( mailtoUrl.protocol().toLower() == QLatin1String("mailto") );
   return KMime::decodeRFC2047String( mailtoUrl.path().toUtf8() );
 }

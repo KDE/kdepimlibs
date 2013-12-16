@@ -32,7 +32,7 @@ endif()
 
 if ( _any_gpgme_found )
 
-   include_directories( ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
+   include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${GPGME_INCLUDES} ${CMAKE_SOURCE_DIR}/gpgme++ ${Boost_INCLUDE_DIR} )
 
    add_subdirectory( tests )
 
@@ -41,12 +41,10 @@ if ( _any_gpgme_found )
         ${_qgpgme_extra_src}
    )
 
-   kde4_add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
+   add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
+   generate_export_header(qgpgme)
 
    target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
-   if(WINCE)
-   target_link_libraries(qgpgme ${WCECOMPAT_LIBRARIES})
-   endif()
 
    set_target_properties( qgpgme PROPERTIES
      VERSION ${_qgpgme_version}
@@ -56,7 +54,7 @@ if ( _any_gpgme_found )
    install( TARGETS qgpgme EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
    install( FILES
-     qgpgme_export.h
+     ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_export.h
      ${_qgpgme_extra_headers}
      dataprovider.h 
      DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme COMPONENT Devel )

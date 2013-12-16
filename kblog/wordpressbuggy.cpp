@@ -90,54 +90,54 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
       }
     }
 
-    QString xmlMarkup = "<?xml version=\"1.0\"?>";
-    xmlMarkup += "<methodCall>";
-    xmlMarkup += "<methodName>metaWeblog.newPost</methodName>";
-    xmlMarkup += "<params><param>";
-    xmlMarkup += "<value><string><![CDATA["+blogId()+"]]></string></value>";
-    xmlMarkup += "</param>";
-    xmlMarkup += "<param>";
-    xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
-    xmlMarkup += "</param><param>";
-    xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
-    xmlMarkup += "</param>";
-    xmlMarkup += "<param><struct>";
-    xmlMarkup += "<member><name>description</name>";
-    xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>title</name>";
-    xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
-    xmlMarkup += "</member><member>";
+    QString xmlMarkup = QLatin1String("<?xml version=\"1.0\"?>");
+    xmlMarkup += QLatin1String("<methodCall>");
+    xmlMarkup += QLatin1String("<methodName>metaWeblog.newPost</methodName>");
+    xmlMarkup += QLatin1String("<params><param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+blogId()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param>");
+    xmlMarkup += QLatin1String("<param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+username()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param><param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+password()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param>");
+    xmlMarkup += QLatin1String("<param><struct>");
+    xmlMarkup += QLatin1String("<member><name>description</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+post->content()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>title</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+post->title()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
 
-    xmlMarkup += "<name>dateCreated</name>";
-    xmlMarkup += "<value><dateTime.iso8601>" +
-                 post->creationDateTime().dateTime().toUTC().toString( "yyyyMMddThh:mm:ss" ) +
-                 "</dateTime.iso8601></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_allow_comments</name>";
-    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_allow_pings</name>";
-    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
-    xmlMarkup += "</member><member>";
+    xmlMarkup += QLatin1String("<name>dateCreated</name>");
+    xmlMarkup += QLatin1String("<value><dateTime.iso8601>") +
+                 post->creationDateTime().dateTime().toUTC().toString( QLatin1String("yyyyMMddThh:mm:ss") ) +
+                 QLatin1String("</dateTime.iso8601></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_allow_comments</name>");
+    xmlMarkup += QString::fromLatin1( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_allow_pings</name>");
+    xmlMarkup += QString::fromLatin1( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
+    xmlMarkup += QLatin1String("</member><member>");
     if ( !post->additionalContent().isEmpty() ) {
-      xmlMarkup += "<name>mt_text_more</name>";
-      xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
-      xmlMarkup += "</member><member>";
+      xmlMarkup += QLatin1String("<name>mt_text_more</name>");
+      xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->additionalContent() + QLatin1String("]]></string></value>");
+      xmlMarkup += QLatin1String("</member><member>");
     }
-    xmlMarkup += "<name>wp_slug</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_excerpt</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_keywords</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->tags().join(",") + "]]></string></value>";
-    xmlMarkup += "</member></struct></param>";
-    xmlMarkup += "<param><value><boolean>" +
-                 QString( "%1" ).arg( (int)(!post->isPrivate() ) ) +
-                 "</boolean></value></param>";
-    xmlMarkup += "</params></methodCall>";
+    xmlMarkup += QLatin1String("<name>wp_slug</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->slug() + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_excerpt</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->summary() + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_keywords</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->tags().join(QLatin1String(",")) + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member></struct></param>");
+    xmlMarkup += QLatin1String("<param><value><boolean>") +
+                 QString::fromLatin1( "%1" ).arg( (int)(!post->isPrivate() ) ) +
+                 QLatin1String("</boolean></value></param>");
+    xmlMarkup += QLatin1String("</params></methodCall>");
 
     QByteArray postData;
     QDataStream stream( &postData, QIODevice::WriteOnly );
@@ -152,11 +152,11 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     }
 
     job->addMetaData(
-      "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
-      "you took another 4 hours of my life to work around the stupid dateTime bug." );
-    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-    job->addMetaData( "ConnectTimeout", "50" );
-    job->addMetaData( "UserAgent", userAgent() );
+      QLatin1String("customHTTPHeader"), QLatin1String("X-hacker: Shame on you Wordpress, ") + QString() +
+      QLatin1String("you took another 4 hours of my life to work around the stupid dateTime bug.") );
+    job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: text/xml; charset=utf-8") );
+    job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
+    job->addMetaData( QLatin1String("UserAgent"), userAgent() );
 
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotCreatePost(KJob*)) );
@@ -192,59 +192,59 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
 
     kDebug() << "Uploading Post with postId" << post->postId();
 
-    QString xmlMarkup = "<?xml version=\"1.0\"?>";
-    xmlMarkup += "<methodCall>";
-    xmlMarkup += "<methodName>metaWeblog.editPost</methodName>";
-    xmlMarkup += "<params><param>";
-    xmlMarkup += "<value><string><![CDATA["+post->postId()+"]]></string></value>";
-    xmlMarkup += "</param>";
-    xmlMarkup += "<param>";
-    xmlMarkup += "<value><string><![CDATA["+username()+"]]></string></value>";
-    xmlMarkup += "</param><param>";
-    xmlMarkup += "<value><string><![CDATA["+password()+"]]></string></value>";
-    xmlMarkup += "</param>";
-    xmlMarkup += "<param><struct>";
-    xmlMarkup += "<member><name>description</name>";
-    xmlMarkup += "<value><string><![CDATA["+post->content()+"]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>title</name>";
-    xmlMarkup += "<value><string><![CDATA["+post->title()+"]]></string></value>";
-    xmlMarkup += "</member><member>";
+    QString xmlMarkup = QLatin1String("<?xml version=\"1.0\"?>");
+    xmlMarkup += QLatin1String("<methodCall>");
+    xmlMarkup += QLatin1String("<methodName>metaWeblog.editPost</methodName>");
+    xmlMarkup += QLatin1String("<params><param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+post->postId()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param>");
+    xmlMarkup += QLatin1String("<param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+username()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param><param>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+password()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</param>");
+    xmlMarkup += QLatin1String("<param><struct>");
+    xmlMarkup += QLatin1String("<member><name>description</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+post->content()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>title</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[")+post->title()+QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
 
-    xmlMarkup += "<name>lastModified</name>";
-    xmlMarkup += "<value><dateTime.iso8601>" +
-                 post->modificationDateTime().dateTime().toUTC().toString( "yyyyMMddThh:mm:ss" ) +
-                 "</dateTime.iso8601></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>dateCreated</name>";
-    xmlMarkup += "<value><dateTime.iso8601>" +
-                 post->creationDateTime().dateTime().toUTC().toString( "yyyyMMddThh:mm:ss" ) +
-                 "</dateTime.iso8601></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_allow_comments</name>";
-    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_allow_pings</name>";
-    xmlMarkup += QString( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
-    xmlMarkup += "</member><member>";
+    xmlMarkup += QLatin1String("<name>lastModified</name>");
+    xmlMarkup += QLatin1String("<value><dateTime.iso8601>") +
+                 post->modificationDateTime().dateTime().toUTC().toString( QLatin1String("yyyyMMddThh:mm:ss") ) +
+                 QLatin1String("</dateTime.iso8601></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>dateCreated</name>");
+    xmlMarkup += QLatin1String("<value><dateTime.iso8601>") +
+                 post->creationDateTime().dateTime().toUTC().toString( QLatin1String("yyyyMMddThh:mm:ss") ) +
+                 QLatin1String("</dateTime.iso8601></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_allow_comments</name>");
+    xmlMarkup += QString::fromLatin1( "<value><int>%1</int></value>" ).arg( (int)post->isCommentAllowed() );
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_allow_pings</name>");
+    xmlMarkup += QString::fromLatin1( "<value><int>%1</int></value>" ).arg( (int)post->isTrackBackAllowed() );
+    xmlMarkup += QLatin1String("</member><member>");
     if ( !post->additionalContent().isEmpty() ) {
-        xmlMarkup += "<name>mt_text_more</name>";
-        xmlMarkup += "<value><string><![CDATA[" + post->additionalContent() + "]]></string></value>";
-        xmlMarkup += "</member><member>";
+        xmlMarkup += QLatin1String("<name>mt_text_more</name>");
+        xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->additionalContent() + QLatin1String("]]></string></value>");
+        xmlMarkup += QLatin1String("</member><member>");
     }
-    xmlMarkup += "<name>wp_slug</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->slug() + "]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_excerpt</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->summary() + "]]></string></value>";
-    xmlMarkup += "</member><member>";
-    xmlMarkup += "<name>mt_keywords</name>";
-    xmlMarkup += "<value><string><![CDATA[" + post->tags().join( "," ) + "]]></string></value>";
-    xmlMarkup += "</member></struct></param>";
-    xmlMarkup += "<param><value><boolean>" +
-                 QString( "%1" ).arg( (int)( !post->isPrivate() ) ) +
-                 "</boolean></value></param>";
-    xmlMarkup += "</params></methodCall>";
+    xmlMarkup += QLatin1String("<name>wp_slug</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->slug() + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_excerpt</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->summary() + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member><member>");
+    xmlMarkup += QLatin1String("<name>mt_keywords</name>");
+    xmlMarkup += QLatin1String("<value><string><![CDATA[") + post->tags().join( QLatin1String(",") ) + QLatin1String("]]></string></value>");
+    xmlMarkup += QLatin1String("</member></struct></param>");
+    xmlMarkup += QLatin1String("<param><value><boolean>") +
+                 QString::fromLatin1( "%1" ).arg( (int)( !post->isPrivate() ) ) +
+                 QLatin1String("</boolean></value></param>");
+    xmlMarkup += QLatin1String("</params></methodCall>");
 
     QByteArray postData;
     QDataStream stream( &postData, QIODevice::WriteOnly );
@@ -259,11 +259,11 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     }
 
     job->addMetaData(
-      "customHTTPHeader", "X-hacker: Shame on you Wordpress, " + QString() +
-      "you took another 4 hours of my life to work around the stupid dateTime bug." );
-    job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-    job->addMetaData( "ConnectTimeout", "50" );
-    job->addMetaData( "UserAgent", userAgent() );
+      QLatin1String("customHTTPHeader"), QLatin1String("X-hacker: Shame on you Wordpress, ") + QString() +
+      QLatin1String("you took another 4 hours of my life to work around the stupid dateTime bug.") );
+    job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: text/xml; charset=utf-8") );
+    job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
+    job->addMetaData( QLatin1String("UserAgent"), userAgent() );
 
     connect( job, SIGNAL(result(KJob*)),
              this, SLOT(slotModifyPost(KJob*)) );
@@ -314,9 +314,9 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
     return;
   }
 
-  QRegExp rxError( "faultString" );
+  QRegExp rxError( QLatin1String("faultString") );
   if ( rxError.indexIn( data ) != -1 ) {
-    rxError = QRegExp( "<string>(.+)</string>" );
+    rxError = QRegExp( QLatin1String("<string>(.+)</string>") );
     if ( rxError.indexIn( data ) != -1 ) {
       kDebug() << "RegExp of faultString failed.";
     }
@@ -325,7 +325,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
     return;
   }
 
-  QRegExp rxId( "<string>(.+)</string>" );
+  QRegExp rxId( QLatin1String("<string>(.+)</string>") );
   if ( rxId.indexIn( data ) == -1 ) {
     kError() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( WordpressBuggy::XmlRpc,
@@ -363,9 +363,9 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
     return;
   }
 
-  QRegExp rxError( "faultString" );
+  QRegExp rxError( QLatin1String("faultString") );
   if ( rxError.indexIn( data ) != -1 ) {
-    rxError = QRegExp( "<string>(.+)</string>" );
+    rxError = QRegExp( QLatin1String("<string>(.+)</string>") );
     if ( rxError.indexIn( data ) != -1 ) {
       kDebug() << "RegExp of faultString failed.";
     }
@@ -374,7 +374,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
     return;
   }
 
-  QRegExp rxId( "<boolean>(.+)</boolean>" );
+  QRegExp rxId( QLatin1String("<boolean>(.+)</boolean>") );
   if ( rxId.indexIn( data ) == -1 ) {
     kError() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( WordpressBuggy::XmlRpc,

@@ -108,7 +108,7 @@ class KMIME_EXPORT Message : public Content
     virtual void clear();
 
     /* reimpl */
-    virtual KDE_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
+    virtual KMIME_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
 
     /* reimpl */
     virtual KMime::Headers::Base *headerByType( const char *type );

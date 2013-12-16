@@ -55,7 +55,7 @@ class SmtpSession : public QObject
     /** Returns the error nmeesage, if any.  */
     QString errorMessage() const;
 
-  signals:
+  Q_SIGNALS:
     /** Emitted when an email transfer has been completed. */
     void result( MailTransport::SmtpSession *session );
 

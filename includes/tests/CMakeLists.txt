@@ -9,9 +9,17 @@ endif()
 # clear the file initially
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/all_includes.h "/* all forwarding includes */\n" )
 
-add_definitions(-DWANT_DEPRECATED_KCAL_API)
-add_definitions(-DWANT_DEPRECATED_KABC_API)
-add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+add_definitions(
+  -DKRESOURCES_DEPRECATED=
+  -DKABC_DEPRECATED=
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+  -DKABC_DEPRECATED_EXPORT=KABC_EXPORT
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
 
 macro(add_includes _dir)
   file(GLOB_RECURSE _includes "${CMAKE_SOURCE_DIR}/includes/${_dir}/[A-Z]*")
@@ -23,14 +31,31 @@ endmacro()
 include_directories(
   # HACK: akonadi/calendar has a generated header. We need to go up 3 directories level
   ${CMAKE_BINARY_DIR}/akonadi/calendar/tests
-  ${CMAKE_SOURCE_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/akonadi/contact
+  ${CMAKE_BINARY_DIR}/akonadi/calendar
+  ${CMAKE_BINARY_DIR}/akonadi/kcal
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/akonadi/notes
+  ${CMAKE_BINARY_DIR}/akonadi/socialutils
   ${CMAKE_BINARY_DIR}/kabc
-  ${CMAKE_SOURCE_DIR}/kcalutils
-<<<<<<< HEAD
-  ${CMAKE_BINARY_DIR}/kcal
+
   ${CMAKE_BINARY_DIR}/kalarmcal
-=======
->>>>>>> Remove kcal
+  ${CMAKE_BINARY_DIR}/kcalutils
+  ${CMAKE_BINARY_DIR}/kholidays
+  ${CMAKE_BINARY_DIR}/kimap
+  ${CMAKE_BINARY_DIR}/kldap
+  ${CMAKE_BINARY_DIR}/kontactinterface
+  ${CMAKE_BINARY_DIR}/kmbox
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kpimidentities
+  ${CMAKE_BINARY_DIR}/kpimtextedit
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kresources
+  ${CMAKE_BINARY_DIR}/ktnef
+  ${CMAKE_BINARY_DIR}/mailtransport
+  ${CMAKE_BINARY_DIR}/microblog
+  ${CMAKE_BINARY_DIR}/syndication
   ${Boost_INCLUDE_DIR}
 )
 

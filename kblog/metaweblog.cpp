@@ -65,7 +65,7 @@ void MetaWeblog::listCategories()
     kDebug() << "Fetching List of Categories...";
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     d->mXmlRpcClient->call(
-      "metaWeblog.getCategories", args,
+      QLatin1String("metaWeblog.getCategories"), args,
       this, SLOT(slotListCategories(QList<QVariant>,QVariant)),
       this, SLOT(slotError(int,QString,QVariant)) );
 }
@@ -83,13 +83,12 @@ void MetaWeblog::createMedia( KBlog::BlogMedia *media )
   kDebug() << "MetaWeblog::createMedia: name=" << media->name();
   QList<QVariant> args( d->defaultArgs( blogId() ) );
   QMap<QString, QVariant> map;
-  QList<QVariant> list;
-  map["name"] = media->name();
-  map["type"] = media->mimetype();
-  map["bits"] = media->data();
+  map[QLatin1String("name")] = media->name();
+  map[QLatin1String("type")] = media->mimetype();
+  map[QLatin1String("bits")] = media->data();
   args << map;
   d->mXmlRpcClient->call(
-    "metaWeblog.newMediaObject", args,
+    QLatin1String("metaWeblog.newMediaObject"), args,
     this, SLOT(slotCreateMedia(QList<QVariant>,QVariant)),
     this, SLOT(slotError(int,QString,QVariant)),
     QVariant( i ) );
@@ -134,7 +133,7 @@ void MetaWeblogPrivate::loadCategories()
     return;
   }
 
-  QString filename = "kblog/" + mUrl.host() + '_' + mBlogId + '_' + mUsername;
+  QString filename = QLatin1String("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
   filename = KStandardDirs::locateLocal( "data", filename, true );
 
   QFile file( filename );
@@ -156,7 +155,7 @@ void MetaWeblogPrivate::saveCategories()
     return;
   }
 
-  QString filename = "kblog/" + mUrl.host() + '_' + mBlogId + '_' + mUsername;
+  QString filename = QLatin1String("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
   filename = KStandardDirs::locateLocal( "data", filename, true );
 
   QFile file( filename );
@@ -169,7 +168,6 @@ void MetaWeblogPrivate::saveCategories()
   stream << mCategoriesList;
   file.close();
 }
-
 
 void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
                                             const QVariant &id )
@@ -198,12 +196,12 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
         kDebug() << "MIDDLE:" << ( *it );
         QMap<QString,QString> category;
         const QMap<QString, QVariant> serverCategory = serverMap[*it].toMap();
-        category["name"]= ( *it );
-        category["description"] = serverCategory[ "description" ].toString();
-        category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
-        category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
-        category["categoryId"] = serverCategory[ "categoryId" ].toString();
-        category["parentId"] = serverCategory[ "parentId" ].toString();
+        category[QLatin1String("name")]= ( *it );
+        category[QLatin1String("description")] = serverCategory[ QLatin1String("description") ].toString();
+        category[QLatin1String("htmlUrl")] = serverCategory[ QLatin1String("htmlUrl") ].toString();
+        category[QLatin1String("rssUrl")] = serverCategory[ QLatin1String("rssUrl") ].toString();
+        category[QLatin1String("categoryId")] = serverCategory[ QLatin1String("categoryId") ].toString();
+        category[QLatin1String("parentId")] = serverCategory[ QLatin1String("parentId") ].toString();
         mCategoriesList.append( category );
       }
       kDebug() << "Emitting listedCategories";
@@ -220,12 +218,12 @@ void MetaWeblogPrivate::slotListCategories( const QList<QVariant> &result,
       kDebug() << "MIDDLE:" << ( *it ).typeName();
       QMap<QString,QString> category;
       const QMap<QString, QVariant> serverCategory = ( *it ).toMap();
-      category[ "name" ] = serverCategory["categoryName"].toString();
-      category["description"] = serverCategory[ "description" ].toString();
-      category["htmlUrl"] = serverCategory[ "htmlUrl" ].toString();
-      category["rssUrl"] = serverCategory[ "rssUrl" ].toString();
-      category["categoryId"] = serverCategory[ "categoryId" ].toString();
-      category["parentId"] = serverCategory[ "parentId" ].toString();
+      category[ QLatin1String("name") ] = serverCategory[QLatin1String("categoryName")].toString();
+      category[QLatin1String("description")] = serverCategory[ QLatin1String("description") ].toString();
+      category[QLatin1String("htmlUrl")] = serverCategory[ QLatin1String("htmlUrl") ].toString();
+      category[QLatin1String("rssUrl")] = serverCategory[ QLatin1String("rssUrl") ].toString();
+      category[QLatin1String("categoryId")] = serverCategory[ QLatin1String("categoryId") ].toString();
+      category[QLatin1String("parentId")] = serverCategory[ QLatin1String("parentId") ].toString();
       mCategoriesList.append( category );
     }
     kDebug() << "Emitting listedCategories()";
@@ -252,7 +250,7 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
     return;
   }
   const QMap<QString, QVariant> resultStruct = result[0].toMap();
-  const QString url = resultStruct["url"].toString();
+  const QString url = resultStruct[QLatin1String("url")].toString();
   kDebug() << "MetaWeblog::slotCreateMedia url=" << url;
 
   if ( !url.isEmpty() ) {
@@ -272,27 +270,27 @@ bool MetaWeblogPrivate::readPostFromMap( BlogPost *post,
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  kDebug() << endl << "Keys:" << mapkeys.join( ", " );
+  kDebug() << endl << "Keys:" << mapkeys.join( QLatin1String(", ") );
   kDebug() << endl;
 
   KDateTime dt =
-    KDateTime( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
+    KDateTime( postInfo[QLatin1String("dateCreated")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt.toLocalZone() );
   }
 
   dt =
-    KDateTime( postInfo["lastModified"].toDateTime(), KDateTime::UTC );
+    KDateTime( postInfo[QLatin1String("lastModified")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt.toLocalZone() );
   }
 
-  post->setPostId( postInfo["postid"].toString().isEmpty() ? postInfo["postId"].toString() :
-                   postInfo["postid"].toString() );
+  post->setPostId( postInfo[QLatin1String("postid")].toString().isEmpty() ? postInfo[QLatin1String("postId")].toString() :
+                   postInfo[QLatin1String("postid")].toString() );
 
-  QString title( postInfo["title"].toString() );
-  QString description( postInfo["description"].toString() );
-  QStringList categories( postInfo["categories"].toStringList() );
+  QString title( postInfo[QLatin1String("title")].toString() );
+  QString description( postInfo[QLatin1String("description")].toString() );
+  QStringList categories( postInfo[QLatin1String("categories")].toStringList() );
 
   post->setTitle( title );
   post->setContent( description );
@@ -309,11 +307,11 @@ bool MetaWeblogPrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost 
     return false;
   }
   QMap<QString, QVariant> map;
-  map["categories"] = post.categories();
-  map["description"] = post.content();
-  map["title"] = post.title();
-  map["lastModified"] = post.modificationDateTime().dateTime().toUTC();
-  map["dateCreated"] = post.creationDateTime().dateTime().toUTC();
+  map[QLatin1String("categories")] = post.categories();
+  map[QLatin1String("description")] = post.content();
+  map[QLatin1String("title")] = post.title();
+  map[QLatin1String("lastModified")] = post.modificationDateTime().dateTime().toUTC();
+  map[QLatin1String("dateCreated")] = post.creationDateTime().dateTime().toUTC();
   *args << map;
   *args << QVariant( !post.isPrivate() );
   return true;
@@ -322,10 +320,10 @@ bool MetaWeblogPrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost 
 QString MetaWeblogPrivate::getCallFromFunction( FunctionToCall type )
 {
   switch ( type ) {
-    case GetRecentPosts: return "metaWeblog.getRecentPosts";
-    case CreatePost:        return "metaWeblog.newPost";
-    case ModifyPost:       return "metaWeblog.editPost";
-    case FetchPost:        return "metaWeblog.getPost";
+    case GetRecentPosts: return QLatin1String("metaWeblog.getRecentPosts");
+    case CreatePost:        return QLatin1String("metaWeblog.newPost");
+    case ModifyPost:       return QLatin1String("metaWeblog.editPost");
+    case FetchPost:        return QLatin1String("metaWeblog.getPost");
     default: return QString();
   }
 }

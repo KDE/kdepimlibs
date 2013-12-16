@@ -48,10 +48,10 @@ set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.$
 
 ############### search packages used by KDE ###############
 
-# cmake would not find kde for xcompile if that is not set
-if(WINCE)
-    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
-endif()
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_LINK_INTERFACE_LIBRARIES "")
+
+include(GenerateExportHeader)
 
 # Used by options
 include(CMakeDependentOption)
@@ -104,7 +104,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.9.80")
+  set(Akonadi_MIN_VERSION "1.11.41")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 
@@ -125,12 +125,8 @@ if (NOT KDEPIM_ONLY_KLEO)
   set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
 
   find_package(Soprano)
-  if (NOT WINCE)
-    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
-  else()
-    set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE OPTIONAL PURPOSE "Storage of semantic data")
-  endif()
-  if (Soprano_FOUND AND NOT WINCE)
+  set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
+  if (Soprano_FOUND)
   include(SopranoAddOntology)
   endif()
 
@@ -143,6 +139,14 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(QJSON)
   set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
+
+  if (KDE4_BUILD_TESTS)
+    find_package(Xsltproc)
+    set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
+
+    find_package(LibXml2)
+    set_package_properties(LibXml2 PROPERTIES DESCRIPTION "The LibXML2 library" URL "http://xmlsoft.org" TYPE OPTIONAL PURPOSE "Needed for building the knut Akonadi resource.")
+  endif()
 
 endif()
 
@@ -160,11 +164,6 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 if (KDEPIM_NO_KRESOURCES)
   add_definitions(-DKDEPIM_NO_KRESOURCES)
 endif()
-if(WINCE)
-  set(STATIC_LIBRARY ON)
-  add_definitions(-DKDELIBS_STATIC_LIBS)
-endif()
-
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   add_definitions(-DKDEPIM_STATIC_LIBS)
@@ -234,9 +233,7 @@ if (NOT KDEPIM_ONLY_KLEO)
 #   add_subdirectory(mailtransport) Can't have without Akonadi
   add_subdirectory(microblog)
   add_subdirectory(syndication)
-  if (NOT WINCE)
   add_subdirectory(kontactinterface)
-  endif()
   # Build the CamelCase headers
   add_subdirectory(includes)
 endif()

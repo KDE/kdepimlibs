@@ -1,7 +1,11 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
+include_directories(
+  ${CMAKE_SOURCE_DIR}/kmbox
+  ${CMAKE_BINARY_DIR}/kmbox
+  ${CMAKE_BINARY_DIR}/kmime
+)
 
 ########### next target ###############
 

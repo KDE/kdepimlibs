@@ -1,6 +1,8 @@
 project(microblog)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5328)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Xml)
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
@@ -11,7 +13,12 @@ set(microblog_LIB_SRCS
    statusitem.cpp
    )
 
-kde4_add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+)
+
+add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
+generate_export_header(microblog)
 
 target_link_libraries(microblog KF5::CoreAddons Qt5::Xml kpimutils )
 
@@ -21,5 +28,5 @@ install(TARGETS microblog EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 
 install( FILES
          statusitem.h
-         microblog_export.h
+         ${CMAKE_CURRENT_BINARY_DIR}/microblog_export.h
          DESTINATION ${INCLUDE_INSTALL_DIR}/microblog COMPONENT Devel)

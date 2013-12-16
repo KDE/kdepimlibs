@@ -68,11 +68,11 @@ void Blog::setUserAgent( const QString &applicationName,
   QString userAgent;
   if ( !applicationName.isEmpty() &&
        !applicationVersion.isEmpty() ) {
-    userAgent = '(' + applicationName + '/' + applicationVersion + ") KDE-KBlog/";
+    userAgent = QLatin1Char('(') + applicationName + QLatin1Char('/') + applicationVersion + QLatin1String(") KDE-KBlog/");
   } else {
-    userAgent = "KDE-KBlog/";
+    userAgent = QLatin1String("KDE-KBlog/");
   }
-  userAgent += KDE_VERSION_STRING;
+  userAgent += QLatin1String(KDE_VERSION_STRING);
   d->mUserAgent = userAgent;
 }
 
@@ -144,4 +144,3 @@ BlogPrivate::~BlogPrivate()
 {
   kDebug() << "~BlogPrivate()";
 }
-

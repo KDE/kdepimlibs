@@ -3,10 +3,15 @@ project(kpimutils)
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews Emoticons)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5321)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(tests)
 
-include_directories(../kmime)
+include_directories(
+  ../kmime
+  ${CMAKE_CURRENT_BINARY_DIR}/../kmime
+)
 
 set(kpimutils_LIB_SRCS
   email.cpp
@@ -16,23 +21,16 @@ set(kpimutils_LIB_SRCS
   kfileio.cpp
   processes.cpp
   progressindicatorwidget.cpp
+  progressindicatorlabel.cpp
+  networkaccesshelper_fake.cpp
 )
 
-# network access helper
-if(WINCE)
-  set(kpimutils_LIB_SRCS ${kpimutils_LIB_SRCS} networkaccesshelper_wince.cpp)
-else()
-  set(kpimutils_LIB_SRCS ${kpimutils_LIB_SRCS} networkaccesshelper_fake.cpp)
-endif()
-
-kde4_add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
+add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
+generate_export_header(kpimutils)
 
 target_link_libraries(kpimutils KF5::ItemViews KF5::Emoticons kmime)
 
-if(WINCE)
-  target_link_libraries(kpimutils ${WCECOMPAT_LIBRARIES} KF5::Solid toolhelp)
-endif()
-
+  target_link_libraries(kpimutils  KF5::Solid toolhelp)
 set_target_properties(kpimutils PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}
   SOVERSION ${GENERIC_LIB_SOVERSION}
@@ -43,7 +41,7 @@ install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFA
 ########### install files ###############
 
 install(FILES
-  kpimutils_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kpimutils_export.h
   email.h
   emailvalidator.h
   linklocator.h
@@ -53,4 +51,5 @@ install(FILES
   processes.h
   networkaccesshelper.h
   progressindicatorwidget.h
+  progressindicatorlabel.h
 DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils COMPONENT Devel)

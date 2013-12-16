@@ -32,167 +32,171 @@
 #include <utime.h>
 
 ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, bool savetime )
-	: MBoxFile( info, parent ),
-	m_file( 0 ),
-	m_stream( 0 ),
-	m_atend( true ),
-	m_prev_time( 0 ),
-	m_only_new( onlynew ),
-	m_savetime( savetime ),
-	m_status( false ),
-	m_prev_status( false ),
-	m_header( true )
-	
+    : MBoxFile( info, parent ),
+      m_file( 0 ),
+      m_stream( 0 ),
+      m_atend( true ),
+      m_prev_time( 0 ),
+      m_only_new( onlynew ),
+      m_savetime( savetime ),
+      m_status( false ),
+      m_prev_status( false ),
+      m_header( true )
 {
-	if( m_info->type() == UrlInfo::invalid )
-		m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
-		
-	if( !open( savetime ) )
-		m_mbox->emitError( KIO::ERR_CANNOT_OPEN_FOR_READING, info->url() );
+    if( m_info->type() == UrlInfo::invalid ) {
+        m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
+    }
+                
+    if( !open( savetime ) ) {
+        m_mbox->emitError( KIO::ERR_CANNOT_OPEN_FOR_READING, info->url() );
+    }
 
-	if( m_info->type() == UrlInfo::message )
-		if( !searchMessage( m_info->id() ) )
-			m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
+    if( m_info->type() == UrlInfo::message ) {
+        if( !searchMessage( m_info->id() ) ) {
+            m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
+        }
+    }
 }
 
 ReadMBox::~ReadMBox()
 {
-	close();
+    close();
 }
 
 QString ReadMBox::currentLine() const
 {
-	return m_current_line;
+    return m_current_line;
 }
 
 QString ReadMBox::currentID() const
 {
-	return m_current_id;
+    return m_current_id;
 }
 
 bool ReadMBox::nextLine()
 {
-	if( !m_stream )
-		return true;
-		
-	m_current_line = m_stream->readLine();
-	m_atend = m_current_line.isNull();
-	if( m_atend ) // Cursor was at EOF
-	{
-		m_current_id.clear();
-		m_prev_status = m_status;
-		return true;
-	}
+    if( !m_stream ) {
+        return true;
+    }
+                
+    m_current_line = m_stream->readLine();
+    m_atend = m_current_line.isNull();
+    if( m_atend ) { // Cursor was at EOF
+        m_current_id.clear();
+        m_prev_status = m_status;
+        return true;
+    }
 
-	//New message
-	if( m_current_line.left( 5 ) == "From " )
-	{
-		m_current_id = m_current_line;
-		m_prev_status = m_status;
-		m_status = true;
-		m_header = true;
-		return true;
-	} else if( m_only_new )
-	{
-		if( m_header && m_current_line.left( 7 ) == "Status:" &&
-		    ! m_current_line.contains( "U" ) && ! m_current_line.contains( "N" ) )
-		{
-			m_status = false;
-		}
-	}
+    //New message
+    if( m_current_line.left( 5 ) == "From " ) {
+        m_current_id = m_current_line;
+        m_prev_status = m_status;
+        m_status = true;
+        m_header = true;
+        return true;
+    } else if( m_only_new ) {
+        if( m_header && m_current_line.left( 7 ) == "Status:" &&
+            ! m_current_line.contains( "U" ) && ! m_current_line.contains( "N" ) ) {
+                m_status = false;
+        }
+    }
 
-	if( m_current_line.trimmed().isEmpty() )
-		m_header = false;
+    if( m_current_line.trimmed().isEmpty() ) {
+        m_header = false;
+    }
 
-	return false;
+    return false;
 }
 
 bool ReadMBox::searchMessage( const QString& id )
 {
-	if( !m_stream )
-		return false;
-		
-	while( !m_atend && m_current_id != id )
-		nextLine();
+    if( !m_stream ) {
+        return false;
+    }
+                
+    while( !m_atend && m_current_id != id ) {
+        nextLine();
+    }
 
-	return m_current_id == id;
+    return m_current_id == id;
 }
 
 unsigned int ReadMBox::skipMessage()
 {
-	unsigned int result = m_current_line.length();
+    unsigned int result = m_current_line.length();
 
-	if( !m_stream )
-		return 0;
+    if( !m_stream ) {
+        return 0;
+    }
 
-	while( !nextLine() )
-		result += m_current_line.length();
+    while( !nextLine() ) {
+        result += m_current_line.length();
+    }
 
-	return result;
+    return result;
 }
 
 void ReadMBox::rewind()
 {
-	if( !m_stream )
-		return;
+    if( !m_stream ) {
+        return;
+    }
 
-	m_stream->device()->reset();
-	m_atend = m_stream->atEnd();
+    m_stream->device()->reset();
+    m_atend = m_stream->atEnd();
 }
 
 bool ReadMBox::atEnd() const
 {
-	if( !m_stream )
-		return true;
-	
-	return m_atend || ( m_info->type() == UrlInfo::message && m_current_id != m_info->id() );
+    if( !m_stream )
+        return true;
+
+    return m_atend || ( m_info->type() == UrlInfo::message && m_current_id != m_info->id() );
 }
 
 bool ReadMBox::inListing() const
 {
-	return !m_only_new || m_prev_status;
+    return !m_only_new || m_prev_status;
 }
 
 bool ReadMBox::open( bool savetime )
 {
-	if( savetime )
-	{
-		QFileInfo info( m_info->filename() );
-	
-		m_prev_time = new utimbuf;
-		m_prev_time->actime = info.lastRead().toTime_t();
-		m_prev_time->modtime = info.lastModified().toTime_t();
-	}
-	
-	if( m_file )
-		return false; //File already open
+    if( savetime ) {
+        QFileInfo info( m_info->filename() );
 
-	m_file = new QFile( m_info->filename() );
-	if( !m_file->open( QIODevice::ReadOnly ) )
-	{
-		delete m_file;
-		m_file = 0;
-		return false;
-	}
-	m_stream = new QTextStream( m_file );
-	skipMessage();
+        m_prev_time = new utimbuf;
+        m_prev_time->actime = info.lastRead().toTime_t();
+        m_prev_time->modtime = info.lastModified().toTime_t();
+    }
 
-	return true;
+    if( m_file ) {
+        return false; //File already open
+    }
+
+    m_file = new QFile( m_info->filename() );
+    if( !m_file->open( QIODevice::ReadOnly ) ) {
+        delete m_file;
+        m_file = 0;
+        return false;
+    }
+    m_stream = new QTextStream( m_file );
+    skipMessage();
+
+    return true;
 }
 
 void ReadMBox::close()
 {
-	if( !m_stream )
-		return;
+    if( !m_stream ) {
+        return;
+    }
 
-	delete m_stream; m_stream = 0;
-	m_file->close();
-	delete m_file; m_file = 0;
+    delete m_stream; m_stream = 0;
+    m_file->close();
+    delete m_file; m_file = 0;
 
-	if( m_prev_time )
-	{
-		utime( QFile::encodeName( m_info->filename() ), m_prev_time );
-		delete m_prev_time; m_prev_time = 0;
-	}
+    if( m_prev_time ) {
+        utime( QFile::encodeName( m_info->filename() ), m_prev_time );
+        delete m_prev_time; m_prev_time = 0;
+    }
 }
-

@@ -2,6 +2,7 @@ project(kmbox)
 
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
 
+
 set(kmbox_LIB_SRCS
     mboxentry.cpp
     mbox_p.cpp
@@ -10,12 +11,17 @@ set(kmbox_LIB_SRCS
 
 add_subdirectory(tests)
 
-kde4_add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
+add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
+generate_export_header(kmbox)
+
+include_directories(
+  ${CMAKE_BINARY_DIR}/kmime
+)
 
 target_link_libraries(kmbox
   KF5::CoreAddons
   kmime
-  kpimutils
+  kpimutils # TODO KF5 remove this
 )
 
 set_target_properties(kmbox PROPERTIES
@@ -25,7 +31,7 @@ set_target_properties(kmbox PROPERTIES
 install(TARGETS kmbox EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  kmbox_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/kmbox_export.h
   mbox.h
   mboxentry.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kmbox

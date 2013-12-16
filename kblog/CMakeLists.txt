@@ -7,7 +7,8 @@ include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}"
   ${kcalcore_BINARY_DIR}
 )
 
-add_subdirectory( tests )
+
+#add_subdirectory( tests )
 
 ########### next target ###############
 
@@ -24,8 +25,23 @@ set(kblog_LIB_SRCS
    wordpressbuggy.cpp
    )
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/kcal
+  ${CMAKE_BINARY_DIR}/kxmlrpcclient
+  ${CMAKE_BINARY_DIR}/syndication
+)
 
-kde4_add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
+add_definitions(
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
+
+
+add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
+generate_export_header(kblog)
 
 target_link_libraries(kblog kxmlrpcclient syndication kcalcore KF5::CoreAddons KF5::KIOCore)
 

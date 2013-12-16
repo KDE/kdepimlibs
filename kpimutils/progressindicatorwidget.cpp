@@ -25,7 +25,8 @@ namespace KPIMUtils {
 IndicatorProgress::IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent)
     : QObject(parent),
       mProgressCount(0),
-      mIndicator(widget)
+      mIndicator(widget),
+      mIsActive(false)
 {
     mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
@@ -50,13 +51,20 @@ void IndicatorProgress::startAnimation()
 {
     mProgressCount = 0;
     mProgressTimer->start(300);
+    mIsActive = true;
 }
 
 void IndicatorProgress::stopAnimation()
 {
+    mIsActive = false;
     if (mProgressTimer->isActive())
         mProgressTimer->stop();
     mIndicator->clear();
+}
+
+bool IndicatorProgress::isActive() const
+{
+    return mIsActive;
 }
 
 class ProgressIndicatorWidgetPrivate
@@ -99,6 +107,11 @@ void ProgressIndicatorWidget::stop()
     d->indicator->stopAnimation();
 }
 
+bool ProgressIndicatorWidget::isActive() const
+{
+    return d->indicator->isActive();
 }
 
-#include "progressindicatorwidget.moc"
+
+}
+

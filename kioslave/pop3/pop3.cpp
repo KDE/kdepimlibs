@@ -28,17 +28,6 @@
 #include "pop3.h"
 #include "common.h"
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-
-#include <errno.h>
-#include <stdio.h>
-
 extern "C" {
 #include <sasl/sasl.h>
 }
@@ -52,7 +41,6 @@ extern "C" {
 #include <klocalizedstring.h>
 #include <kcodecs.h>
 #include <kmd5.h>
-#include <kprotocolmanager.h>
 
 #include <kio/slaveinterface.h>
 

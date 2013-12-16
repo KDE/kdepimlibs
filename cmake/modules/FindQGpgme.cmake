@@ -8,7 +8,7 @@
 # What we do here is a bit simplictic, but it's no worse than what
 # people were using in kdepim up to now...
 
-find_package(Gpgme)
+find_package(Gpgme QUIET)
 
 if(GPGME_FOUND)
 
@@ -38,7 +38,6 @@ if(GPGME_FOUND)
    endif()
 
 endif()
-
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QGpgme  DEFAULT_MSG  QGPGME_LIBRARY QGPGME_INCLUDE_DIR _QGPGME_EXTRA_LIBRARY)

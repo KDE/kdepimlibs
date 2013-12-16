@@ -1,5 +1,10 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/mailtransport
+  ${CMAKE_BINARY_DIR}/mailtransport
+)
+
 macro(add_akonadi_isolated_test _source _path)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )

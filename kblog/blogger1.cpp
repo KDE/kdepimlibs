@@ -76,7 +76,7 @@ void Blogger1::fetchUserInfo()
     kDebug() << "Fetch user's info...";
     QList<QVariant> args( d->blogger1Args() );
     d->mXmlRpcClient->call(
-      "blogger.getUserInfo", args,
+      QLatin1String("blogger.getUserInfo"), args,
       this, SLOT(slotFetchUserInfo(QList<QVariant>,QVariant)),
       this, SLOT(slotError(int,QString,QVariant)) );
 }
@@ -87,7 +87,7 @@ void Blogger1::listBlogs()
     kDebug() << "Fetch List of Blogs...";
     QList<QVariant> args( d->blogger1Args() );
     d->mXmlRpcClient->call(
-      "blogger.getUsersBlogs", args,
+      QLatin1String("blogger.getUsersBlogs"), args,
       this, SLOT(slotListBlogs(QList<QVariant>,QVariant)),
       this, SLOT(slotError(int,QString,QVariant)) );
 }
@@ -181,7 +181,7 @@ void Blogger1::removePost( KBlog::BlogPost *post )
  QList<QVariant> args( d->blogger1Args( post->postId() ) );
  args << QVariant( true ); // Publish must be set to remove post.
  d->mXmlRpcClient->call(
-   "blogger.deletePost", args,
+   QLatin1String("blogger.deletePost"), args,
    this, SLOT(slotRemovePost(QList<QVariant>,QVariant)),
    this, SLOT(slotError(int,QString,QVariant)),
    QVariant( i ) );
@@ -205,7 +205,7 @@ QList<QVariant> Blogger1Private::defaultArgs( const QString &id )
   kDebug();
   Q_Q ( Blogger1 );
   QList<QVariant> args;
-  args << QVariant( QString( "0123456789ABCDEF" ) );
+  args << QVariant( QLatin1String( "0123456789ABCDEF" ) );
   if ( !id.isEmpty() ) {
     args << QVariant( id );
   }
@@ -220,7 +220,7 @@ QList<QVariant> Blogger1Private::blogger1Args( const QString &id )
   kDebug();
   Q_Q ( Blogger1 );
   QList<QVariant> args;
-  args << QVariant( QString( "0123456789ABCDEF" ) );
+  args << QVariant( QLatin1String( "0123456789ABCDEF" ) );
   if ( !id.isEmpty() ) {
     args << QVariant( id );
   }
@@ -246,12 +246,12 @@ void Blogger1Private::slotFetchUserInfo( const QList<QVariant> &result, const QV
     return;
   }
   const QMap<QString,QVariant> resultMap = result[0].toMap();
-  userInfo["nickname"]=resultMap["nickname"].toString();
-  userInfo["userid"]=resultMap["userid"].toString();
-  userInfo["url"]=resultMap["url"].toString();
-  userInfo["email"]=resultMap["email"].toString();
-  userInfo["lastname"]=resultMap["lastname"].toString();
-  userInfo["firstname"]=resultMap["firstname"].toString();
+  userInfo[QLatin1String("nickname")]=resultMap[QLatin1String("nickname")].toString();
+  userInfo[QLatin1String("userid")]=resultMap[QLatin1String("userid")].toString();
+  userInfo[QLatin1String("url")]=resultMap[QLatin1String("url")].toString();
+  userInfo[QLatin1String("email")]=resultMap[QLatin1String("email")].toString();
+  userInfo[QLatin1String("lastname")]=resultMap[QLatin1String("lastname")].toString();
+  userInfo[QLatin1String("firstname")]=resultMap[QLatin1String("firstname")].toString();
 
   emit q->fetchedUserInfo( userInfo );
 }
@@ -279,12 +279,12 @@ void Blogger1Private::slotListBlogs( const QList<QVariant> &result, const QVaria
     kDebug() << "MIDDLE:" << ( *it ).typeName();
     const QMap<QString, QVariant> postInfo = ( *it ).toMap();
     QMap<QString,QString> blogInfo;
-    blogInfo[ "id" ] = postInfo["blogid"].toString();
-    blogInfo[ "url" ] = postInfo["url"].toString();
-    blogInfo[ "apiUrl" ] = postInfo["xmlrpc"].toString();
-    blogInfo[ "title" ] = postInfo["blogName"].toString();
-    kDebug() << "Blog information retrieved: ID =" << blogInfo["id"]
-        << ", Name =" << blogInfo["title"];
+    blogInfo[ QLatin1String("id") ] = postInfo[QLatin1String("blogid")].toString();
+    blogInfo[ QLatin1String("url") ] = postInfo[QLatin1String("url")].toString();
+    blogInfo[ QLatin1String("apiUrl") ] = postInfo[QLatin1String("xmlrpc")].toString();
+    blogInfo[ QLatin1String("title") ] = postInfo[QLatin1String("blogName")].toString();
+    kDebug() << "Blog information retrieved: ID =" << blogInfo[QLatin1String("id")]
+        << ", Name =" << blogInfo[QLatin1String("title")];
     blogsList << blogInfo;
   }
   emit q->listedBlogs( blogsList );
@@ -465,34 +465,34 @@ bool Blogger1Private::readPostFromMap(
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  kDebug() << endl << "Keys:" << mapkeys.join( ", " );
+  kDebug() << endl << "Keys:" << mapkeys.join( QLatin1String(", ") );
   kDebug() << endl;
 
-  KDateTime dt( postInfo["dateCreated"].toDateTime(), KDateTime::UTC );
+  KDateTime dt( postInfo[QLatin1String("dateCreated")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt.toLocalZone() );
   }
-  dt = KDateTime ( postInfo["lastModified"].toDateTime(), KDateTime::UTC );
+  dt = KDateTime ( postInfo[QLatin1String("lastModified")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt.toLocalZone() );
   }
-  post->setPostId( postInfo["postid"].toString().isEmpty() ? postInfo["postId"].toString() :
-                   postInfo["postid"].toString() );
+  post->setPostId( postInfo[QLatin1String("postid")].toString().isEmpty() ? postInfo[QLatin1String("postId")].toString() :
+                   postInfo[QLatin1String("postid")].toString() );
 
-  QString title( postInfo["title"].toString() );
-  QString description( postInfo["description"].toString() );
+  QString title( postInfo[QLatin1String("title")].toString() );
+  //QString description( postInfo["description"].toString() );
   QString contents;
-  if ( postInfo["content"].type() == QVariant::ByteArray ) {
-    QByteArray tmpContent = postInfo["content"].toByteArray();
+  if ( postInfo[QLatin1String("content")].type() == QVariant::ByteArray ) {
+    QByteArray tmpContent = postInfo[QLatin1String("content")].toByteArray();
     contents = QString::fromUtf8( tmpContent.data(), tmpContent.size() );
   } else {
-    contents = postInfo["content"].toString();
+    contents = postInfo[QLatin1String("content")].toString();
   }
   QStringList category;
 
   // Check for hacked title/category support (e.g. in Wordpress)
-  QRegExp titleMatch = QRegExp( "<title>([^<]*)</title>" );
-  QRegExp categoryMatch = QRegExp( "<category>([^<]*)</category>" );
+  QRegExp titleMatch = QRegExp( QLatin1String("<title>([^<]*)</title>") );
+  QRegExp categoryMatch = QRegExp( QLatin1String("<category>([^<]*)</category>") );
   if ( contents.indexOf( titleMatch ) != -1 ) {
     // Get the title value from the regular expression match
     title = titleMatch.cap( 1 );
@@ -515,11 +515,12 @@ bool Blogger1Private::readArgsFromPost( QList<QVariant> *args, const BlogPost &p
   if ( !args ) {
     return false;
   }
-  QStringList categories = post.categories();
-  QString content = "<title>" + post.title() + "</title>";
+  const QStringList categories = post.categories();
+  QString content = QLatin1String("<title>") + post.title() + QLatin1String("</title>");
   QStringList::const_iterator it;
-  for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
-    content += "<category>" + *it + "</category>";
+  QStringList::const_iterator end(categories.constEnd());
+  for ( it = categories.constBegin(); it != end; ++it ) {
+    content += QLatin1String("<category>") + *it + QLatin1String("</category>");
   }
   content += post.content();
   *args << QVariant( content );
@@ -530,10 +531,10 @@ bool Blogger1Private::readArgsFromPost( QList<QVariant> *args, const BlogPost &p
 QString Blogger1Private::getCallFromFunction( FunctionToCall type )
 {
   switch ( type ) {
-    case GetRecentPosts: return "blogger.getRecentPosts";
-    case CreatePost:        return "blogger.newPost";
-    case ModifyPost:       return "blogger.editPost";
-    case FetchPost:        return "blogger.getPost";
+    case GetRecentPosts: return QLatin1String("blogger.getRecentPosts");
+    case CreatePost:        return QLatin1String("blogger.newPost");
+    case ModifyPost:       return QLatin1String("blogger.editPost");
+    case FetchPost:        return QLatin1String("blogger.getPost");
     default: return QString();
   }
 }
