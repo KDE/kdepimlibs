@@ -19,7 +19,6 @@
 
 #include "errorattribute.h"
 
-#include <QDataStream>
 
 #include <KDebug>
 

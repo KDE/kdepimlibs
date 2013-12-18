@@ -36,7 +36,6 @@
 #include <KDebug>
 
 #include <QtCore/QQueue>
-#include <QtNetwork/QHostInfo>
 
 using namespace MailTransport;
 using namespace KioSMTP;

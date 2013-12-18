@@ -24,13 +24,11 @@
 #include "socket.h"
 
 // Qt
-#include <QRegExp>
 #include <QByteArray>
 #include <QSslSocket>
 
 // KDE
 #include <KDebug>
-#include <KLocalizedString>
 #include <ksocketfactory.h>
 
 using namespace MailTransport;

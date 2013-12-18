@@ -24,7 +24,6 @@
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocalizedString>
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>

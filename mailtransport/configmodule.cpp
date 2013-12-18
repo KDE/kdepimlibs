@@ -20,10 +20,11 @@
 #include "configmodule.h"
 #include "transportmanagementwidget.h"
 
-#include <QBoxLayout>
 
 #include <KPluginFactory>
 #include <KPluginLoader>
+
+#include <QVBoxLayout>
 
 using namespace MailTransport;
 

@@ -22,7 +22,6 @@
 
 #include <QObject>
 
-class KJob;
 
 /**
   This class uses the DispatcherInterface to send an abort() signal th the MDA.
