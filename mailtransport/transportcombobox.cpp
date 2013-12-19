@@ -22,7 +22,6 @@
 #include "transportmanager.h"
 
 #include <KDebug>
-#include <KLocalizedString>
 
 using namespace MailTransport;
 

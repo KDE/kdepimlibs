@@ -26,7 +26,6 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-class KJob;
 
 class FilterActionTest : public QObject
 {

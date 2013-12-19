@@ -19,7 +19,6 @@
 
 #include "sentbehaviourattribute.h"
 
-#include <QDataStream>
 
 #include <KDebug>
 
