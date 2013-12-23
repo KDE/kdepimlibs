@@ -245,7 +245,7 @@ QString Query::Private::marshal( const QVariant &arg ) const
         return markup;
       }
     case QVariant::ByteArray:
-      return "<value><base64>" + arg.toByteArray().toBase64() + "</base64></value>\r\n";
+      return QByteArray(QByteArray("<value><base64>") + arg.toByteArray().toBase64() + QByteArray("</base64></value>\r\n"));
     case QVariant::DateTime:
       {
         return "<value><dateTime.iso8601>" +

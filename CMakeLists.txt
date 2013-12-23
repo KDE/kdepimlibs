@@ -128,7 +128,7 @@ endif()
 ############### Needed commands before building anything ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 if (KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
