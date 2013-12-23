@@ -135,7 +135,7 @@ void FilterActionTest::testMassModifyItems()
       QVERIFY( acc.contains( item ) );
       acc.removeAll( item );
     } else {
-      QVERIFY2( false, "Got bad data \"" + data + '\"' );
+      QVERIFY2( false, QByteArray(QByteArray("Got bad data \"") + data + QByteArray("\"")) );
     }
   }
   QCOMPARE( acc.count(), 0 );
@@ -169,7 +169,7 @@ void FilterActionTest::testMassModifyCollection()
       QVERIFY( acc.contains( item ) );
       acc.removeAll( item );
     } else {
-      QVERIFY2( false, "Got bad data \"" + data + '\"' );
+      QVERIFY2( false, QByteArray(QByteArray("Got bad data \"") + data + QByteArray("\"")) );
     }
   }
   QCOMPARE( acc.count(), 0 );

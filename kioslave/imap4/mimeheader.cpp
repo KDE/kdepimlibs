@@ -245,7 +245,7 @@ mimeHeader::getParameter (const QByteArray& aStr, QHash < QString, QString > &aD
   found = aDict.value( aStr );
   if ( found.isEmpty() ) {
     //might be a continuated or encoded parameter
-    found = aDict.value( aStr + '*' );
+    found = aDict.value( QByteArray(aStr + QByteArray("*")) );
     if ( found.isEmpty() ) {
       //continuated parameter
       QString decoded, encoded;
@@ -257,7 +257,7 @@ mimeHeader::getParameter (const QByteArray& aStr, QHash < QString, QString > &aD
         search = aStr + '*' + search;
         found = aDict.value( search );
         if ( found.isEmpty() ) {
-          found = aDict.value( search + '*' );
+          found = aDict.value( QByteArray(search + QByteArray("*")) );
           if ( !found.isEmpty() ) {
             encoded += KIMAP::encodeRFC2231String( found );
           }
@@ -269,7 +269,7 @@ mimeHeader::getParameter (const QByteArray& aStr, QHash < QString, QString > &aD
       if ( encoded.contains( '\'' ) ) {
         retVal = KIMAP::decodeRFC2231String( encoded.toLocal8Bit() );
       } else {
-        retVal = KIMAP::decodeRFC2231String( QByteArray( "''" ) + encoded.toLocal8Bit() );
+        retVal = KIMAP::decodeRFC2231String( QByteArray(QByteArray( "''" ) + encoded.toLocal8Bit()) );
       }
     } else {
       //simple encoded parameter

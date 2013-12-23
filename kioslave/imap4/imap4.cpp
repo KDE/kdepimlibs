@@ -360,8 +360,8 @@ IMAP4Protocol::get (const KUrl & _url)
                                QString::number( cache->getSize() ) + "\r\n" );
               }
               if ( !cache->getDate().isEmpty() ) {
-                outputLineStr( "X-Date: " +
-                               cache->getDate() + "\r\n" );
+                outputLineStr( QByteArray(QByteArray("X-Date: ") +
+                               cache->getDate() + QByteArray("\r\n")) );
               }
               if ( cache->getFlags() != 0 ) {
                 outputLineStr( "X-Flags: " +
