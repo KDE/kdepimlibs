@@ -827,7 +827,7 @@ class KMIME_EXPORT Content
 // some compilers (for instance Compaq C++) need template inline functions
 // here rather than in the *.cpp file
 
-template <class T> T *Content::headerInstance( T *ptr, bool create )
+template <class T> T *Content::headerInstance( T */*ptr*/, bool create )
 {
   return header<T>( create );
 }

@@ -22,7 +22,6 @@
 
 #include <QObject>
 
-class KJob;
 
 /**
   This class uses the SendQueuedAction to mark all queued messages in the

@@ -22,7 +22,6 @@
 
 #include <QObject>
 
-class KJob;
 
 /**
   This class uses the ClearErrorAction to mark all failed messages in the

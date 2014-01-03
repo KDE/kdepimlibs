@@ -453,12 +453,10 @@ void KTNEFWriter::setOrganizer( const QString &organizer )
     return;
   }
 
-  QString name = organizer.left( i );
-  name.trimmed();
+  QString name = organizer.left( i ).trimmed();
 
   QString email = organizer.right( i+1 );
-  email = email.left( email.length()-1 );
-  email.trimmed();
+  email = email.left( email.length()-1 ).trimmed();
 
   setSender( name, email );
 }

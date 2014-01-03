@@ -23,10 +23,7 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QDBusInterface>
-#include <QString>
 
-#include <KLocalizedString>
 
 #include <kmime/kmime_message.h>
 

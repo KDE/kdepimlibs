@@ -37,7 +37,6 @@ namespace KWallet {
 namespace MailTransport {
 
 class Transport;
-class TransportConfigWidget;
 class TransportJob;
 class TransportManagerPrivate;
 
