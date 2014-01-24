@@ -56,7 +56,8 @@ using namespace Akonadi;
 static const QList<QByteArray> sCapabilities = QList<QByteArray>()
         << "NOTIFY 2"
         << "NOPAYLOADPATH"
-        << "AKAPPENDSTREAMING";
+        << "AKAPPENDSTREAMING"
+        << "SERVERSEARCH";
 
 void SessionPrivate::startNext()
 {
