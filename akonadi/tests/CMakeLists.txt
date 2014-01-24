@@ -17,6 +17,7 @@ include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi/kmime
@@ -46,7 +47,7 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
 endmacro()
 
 include(../AkonadiMacros.cmake)
@@ -101,6 +102,7 @@ add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test(actionstatemanagertest.cpp)
 add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
+add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
