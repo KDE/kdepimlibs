@@ -22,6 +22,7 @@
 
 #include <akonadi/item.h>
 #include <akonadi/job.h>
+#include <Akonadi/Collection>
 
 #include <QtCore/QUrl>
 
@@ -29,6 +30,7 @@ namespace Akonadi {
 
 class ItemFetchScope;
 class ItemSearchJobPrivate;
+class SearchQuery;
 
 /**
  * @short Job that searches for items in the Akonadi storage.
@@ -75,10 +77,20 @@ class AKONADI_EXPORT ItemSearchJob : public Job
     /**
      * Creates an item search job.
      *
-     * @param query The search query in SPARQL format.
+     * @param query The search query in raw Akonadi search metalanguage format (JSON)
      * @param parent The parent object.
+     * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    explicit ItemSearchJob( const QString &query, QObject *parent = 0 );
+    explicit AKONADI_DEPRECATED ItemSearchJob( const QString &query, QObject *parent = 0 );
+
+    /**
+     * Creates an item search job.
+     *
+     * @param query The search query.
+     * @param parent The parent object.
+     * @since 4.13
+     */
+    explicit ItemSearchJob( const SearchQuery &query, QObject *parent = 0 );
 
     /**
      * Destroys the item search job.
@@ -86,9 +98,18 @@ class AKONADI_EXPORT ItemSearchJob : public Job
     ~ItemSearchJob();
 
     /**
-     * Sets the search @p query in SPARQL format.
+     * Sets the search @p query in Akonadi search metalanguage format (JSON)
+     *
+     * @deprecated Deprecated as of 4.13. Use SearchQuery instead.
      */
-    void setQuery( const QString &query );
+    void AKONADI_DEPRECATED setQuery( const QString &query );
+
+    /**
+     * Sets the search @p query.
+     *
+     * @since 4.13
+     */
+    void setQuery( const SearchQuery &query );
 
     /**
      * Sets the item fetch scope.
@@ -132,8 +153,98 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * Always limit your searches to statements that contain this URI as predicate.
      *
      * @since 4.4.3
+     * @deprecated Deprecated as of 4.13, where SPARQL queries were replaced by Baloo
      */
-    static QUrl akonadiItemIdUri();
+    static AKONADI_DEPRECATED QUrl akonadiItemIdUri();
+
+
+    /**
+     * Search only for items of given mime types.
+     *
+     * @since 4.13
+     */
+    void setMimeTypes( const QStringList &mimeTypes );
+
+    /**
+     * Returns list of mime types to search in
+     *
+     * @since 4.13
+     */
+    QStringList mimeTypes() const;
+
+    /**
+     * Search only in given collections.
+     *
+     * When recursive search is enabled, all child collections of each specified
+     * collection will be searched too
+     *
+     * By default all collections are be searched.
+     *
+     * @param collections Collections to search
+     * @since 4.13
+     */
+    void setSearchCollections( const Collection::List &collections );
+
+    /**
+     * Returns list of collections to search.
+     *
+     * This list does not include child collections that will be searched when
+     * recursive search is enabled
+     *
+     * @since 4.13
+     */
+    Collection::List searchCollections() const;
+
+    /**
+     * Sets whether the search should recurse into collections
+     *
+     * When set to true, all child collections of the specific collections will
+     * be search recursively.
+     *
+     * @param recursive Whether to search recursively
+     * @since 4.13
+     */
+    void setRecursive( bool recursive );
+
+    /**
+     * Returns whether the search is recursive
+     *
+     * @since 4.13
+     */
+    bool isRecursive() const;
+
+    /**
+     * Sets whether resources should be queried too.
+     *
+     * When set to true, Akonadi will search local indexed items and will also
+     * query resources that support server-side search, to forward the query
+     * to remote storage (for example using SEARCH feature on IMAP servers) and
+     * merge their results with results from local index.
+     *
+     * This is useful especially when searching resources, that don't fetch full
+     * payload by default, for example the IMAP resource, which only fetches headers
+     * by default and the body is fetched on demand, which means that emails that
+     * were not yet fully fetched cannot be indexed in local index, and thus cannot
+     * be searched. With remote search, even those emails can be included in search
+     * results.
+     *
+     * This feature is enabled by default.
+     *
+     * Results are streamed back to client as they are received from queried sources,
+     * so this job can take some time to finish, but will deliver initial results
+     * from local index fairly quickly.
+     *
+     * @param enabled Whether remote search is enabled
+     * @since 4.13
+     */
+    void setRemoteSearchEnabled( bool enabled );
+
+    /**
+     * Returns whether remote search is enabled.
+     *
+     * @since 4.13
+     */
+    bool isRemoteSearchEnabled() const;
 
   Q_SIGNALS:
     /**
