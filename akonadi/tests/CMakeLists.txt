@@ -30,6 +30,7 @@ include_directories(
 add_subdirectory(etm_test_app)
 add_subdirectory(testrunner)
 add_subdirectory(testresource)
+add_subdirectory(testsearchplugin)
 
 # add benchmarker
 add_subdirectory(benchmarker)
@@ -141,3 +142,4 @@ add_akonadi_isolated_test(collectioncreator.cpp)
 add_akonadi_isolated_test(itembenchmark.cpp)
 add_akonadi_isolated_test(gidtest.cpp)
 add_akonadi_isolated_test(lazypopulationtest.cpp)
+add_akonadi_isolated_test_advanced(itemsearchjobtest.cpp testsearchplugin/testsearchplugin.cpp "")
