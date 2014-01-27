@@ -30,6 +30,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
+#include <QFile>
 
 class QIODevice;
 
@@ -135,6 +136,8 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     // parser stuff
     ImapParser *parser;
+
+    QFile *logFile;
 };
 
 }
