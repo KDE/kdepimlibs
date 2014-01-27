@@ -22,7 +22,7 @@
 #ifndef AKONADI_SEARCHRESULTJOB_H
 #define AKONADI_SEARCHRESULTJOB_H
 
-#include <Akonadi/Job>
+#include <akonadi/job.h>
 #include <akonadi/private/imapset_p.h>
 
 namespace Akonadi {

@@ -22,7 +22,7 @@
 
 #include <akonadi/item.h>
 #include <akonadi/job.h>
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 
 #include <QtCore/QUrl>
 
