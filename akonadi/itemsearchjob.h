@@ -38,16 +38,11 @@ class SearchQuery;
  * This job searches for items that match a given search query and returns
  * the list of matching item.
  *
- * <b>Attention:</b> Since this is an ordinary SPARQL query, potentially the whole Nepomuk
- *                   store is searched, which can be very slow. Therefore, you should create
- *                   SPARQL queries that only search for items that Akonadi fed into Nepomuk.
- *                   This can be done by limiting the results to statements that contain the
- *                   predicate with the akonadiItemIdUri() URI. This limits the search result to
- *                   to Nepomuk resources that were added by the Akonadi Nepomuk feeders.
- *
  * @code
  *
- * const QString query = "..."; // some sparql query
+ * SearchQuery query;
+ * query.addTerm( SearchTerm( "From", "user1@domain.example", SearchTerm::CondEqual ) );
+ * query.addTerm( SearchTerm( "Date", QDateTime( QDate( 2014, 01, 27 ), QTime( 00, 00, 00 ) ), SearchTerm::CondGreaterThan );
  *
  * Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob( query );
  * job->fetchScope().fetchFullPayload();
