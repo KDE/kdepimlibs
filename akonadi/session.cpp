@@ -406,6 +406,8 @@ void SessionPrivate::init( const QByteArray &id )
                          mParent );
     if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
       kWarning() << "Failed to open Akonadi Session log file" << logFile->fileName();
+      delete logFile;
+      logFile = 0;
     }
   }
 
