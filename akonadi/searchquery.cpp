@@ -286,3 +286,48 @@ SearchQuery SearchQuery::fromJSON( const QByteArray &jsonData )
   query.d->rootTerm = Private::JSONToTerm( json.toMap() );
   return query;
 }
+
+QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
+{
+  QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
+  mapping.insert(EmailSearchTerm::Body, QLatin1String("body"));
+  mapping.insert(EmailSearchTerm::Headers, QLatin1String("headers"));
+  mapping.insert(EmailSearchTerm::Recipients, QLatin1String("recipients"));
+  mapping.insert(EmailSearchTerm::Subject, QLatin1String("subject"));
+  mapping.insert(EmailSearchTerm::From, QLatin1String("from"));
+  mapping.insert(EmailSearchTerm::To, QLatin1String("to"));
+  mapping.insert(EmailSearchTerm::CC, QLatin1String("cc"));
+  mapping.insert(EmailSearchTerm::BCC, QLatin1String("bcc"));
+  mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
+  mapping.insert(EmailSearchTerm::ReplyTo, QLatin1String("replyto"));
+  mapping.insert(EmailSearchTerm::Organization, QLatin1String("organization"));
+  mapping.insert(EmailSearchTerm::ListId, QLatin1String("listid"));
+  mapping.insert(EmailSearchTerm::ResentFrom, QLatin1String("resentfrom"));
+  mapping.insert(EmailSearchTerm::XLoop, QLatin1String("xloop"));
+  mapping.insert(EmailSearchTerm::XMailingList, QLatin1String("xmailinglist"));
+  mapping.insert(EmailSearchTerm::XSpamFlag, QLatin1String("xspamflag"));
+  mapping.insert(EmailSearchTerm::All, QLatin1String("all"));
+  mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
+  mapping.insert(EmailSearchTerm::Age, QLatin1String("age"));
+  mapping.insert(EmailSearchTerm::Date, QLatin1String("date"));
+  mapping.insert(EmailSearchTerm::Size, QLatin1String("size"));
+  return mapping;
+}
+
+static QMap<EmailSearchTerm::EmailSearchField, QString> emailSearchFieldMapping = initializeMapping();
+
+EmailSearchTerm::EmailSearchTerm( EmailSearchTerm::EmailSearchField field, const QVariant& value, SearchTerm::Condition condition )
+  : SearchTerm( toKey( field ), value, condition )
+{
+
+}
+
+QString EmailSearchTerm::toKey( EmailSearchTerm::EmailSearchField field )
+{
+  return emailSearchFieldMapping.value( field );
+}
+
+EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey( const QString &key )
+{
+  return emailSearchFieldMapping.key(key);
+}

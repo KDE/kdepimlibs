@@ -169,6 +169,71 @@ class AKONADI_EXPORT SearchQuery
     QSharedDataPointer<Private> d;
 
 };
+
+/**
+ * A search term for an email field.
+ *
+ * This class can be used to create queries that akonadi email search backends understand.
+ *
+ * TODO support everything from IMAP:
+ * Flag searches:
+ * ALL, ANSWERED, DELETED, DRAFT, FLAGGED, SEEN, UN* (NOT flag)
+ *
+ * Text searches:
+ * BCC, CC, BODY, FROM, HEADER <field-name> <string>, TO, UID, SUBJECT, TEXT (body or header of message)
+ *
+ * KEYWORD <flag>
+ *
+ * Property searches:
+ * BEFORE/SINCE/ON <date>, LARGER/SMALLER <n>, SENTBEFORE/SENTSINCE/SENTON (Date:), SINCE (internal date)
+ *
+ *
+ */
+class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
+{
+  public:
+    enum EmailSearchField {
+      Unknown,
+      Body, //textsearch on body of message
+      Headers, //textsearch on all headers
+      Recipients, //textsearch on recipient list
+      Subject, //textsearch on subject
+      From, //textsearch on From: header
+      To, //textsearch on To: header
+      CC, //textsearch on CC: header
+      BCC, //textsearch on BCC: header
+      MessageTag, //textsearch on message tags
+      ReplyTo, //textsearch on ?
+      Organization, //textsearch ?
+      ListId, //textsearch?
+      ResentFrom, //textsearch?
+      XLoop, //textsearch?
+      XMailingList, //textsearch?
+      XSpamFlag, //textsearch?
+      All, //textsearch on everything
+      MessageStatus, //Message flags (see Akonadi::MessageFlags)
+      Age, //datesearch on (internaldate or Date: ?)
+      Date, //datesearch on (internaldate or Date: ?)
+      Size, //search on bytesize
+      Attachment //textsearch on attachment
+    };
+
+    /**
+     * Constructs an email end term
+     */
+    EmailSearchTerm( EmailSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+
+    /**
+     * Translates field to key
+     */
+    static QString toKey(EmailSearchField);
+
+    /**
+     * Translates key to field
+     */
+    static EmailSearchField fromKey(const QString &key);
+};
+
 }
 
 #endif // AKONADI_SEARCHQUERY_H
