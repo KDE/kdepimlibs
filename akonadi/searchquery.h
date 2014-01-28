@@ -152,6 +152,11 @@ class AKONADI_EXPORT SearchQuery
     void addTerm( const SearchTerm &term );
 
     /**
+     * Sets the root term
+     */
+    void setTerm( const SearchTerm &term );
+
+    /**
      * Returns the root term.
      */
     SearchTerm term() const;

@@ -260,6 +260,11 @@ void SearchQuery::addTerm( const SearchTerm &term )
   d->rootTerm.addSubTerm( term );
 }
 
+void SearchQuery::setTerm( const SearchTerm& term )
+{
+  d->rootTerm = term;
+}
+
 QByteArray SearchQuery::toJSON() const
 {
   QVariantMap root = Private::termToJSON( d->rootTerm );
