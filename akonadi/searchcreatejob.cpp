@@ -1,6 +1,7 @@
 
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2014 Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,6 +25,7 @@
 #include "imapparser_p.h"
 #include "protocolhelper_p.h"
 #include "job_p.h"
+#include "searchquery.h"
 #include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
@@ -31,34 +33,36 @@ using namespace Akonadi;
 class Akonadi::SearchCreateJobPrivate : public JobPrivate
 {
   public:
-    SearchCreateJobPrivate( SearchCreateJob *parent )
+    SearchCreateJobPrivate( const QString &name, const SearchQuery &query, SearchCreateJob *parent )
       : JobPrivate( parent )
+      , mName( name )
+      , mQuery( query )
     {
     }
 
     QString mName;
-    QString mQuery;
-    QString mQueryLanguage;
+    SearchQuery mQuery;
     Collection mCreatedCollection;
 };
 
-SearchCreateJob::SearchCreateJob( const QString & name, const QString & query, QObject * parent )
-  : Job( new SearchCreateJobPrivate( this ), parent )
+SearchCreateJob::SearchCreateJob( const QString &name, const QString &query, QObject *parent )
+  : Job( new SearchCreateJobPrivate( name, SearchQuery::fromJSON( query.toLatin1() ), this ), parent )
 {
-  Q_D( SearchCreateJob );
-
-  d->mName = name;
-  d->mQuery = query;
 }
+
+SearchCreateJob::SearchCreateJob( const QString &name, const SearchQuery &searchQuery, QObject *parent)
+  : Job( new SearchCreateJobPrivate( name, searchQuery, this ), parent )
+{
+}
+
 
 SearchCreateJob::~SearchCreateJob()
 {
 }
 
-void SearchCreateJob::setQueryLanguage(const QString& queryLanguage)
+void SearchCreateJob::setQueryLanguage( const QString &queryLanguage )
 {
-  Q_D( SearchCreateJob );
-  d->mQueryLanguage = queryLanguage;
+  Q_UNUSED( queryLanguage );
 }
 
 void SearchCreateJob::doStart()
@@ -68,12 +72,7 @@ void SearchCreateJob::doStart()
   QByteArray command = d->newTag() + " SEARCH_STORE ";
   command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
-  command += ImapParser::quote( d->mQuery.toUtf8() );
-  if ( !d->mQueryLanguage.isEmpty() ) {
-    command += " (" AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG " ";
-    command += ImapParser::quote( d->mQueryLanguage.toUtf8() );
-    command += ')';
-  }
+  command += ImapParser::quote( d->mQuery.toJSON() );
   command += '\n';
   d->writeData( command );
 }

@@ -25,6 +25,7 @@
 namespace Akonadi {
 
 class Collection;
+class SearchQuery;
 class SearchCreateJobPrivate;
 
 /**
@@ -68,15 +69,28 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      * @param name The name of the search collection.
      * @param query The search query (format not defined yet).
      * @param parent The parent object.
+     * @deprecated Deprecated as of 4.13, use Akonadi::SearchQuery instead
      */
-    SearchCreateJob( const QString &name, const QString &query, QObject *parent = 0 );
+    AKONADI_DEPRECATED SearchCreateJob( const QString &name, const QString &query, QObject *parent = 0 );
+
+    /**
+     * Creates a search create job
+     *
+     * @param name The name of the search collection.
+     * @param query The search query.
+     * @param parent The parent object.
+     * @since 4.13
+     */
+    SearchCreateJob( const QString &name, const SearchQuery &searchQuery, QObject *parent = 0 );
 
     /**
      * Sets the query language.
      * @param queryLanguage The query language used.
      * @since 4.6
+     * @deprecated This method is deprecated as of 4.13 and has no effect.
+     *
      */
-    void setQueryLanguage( const QString &queryLanguage );
+    AKONADI_DEPRECATED void setQueryLanguage( const QString &queryLanguage );
 
     /**
      * Destroys the search create job.
