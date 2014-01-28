@@ -10,12 +10,13 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_plugin(testsearchplugin testsearchplugin.cpp)
+kde4_add_plugin(akonadi_test_searchplugin testsearchplugin.cpp)
 
-target_link_libraries(testsearchplugin
+target_link_libraries(akonadi_test_searchplugin
   akonadi-kde
   ${KDE4_KDEUI_LIBS}
   ${KDE4_AKONADI_LIBS}
 )
 
-install( TARGETS testsearchplugin DESTINATION ${PLUGIN_INSTALL_DIR}/ )
+install( FILES akonaditestsearchplugin.desktop DESTINATION ${PLUGIN_INSTALL_DIR}/akonadi )
+install( TARGETS akonadi_test_searchplugin DESTINATION ${PLUGIN_INSTALL_DIR}/akonadi )
