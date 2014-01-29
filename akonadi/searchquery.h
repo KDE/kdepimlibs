@@ -226,12 +226,36 @@ class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
     /**
      * Translates field to key
      */
-    static QString toKey(EmailSearchField);
+    static QString toKey( EmailSearchField );
 
     /**
      * Translates key to field
      */
-    static EmailSearchField fromKey(const QString &key);
+    static EmailSearchField fromKey( const QString &key );
+};
+
+class AKONADI_EXPORT ContactSearchTerm : public SearchTerm
+{
+  public:
+    enum ContactSearchField {
+      Unknown,
+      Name,
+      Email,
+      Nickname,
+      Uid
+    };
+
+    ContactSearchTerm( ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
+
+    /**
+     * Translates field to key
+     */
+    static QString toKey( ContactSearchField );
+
+    /**
+     * Translates key to field
+     */
+    static ContactSearchField fromKey( const QString &key );
 };
 
 }

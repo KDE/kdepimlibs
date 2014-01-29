@@ -331,3 +331,31 @@ EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey( const QString &key )
 {
   return emailSearchFieldMapping.key(key);
 }
+
+QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()
+{
+  QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
+  mapping.insert(ContactSearchTerm::Name, QLatin1String("name"));
+  mapping.insert(ContactSearchTerm::Nickname, QLatin1String("nickname"));
+  mapping.insert(ContactSearchTerm::Email, QLatin1String("email"));
+  mapping.insert(ContactSearchTerm::Uid, QLatin1String("uid"));
+  return mapping;
+}
+
+static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMapping = initializeContactMapping();
+
+ContactSearchTerm::ContactSearchTerm( ContactSearchTerm::ContactSearchField field, const QVariant& value, SearchTerm::Condition condition )
+  : SearchTerm( toKey( field ), value, condition )
+{
+
+}
+
+QString ContactSearchTerm::toKey( ContactSearchTerm::ContactSearchField field )
+{
+  return contactSearchFieldMapping.value( field );
+}
+
+ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey( const QString &key )
+{
+  return contactSearchFieldMapping.key(key);
+}
