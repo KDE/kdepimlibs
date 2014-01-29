@@ -42,6 +42,9 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
   setMimeTypes( QStringList() << KABC::ContactGroup::mimeType() );
 
   // by default search for all contact groups
+  Akonadi::SearchQuery query;
+  query.addTerm( ContactSearchTerm(ContactSearchTerm::All, QVariant(), SearchTerm::CondEqual) );
+  ItemSearchJob::setQuery( query );
 }
 
 ContactGroupSearchJob::~ContactGroupSearchJob()

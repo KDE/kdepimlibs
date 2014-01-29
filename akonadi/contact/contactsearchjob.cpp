@@ -41,6 +41,9 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
   setMimeTypes( QStringList() << KABC::Addressee::mimeType() );
 
   // by default search for all contacts
+  Akonadi::SearchQuery query;
+  query.addTerm( ContactSearchTerm(ContactSearchTerm::All, QVariant(), SearchTerm::CondEqual) );
+  ItemSearchJob::setQuery( query );
 }
 
 ContactSearchJob::~ContactSearchJob()
