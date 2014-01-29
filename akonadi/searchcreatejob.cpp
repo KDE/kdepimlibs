@@ -89,7 +89,7 @@ void SearchCreateJob::doStart()
   command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
   command += ImapParser::quote( d->mQuery.toJSON() );
-  command += ' ';
+  command += " (";
   command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) + " \"ASQL\" "; // Akonadi Search Query Language ;-)
   if ( !d->mCollections.isEmpty() ) {
     command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) + " (";
@@ -102,7 +102,7 @@ void SearchCreateJob::doStart()
   }
   command += QByteArray( AKONADI_PARAM_MIMETYPE ) + " (";
   command += d->mMimeTypes.join( QLatin1String( " " ) ).toLatin1();
-  command += ")";
+  command += ") )";
   command += '\n';
   d->writeData( command );
 }
