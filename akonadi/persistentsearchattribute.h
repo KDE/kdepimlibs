@@ -24,6 +24,8 @@
 
 namespace Akonadi {
 
+class Collection;
+
 /**
  * @short An attribute to store query properties of persistent search collections.
  *
@@ -102,6 +104,26 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      * @param query The query string.
      */
     void setQueryString( const QString &query );
+
+    /**
+     * Returns IDs of collections that will be queried
+     * @since 4.13
+     */
+    QList<qint64> queryCollections() const;
+
+    /**
+     * Sets collections to be queried.
+     * @param collections List of collections to be queries
+     * @since 4.13
+     */
+    void setQueryCollections( const QList<Collection> &collections );
+
+    /**
+     * Sets IDs of collections to be queries
+     * @param collectionsIDs IDs of collections to query
+     * @since 4.13
+     */
+    void setQueryCollections( const QList<qint64> &collectionsIds );
 
     //@cond PRIVATE
     virtual QByteArray type() const;

@@ -18,10 +18,12 @@
 */
 
 #include "persistentsearchattribute.h"
+#include "collection.h"
 
 #include <akonadi/private/imapparser_p.h>
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 
@@ -30,6 +32,7 @@ class PersistentSearchAttribute::Private
   public:
     QString queryLanguage;
     QString queryString;
+    QList<qint64> queryCollections;
 };
 
 PersistentSearchAttribute::PersistentSearchAttribute()
@@ -62,6 +65,24 @@ void PersistentSearchAttribute::setQueryString(const QString& query)
   d->queryString = query;
 }
 
+QList<qint64> PersistentSearchAttribute::queryCollections() const
+{
+  return d->queryCollections;
+}
+
+void PersistentSearchAttribute::setQueryCollections( const QList<Collection> &collections )
+{
+  d->queryCollections.clear();
+  Q_FOREACH ( const Collection &collection, collections ) {
+    d->queryCollections << collection.id();
+  }
+}
+
+void PersistentSearchAttribute::setQueryCollections( const QList<qint64> &collectionsIds )
+{
+  d->queryCollections = collectionsIds;
+}
+
 QByteArray PersistentSearchAttribute::type() const
 {
   return "PERSISTENTSEARCH"; // ### should eventually be AKONADI_PARAM_PERSISTENTSEARCH
@@ -72,17 +93,25 @@ Attribute* PersistentSearchAttribute::clone() const
   PersistentSearchAttribute* attr = new PersistentSearchAttribute;
   attr->setQueryLanguage( queryLanguage() );
   attr->setQueryString( queryString() );
+  attr->setQueryCollections( queryCollections() );
   return attr;
 }
 
 QByteArray PersistentSearchAttribute::serialized() const
 {
+  QStringList cols;
+  Q_FOREACH ( qint64 colId, d->queryCollections ) {
+    cols << QString::number( colId );
+  }
+
   QList<QByteArray> l;
   // ### eventually replace with the AKONADI_PARAM_PERSISTENTSEARCH_XXX constants
   l.append( "QUERYLANGUAGE" );
   l.append( d->queryLanguage.toLatin1() );
   l.append( "QUERYSTRING" );
   l.append( ImapParser::quote( d->queryString.toUtf8() ) );
+  l.append( "QUERYCOLLECTIONS" );
+  l.append( " (" + cols.join( QLatin1String( " " ) ).toLatin1() + ")" );
   return "(" + ImapParser::join( l, " " ) + ')'; //krazy:exclude=doublequote_chars
 }
 
@@ -92,9 +121,17 @@ void PersistentSearchAttribute::deserialize(const QByteArray& data)
   ImapParser::parseParenthesizedList( data, l );
   for ( int i = 0; i < l.size() - 1; i += 2 ) {
     const QByteArray key = l.at( i );
-    if ( key == "QUERYLANGUAGE" )
+    if ( key == "QUERYLANGUAGE" ) {
       d->queryLanguage = QString::fromLatin1( l.at( i + 1 ) );
-    else if ( key == "QUERYSTRING" )
+    } else if ( key == "QUERYSTRING" ) {
       d->queryString = QString::fromUtf8( l.at( i + 1 ) );
+    } else if ( key == "QUERYCOLLECTIONS" ) {
+      QList<QByteArray> ids;
+      ImapParser::parseParenthesizedList( l.at ( i + 1 ), ids );
+      d->queryCollections.clear();
+      Q_FOREACH ( const QByteArray &id, ids ) {
+        d->queryCollections << id.toLongLong();
+      }
+    }
   }
 }

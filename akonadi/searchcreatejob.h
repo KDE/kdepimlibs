@@ -21,6 +21,7 @@
 #define AKONADI_SEARCHCREATEJOB_H
 
 #include <akonadi/job.h>
+#include "collection.h"
 
 namespace Akonadi {
 
@@ -91,6 +92,25 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      *
      */
     AKONADI_DEPRECATED void setQueryLanguage( const QString &queryLanguage );
+
+    /**
+     * Sets list of mime types of items that search results can contain
+     *
+     * @param mimeTypes Mime types of items to include in search
+     * @since 4.13
+     */
+    void setSearchMimeTypes( const QStringList &mimeTypes );
+
+    /**
+     * Sets list of collections to search in.
+     *
+     * When an empty list is set (default value), the search will contain
+     * results from all collections that contain given mime types.
+     *
+     * @param collections Collections to search in, or an empty list to search all
+     * @since 4.13
+     */
+    void setSearchCollections( const Collection::List &collections );
 
     /**
      * Destroys the search create job.

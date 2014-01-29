@@ -42,6 +42,8 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
 
     QString mName;
     SearchQuery mQuery;
+    QStringList mMimeTypes;
+    Collection::List mCollections;
     Collection mCreatedCollection;
 };
 
@@ -65,6 +67,20 @@ void SearchCreateJob::setQueryLanguage( const QString &queryLanguage )
   Q_UNUSED( queryLanguage );
 }
 
+void SearchCreateJob::setSearchCollections( const Collection::List &collections )
+{
+  Q_D( SearchCreateJob );
+
+  d->mCollections = collections;
+}
+
+void SearchCreateJob::setSearchMimeTypes( const QStringList &mimeTypes )
+{
+  Q_D( SearchCreateJob );
+
+  d->mMimeTypes = mimeTypes;
+}
+
 void SearchCreateJob::doStart()
 {
   Q_D( SearchCreateJob );
@@ -73,6 +89,20 @@ void SearchCreateJob::doStart()
   command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
   command += ImapParser::quote( d->mQuery.toJSON() );
+  command += ' ';
+  command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) + " \"ASQL\" "; // Akonadi Search Query Language ;-)
+  if ( !d->mCollections.isEmpty() ) {
+    command += QByteArray( AKONADI_PARAM_PERSISTENTSEARCH_QUERYCOLLECTIONS ) + " (";
+    QList<QByteArray> ids;
+    Q_FOREACH ( const Collection &col, d->mCollections ) {
+      ids << QByteArray::number( col.id() );
+    }
+    command += ImapParser::join( ids, " " );
+    command += ") ";
+  }
+  command += QByteArray( AKONADI_PARAM_MIMETYPE ) + " (";
+  command += d->mMimeTypes.join( QLatin1String( " " ) ).toLatin1();
+  command += ")";
   command += '\n';
   d->writeData( command );
 }
