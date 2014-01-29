@@ -50,7 +50,7 @@ class AKONADI_EXPORT SearchTerm
       CondGreaterThan,
       CondGreaterOrEqual,
       CondLessThan,
-      CondLessOrEqueal,
+      CondLessOrEqual,
       CondContains
     };
 
