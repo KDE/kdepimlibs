@@ -292,25 +292,24 @@ QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
   QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
   mapping.insert(EmailSearchTerm::Body, QLatin1String("body"));
   mapping.insert(EmailSearchTerm::Headers, QLatin1String("headers"));
-  mapping.insert(EmailSearchTerm::Recipients, QLatin1String("recipients"));
   mapping.insert(EmailSearchTerm::Subject, QLatin1String("subject"));
-  mapping.insert(EmailSearchTerm::From, QLatin1String("from"));
-  mapping.insert(EmailSearchTerm::To, QLatin1String("to"));
-  mapping.insert(EmailSearchTerm::CC, QLatin1String("cc"));
-  mapping.insert(EmailSearchTerm::BCC, QLatin1String("bcc"));
-  mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
-  mapping.insert(EmailSearchTerm::ReplyTo, QLatin1String("replyto"));
-  mapping.insert(EmailSearchTerm::Organization, QLatin1String("organization"));
-  mapping.insert(EmailSearchTerm::ListId, QLatin1String("listid"));
-  mapping.insert(EmailSearchTerm::ResentFrom, QLatin1String("resentfrom"));
-  mapping.insert(EmailSearchTerm::XLoop, QLatin1String("xloop"));
-  mapping.insert(EmailSearchTerm::XMailingList, QLatin1String("xmailinglist"));
-  mapping.insert(EmailSearchTerm::XSpamFlag, QLatin1String("xspamflag"));
-  mapping.insert(EmailSearchTerm::All, QLatin1String("all"));
+  mapping.insert(EmailSearchTerm::Message, QLatin1String("message"));
+  mapping.insert(EmailSearchTerm::HeaderFrom, QLatin1String("from"));
+  mapping.insert(EmailSearchTerm::HeaderTo, QLatin1String("to"));
+  mapping.insert(EmailSearchTerm::HeaderCC, QLatin1String("cc"));
+  mapping.insert(EmailSearchTerm::HeaderBCC, QLatin1String("bcc"));
+  mapping.insert(EmailSearchTerm::HeaderReplyTo, QLatin1String("replyto"));
+  mapping.insert(EmailSearchTerm::HeaderOrganization, QLatin1String("organization"));
+  mapping.insert(EmailSearchTerm::HeaderListId, QLatin1String("listid"));
+  mapping.insert(EmailSearchTerm::HeaderResentFrom, QLatin1String("resentfrom"));
+  mapping.insert(EmailSearchTerm::HeaderXLoop, QLatin1String("xloop"));
+  mapping.insert(EmailSearchTerm::HeaderXMailingList, QLatin1String("xmailinglist"));
+  mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QLatin1String("xspamflag"));
+  mapping.insert(EmailSearchTerm::HeaderDate, QLatin1String("date"));
   mapping.insert(EmailSearchTerm::MessageStatus, QLatin1String("messagestatus"));
-  mapping.insert(EmailSearchTerm::Age, QLatin1String("age"));
-  mapping.insert(EmailSearchTerm::Date, QLatin1String("date"));
-  mapping.insert(EmailSearchTerm::Size, QLatin1String("size"));
+  mapping.insert(EmailSearchTerm::MessageTag, QLatin1String("messagetag"));
+  mapping.insert(EmailSearchTerm::ByteSize, QLatin1String("size"));
+  mapping.insert(EmailSearchTerm::Attachment, QLatin1String("attachment"));
   return mapping;
 }
 
@@ -339,6 +338,7 @@ QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()
   mapping.insert(ContactSearchTerm::Nickname, QLatin1String("nickname"));
   mapping.insert(ContactSearchTerm::Email, QLatin1String("email"));
   mapping.insert(ContactSearchTerm::Uid, QLatin1String("uid"));
+  mapping.insert(ContactSearchTerm::All, QLatin1String("all"));
   return mapping;
 }
 

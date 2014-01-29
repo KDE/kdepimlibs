@@ -192,30 +192,32 @@ class AKONADI_EXPORT SearchQuery
 class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
 {
   public:
+
+    /**
+     * All fields expect a search string unless noted otherwise.
+     */
     enum EmailSearchField {
       Unknown,
-      Body, //textsearch on body of message
-      Headers, //textsearch on all headers
-      Recipients, //textsearch on recipient list
-      Subject, //textsearch on subject
-      From, //textsearch on From: header
-      To, //textsearch on To: header
-      CC, //textsearch on CC: header
-      BCC, //textsearch on BCC: header
-      MessageTag, //textsearch on message tags
-      ReplyTo, //textsearch on ?
-      Organization, //textsearch ?
-      ListId, //textsearch?
-      ResentFrom, //textsearch?
-      XLoop, //textsearch?
-      XMailingList, //textsearch?
-      XSpamFlag, //textsearch?
-      All, //textsearch on everything
-      MessageStatus, //Message flags (see Akonadi::MessageFlags)
-      Age, //datesearch on (internaldate or Date: ?)
-      Date, //datesearch on (internaldate or Date: ?)
-      Size, //search on bytesize
-      Attachment //textsearch on attachment
+      Subject,
+      Body,
+      Message, //Complete message including headers, body and attachment
+      Headers, //All headers
+      HeaderFrom,
+      HeaderTo,
+      HeaderCC,
+      HeaderBCC,
+      HeaderReplyTo,
+      HeaderOrganization,
+      HeaderListId,
+      HeaderResentFrom,
+      HeaderXLoop,
+      HeaderXMailingList,
+      HeaderXSpamFlag,
+      HeaderDate, //Expects KDateTime::toString()
+      MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
+      ByteSize, //Expects QString::number()
+      Attachment, //textsearch on attachment
+      MessageTag //tags
     };
 
     /**
@@ -242,7 +244,8 @@ class AKONADI_EXPORT ContactSearchTerm : public SearchTerm
       Name,
       Email,
       Nickname,
-      Uid
+      Uid,
+      All //Special field: matches all contacts.
     };
 
     ContactSearchTerm( ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual );
