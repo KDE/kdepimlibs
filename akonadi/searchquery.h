@@ -175,19 +175,7 @@ class AKONADI_EXPORT SearchQuery
  *
  * This class can be used to create queries that akonadi email search backends understand.
  *
- * TODO support everything from IMAP:
- * Flag searches:
- * ALL, ANSWERED, DELETED, DRAFT, FLAGGED, SEEN, UN* (NOT flag)
- *
- * Text searches:
- * BCC, CC, BODY, FROM, HEADER <field-name> <string>, TO, UID, SUBJECT, TEXT (body or header of message)
- *
- * KEYWORD <flag>
- *
- * Property searches:
- * BEFORE/SINCE/ON <date>, LARGER/SMALLER <n>, SENTBEFORE/SENTSINCE/SENTON (Date:), SINCE (internal date)
- *
- *
+ * @since 4.13
  */
 class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
 {
@@ -213,11 +201,11 @@ class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
       HeaderXLoop,
       HeaderXMailingList,
       HeaderXSpamFlag,
-      HeaderDate, //Expects KDateTime::toString()
+      HeaderDate, //Expects QDateTime
       MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
-      ByteSize, //Expects QString::number()
-      Attachment, //textsearch on attachment
-      MessageTag //tags
+      ByteSize, //Expects int
+      Attachment, //Textsearch on attachment
+      MessageTag
     };
 
     /**
@@ -236,6 +224,13 @@ class AKONADI_EXPORT EmailSearchTerm : public SearchTerm
     static EmailSearchField fromKey( const QString &key );
 };
 
+/**
+ * A search term for a contact field.
+ *
+ * This class can be used to create queries that akonadi contact search backends understand.
+ *
+ * @since 4.13
+ */
 class AKONADI_EXPORT ContactSearchTerm : public SearchTerm
 {
   public:
