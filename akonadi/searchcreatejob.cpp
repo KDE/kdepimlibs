@@ -37,6 +37,8 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
       : JobPrivate( parent )
       , mName( name )
       , mQuery( query )
+      , mRecursive( false )
+      , mRemote( true )
     {
     }
 
@@ -44,6 +46,8 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
     SearchQuery mQuery;
     QStringList mMimeTypes;
     Collection::List mCollections;
+    bool mRecursive;
+    bool mRemote;
     Collection mCreatedCollection;
 };
 
@@ -74,11 +78,45 @@ void SearchCreateJob::setSearchCollections( const Collection::List &collections 
   d->mCollections = collections;
 }
 
+Collection::List SearchCreateJob::searchCollections() const
+{
+  return d_func()->mCollections;
+}
+
 void SearchCreateJob::setSearchMimeTypes( const QStringList &mimeTypes )
 {
   Q_D( SearchCreateJob );
 
   d->mMimeTypes = mimeTypes;
+}
+
+QStringList SearchCreateJob::searchMimeTypes() const
+{
+  return d_func()->mMimeTypes;
+}
+
+void SearchCreateJob::setRecursive( bool recursive )
+{
+  Q_D( SearchCreateJob );
+
+  d->mRecursive = recursive;
+}
+
+bool SearchCreateJob::isRecursive() const
+{
+  return d_func()->mRecursive;
+}
+
+void SearchCreateJob::setRemoteSearchEnabled( bool enabled )
+{
+  Q_D( SearchCreateJob );
+
+  d->mRemote = enabled;
+}
+
+bool SearchCreateJob::isRemoteSearchEnabled() const
+{
+  return d_func()->mRemote;
 }
 
 void SearchCreateJob::doStart()
@@ -99,6 +137,12 @@ void SearchCreateJob::doStart()
     }
     command += ImapParser::join( ids, " " );
     command += ") ";
+  }
+  if ( d->mRecursive ) {
+    command += QByteArray( AKONADI_PARAM_RECURSIVE ) + " ";
+  }
+  if ( d->mRemote ) {
+    command += QByteArray( AKONADI_PARAM_REMOTE ) + " ";
   }
   command += QByteArray( AKONADI_PARAM_MIMETYPE ) + " (";
   command += d->mMimeTypes.join( QLatin1String( " " ) ).toLatin1();
