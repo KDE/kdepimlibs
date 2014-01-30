@@ -71,7 +71,7 @@ static Akonadi::SearchTerm::Condition matchType( ContactSearchJob::Match match )
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
-  Akonadi::SearchQuery query;
+  Akonadi::SearchQuery query(SearchTerm::RelOr);
 
   if ( criterion == Name ) {
     query.addTerm( ContactSearchTerm(ContactSearchTerm::Name, value, matchType(match)) );
@@ -80,8 +80,8 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
   } else if ( criterion == NickName ) {
     query.addTerm( ContactSearchTerm(ContactSearchTerm::Nickname, value, matchType(match)) );
   } else if ( criterion == NameOrEmail ) {
+    query.addTerm( ContactSearchTerm(ContactSearchTerm::Name, value, matchType(match)) );
     query.addTerm( ContactSearchTerm(ContactSearchTerm::Email, value, matchType(match)) );
-    query.addTerm( ContactSearchTerm(ContactSearchTerm::Nickname, value, matchType(match)) );
   } else if ( criterion == ContactUid ) {
     query.addTerm( ContactSearchTerm(ContactSearchTerm::Uid, value, matchType(match)) );
   }
