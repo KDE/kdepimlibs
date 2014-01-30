@@ -59,13 +59,14 @@ void AgentSearchInterfacePrivate::removeSearch( quint64 resultCollectionId )
   q->removeSearch( Collection( resultCollectionId ) );
 }
 
-void AgentSearchInterfacePrivate::search( const QByteArray &searchId_,
+void AgentSearchInterfacePrivate::search( const QByteArray &searchId,
                                           const QString &query,
                                           quint64 collectionId )
 {
-  searchId = searchId_;
+  mSearchId = searchId;
+  mCollectionId = collectionId;
 
-  CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base, this );
+  CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Base, this );
   fetchJob->fetchScope().setAncestorRetrieval( CollectionFetchScope::All );
   fetchJob->setProperty( "query", query );
   connect( fetchJob, SIGNAL(finished(KJob*)), this, SLOT(collectionReceived(KJob*)) );
@@ -76,14 +77,14 @@ void AgentSearchInterfacePrivate::collectionReceived( KJob *job )
   CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
   if ( fetchJob->error() ) {
     kError() << fetchJob->errorString();
-    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), this );
+    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), Collection( mCollectionId ), this );
     return;
   }
 
   if ( fetchJob->collections().count() != 1) {
     kDebug() << "Server requested search in invalid collection, or collection was removed in the meanwhile";
     // Tell server we are done
-    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), this );
+    new SearchResultJob( fetchJob->property( "searchId" ).toByteArray(), Collection( mCollectionId ), this );
     return;
   }
 
@@ -115,7 +116,7 @@ void AgentSearchInterface::searchFinished( const QVector<qint64> result, ResultS
     return;
   }
 
-  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  SearchResultJob *resultJob = new SearchResultJob( d->mSearchId, Collection( d->mCollectionId ), d );
   resultJob->setResult( result );
 }
 
@@ -133,13 +134,13 @@ void AgentSearchInterface::searchFinished( const ImapSet &result, ResultScope sc
     return;
   }
 
-  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  SearchResultJob *resultJob = new SearchResultJob( d->mSearchId, Collection( d->mCollectionId ), d );
   resultJob->setResult( result );
 }
 
 void AgentSearchInterface::searchFinished( const QVector<QByteArray> &result )
 {
-  SearchResultJob *resultJob = new SearchResultJob( d->searchId, d );
+  SearchResultJob *resultJob = new SearchResultJob( d->mSearchId, Collection( d->mCollectionId ), d );
   resultJob->setResult( result );
 }
 

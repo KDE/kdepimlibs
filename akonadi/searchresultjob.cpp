@@ -35,6 +35,7 @@ class SearchResultJobPrivate: public Akonadi::JobPrivate
     SearchResultJobPrivate( SearchResultJob *parent );
 
     QByteArray searchId;
+    Collection collection;
     ImapSet uid;
     QVector<QByteArray> rid;
 };
@@ -49,12 +50,14 @@ SearchResultJobPrivate::SearchResultJobPrivate( SearchResultJob *parent)
 
 using namespace Akonadi;
 
-SearchResultJob::SearchResultJob( const QByteArray &searchId, QObject *parent )
+SearchResultJob::SearchResultJob( const QByteArray &searchId, const Collection &collection, QObject *parent )
  : Job(new SearchResultJobPrivate( this ), parent )
 {
   Q_D( SearchResultJob );
+  Q_ASSERT( collection.isValid() );
 
   d->searchId = searchId;
+  d->collection = collection;
 }
 
 SearchResultJob::~SearchResultJob()
@@ -106,7 +109,7 @@ void SearchResultJob::doStart()
     command += AKONADI_CMD_UID;
   }
 
-  command += " SEARCH_RESULT " + d->searchId + " (";
+  command += " SEARCH_RESULT " + d->searchId + " " + QByteArray::number( d->collection.id() ) + " (";
 
   if ( !d->rid.isEmpty() ) {
     command += ImapParser::join( d->rid.toList(), " " );

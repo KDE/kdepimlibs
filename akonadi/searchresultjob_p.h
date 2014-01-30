@@ -24,6 +24,7 @@
 
 #include <akonadi/job.h>
 #include <akonadi/private/imapset_p.h>
+#include <akonadi/collection.h>
 
 namespace Akonadi {
 
@@ -33,7 +34,7 @@ class SearchResultJob : public Akonadi::Job
 {
   Q_OBJECT
   public:
-    explicit SearchResultJob( const QByteArray &searchId, QObject* parent = 0 );
+    explicit SearchResultJob( const QByteArray &searchId, const Collection &collection, QObject* parent = 0 );
     virtual ~SearchResultJob();
 
     void setSearchId( const QByteArray &searchId );

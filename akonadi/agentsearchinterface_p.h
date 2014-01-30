@@ -21,8 +21,10 @@
 #define AKOANDI_AGENTSEARCHINTERFACE_P_H
 
 #include "agentsearchinterface.h"
-
 #include <QObject>
+
+#include <akonadi/collection.h>
+
 
 class KJob;
 
@@ -40,7 +42,8 @@ class AgentSearchInterfacePrivate : public QObject
     void addSearch( const QString &query, const QString &queryLanguage, quint64 resultCollectionId );
     void removeSearch( quint64 resultCollectionId );
 
-    QByteArray searchId;
+    QByteArray mSearchId;
+    qint64 mCollectionId;
 
   private Q_SLOTS:
     void delayedInit();
