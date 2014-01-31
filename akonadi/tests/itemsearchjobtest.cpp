@@ -89,9 +89,7 @@ private Q_SLOTS:
         QFETCH(QSet<qint64>, resultSet);
 
         ItemSearchJob *itemSearchJob = new ItemSearchJob(query, this);
-        //support remote search on the server
-//         itemSearchJob->setRemoteSearchEnabled(remoteSearchEnabled);
-        itemSearchJob->setRemoteSearchEnabled(false);
+        itemSearchJob->setRemoteSearchEnabled(remoteSearchEnabled);
         itemSearchJob->setSearchCollections(Collection::List() << Collection::root());
         itemSearchJob->setRecursive(true);
         AKVERIFYEXEC(itemSearchJob);
