@@ -133,6 +133,24 @@ class SearchQueryTest : public QObject
         }
       }
     }
+
+    void testFullQuery()
+    {
+      {
+        SearchQuery query;
+        query.addTerm("key", "value");
+        const QByteArray serialized = query.toJSON();
+        QCOMPARE(SearchQuery::fromJSON(serialized), query);
+      }
+      {
+        SearchQuery query;
+        query.setLimit(10);
+        query.addTerm("key", "value");
+        const QByteArray serialized = query.toJSON();
+        QCOMPARE(SearchQuery::fromJSON(serialized), query);
+      }
+    }
+
 };
 
 QTEST_AKONADIMAIN( SearchQueryTest, NoGUI )

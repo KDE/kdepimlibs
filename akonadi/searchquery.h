@@ -68,7 +68,7 @@ class AKONADI_EXPORT SearchTerm
     ~SearchTerm();
 
     SearchTerm& operator=( const SearchTerm &other );
-    bool operator==( const SearchTerm &other );
+    bool operator==( const SearchTerm &other ) const;
 
     bool isNull() const;
 
@@ -137,7 +137,7 @@ class AKONADI_EXPORT SearchQuery
     ~SearchQuery();
     SearchQuery( const SearchQuery &other );
     SearchQuery& operator=( const SearchQuery &other );
-    bool operator==( const SearchQuery &other );
+    bool operator==( const SearchQuery &other ) const;
 
     bool isNull() const;
 
@@ -160,6 +160,21 @@ class AKONADI_EXPORT SearchQuery
      * Returns the root term.
      */
     SearchTerm term() const;
+
+    /**
+     * Sets the maximum number of results.
+     *
+     * Note that this limit is only evaluated per search backend,
+     * so the total number of results retrieved may be larger.
+     */
+    void setLimit( int limit );
+
+    /**
+     * Returns the maximum number of results.
+     *
+     * The default value is -1, indicating no limit.
+     */
+    int limit() const;
 
     QByteArray toJSON() const;
     static SearchQuery fromJSON( const QByteArray &json );

@@ -50,7 +50,7 @@ class SearchTerm::Private: public QSharedData
     {
     }
 
-    bool operator==( const Private &other )
+    bool operator==( const Private &other ) const
     {
       return relation == other.relation
              && isNegated == other.isNegated
@@ -72,19 +72,21 @@ class SearchQuery::Private: public QSharedData
 {
   public:
     Private():
-      QSharedData()
+      QSharedData(),
+      limit(-1)
     {
     }
 
     Private( const Private &other ):
       QSharedData( other ),
-      rootTerm( other.rootTerm )
+      rootTerm( other.rootTerm ),
+      limit( other.limit )
     {
     }
 
-    bool operator==( const Private &other )
+    bool operator==( const Private &other ) const
     {
-      return rootTerm == other.rootTerm;
+      return rootTerm == other.rootTerm && limit == other.limit;
     }
 
     static QVariantMap termToJSON( const SearchTerm &term )
@@ -131,6 +133,7 @@ class SearchQuery::Private: public QSharedData
     }
 
     SearchTerm rootTerm;
+    int limit;
 };
 
 SearchTerm::SearchTerm( SearchTerm::Relation relation ):
@@ -163,9 +166,9 @@ SearchTerm& SearchTerm::operator=( const SearchTerm &other )
   return *this;
 }
 
-bool SearchTerm::operator==( const SearchTerm &other )
+bool SearchTerm::operator==( const SearchTerm &other ) const
 {
-  return d == other.d;
+  return *d == *other.d;
 }
 
 bool SearchTerm::isNull() const
@@ -235,9 +238,9 @@ SearchQuery& SearchQuery::operator=( const SearchQuery &other )
   return *this;
 }
 
-bool SearchQuery::operator==( const SearchQuery &other )
+bool SearchQuery::operator==( const SearchQuery &other ) const
 {
-  return d->rootTerm == other.d->rootTerm;
+  return *d == *other.d;
 }
 
 bool SearchQuery::isNull() const
@@ -265,9 +268,20 @@ void SearchQuery::setTerm( const SearchTerm& term )
   d->rootTerm = term;
 }
 
+void SearchQuery::setLimit( int limit )
+{
+  d->limit = limit;
+}
+
+int SearchQuery::limit() const
+{
+  return d->limit;
+}
+
 QByteArray SearchQuery::toJSON() const
 {
   QVariantMap root = Private::termToJSON( d->rootTerm );
+  root.insert( QLatin1String( "limit" ), d->limit );
 
   QJson::Serializer serializer;
   return serializer.serialize( root );
@@ -282,8 +296,12 @@ SearchQuery SearchQuery::fromJSON( const QByteArray &jsonData )
     return SearchQuery();
   }
 
+  const QVariantMap map = json.toMap();
   SearchQuery query;
-  query.d->rootTerm = Private::JSONToTerm( json.toMap() );
+  query.d->rootTerm = Private::JSONToTerm( map );
+  if ( map.contains( QLatin1String("limit") ) ) {
+    query.d->limit = map.value( QLatin1String("limit") ).toInt();
+  }
   return query;
 }
 
