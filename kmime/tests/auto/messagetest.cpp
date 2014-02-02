@@ -503,7 +503,7 @@ void MessageTest::testEncapsulatedMessages()
   QVERIFY( messageContent->body().isEmpty() );
   QCOMPARE( messageContent->contents().count(), 1 );
   QVERIFY( messageContent->bodyIsMessage() );
-  QVERIFY( messageContent->bodyAsMessage() );
+  QVERIFY( messageContent->bodyAsMessage().get() );
   QVERIFY( !messageContent->isTopLevel() );
   QCOMPARE( messageContent->index().toString().toLatin1().data(), "2" );
 
