@@ -193,7 +193,7 @@ void Client::call( const QString &method, const QByteArray &arg,
 {
   QList<QVariant> args;
   args << QVariant( arg );
-  call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
+  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
 
 void Client::call( const QString &method, const QDateTime &arg,
