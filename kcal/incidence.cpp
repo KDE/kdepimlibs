@@ -532,8 +532,9 @@ void Incidence::addRelation( Incidence *incidence )
 
 void Incidence::removeRelation( Incidence *incidence )
 {
+  const QString uid = incidence->uid();
   d->mRelations.removeRef( incidence );
-  if ( d->mRelatedToUid == incidence->uid() ) {
+  if ( d->mRelatedToUid == uid ) {
     d->mRelatedToUid.clear();
   }
 //  if (incidence->getRelatedTo() == this) incidence->setRelatedTo(0);
