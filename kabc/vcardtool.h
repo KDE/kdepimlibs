@@ -45,13 +45,13 @@ class KABC_EXPORT VCardTool
       the vCard format.
      */
     QByteArray createVCards( const Addressee::List &list,
-                             VCard::Version version = VCard::v3_0 ) const;
+                             VCard::Version version = VCard::v4_0 ) const;
 
     /**
      * since 4.9.1
      */
     QByteArray exportVCards( const Addressee::List &list,
-                             VCard::Version version = VCard::v3_0 ) const;
+                             VCard::Version version = VCard::v4_0 ) const;
     /**
       Parses the string and returns a list of addressee objects.
      */
