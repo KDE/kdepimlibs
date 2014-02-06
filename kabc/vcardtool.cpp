@@ -93,8 +93,10 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     VCard card;
     QStringList::ConstIterator strIt;
 
-    // ADR + LABEL
     const Address::List addresses = ( *addrIt ).addresses();
+
+    // ADR + LABEL
+
     for ( Address::List::ConstIterator it = addresses.begin(); it != addresses.end(); ++it ) {
       QStringList address;
 
@@ -128,15 +130,19 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
                                                  QLatin1String( "\\;" ) ) );
 
       VCardLine adrLine( QLatin1String( "ADR" ), address.join( QLatin1String( ";" ) ) );
+      VCardLine labelLine( QLatin1String( "LABEL" ), ( *it ).label() );
       if ( version == VCard::v2_1 && needsEncoding( address.join( QLatin1String( ";" ) ) ) ) {
         adrLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
         adrLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
       }
 
-      VCardLine labelLine( QLatin1String( "LABEL" ), ( *it ).label() );
-      if ( version == VCard::v2_1 && needsEncoding( ( *it ).label() ) ) {
-        labelLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
-        labelLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+      if ( version == VCard::v4_0 ) { // No LABEL field in VCard 4.0, LABEL param for ADR instead
+          adrLine.addParameter( QLatin1String( "LABEL" ), ( *it ).label() );
+      } else {
+        if ( version == VCard::v2_1 && needsEncoding( ( *it ).label() ) ) {
+          labelLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
+          labelLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+        }
       }
 
       const bool hasLabel = !( *it ).label().isEmpty();
@@ -154,7 +160,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       if ( !isEmpty ) {
         card.addLine( adrLine );
       }
-      if ( hasLabel ) {
+      if ( hasLabel && version != VCard::v4_0 ) {
         card.addLine( labelLine );
       }
     }
@@ -163,19 +169,17 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     card.addLine( VCardLine( QLatin1String( "BDAY" ), createDateTime( ( *addrIt ).birthday() ) ) );
 
     // CATEGORIES
-    if ( version == VCard::v3_0 ) {
-      QStringList categories = ( *addrIt ).categories();
-      QStringList::Iterator catIt;
-      QStringList::Iterator catEnd( categories.end() );
-      for ( catIt = categories.begin(); catIt != catEnd; ++catIt ) {
-        ( *catIt ).replace( QLatin1Char( ',' ), QLatin1String( "\\," ) );
-      }
-
-      VCardLine catLine( QLatin1String( "CATEGORIES" ), categories.join( QLatin1String( "," ) ) );
-      card.addLine( catLine );
+    QStringList categories = ( *addrIt ).categories();
+    QStringList::Iterator catIt;
+    QStringList::Iterator catEnd( categories.end() );
+    for ( catIt = categories.begin(); catIt != catEnd; ++catIt ) {
+      ( *catIt ).replace( QLatin1Char( ',' ), QLatin1String( "\\," ) );
     }
 
-    // CLASS
+    VCardLine catLine( QLatin1String( "CATEGORIES" ), categories.join( QLatin1String( "," ) ) );
+    card.addLine( catLine );
+
+    // CLASS only for version == 3.0
     if ( version == VCard::v3_0 ) {
       card.addLine( createSecrecy( ( *addrIt ).secrecy() ) );
     }
@@ -192,7 +196,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       card.addLine( line );
     }
 
-    // FN
+    // FN required for only version > 2.1
     VCardLine fnLine( QLatin1String( "FN" ), ( *addrIt ).formattedName() );
     if ( version == VCard::v2_1 && needsEncoding( ( *addrIt ).formattedName() ) ) {
       fnLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
@@ -219,15 +223,17 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     // LOGO
     card.addLine( createPicture( QLatin1String( "LOGO" ), ( *addrIt ).logo() ) );
 
-    // MAILER
-    VCardLine mailerLine( QLatin1String( "MAILER" ), ( *addrIt ).mailer() );
-    if ( version == VCard::v2_1 && needsEncoding( ( *addrIt ).mailer() ) ) {
-      mailerLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
-      mailerLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+    // MAILER only for version < 4.0
+    if ( version != VCard::v4_0 ) {
+      VCardLine mailerLine( QLatin1String( "MAILER" ), ( *addrIt ).mailer() );
+      if ( version == VCard::v2_1 && needsEncoding( ( *addrIt ).mailer() ) ) {
+        mailerLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
+        mailerLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+      }
+      card.addLine( mailerLine );
     }
-    card.addLine( mailerLine );
 
-    // N
+    // N required for only version < 4.0
     QStringList name;
     name.append( ( *addrIt ).familyName().replace( QLatin1Char( ';' ),
                                                    QLatin1String( "\\;" ) ) );
@@ -249,18 +255,23 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       nLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
       nLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
     }
+    if ( version == VCard::v4_0 && !( *addrIt ).sortString().isEmpty() ) {
+        nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
+    }
     card.addLine( nLine );
 
-    // NAME
-    VCardLine nameLine( QLatin1String( "NAME" ), ( *addrIt ).name() );
-    if ( version == VCard::v2_1 && needsEncoding( ( *addrIt ).name() ) ) {
-      nameLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
-      nameLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
-    }
-    card.addLine( nameLine );
-
-    // NICKNAME
+    // NAME only for version == 3.0
     if ( version == VCard::v3_0 ) {
+      VCardLine nameLine( QLatin1String( "NAME" ), ( *addrIt ).name() );
+      if ( version == VCard::v2_1 && needsEncoding( ( *addrIt ).name() ) ) {
+        nameLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
+        nameLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+      }
+      card.addLine( nameLine );
+    }
+
+    // NICKNAME only for version > 2.1
+    if ( version != VCard::v2_1 ) {
       card.addLine( VCardLine( QLatin1String( "NICKNAME" ), ( *addrIt ).nickName() ) );
     }
 
@@ -285,13 +296,16 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       orgLine.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
       orgLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
     }
+    if ( version == VCard::v4_0 && !( *addrIt ).sortString().isEmpty() ) {
+        nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
+    }
     card.addLine( orgLine );
 
     // PHOTO
     card.addLine( createPicture( QLatin1String( "PHOTO" ), ( *addrIt ).photo() ) );
 
-    // PROID
-    if ( version == VCard::v3_0 ) {
+    // PRODID only for version > 2.1
+    if ( version != VCard::v2_1 ) {
       card.addLine( VCardLine( QLatin1String( "PRODID" ), ( *addrIt ).productId() ) );
     }
 
@@ -306,8 +320,8 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     }
     card.addLine( roleLine );
 
-    // SORT-STRING
-    if ( version == VCard::v3_0 ) {
+    // SORT-STRING only for version < 4.0, use SORT-AS param in N and/or ORG instead
+    if ( version != VCard::v4_0 ) {
       card.addLine( VCardLine( QLatin1String( "SORT-STRING" ), ( *addrIt ).sortString() ) );
     }
 
@@ -363,11 +377,13 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     // URL
     card.addLine( VCardLine( QLatin1String( "URL" ), ( *addrIt ).url().url() ) );
 
-    // VERSION
+    // VERSION field required
     if ( version == VCard::v2_1 ) {
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "2.1" ) ) );
     } else if ( version == VCard::v3_0 ) {
-      card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
+        card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
+    } else if ( version == VCard::v4_0 ) {
+      card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "4.0" ) ) );
     }
 
     // X-
