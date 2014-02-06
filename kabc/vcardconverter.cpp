@@ -44,7 +44,8 @@ QByteArray VCardConverter::exportVCards( const Addressee::List &list, Version ve
 {
   VCardTool tool;
 
-  return tool.exportVCards( list, ( version == v3_0 ? VCard::v3_0 : VCard::v2_1 ) );
+  return tool.exportVCards( list, ( version == v4_0 ? VCard::v4_0 :
+                                    version == v3_0 ? VCard::v3_0 : VCard::v2_1 ) );
 }
 
 QByteArray VCardConverter::createVCard( const Addressee &addr, Version version ) const
@@ -59,7 +60,8 @@ QByteArray VCardConverter::createVCards( Addressee::List list, Version version )
 {
   VCardTool tool;
 
-  return tool.createVCards( list, ( version == v3_0 ? VCard::v3_0 : VCard::v2_1 ) );
+  return tool.createVCards( list, ( version == v4_0 ? VCard::v4_0 :
+                                    version == v3_0 ? VCard::v3_0 : VCard::v2_1 ) );
 }
 
 Addressee VCardConverter::parseVCard( const QByteArray &vcard ) const
