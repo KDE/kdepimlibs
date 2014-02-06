@@ -297,11 +297,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       orgLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
     }
     if ( version == VCard::v4_0 && !( *addrIt ).sortString().isEmpty() ) {
-<<<<<<< HEAD
       nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
-=======
-        nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
->>>>>>> Update vCard parser (Addressee::list => vCard formatted data)
     }
     card.addLine( orgLine );
 
@@ -385,11 +381,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     if ( version == VCard::v2_1 ) {
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "2.1" ) ) );
     } else if ( version == VCard::v3_0 ) {
-<<<<<<< HEAD
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
-=======
-        card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
->>>>>>> Update vCard parser (Addressee::list => vCard formatted data)
     } else if ( version == VCard::v4_0 ) {
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "4.0" ) ) );
     }
