@@ -181,6 +181,31 @@ void RoundtripTest::validate( VCardConverter::Version version,
     versionExpected.append( versionString );
     QCOMPARE( outputLines[ 1 ], versionExpected );
   }
+
+  if ( !output4_0File.isEmpty() ) {
+    const QByteArray outputData = converter.createVCards( list, VCardConverter::v4_0 );
+    QFile outputFile( QFileInfo( mOutput4_0Dir, output4_0File ).absoluteFilePath() );
+    QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
+
+    const QByteArray outputRefData = outputFile.readAll();
+
+    const QList<QByteArray> outputLines = outputData.split( '\n' );
+    const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
+    QCOMPARE( outputLines.count(), outputRefLines.count() );
+
+    for ( int i = 0; i < outputLines.count(); ++i ) {
+      const QByteArray actual = outputLines[ i ];
+      const QByteArray expect = outputRefLines[ i ];
+
+      if ( actual != expect ) {
+        qCritical() << "Mismatch in v4.0 output line" << ( i + 1 );
+
+        qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
+        QCOMPARE( actual.count(), expect.count() );
+        QCOMPARE( actual, expect );
+      }
+    }
+  }
 }
 
 QTEST_KDEMAIN( RoundtripTest, NoGUI )
