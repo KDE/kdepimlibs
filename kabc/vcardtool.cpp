@@ -256,7 +256,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       nLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
     }
     if ( version == VCard::v4_0 && !( *addrIt ).sortString().isEmpty() ) {
-        nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
+      nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
     }
     card.addLine( nLine );
 
@@ -297,7 +297,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       orgLine.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
     }
     if ( version == VCard::v4_0 && !( *addrIt ).sortString().isEmpty() ) {
-        nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
+      nLine.addParameter( QLatin1String( "SORT-AS" ), ( *addrIt ).sortString() );
     }
     card.addLine( orgLine );
 
@@ -381,7 +381,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     if ( version == VCard::v2_1 ) {
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "2.1" ) ) );
     } else if ( version == VCard::v3_0 ) {
-        card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
+      card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "3.0" ) ) );
     } else if ( version == VCard::v4_0 ) {
       card.addLine( VCardLine( QLatin1String( "VERSION" ), QLatin1String( "4.0" ) ) );
     }
@@ -497,6 +497,9 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           }
 
           address.setType( type );
+          if ( !( *lineIt ).parameter( QLatin1String( "label" ) ).isEmpty() ) {
+            address.setLabel( ( *lineIt ).parameter( QLatin1String( "label" ) ) );
+          }
           addr.insertAddress( address );
         }
 
@@ -603,6 +606,9 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           if ( numberOfParts > 4 ) {
             addr.setSuffix( nameParts[ 4 ] );
           }
+          if ( !( *lineIt ).parameter( QLatin1String( "sort-as" ) ).isEmpty() ) {
+            addr.setSortString( ( *lineIt ).parameter( QLatin1String( "sort-as" ) ) );
+          }
         }
 
         // NAME
@@ -628,6 +634,9 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           }
           if ( orgParts.count() > 1 ) {
             addr.setDepartment( orgParts[ 1 ] );
+          }
+          if ( !( *lineIt ).parameter( QLatin1String( "sort-as" ) ).isEmpty() ) {
+            addr.setSortString( ( *lineIt ).parameter( QLatin1String( "sort-as" ) ) );
           }
         }
 
