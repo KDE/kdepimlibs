@@ -57,10 +57,12 @@ class KABC_EXPORT VCardConverter
     /**
       @li v2_1 - VCard format version 2.1
       @li v3_0 - VCard format version 3.0
+      @li v4_0 - VCard format version 4.0
      */
     enum Version {
       v2_1,
-      v3_0
+      v3_0,
+      v4_0
     };
 
     /**
@@ -80,7 +82,7 @@ class KABC_EXPORT VCardConverter
       @param addr The contact object
       @param version The version of the generated vCard format
      */
-    QByteArray createVCard( const Addressee &addr, Version version = v3_0 ) const;
+    QByteArray createVCard( const Addressee &addr, Version version = v4_0 ) const;
 
     /**
       Creates a string in vCard format which contains the given
@@ -90,7 +92,7 @@ class KABC_EXPORT VCardConverter
       @param version The version of the generated vCard format
      */
     // FIXME: Add error handling
-    QByteArray createVCards( Addressee::List list, Version version = v3_0 ) const;
+    QByteArray createVCards( Addressee::List list, Version version = v4_0 ) const;
 
     // FIXME: Add "createVCards( AddressBook * )"
 
