@@ -26,6 +26,7 @@
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/sharedvaluepool_p.h>
+#include <akonadi/attributeentity.h>
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
@@ -103,6 +104,7 @@ class ProtocolHelper
       Convert attributes to their protocol representation.
     */
     static QByteArray attributesToByteArray( const Entity &entity, bool ns = false );
+    static QByteArray attributesToByteArray( const AttributeEntity &entity, bool ns = false );
 
     /**
       Encodes part label and namespace.

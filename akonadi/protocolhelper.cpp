@@ -213,6 +213,16 @@ QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity, bool ns 
   return ImapParser::join( l, " " );
 }
 
+QByteArray ProtocolHelper::attributesToByteArray(const AttributeEntity & entity, bool ns )
+{
+  QList<QByteArray> l;
+  foreach ( const Attribute *attr, entity.attributes() ) {
+    l << encodePartIdentifier( ns ? PartAttribute : PartGlobal, attr->type() );
+    l << ImapParser::quote( attr->serialized() );
+  }
+  return ImapParser::join( l, " " );
+}
+
 QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArray & label, int version )
 {
   const QByteArray versionString( version != 0 ? QByteArray(QByteArray("[") + QByteArray::number( version ) + QByteArray("]")) : "" );

@@ -185,6 +185,10 @@ set( akonadikde_LIB_SRC
   transactionsequence.cpp
   transportresourcebase.cpp
   typepluginloader.cpp
+  attributeentity.cpp
+  tag.cpp
+  tagcreatejob.cpp
+  tagfetchjob.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
