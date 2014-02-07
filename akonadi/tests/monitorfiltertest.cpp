@@ -28,7 +28,6 @@
 using namespace Akonadi;
 
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Operation )
-Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Type )
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 class MonitorFilterTest : public QObject
