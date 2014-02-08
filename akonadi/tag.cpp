@@ -72,7 +72,10 @@ Tag& Tag::operator=(const Tag &other)
 
 bool Tag::operator==(const Tag &other)
 {
-    return d->id == other.d->id;
+    if (isValid() && other.isValid()) {
+        return d->id == other.d->id;
+    }
+    return d->gid == other.d->gid;
 }
 
 void Tag::setId(Tag::Id identifier)
