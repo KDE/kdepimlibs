@@ -390,6 +390,8 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
   if ( fetchScope.fetchGid() )
     command += " GID";
+  if ( fetchScope.fetchTags() )
+    command += " TAGS";
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
@@ -476,6 +478,19 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
         item.setFlags( convertedFlags );
       }
+    } else if ( key == "TAGS" ) {
+      ImapSet set;
+      ImapParser::parseSequenceSet( lineTokens[i + 1], set );
+      Tag::List tags;
+      Q_FOREACH ( const ImapInterval &interval, set.intervals() ) {
+        Q_ASSERT( interval.hasDefinedBegin() );
+        Q_ASSERT( interval.hasDefinedEnd() );
+        for ( qint64 i = interval.begin(); i <= interval.end(); i++ ) {
+          //TODO use value pool when tag is shared data
+          tags << Tag( i );
+        }
+      }
+      item.setTags( tags );
     } else if ( key == "CACHEDPARTS" ) {
       QSet<QByteArray> partsSet;
       QList<QByteArray> parts;

@@ -29,6 +29,8 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 using namespace Akonadi;
 
@@ -98,6 +100,10 @@ void TagTest::testTagItem()
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
 }
 
 
