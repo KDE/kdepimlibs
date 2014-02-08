@@ -289,6 +289,53 @@ QByteArray ProtocolHelper::entitySetToByteArray( const QList<Item> &_objects, co
   return entitySetToByteArray<Item>(objects, command);
 }
 
+QByteArray ProtocolHelper::tagSetToImapSequenceSet( const Akonadi::Tag::List &_objects )
+{
+  if ( _objects.isEmpty() )
+    throw Exception( "No objects specified" );
+
+  Tag::List objects( _objects );
+
+  std::sort( objects.begin(), objects.end(), boost::bind( &Tag::id, _1 ) < boost::bind( &Tag::id, _2 ) );
+  if ( !objects.first().isValid() ) {
+    throw Exception( "Not all tags have a uid" );
+  }
+  // all items have a uid set
+  QVector<Tag::Id>  uids;
+  foreach ( const Tag &object, objects )
+    uids << object.id();
+  ImapSet set;
+  set.add( uids );
+  return set.toImapSequenceSet();
+}
+
+QByteArray ProtocolHelper::tagSetToByteArray( const Tag::List &_objects, const QByteArray &command )
+{
+  if ( _objects.isEmpty() )
+    throw Exception( "No objects specified" );
+
+  Tag::List objects( _objects );
+
+  QByteArray rv;
+  std::sort( objects.begin(), objects.end(), boost::bind( &Tag::id, _1 ) < boost::bind( &Tag::id, _2 ) );
+  if ( objects.first().isValid() ) {
+    // all items have a uid set
+    rv += " " AKONADI_CMD_UID " ";
+    if ( !command.isEmpty() ) {
+      rv += command;
+      rv += ' ';
+    }
+    QVector<Tag::Id>  uids;
+    foreach ( const Tag &object, objects )
+      uids << object.id();
+    ImapSet set;
+    set.add( uids );
+    rv += set.toImapSequenceSet();
+    return rv;
+  }
+  throw Exception( "Not all tags have a uid" );
+}
+
 QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
 {
   if ( col == Collection::root() )

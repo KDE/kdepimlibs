@@ -27,6 +27,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/sharedvaluepool_p.h>
 #include <akonadi/attributeentity.h>
+#include <akonadi/tag.h>
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
@@ -187,6 +188,9 @@ class ProtocolHelper
     }
 
     static QByteArray entitySetToByteArray( const QList<Akonadi::Item> &_objects, const QByteArray &command );
+
+    static QByteArray tagSetToImapSequenceSet( const Akonadi::Tag::List &_objects );
+    static QByteArray tagSetToByteArray( const Akonadi::Tag::List &_objects, const QByteArray &command );
 
     /**
       Converts the given object identifier into a protocol representation.

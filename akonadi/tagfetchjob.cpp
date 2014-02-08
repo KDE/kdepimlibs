@@ -84,12 +84,17 @@ void TagFetchJob::doStart()
     Q_D(TagFetchJob);
 
     QByteArray command = d->newTag();
-    command += " UID";
-    command += " TAGFETCH";
     if (d->mRequestedTags.isEmpty()) {
-      command += " 1:*";
+        command += " UID TAGFETCH 1:*";
     } else {
-      command += ' ' + QString::number(d->mRequestedTags.first().id()).toLatin1();
+        try {
+            command += ProtocolHelper::tagSetToByteArray(d->mRequestedTags, "TAGFETCH");
+        } catch (const Exception &e) {
+            setError(Job::Unknown);
+            setErrorText(QString::fromUtf8(e.what()));
+            emitResult();
+            return;
+        }
     }
     command += " (UID";
 //       Q_FOREACH (const QByteArray &part, fetchScope.attributes()) {
