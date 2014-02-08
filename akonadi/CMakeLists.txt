@@ -189,6 +189,7 @@ set( akonadikde_LIB_SRC
   tag.cpp
   tagcreatejob.cpp
   tagfetchjob.cpp
+  tagdeletejob.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
