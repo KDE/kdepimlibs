@@ -34,7 +34,7 @@ public:
 
     Tag();
     explicit Tag(Id id);
-    explicit Tag(const QByteArray &type, const QByteArray &uuid, const QString &displayName, const Tag &parent);
+    explicit Tag(const QByteArray &gid, const QByteArray &type = QByteArray(), const QString &displayName = QString(), const Tag &parent = Tag());
 
     Tag(const Tag &);
 

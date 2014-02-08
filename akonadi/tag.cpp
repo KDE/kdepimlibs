@@ -24,14 +24,13 @@ using namespace Akonadi;
 
 struct Akonadi::Tag::Private {
     Private()
-        :id(-1),
-        parent(0)
+        :id(-1)
     {}
 
     Id id;
     QByteArray gid;
     QByteArray remoteId;
-    Tag *parent;
+    QScopedPointer<Tag> parent;
     QByteArray type;
 };
 
@@ -46,27 +45,34 @@ Tag::Tag(Tag::Id id)
     :AttributeEntity(),
     d(new Private)
 {
-
+    d->id = id;
 }
 
-Tag::Tag(const QByteArray &type, const QByteArray &gid, const QString &displayName, const Tag &parent)
+Tag::Tag(const QByteArray &gid, const QByteArray &type, const QString &name, const Tag &parent)
     :AttributeEntity(),
     d(new Private)
 {
-  d->type = type;
-  d->gid = gid;
-
+    d->gid = gid;
+    d->type = type;
+    setName(name);
+    setParent(parent);
 }
 
 Tag::Tag(const Tag &other)
     :d(new Private)
 {
-    *d = *other.d;
+    operator=(other);
 }
 
 Tag& Tag::operator=(const Tag &other)
 {
-    *d = *other.d;
+    d->id = other.d->id;
+    d->gid = other.d->gid;
+    d->remoteId = other.d->remoteId;
+    d->type = other.d->type;
+    if (other.d->parent) {
+        d->parent.reset(new Tag(*other.d->parent));
+    }
     return *this;
 }
 
@@ -110,8 +116,10 @@ QByteArray Tag::remoteId() const
 
 void Tag::setName(const QString &name)
 {
-    EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>(Akonadi::AttributeEntity::AddIfMissing);
-    attr->setDisplayName(name);
+    if (!name.isEmpty()) {
+        EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+        attr->setDisplayName(name);
+    }
 }
 
 QString Tag::name() const
@@ -123,7 +131,9 @@ QString Tag::name() const
 
 void Tag::setParent(const Tag &parent)
 {
-    d->parent = new Tag(parent);
+    if (parent.isValid()) {
+        d->parent.reset(new Tag(parent));
+    }
 }
 
 Tag Tag::parent() const

@@ -26,6 +26,9 @@
 #include <akonadi/tagfetchjob.h>
 #include <akonadi/tagdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
+#include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/itemmodifyjob.h>
 
 using namespace Akonadi;
 
@@ -37,6 +40,7 @@ private Q_SLOTS:
     void initTestCase();
 
     void testCreateFetch();
+    void testTagItem();
 };
 
 void TagTest::initTestCase()
@@ -70,6 +74,32 @@ void TagTest::testCreateFetch()
         QCOMPARE(fetchJob->tags().size(), 0);
     }
 }
+
+void TagTest::testTagItem()
+{
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    Tag tag;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+    }
+
+    item1.setTag(tag);
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+}
+
 
 #include "tagtest.moc"
 
