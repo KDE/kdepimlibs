@@ -29,7 +29,7 @@ namespace Akonadi {
 class AKONADI_EXPORT Tag : public AttributeEntity
 {
 public:
-    typedef QVector<Tag> List;
+    typedef QList<Tag> List;
     typedef qint64 Id;
 
     Tag();
