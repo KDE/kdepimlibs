@@ -116,6 +116,7 @@ set( akonadikde_LIB_SRC
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
+  entityannotationsattribute.cpp
   erroroverlay.cpp
   etmviewstatesaver.cpp
   exception.cpp
@@ -354,6 +355,7 @@ install( FILES
   entitytreeview.h
   entitytreeviewstatesaver.h
   etmviewstatesaver.h
+  entityannotationsattribute.h
   exception.h
   favoritecollectionsmodel.h
   gid/gidextractorinterface.h
