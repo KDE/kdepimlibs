@@ -312,6 +312,7 @@ install( FILES
   agenttypedialog.h
   attribute.h
   attributefactory.h
+  attributeentity.h
   cachepolicy.h
   cachepolicypage.h
   changerecorder.h
@@ -397,6 +398,10 @@ install( FILES
   specialcollectionsdiscoveryjob.h
   standardactionmanager.h
   statisticsproxymodel.h
+  tag.h
+  tagcreatejob.h
+  tagfetchjob.h
+  tagdeletejob.h
   trashjob.h
   trashrestorejob.h
   trashsettings.h
