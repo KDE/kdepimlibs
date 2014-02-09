@@ -71,13 +71,20 @@ TagFetchJob::TagFetchJob(QObject *parent)
 }
 
 TagFetchJob::TagFetchJob(const Tag &tag, QObject *parent)
-    :Job(parent)
+    :Job(new TagFetchJobPrivate(this), parent)
 {
     Q_D(TagFetchJob);
     d->init();
     d->mRequestedTags << tag;
 }
 
+TagFetchJob::TagFetchJob(const Tag::List& tags, QObject* parent)
+    :Job(new TagFetchJobPrivate(this), parent)
+{
+    Q_D(TagFetchJob);
+    d->init();
+    d->mRequestedTags << tags;
+}
 
 void TagFetchJob::doStart()
 {

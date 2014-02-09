@@ -39,9 +39,10 @@ public:
 
     TagFetchJob(QObject *parent = 0);
     TagFetchJob(const Tag &tag, QObject *parent = 0);
+    TagFetchJob(const Tag::List &tags, QObject *parent = 0);
 
     /**
-     * Returns the created tag with the new unique id, or an invalid tag if the job failed.
+     * Returns the fetched tags after the job has been completed.
      */
     Tag::List tags() const;
 
