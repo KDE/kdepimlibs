@@ -27,11 +27,13 @@ using namespace Akonadi;
 struct Akonadi::TagCreateJobPrivate : public JobPrivate
 {
     TagCreateJobPrivate(TagCreateJob *parent)
-        :JobPrivate(parent)
+        :JobPrivate(parent),
+        mUid(-1)
     {
     }
 
     Tag mTag;
+    Tag::Id mUid;
 };
 
 TagCreateJob::TagCreateJob(const Akonadi::Tag &tag, QObject *parent)
@@ -83,26 +85,19 @@ void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
             QList<QByteArray> fetchResponse;
             ImapParser::parseParenthesizedList(data, fetchResponse, begin + 9);
 
-            Tag tag;
-
             for (int i = 0; i < fetchResponse.count() - 1; i += 2) {
                 const QByteArray key = fetchResponse.value(i);
                 const QByteArray value = fetchResponse.value(i + 1);
 
                 if (key == "UID") {
-                    tag.setId(value.toLongLong());
-                } else if (key == "GID") {
-                    tag.setGid(value);
-                } else if (key == "REMOTEID") {
-                    tag.setRemoteId(value);
+                    d->mUid = value.toLongLong();
                 }
             }
 
-            if ( !tag.isValid() ) {
-              kWarning() << "got invalid tag back";
-              return;
+            if (d->mUid < 0) {
+                kWarning() << "got invalid tag back";
+                return;
             }
-            d->mTag = tag;
         }
     }
 }
@@ -110,6 +105,7 @@ void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
 Tag TagCreateJob::tag() const
 {
     Q_D(const TagCreateJob);
-
-    return d->mTag;
+    Tag tag(d->mTag);
+    tag.setId(d->mUid);
+    return tag;
 }
