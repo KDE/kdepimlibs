@@ -26,6 +26,8 @@
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/tag.h>
+#include <akonadi/tagfetchjob.h>
 #include <akonadi/session.h>
 
 #include "akonadiprivate_export.h"
@@ -36,6 +38,7 @@
 #include <QHash>
 #include <QtCore/QQueue>
 
+class Dummy;
 class KJob;
 
 typedef QList<Akonadi::Entity::Id> EntityIdList;
@@ -73,6 +76,10 @@ struct EntityCacheNode
   T entity;
   bool pending;
   bool invalid;
+};
+
+class DummyFetchScope
+{
 };
 
 /**
@@ -127,7 +134,7 @@ class EntityCache : public EntityCacheBase
     }
 
     /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
-    void update( typename T::Id id, const FetchScope &scope )
+    void update( typename T::Id id, const FetchScope &scope = FetchScope() )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( node ) {
@@ -140,7 +147,7 @@ class EntityCache : public EntityCacheBase
     }
 
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
-    virtual bool ensureCached( typename T::Id id, const FetchScope &scope )
+    virtual bool ensureCached( typename T::Id id, const FetchScope &scope = FetchScope() )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( !node ) {
@@ -160,8 +167,7 @@ class EntityCache : public EntityCacheBase
       Q_ASSERT( !isRequested( id ) );
       shrinkCache();
       EntityCacheNode<T> *node = new EntityCacheNode<T>( id );
-      FetchJob* job = createFetchJob( id );
-      job->setFetchScope( scope );
+      FetchJob* job = createFetchJob( id, scope );
       job->setProperty( "EntityCacheNode", QVariant::fromValue<typename T::Id>( id ) );
       connect( job, SIGNAL( result( KJob* )), SLOT(processResult( KJob* ) ) );
       mCache.enqueue( node );
@@ -202,9 +208,11 @@ class EntityCache : public EntityCacheBase
 
     void extractResult( EntityCacheNode<T>* node, KJob* job ) const;
 
-    inline FetchJob* createFetchJob( typename T::Id id )
+    inline FetchJob* createFetchJob( typename T::Id id, const FetchScope &scope )
     {
-      return new FetchJob( T( id ), session );
+      FetchJob *fetch = new FetchJob( T( id ), session );
+      fetch->setFetchScope( scope );
+      return fetch;
     }
 
     /** Tries to reduce the cache size until at least one more object fits in. */
@@ -242,13 +250,34 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
   }
 }
 
-template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( Collection::Id id )
+template<> inline void EntityCache<Tag, TagFetchJob, DummyFetchScope>::extractResult( EntityCacheNode<Tag>* node, KJob* job) const
 {
-  return new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, session );
+  TagFetchJob *fetch = qobject_cast<TagFetchJob*>( job );
+  Q_ASSERT( fetch );
+  if ( fetch->tags().isEmpty() ) {
+    node->entity = Tag();
+  } else {
+    node->entity = fetch->tags().first();
+  }
+}
+
+
+template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( Collection::Id id, const CollectionFetchScope &scope )
+{
+  CollectionFetchJob *fetch = new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, session );
+  fetch->setFetchScope( scope );
+  return fetch;
+}
+
+template<> inline TagFetchJob* EntityCache<Tag, TagFetchJob, DummyFetchScope>::createFetchJob( Tag::Id id, const DummyFetchScope &scope )
+{
+  Q_UNUSED( scope );
+  return new TagFetchJob( Tag( id ), session );
 }
 
 typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;
 typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
+typedef EntityCache<Tag, TagFetchJob, DummyFetchScope> TagCache;
 
 template <typename T>
 struct EntityListCacheNode
@@ -294,7 +323,7 @@ public:
   }
 
   /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
-  bool ensureCached( const QList<Entity::Id> &ids, const FetchScope &scope )
+  bool ensureCached( const QList<Entity::Id> &ids, const FetchScope &scope = FetchScope() )
   {
     QList<Entity::Id> toRequest;
     bool result = true;
@@ -330,7 +359,7 @@ public:
   }
 
   /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
-  void update( const QList<Entity::Id> &ids, const FetchScope &scope )
+  void update( const QList<Entity::Id> &ids, const FetchScope &scope = FetchScope() )
   {
     QList<Entity::Id> toRequest;
 
@@ -363,8 +392,7 @@ public:
       EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
       mCache.insert( id, node );
     }
-    FetchJob* job = createFetchJob( ids );
-    job->setFetchScope( scope );
+    FetchJob* job = createFetchJob( ids, scope );
     job->setProperty( "EntityListCacheIds", QVariant::fromValue< QList<Entity::Id> >( ids ) );
     connect( job, SIGNAL(result(KJob*)), SLOT(processResult(KJob*)) );
   }
@@ -408,9 +436,11 @@ private:
     }
   }
 
-  inline FetchJob* createFetchJob( const QList<Entity::Id> &ids )
+  inline FetchJob* createFetchJob( const QList<Entity::Id> &ids, const FetchScope &scope )
   {
-    return new FetchJob( ids, session );
+    FetchJob *job = new FetchJob( ids, session );
+    job->setFetchScope( scope );
+    return job;
   }
 
   void processResult( KJob* job )
@@ -472,14 +502,30 @@ template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extr
   items = fetch->items();
 }
 
-template<>
-inline CollectionFetchJob* EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( const QList<Entity::Id> &ids )
+template<> inline void EntityListCache<Tag, TagFetchJob, DummyFetchScope>::extractResults( KJob *job, Tag::List &tags )  const
 {
-  return new CollectionFetchJob( ids, CollectionFetchJob::Base, session );
+  TagFetchJob* fetch = qobject_cast<TagFetchJob*>( job );
+  Q_ASSERT( fetch );
+  tags = fetch->tags();
+}
+
+template<> inline TagFetchJob* EntityListCache<Tag, TagFetchJob, DummyFetchScope>::createFetchJob( const QList<Entity::Id> &ids, const DummyFetchScope &scope )
+{
+  Q_UNUSED( scope );
+  return new TagFetchJob( ids, session );
+}
+
+template<>
+inline CollectionFetchJob* EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( const QList<Entity::Id> &ids, const CollectionFetchScope &scope )
+{
+  CollectionFetchJob *fetch = new CollectionFetchJob( ids, CollectionFetchJob::Base, session );
+  fetch->setFetchScope( scope );
+  return fetch;
 }
 
 typedef EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionListCache;
 typedef EntityListCache<Item, ItemFetchJob, ItemFetchScope> ItemListCache;
+typedef EntityListCache<Tag, TagFetchJob, DummyFetchScope> TagListCache;
 
 }
 

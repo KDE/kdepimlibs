@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 
 #include "entity.h"
+#include "tag.h"
 #include "akonadiprivate_export.h"
 #include <notificationmessagev2_p.h>
 
@@ -42,6 +43,8 @@ class AKONADI_TESTS_EXPORT NotificationSource: public QObject
     void setMonitoredItem( Entity::Id id, bool monitored );
     void setMonitoredResource( const QByteArray &resource, bool monitored );
     void setMonitoredMimeType( const QString &mimeType, bool monitored );
+    void setMonitoredTag( Tag::Id id, bool monitored );
+    void setMonitoredType( int type, bool monitored );
     void setIgnoredSession( const QByteArray &session, bool monitored );
 
     QObject* source() const;

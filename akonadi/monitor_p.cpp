@@ -32,6 +32,7 @@
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include "changemediator_p.h"
+#include <boost/concept_check.hpp>
 
 using namespace Akonadi;
 
@@ -109,6 +110,12 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
     Q_FOREACH ( const QString &mimeType, mimetypes ) {
       notificationSource->setMonitoredMimeType( mimeType, true );
     }
+    Q_FOREACH ( Tag::Id tagId, tags ) {
+      notificationSource->setMonitoredTag( tagId, true );
+    }
+    Q_FOREACH ( Monitor::Type type, types ) {
+      notificationSource->setMonitoredType( static_cast<int>( type ), true );
+    }
   }
 }
 
@@ -120,6 +127,11 @@ void MonitorPrivate::invalidateCollectionCache( qint64 id )
 void MonitorPrivate::invalidateItemCache( qint64 id )
 {
   itemCache->update( QList<Entity::Id>() << id, mItemFetchScope );
+}
+
+void MonitorPrivate::invalidateTagCache( qint64 id )
+{
+  tagCache->update( id );
 }
 
 int MonitorPrivate::pipelineSize() const
@@ -143,6 +155,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
           && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
           )
        )
+    || ( op == NotificationMessageV2::ModifyTags && q_ptr->receivers( SIGNAL(itemTagsChanged(Akonadi::Item::List,QSet<Tag>,QSet<Tag>)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
                                            && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0
@@ -166,6 +179,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
     || ( op == NotificationMessageV2::Remove )
     || ( op == NotificationMessageV2::Modify )
     || ( op == NotificationMessageV2::ModifyFlags )
+    || ( op == NotificationMessageV2::ModifyTags )
     || ( op == NotificationMessageV2::Link )
     || ( op == NotificationMessageV2::Unlink ) )
   {
@@ -203,6 +217,11 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &n
         batchSupported = q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) > 0;
         needsSplit = isBatch && !batchSupported && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0;
         return;
+      case NotificationMessageV2::ModifyTags:
+        // Tags were added after batch notifications, so they are always supported
+        batchSupported = true;
+        needsSplit = false;
+        return;
       case NotificationMessageV2::Move:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) > 0;
@@ -226,6 +245,9 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &n
         return;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections ) {
+    needsSplit = isBatch;
+    batchSupported = false;
+  } else if ( msg.type() == NotificationMessageV2::Tags ) {
     needsSplit = isBatch;
     batchSupported = false;
   }
@@ -275,6 +297,11 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) cons
   if ( monitorAll && msg.type() != NotificationMessageV2::InvalidType)
     return true;
 
+  // Types are monitored, but not this one
+  if ( !types.isEmpty() && !types.contains( static_cast<Monitor::Type>( msg.type() ) ) ) {
+    return false;
+  }
+
   switch ( msg.type() ) {
     case NotificationMessageV2::InvalidType:
       kWarning() << "Received invalid change notification!";
@@ -320,6 +347,17 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) cons
       }
       return isCollectionMonitored( msg.parentCollection() )
           || isCollectionMonitored( msg.parentDestCollection() );
+
+    case NotificationMessageV2::Tags:
+      if ( !tags.isEmpty() ) {
+        Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+          if ( tags.contains( entity.id ) ) {
+            return true;
+          }
+        }
+        return false;
+      }
+      return true;;
   }
   Q_ASSERT( false );
   return false;
@@ -394,8 +432,17 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
     }
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
     Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      if ( !collectionCache->ensureCached( entity.id, mCollectionFetchScope ) )
+      if ( !collectionCache->ensureCached( entity.id, mCollectionFetchScope ) ) {
         allCached = false;
+        break;
+      }
+    }
+  } else if ( msg.type() == NotificationMessageV2::Tags ) {
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      if ( !tagCache->ensureCached( entity.id ) ) {
+        allCached = false;
+        break;
+      }
     }
   }
   return allCached;
@@ -419,6 +466,11 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
   } else if ( msg.type() == NotificationMessageV2::Items ) {
     Item::List items = itemCache->retrieve( msg.uids() );
     someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
+  } else if ( msg.type() == NotificationMessageV2::Tags ) {
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      const Tag tag = tagCache->retrieve( entity.id );
+      someoneWasListening = emitTagNotification( msg, tag );
+    }
   }
 
   if ( !someoneWasListening )
@@ -550,7 +602,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   int appendedMessages = 0;
   int modifiedMessages = 0;
   int erasedMessages = 0;
-  foreach ( const NotificationMessageV2 &msg, msgs ) {
+  Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     bool needsSplit = true;
@@ -857,6 +909,34 @@ bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV2 &ms
   return false;
 }
 
+bool MonitorPrivate::emitTagNotification( const NotificationMessageV2 &msg, const Tag &tag )
+{
+  Q_ASSERT( msg.type() == NotificationMessageV2::Tags );
+
+  switch ( msg.operation() ) {
+    case NotificationMessageV2::Add:
+      if ( q_ptr->receivers( SIGNAL(tagAdded(Akonadi::Tag)) ) == 0 )
+        return false;
+      Q_EMIT q_ptr->tagAdded( tag );
+      return true;
+    case NotificationMessageV2::Modify:
+      if ( q_ptr->receivers( SIGNAL(tagChanged(Akonadi::Tag)) ) == 0 )
+        return false;
+      Q_EMIT q_ptr->tagChanged( tag );
+      return true;
+    case NotificationMessageV2::Remove:
+      if ( q_ptr->receivers( SIGNAL(tagRemoved(Akonadi::Tag)) ) == 0 )
+        return false;
+      Q_EMIT q_ptr->tagRemoved( tag );
+      return true;
+    default:
+      kDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+  }
+
+  return false;
+}
+
+
 void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
 {
   // remove invalidates
@@ -866,6 +946,10 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
         collectionCache->invalidate( uid );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
       itemCache->invalidate( msg.uids() );
+    } else if ( msg.type() == NotificationMessageV2::Tags ) {
+      Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+        tagCache->invalidate( entity.id );
+      }
     }
   }
 
@@ -880,6 +964,10 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
         collectionCache->update( uid, mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
       itemCache->update( msg.uids(), mItemFetchScope );
+    } else if ( msg.type() == NotificationMessageV2::Tags ) {
+      Q_FOREACH( quint64 uid, msg.uids() ) {
+        tagCache->update( uid );
+      }
     }
   }
 }

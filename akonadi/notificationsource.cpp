@@ -87,6 +87,24 @@ void NotificationSource::setIgnoredSession( const QByteArray &session, bool igno
   Q_UNUSED( ok );
 }
 
+void NotificationSource::setMonitoredTag( Tag::Id id, bool monitored )
+{
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredTag",
+                                             Q_ARG( qlonglong, id ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
+}
+
+void NotificationSource::setMonitoredType( int type, bool monitored )
+{
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredType",
+                                             Q_ARG( int, type ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
+}
+
 QObject* NotificationSource::source() const
 {
   return parent();

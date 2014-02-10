@@ -89,6 +89,17 @@ TagFetchJob::TagFetchJob(const Tag::List& tags, QObject* parent)
     d->mRequestedTags << tags;
 }
 
+TagFetchJob::TagFetchJob(const QList<Tag::Id>& ids, QObject* parent)
+    : Job(new TagFetchJobPrivate(this), parent)
+{
+    Q_D(TagFetchJob);
+    d->init();
+    Q_FOREACH (Tag::Id id, ids) {
+      d->mRequestedTags << Tag(id);
+    }
+}
+
+
 void TagFetchJob::fetchAttribute(const QByteArray& type, bool fetch)
 {
     Q_D(TagFetchJob);

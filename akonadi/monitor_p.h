@@ -64,6 +64,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
+    QSet<Tag::Id> tags;
+    QSet<Monitor::Type> types;
     QSet<QString> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
@@ -73,6 +75,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Session *session;
     CollectionCache *collectionCache;
     ItemListCache *itemCache;
+    TagCache *tagCache;
 
     // The waiting list
     QQueue<NotificationMessageV2> pendingNotifications;
@@ -146,6 +149,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool emitCollectionNotification( const NotificationMessageV2 &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
 
+    bool emitTagNotification( const NotificationMessageV2 &msg, const Tag &tag );
+
     void serverStateChanged( Akonadi::ServerManager::State state );
 
     /**
@@ -157,6 +162,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
      * This method is called by the ChangeMediator to enforce an invalidation of the passed item.
      */
     void invalidateItemCache( qint64 itemId );
+
+    void invalidateTagCache( qint64 tagId );
 
     /**
       @brief Class used to determine when to purge items in a Collection

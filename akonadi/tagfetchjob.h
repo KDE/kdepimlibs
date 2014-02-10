@@ -40,6 +40,7 @@ public:
     TagFetchJob(QObject *parent = 0);
     TagFetchJob(const Tag &tag, QObject *parent = 0);
     TagFetchJob(const Tag::List &tags, QObject *parent = 0);
+    TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
 
     /**
      * Sets whether the attribute of the given @p type should be fetched.
