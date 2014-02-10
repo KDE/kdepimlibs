@@ -48,14 +48,12 @@ Tag::Tag(Tag::Id id)
     d->id = id;
 }
 
-Tag::Tag(const QByteArray &gid, const QByteArray &type, const QString &name, const Tag &parent)
+Tag::Tag(const QString& name)
     :AttributeEntity(),
     d(new Private)
 {
-    d->gid = gid;
-    d->type = type;
+    d->gid = name.toUtf8();
     setName(name);
-    setParent(parent);
 }
 
 Tag::Tag(const Tag &other)
@@ -82,6 +80,30 @@ bool Tag::operator==(const Tag &other)
         return d->id == other.d->id;
     }
     return d->gid == other.d->gid;
+}
+
+Tag Tag::fromUrl(const KUrl& url)
+{
+    if (url.protocol() != QLatin1String("akonadi")) {
+        return Tag();
+    }
+
+    const QString tagStr = url.queryItem(QLatin1String("tag"));
+    bool ok = false;
+    Tag::Id itemId = tagStr.toLongLong(&ok);
+    if (!ok) {
+        return Tag();
+    }
+
+    return Tag(itemId);
+}
+
+KUrl Tag::url() const
+{
+    KUrl url;
+    url.setProtocol( QString::fromLatin1( "akonadi" ) );
+    url.addQueryItem( QLatin1String( "tag" ), QString::number( id() ) );
+    return url;
 }
 
 void Tag::setId(Tag::Id identifier)
@@ -142,6 +164,16 @@ Tag Tag::parent() const
         return Tag();
     }
     return *d->parent;
+}
+
+void Tag::setType(const QByteArray &type) const
+{
+    d->type = type;
+}
+
+QByteArray Tag::type() const
+{
+    return d->type;
 }
 
 bool Tag::isValid() const

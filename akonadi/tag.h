@@ -23,9 +23,17 @@
 #include <akonadi/attributeentity.h>
 #include <QVector>
 #include <QSharedPointer>
+#include <KUrl>
 
 namespace Akonadi {
 
+/**
+ * The following types are defined initially:
+ * * PLAIN:
+ * ** gid = displayName
+ * ** immutable
+ * ** no hierarchy (no parent)
+ */
 class AKONADI_EXPORT Tag : public AttributeEntity
 {
 public:
@@ -34,12 +42,22 @@ public:
 
     Tag();
     explicit Tag(Id id);
-    explicit Tag(const QByteArray &gid, const QByteArray &type = QByteArray(), const QString &displayName = QString(), const Tag &parent = Tag());
+    /**
+     * Creates a PLAIN tag
+     */
+    explicit Tag(const QString &name);
 
     Tag(const Tag &);
 
     Tag &operator=(const Tag &);
     bool operator==(const Tag &);
+
+    static Tag fromUrl( const KUrl &url );
+
+    /**
+     * Returns the url of the tag.
+     */
+    KUrl url() const;
 
     /**
      * Sets the unique @p identifier of the tag.
