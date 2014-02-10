@@ -21,6 +21,7 @@
 #include "entityannotationsattribute.h"
 
 #include <QByteArray>
+#include <QString>
 
 using namespace Akonadi;
 
@@ -41,6 +42,21 @@ void EntityAnnotationsAttribute::setAnnotations(const QMap<QByteArray, QByteArra
 QMap<QByteArray, QByteArray> EntityAnnotationsAttribute::annotations() const
 {
     return mAnnotations;
+}
+
+void EntityAnnotationsAttribute::insert(const QByteArray &key, const QString &value)
+{
+    mAnnotations.insert(key, value.toUtf8());
+}
+
+QString EntityAnnotationsAttribute::value(const QByteArray &key)
+{
+    return QString::fromUtf8(mAnnotations.value(key).data());
+}
+
+bool EntityAnnotationsAttribute::contains(const QByteArray &key) const
+{
+    return mAnnotations.contains(key);
 }
 
 QByteArray EntityAnnotationsAttribute::type() const

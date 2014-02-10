@@ -21,6 +21,8 @@
 #ifndef AKONADI_ENTITYANNOTATIONSATTRIBUTE_H
 #define AKONADI_ENTITYANNOTATIONSATTRIBUTE_H
 
+#include "akonadi_export.h"
+
 #include <Akonadi/Attribute>
 #include <QMap>
 
@@ -37,8 +39,9 @@ namespace Akonadi {
  * for a shared note:
  * /shared/comment
  *
+ * @since 4.13
  */
-class EntityAnnotationsAttribute : public Akonadi::Attribute
+class AKONADI_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
     EntityAnnotationsAttribute();
@@ -46,6 +49,10 @@ public:
 
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
     QMap<QByteArray, QByteArray> annotations() const;
+
+    void insert(const QByteArray &, const QString &);
+    QString value(const QByteArray &);
+    bool contains(const QByteArray &) const;
 
     QByteArray type() const;
     Attribute *clone() const;
