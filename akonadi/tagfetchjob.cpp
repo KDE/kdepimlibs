@@ -22,6 +22,8 @@
 #include "tag.h"
 #include "protocolhelper_p.h"
 #include <QTimer>
+#include <QFile>
+#include <akonadi/attributefactory.h>
 
 using namespace Akonadi;
 
@@ -57,6 +59,7 @@ public:
 
     Q_DECLARE_PUBLIC(TagFetchJob)
 
+    QList<QByteArray> mRequestedAttributes;
     Tag::List mRequestedTags;
     Tag::List mResultTags;
     Tag::List mPendingTags; // items pending for emitting itemsReceived()
@@ -86,6 +89,14 @@ TagFetchJob::TagFetchJob(const Tag::List& tags, QObject* parent)
     d->mRequestedTags << tags;
 }
 
+void TagFetchJob::fetchAttribute(const QByteArray& type, bool fetch)
+{
+    Q_D(TagFetchJob);
+    if (fetch) {
+        d->mRequestedAttributes << type;
+    }
+}
+
 void TagFetchJob::doStart()
 {
     Q_D(TagFetchJob);
@@ -104,9 +115,9 @@ void TagFetchJob::doStart()
         }
     }
     command += " (UID";
-//       Q_FOREACH (const QByteArray &part, fetchScope.attributes()) {
-//         command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
-//       }
+    Q_FOREACH (const QByteArray &part, d->mRequestedAttributes) {
+        command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
+    }
     command += ")\n";
 
     d->writeData( command );
@@ -135,16 +146,51 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
                     tag.setGid(value);
                 } else if (key == "REMOTEID") {
                     tag.setRemoteId(value);
+                } else if (key == "PARENT") {
+                    tag.setParent(Tag(value.toLongLong()));
+                } else {
+                    int version = 0;
+                    QByteArray plainKey(key);
+                    ProtocolHelper::PartNamespace ns;
+
+                    ImapParser::splitVersionedKey(key, plainKey, version);
+                    plainKey = ProtocolHelper::decodePartIdentifier(plainKey, ns);
+
+                    switch (ns) {
+                        case ProtocolHelper::PartAttribute:
+                        {
+                            Attribute* attr = AttributeFactory::createAttribute(plainKey);
+                            Q_ASSERT(attr);
+                            if ( value == "[FILE]" ) {
+                                ++i;
+                                QFile file(QString::fromUtf8(value));
+                                if (file.open(QFile::ReadOnly)) {
+                                    attr->deserialize(file.readAll());
+                                } else {
+                                    kWarning() << "Failed to open attribute file: " << value;
+                                    delete attr;
+                                    attr = 0;
+                                }
+                            } else {
+                                attr->deserialize(value);
+                            }
+                            if (attr) {
+                                tag.addAttribute(attr);
+                            }
+                            break;
+                        }
+                        default:
+                            kWarning() << "Unknown item part type:" << key;
+                    }
                 }
             }
 
-            if ( !tag.isValid() )
-              return;
-
-            d->mResultTags.append(tag);
-            d->mPendingTags.append(tag);
-            if ( !d->mEmitTimer->isActive() ) {
-                d->mEmitTimer->start();
+            if (tag.isValid() ) {
+                d->mResultTags.append(tag);
+                d->mPendingTags.append(tag);
+                if ( !d->mEmitTimer->isActive() ) {
+                    d->mEmitTimer->start();
+                }
             }
             return;
         }

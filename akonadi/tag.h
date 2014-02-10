@@ -50,6 +50,8 @@ public:
     Tag(const Tag &);
 
     Tag &operator=(const Tag &);
+    //Avoid slicing
+    AttributeEntity &operator=(const AttributeEntity &);
     bool operator==(const Tag &);
 
     static Tag fromUrl( const KUrl &url );

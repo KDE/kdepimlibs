@@ -35,10 +35,17 @@ namespace Akonadi {
  * In the current form using this in Akonadi::Entity would break the implicit sharing of it's private class,
  * so AttributeEntity::Private would need to become a parent class of EntityPrivate and use the same clone()
  * calls etc.
+ * An even better solution is probably ot make AttributeEntity a private member of Entity, with all Attribute related member functions forwarding to this class.
  */
 class AKONADI_EXPORT AttributeEntity {
 public:
     AttributeEntity();
+
+    AttributeEntity(const AttributeEntity &);
+    virtual ~AttributeEntity();
+
+    //Each subclass must override this to avoid slicing
+    virtual AttributeEntity &operator=(const AttributeEntity &);
 
     /**
      * Adds an attribute to the entity.

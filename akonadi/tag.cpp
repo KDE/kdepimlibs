@@ -57,7 +57,8 @@ Tag::Tag(const QString& name)
 }
 
 Tag::Tag(const Tag &other)
-    :d(new Private)
+    :AttributeEntity(),
+    d(new Private)
 {
     operator=(other);
 }
@@ -71,7 +72,13 @@ Tag& Tag::operator=(const Tag &other)
     if (other.d->parent) {
         d->parent.reset(new Tag(*other.d->parent));
     }
+    AttributeEntity::operator=(other);
     return *this;
+}
+
+AttributeEntity& Tag::operator=(const AttributeEntity &other)
+{
+  return operator=(*static_cast<const Tag*>(&other));
 }
 
 bool Tag::operator==(const Tag &other)
