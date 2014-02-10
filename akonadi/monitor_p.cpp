@@ -62,6 +62,9 @@ void MonitorPrivate::init()
   // needs to be at least 1x pipeline size
   itemCache = dependenciesFactory->createItemListCache(PipelineSize, session);
 
+  // 20 tags looks like a reasonable mount to keep around
+  tagCache = dependenciesFactory->createTagCache(20, session);
+
   QObject::connect( collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
