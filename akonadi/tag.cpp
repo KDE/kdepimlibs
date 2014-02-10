@@ -53,7 +53,6 @@ Tag::Tag(const QString& name)
     d(new Private)
 {
     d->gid = name.toUtf8();
-    setName(name);
 }
 
 Tag::Tag(const Tag &other)
