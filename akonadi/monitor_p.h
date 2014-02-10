@@ -27,6 +27,7 @@
 #include "collectionfetchscope.h"
 #include "item.h"
 #include "itemfetchscope.h"
+#include "tagfetchscope.h"
 #include "job.h"
 #include <akonadi/private/notificationmessagev2_p.h>
 #include "entitycache_p.h"
@@ -70,6 +71,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool monitorAll;
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
+    TagFetchScope mTagFetchScope;
     CollectionFetchScope mCollectionFetchScope;
     bool mFetchChangedOnly;
     Session *session;

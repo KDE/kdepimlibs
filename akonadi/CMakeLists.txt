@@ -190,6 +190,7 @@ set( akonadikde_LIB_SRC
   tag.cpp
   tagattribute.cpp
   tagcreatejob.cpp
+  tagfetchscope.cpp
   tagfetchjob.cpp
   tagdeletejob.cpp
   unlinkjob.cpp
@@ -403,6 +404,7 @@ install( FILES
   tag.h
   tagcreatejob.h
   tagfetchjob.h
+  tagfetchscope.h
   tagdeletejob.h
   trashjob.h
   trashrestorejob.h

@@ -25,6 +25,7 @@
 
 namespace Akonadi {
 
+class TagFetchScope;
 class TagFetchJobPrivate;
 
 /**
@@ -42,24 +43,9 @@ public:
     TagFetchJob(const Tag::List &tags, QObject *parent = 0);
     TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = 0);
 
-    /**
-     * Sets whether the attribute of the given @p type should be fetched.
-     *
-     * @param type The attribute type to fetch.
-     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
-     */
-    void fetchAttribute( const QByteArray &type, bool fetch = true );
+    void setFetchScope(const TagFetchScope &);
 
-    /**
-     * Sets whether the attribute of the requested type should be fetched.
-     *
-     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
-     */
-    template <typename T> inline void fetchAttribute( bool fetch = true )
-    {
-      T dummy;
-      fetchAttribute( dummy.type(), fetch );
-    }
+    TagFetchScope &fetchScope();
 
     /**
      * Returns the fetched tags after the job has been completed.

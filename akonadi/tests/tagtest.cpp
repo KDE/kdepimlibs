@@ -26,6 +26,7 @@
 #include <akonadi/tagfetchjob.h>
 #include <akonadi/tagdeletejob.h>
 #include <tagattribute.h>
+#include <tagfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -92,7 +93,7 @@ void TagTest::testAttributes()
 
     {
         TagFetchJob *fetchJob = new TagFetchJob(createjob->tag(), this);
-        fetchJob->fetchAttribute<TagAttribute>();
+        fetchJob->fetchScope().fetchAttribute<TagAttribute>();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());

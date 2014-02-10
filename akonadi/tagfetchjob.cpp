@@ -21,6 +21,7 @@
 #include "job_p.h"
 #include "tag.h"
 #include "protocolhelper_p.h"
+#include "tagfetchscope.h"
 #include <QTimer>
 #include <QFile>
 #include <akonadi/attributefactory.h>
@@ -59,11 +60,11 @@ public:
 
     Q_DECLARE_PUBLIC(TagFetchJob)
 
-    QList<QByteArray> mRequestedAttributes;
     Tag::List mRequestedTags;
     Tag::List mResultTags;
     Tag::List mPendingTags; // items pending for emitting itemsReceived()
     QTimer* mEmitTimer;
+    TagFetchScope mFetchScope;
 };
 
 TagFetchJob::TagFetchJob(QObject *parent)
@@ -86,7 +87,7 @@ TagFetchJob::TagFetchJob(const Tag::List& tags, QObject* parent)
 {
     Q_D(TagFetchJob);
     d->init();
-    d->mRequestedTags << tags;
+    d->mRequestedTags = tags;
 }
 
 TagFetchJob::TagFetchJob(const QList<Tag::Id>& ids, QObject* parent)
@@ -99,13 +100,16 @@ TagFetchJob::TagFetchJob(const QList<Tag::Id>& ids, QObject* parent)
     }
 }
 
-
-void TagFetchJob::fetchAttribute(const QByteArray& type, bool fetch)
+void TagFetchJob::setFetchScope(const TagFetchScope &fetchScope)
 {
     Q_D(TagFetchJob);
-    if (fetch) {
-        d->mRequestedAttributes << type;
-    }
+    d->mFetchScope = fetchScope;
+}
+
+TagFetchScope& TagFetchJob::fetchScope()
+{
+    Q_D(TagFetchJob);
+    return d->mFetchScope;
 }
 
 void TagFetchJob::doStart()
@@ -126,7 +130,7 @@ void TagFetchJob::doStart()
         }
     }
     command += " (UID";
-    Q_FOREACH (const QByteArray &part, d->mRequestedAttributes) {
+    Q_FOREACH (const QByteArray &part, d->mFetchScope.attributes()) {
         command += ' ' + ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
     }
     command += ")\n";

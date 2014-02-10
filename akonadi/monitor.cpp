@@ -260,6 +260,18 @@ CollectionFetchScope& Monitor::collectionFetchScope()
   return d->mCollectionFetchScope;
 }
 
+void Monitor::setTagFetchScope( const TagFetchScope &fetchScope )
+{
+  Q_D( Monitor );
+  d->mTagFetchScope = fetchScope;
+}
+
+TagFetchScope &Monitor::tagFetchScope()
+{
+  Q_D( Monitor );
+  return d->mTagFetchScope;
+}
+
 Akonadi::Collection::List Monitor::collectionsMonitored() const
 {
   Q_D( const Monitor );

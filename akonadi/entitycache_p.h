@@ -28,6 +28,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/tag.h>
 #include <akonadi/tagfetchjob.h>
+#include <akonadi/tagfetchscope.h>
 #include <akonadi/session.h>
 
 #include "akonadiprivate_export.h"
@@ -76,10 +77,6 @@ struct EntityCacheNode
   T entity;
   bool pending;
   bool invalid;
-};
-
-class DummyFetchScope
-{
 };
 
 /**
@@ -250,7 +247,7 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
   }
 }
 
-template<> inline void EntityCache<Tag, TagFetchJob, DummyFetchScope>::extractResult( EntityCacheNode<Tag>* node, KJob* job) const
+template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResult( EntityCacheNode<Tag>* node, KJob* job) const
 {
   TagFetchJob *fetch = qobject_cast<TagFetchJob*>( job );
   Q_ASSERT( fetch );
@@ -269,15 +266,16 @@ template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob
   return fetch;
 }
 
-template<> inline TagFetchJob* EntityCache<Tag, TagFetchJob, DummyFetchScope>::createFetchJob( Tag::Id id, const DummyFetchScope &scope )
+template<> inline TagFetchJob* EntityCache<Tag, TagFetchJob, TagFetchScope>::createFetchJob( Tag::Id id, const TagFetchScope &scope )
 {
-  Q_UNUSED( scope );
-  return new TagFetchJob( Tag( id ), session );
+  TagFetchJob *fetch = new TagFetchJob( Tag( id ), session );
+  fetch->setFetchScope( scope );
+  return fetch;
 }
 
 typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;
 typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
-typedef EntityCache<Tag, TagFetchJob, DummyFetchScope> TagCache;
+typedef EntityCache<Tag, TagFetchJob, TagFetchScope> TagCache;
 
 template <typename T>
 struct EntityListCacheNode
@@ -502,17 +500,18 @@ template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extr
   items = fetch->items();
 }
 
-template<> inline void EntityListCache<Tag, TagFetchJob, DummyFetchScope>::extractResults( KJob *job, Tag::List &tags )  const
+template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults( KJob *job, Tag::List &tags )  const
 {
   TagFetchJob* fetch = qobject_cast<TagFetchJob*>( job );
   Q_ASSERT( fetch );
   tags = fetch->tags();
 }
 
-template<> inline TagFetchJob* EntityListCache<Tag, TagFetchJob, DummyFetchScope>::createFetchJob( const QList<Entity::Id> &ids, const DummyFetchScope &scope )
+template<> inline TagFetchJob* EntityListCache<Tag, TagFetchJob, TagFetchScope>::createFetchJob( const QList<Entity::Id> &ids, const TagFetchScope &scope )
 {
-  Q_UNUSED( scope );
-  return new TagFetchJob( ids, session );
+  TagFetchJob *fetch = new TagFetchJob( ids, session );
+  fetch->setFetchScope( scope );
+  return fetch;
 }
 
 template<>
@@ -525,7 +524,7 @@ inline CollectionFetchJob* EntityListCache<Collection, CollectionFetchJob, Colle
 
 typedef EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionListCache;
 typedef EntityListCache<Item, ItemFetchJob, ItemFetchScope> ItemListCache;
-typedef EntityListCache<Tag, TagFetchJob, DummyFetchScope> TagListCache;
+typedef EntityListCache<Tag, TagFetchJob, TagFetchScope> TagListCache;
 
 }
 

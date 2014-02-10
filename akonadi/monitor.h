@@ -34,6 +34,7 @@ class Item;
 class ItemFetchScope;
 class MonitorPrivate;
 class Session;
+class TagFetchScope;
 
 
 /**
@@ -286,6 +287,30 @@ class AKONADI_EXPORT Monitor : public QObject
      * @since 4.4
      */
     CollectionFetchScope &collectionFetchScope();
+
+    /**
+     * Sets the tag fetch scope.
+     *
+     * Controls how much of an tag's data is fetched from the server.
+     *
+     * @param fetchScope The new scope for tag fetch operations.
+     *
+     * @see tagFetchScope()
+     */
+    void setTagFetchScope( const TagFetchScope &fetchScope );
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setTagFetchScope() for replacing the current tag fetch scope
+     */
+    TagFetchScope &tagFetchScope();
 
     /**
      * Returns the list of collections being monitored.

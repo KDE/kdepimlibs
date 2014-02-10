@@ -442,7 +442,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
     }
   } else if ( msg.type() == NotificationMessageV2::Tags ) {
     Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      if ( !tagCache->ensureCached( entity.id ) ) {
+      if ( !tagCache->ensureCached( entity.id, mTagFetchScope ) ) {
         allCached = false;
         break;
       }
