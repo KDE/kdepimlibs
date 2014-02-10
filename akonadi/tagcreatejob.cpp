@@ -21,6 +21,7 @@
 #include "job_p.h"
 #include "tag.h"
 #include "protocolhelper_p.h"
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
@@ -47,13 +48,20 @@ void TagCreateJob::doStart()
 {
     Q_D(TagCreateJob);
 
+    if (d->mTag.gid().isEmpty()) {
+        kWarning() << "The gid of a new tag must not be empty";
+        setError(Job::Unknown);
+        setErrorText( i18n("Failed to create tag.") );
+        emitResult();
+        return;
+    }
+
     QByteArray command = d->newTag() + " TAGAPPEND (";
 
     QList<QByteArray> list;
-    if (!d->mTag.gid().isEmpty()) {
-        list << "GID";
-        list << ImapParser::quote(d->mTag.gid());
-    }
+    list << "GID";
+    list << ImapParser::quote(d->mTag.gid());
+
     if (!d->mTag.remoteId().isEmpty()) {
         list << "RID";
         list << ImapParser::quote(d->mTag.remoteId());
@@ -71,7 +79,6 @@ void TagCreateJob::doStart()
     command += ")";
 
     d->writeData( command );
-    d->mTag = Tag();
 }
 
 void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
