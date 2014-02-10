@@ -18,7 +18,7 @@
 */
 
 #include "tag.h"
-#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/tagattribute.h>
 
 using namespace Akonadi;
 
@@ -146,14 +146,14 @@ QByteArray Tag::remoteId() const
 void Tag::setName(const QString &name)
 {
     if (!name.isEmpty()) {
-        EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+        TagAttribute* const attr = attribute<TagAttribute>(AttributeEntity::AddIfMissing);
         attr->setDisplayName(name);
     }
 }
 
 QString Tag::name() const
 {
-    const EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>();
+    const TagAttribute* const attr = attribute<TagAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
     return !displayName.isEmpty() ? displayName : QString::fromLatin1(d->gid);
 }
