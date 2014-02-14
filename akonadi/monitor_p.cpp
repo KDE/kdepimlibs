@@ -67,6 +67,7 @@ void MonitorPrivate::init()
 
   QObject::connect( collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
+  QObject::connect( tagCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
