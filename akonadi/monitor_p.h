@@ -152,7 +152,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool emitCollectionNotification( const NotificationMessageV3 &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
 
-    bool emitTagNotification( const NotificationMessageV3 &msg, const Tag &tag );
+    bool emitTagsNotification( const NotificationMessageV3 &msg, const Tag::List &tags );
 
     void serverStateChanged( Akonadi::ServerManager::State state );
 

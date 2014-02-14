@@ -25,14 +25,16 @@
 #include <akonadi/tagcreatejob.h>
 #include <akonadi/tagfetchjob.h>
 #include <akonadi/tagdeletejob.h>
-#include <tagattribute.h>
-#include <tagfetchscope.h>
+#include <akonadi/tagattribute.h>
+#include <akonadi/tagfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/monitor.h>
+#include <akonadi/attributefactory.h>
 
 using namespace Akonadi;
 
@@ -46,12 +48,17 @@ private Q_SLOTS:
     void testCreateFetch();
     void testAttributes();
     void testTagItem();
+    void testMonitor();
 };
 
 void TagTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
+    AttributeFactory::registerAttribute<TagAttribute>();
+    qRegisterMetaType<Akonadi::Tag>();
+    qRegisterMetaType<QSet<Akonadi::Tag> >();
+    qRegisterMetaType<Akonadi::Item::List>();
 }
 
 void TagTest::testCreateFetch()
@@ -111,6 +118,8 @@ void TagTest::testAttributes()
 
 void TagTest::testTagItem()
 {
+    Akonadi::Monitor monitor;
+    monitor.setAllMonitored(true);
     const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
     Tag tag;
     {
@@ -129,8 +138,15 @@ void TagTest::testTagItem()
 
     item1.setTag(tag);
 
+    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List, QSet<Akonadi::Tag>, QSet<Akonadi::Tag>)));
+    QVERIFY(tagsSpy.isValid());
+
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
+
+    QTRY_VERIFY(tagsSpy.count() >= 1);
+    QTRY_COMPARE(tagsSpy.last().first().value<Akonadi::Item::List>().first().id(), item1.id());
+    QTRY_COMPARE(tagsSpy.last().at(1).value< QSet<Tag> >().size(), 1); //1 added tag
 
     ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
@@ -138,6 +154,32 @@ void TagTest::testTagItem()
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 }
 
+void TagTest::testMonitor()
+{
+  Akonadi::Monitor monitor;
+  monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+
+  Akonadi::Tag createdTag;
+  {
+    QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
+    QVERIFY(addedSpy.isValid());
+    TagCreateJob *createjob = new TagCreateJob(Tag("gid2"), this);
+    AKVERIFYEXEC(createjob);
+    //We usually pick up signals from the previous tests as well (due to server-side notification caching)
+    QTRY_VERIFY(addedSpy.count() >= 1);
+    QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createjob->tag().id());
+    createdTag = createjob->tag();
+  }
+
+  {
+    QSignalSpy removedSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+    QVERIFY(removedSpy.isValid());
+    TagDeleteJob *deletejob = new TagDeleteJob(createdTag, this);
+    AKVERIFYEXEC(deletejob);
+    QTRY_VERIFY(removedSpy.count() >= 1);
+    QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+  }
+}
 
 #include "tagtest.moc"
 

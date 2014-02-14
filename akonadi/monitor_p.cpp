@@ -478,16 +478,13 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV3 &msg )
         someoneWasListening = true;
     }
   } else if ( msg.type() == NotificationMessageV2::Items ) {
-    Item::List items = itemCache->retrieve( msg.uids() );
+    //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
+    const Item::List items = itemCache->retrieve( msg.uids() );
     someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
   } else if ( msg.type() == NotificationMessageV2::Tags ) {
+    //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
     const Tag::List tags = tagCache->retrieve( msg.uids() );
-    Q_FOREACH ( const Tag &tag, tags ) {
-      someoneWasListening = emitTagNotification( msg, tag );
-      if ( !someoneWasListening ) {
-        break;
-      }
-    }
+    someoneWasListening = emitTagsNotification( msg, tags );
   }
 
   if ( !someoneWasListening )
@@ -936,25 +933,41 @@ bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV3 &ms
   return false;
 }
 
-bool MonitorPrivate::emitTagNotification( const NotificationMessageV3 &msg, const Tag& tag )
+bool MonitorPrivate::emitTagsNotification( const NotificationMessageV3 &msg, const Tag::List& tags )
 {
   Q_ASSERT( msg.type() == NotificationMessageV2::Tags );
+
+  Tag::List validTags;
+  if ( msg.operation() == NotificationMessageV2::Remove ) {
+    //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
+    Q_FOREACH ( const Entity::Id &uid, msg.uids() ) {
+      validTags << Tag( uid );
+    }
+  } else {
+    validTags = tags;
+  }
 
   switch ( msg.operation() ) {
     case NotificationMessageV2::Add:
       if ( q_ptr->receivers( SIGNAL(tagAdded(Akonadi::Tag)) ) == 0 )
         return false;
-      Q_EMIT q_ptr->tagAdded( tag );
+      Q_FOREACH ( const Tag &tag, validTags ) {
+        Q_EMIT q_ptr->tagAdded( tag );
+      }
       return true;
     case NotificationMessageV2::Modify:
       if ( q_ptr->receivers( SIGNAL(tagChanged(Akonadi::Tag)) ) == 0 )
         return false;
-      Q_EMIT q_ptr->tagChanged( tag );
+      Q_FOREACH ( const Tag &tag, validTags ) {
+        Q_EMIT q_ptr->tagChanged( tag );
+      }
       return true;
     case NotificationMessageV2::Remove:
       if ( q_ptr->receivers( SIGNAL(tagRemoved(Akonadi::Tag)) ) == 0 )
         return false;
-      Q_EMIT q_ptr->tagRemoved( tag );
+      Q_FOREACH ( const Tag &tag, validTags ) {
+        Q_EMIT q_ptr->tagRemoved( tag );
+      }
       return true;
     default:
       kDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
