@@ -26,8 +26,8 @@ NotificationSource::NotificationSource( QObject *source ):
 {
   Q_ASSERT( source );
 
-  connect( source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
-           this, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
+  connect( source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
+           this, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)) );
 }
 
 NotificationSource::~NotificationSource()

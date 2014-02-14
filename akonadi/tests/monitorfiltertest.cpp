@@ -65,7 +65,7 @@ class MonitorFilterTest : public QObject
       Monitor dummyMonitor;
       MonitorPrivate m( 0, &dummyMonitor );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.addEntity( 1 );
       msg.setOperation( op );
       msg.setType( Akonadi::NotificationMessageV2::Items );
@@ -88,7 +88,7 @@ class MonitorFilterTest : public QObject
       QSignalSpy spy( &dummyMonitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
       QVERIFY( spy.isValid() );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.addEntity( 1 );
       msg.setOperation( NotificationMessageV2::Add );
       msg.setType( Akonadi::NotificationMessageV2::Items );
@@ -134,7 +134,7 @@ class MonitorFilterTest : public QObject
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.addEntity( 1 );
       msg.setOperation( op );
       msg.setParentCollection( 2 );
@@ -175,7 +175,7 @@ class MonitorFilterTest : public QObject
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.setOperation( op );
       msg.setType( type );
       msg.setResource( "foo" );
@@ -232,7 +232,7 @@ class MonitorFilterTest : public QObject
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.addEntity( 1, QString(), QString(), "my/type" );
       msg.setOperation( op );
       msg.setParentCollection( 2 );
@@ -289,7 +289,7 @@ class MonitorFilterTest : public QObject
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
-      NotificationMessageV2 msg;
+      NotificationMessageV3 msg;
       msg.addEntity( 1, QString(), QString(), "my/type" );
       msg.setOperation( op );
       msg.setParentCollection( 2 );

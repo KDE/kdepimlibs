@@ -20,9 +20,9 @@
 #ifndef AKONADI_MONITOR_H
 #define AKONADI_MONITOR_H
 
+#include <akonadi/tag.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include <akonadi/tag.h>
 
 #include <QtCore/QObject>
 
@@ -424,7 +424,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param removedTags Tags that have been removed from each item in @p items
      * @since 4.13
      */
-    void itemsTagsChanged( const Akonadi::Item::List *items, const QSet<Tag> &addedTags,
+    void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Tag> &addedTags,
                                                              const QSet<Tag> &removedTags );
 
     /**
@@ -693,7 +693,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV2::List& ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV3::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
     Q_PRIVATE_SLOT( d_ptr, void serverStateChanged( Akonadi::ServerManager::State ) )
     Q_PRIVATE_SLOT( d_ptr, void invalidateCollectionCache( qint64 ) )

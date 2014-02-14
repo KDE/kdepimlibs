@@ -218,11 +218,11 @@ endif()
 
 # DBus interfaces and adaptors
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerinterface )
 
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev3_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationsourceinterface )
 
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )

@@ -28,11 +28,10 @@
 #include "notificationmessagev2_p.h"
 #include "notificationmanagerinterface.h"
 #include "session.h"
+#include "changemediator_p.h"
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include "changemediator_p.h"
-#include <boost/concept_check.hpp>
 
 using namespace Akonadi;
 
@@ -52,7 +51,6 @@ MonitorPrivate::MonitorPrivate( ChangeNotificationDependenciesFactory *dependenc
   collectionMoveTranslationEnabled( true ),
   useRefCounting( false )
 {
-
 }
 
 void MonitorPrivate::init()
@@ -63,7 +61,7 @@ void MonitorPrivate::init()
   itemCache = dependenciesFactory->createItemListCache(PipelineSize, session);
 
   // 20 tags looks like a reasonable mount to keep around
-  tagCache = dependenciesFactory->createTagCache(20, session);
+  tagCache = dependenciesFactory->createTagListCache(20, session);
 
   QObject::connect( collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
@@ -72,6 +70,7 @@ void MonitorPrivate::init()
                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   NotificationMessageV2::registerDBusTypes();
+  NotificationMessageV3::registerDBusTypes();
 
   statisticsCompressionTimer.setSingleShot( true );
   statisticsCompressionTimer.setInterval( 500 );
@@ -88,8 +87,8 @@ bool MonitorPrivate::connectToNotificationManager()
   if (!notificationSource)
     return false;
 
-  QObject::connect( notificationSource, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
-                    q_ptr, SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
+  QObject::connect( notificationSource, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
+                    q_ptr, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)) );
 
   return true;
 }
@@ -135,7 +134,7 @@ void MonitorPrivate::invalidateItemCache( qint64 id )
 
 void MonitorPrivate::invalidateTagCache( qint64 id )
 {
-  tagCache->update( id, mTagFetchScope );
+  tagCache->update( QList<Tag::Id>() << id, mTagFetchScope );
 }
 
 int MonitorPrivate::pipelineSize() const
@@ -143,7 +142,7 @@ int MonitorPrivate::pipelineSize() const
   return PipelineSize;
 }
 
-bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool allowModifyFlagsConversion ) const
+bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV3 &msg, bool allowModifyFlagsConversion ) const
 {
   NotificationMessageV2::Operation op = msg.operation();
 
@@ -203,7 +202,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
   return true;
 }
 
-void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &needsSplit, bool &batchSupported) const
+void MonitorPrivate::checkBatchSupport(const NotificationMessageV3 &msg, bool& needsSplit, bool& batchSupported) const
 {
   const bool isBatch = (msg.entities().count() > 1);
 
@@ -257,11 +256,11 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &n
   }
 }
 
-NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessageV2& msg, bool legacy) const
+NotificationMessageV3::List MonitorPrivate::splitMessage(const NotificationMessageV3 &msg, bool legacy) const
 {
-  NotificationMessageV2::List list;
+  NotificationMessageV3::List list;
 
-  NotificationMessageV2 baseMsg;
+  NotificationMessageV3 baseMsg;
   baseMsg.setSessionId( msg.sessionId() );
   baseMsg.setType( msg.type() );
   if ( legacy && msg.operation() == NotificationMessageV2::ModifyFlags ) {
@@ -277,9 +276,11 @@ NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessa
   baseMsg.setDestinationResource( msg.destinationResource() );
   baseMsg.setAddedFlags( msg.addedFlags() );
   baseMsg.setRemovedFlags( msg.removedFlags() );
+  baseMsg.setAddedTags( msg.addedTags() );
+  baseMsg.setRemovedTags( msg.removedTags() );
 
   Q_FOREACH( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-    NotificationMessageV2 copy = baseMsg;
+    NotificationMessageV3 copy = baseMsg;
     copy.addEntity(entity.id, entity.remoteId, entity.remoteRevision, entity.mimeType);
 
     list << copy;
@@ -288,7 +289,7 @@ NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessa
   return list;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) const
+bool MonitorPrivate::acceptNotification( const Akonadi::NotificationMessageV3 &msg ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )
@@ -370,7 +371,7 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) cons
 void MonitorPrivate::cleanOldNotifications()
 {
   bool erased = false;
-  for ( QQueue<NotificationMessageV2>::iterator it = pipeline.begin(); it != pipeline.end(); ) {
+  for ( QQueue<NotificationMessageV3>::iterator it = pipeline.begin(); it != pipeline.end(); ) {
     if ( !acceptNotification( *it ) ) {
       it = pipeline.erase( it );
       erased = true;
@@ -379,7 +380,7 @@ void MonitorPrivate::cleanOldNotifications()
     }
   }
 
-  for ( QQueue<NotificationMessageV2>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
+  for ( QQueue<NotificationMessageV3>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
     if ( !acceptNotification( *it ) ) {
       it = pendingNotifications.erase( it );
       erased = true;
@@ -391,7 +392,7 @@ void MonitorPrivate::cleanOldNotifications()
     notificationsErased();
 }
 
-bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
+bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV3 &msg )
 {
   bool allCached = true;
   if ( fetchCollection ) {
@@ -433,7 +434,16 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
     }
     if ( !itemCache->ensureCached( msg.uids(), scope ) ) {
         allCached = false;
+
     }
+
+    // Make sure all tags for ModifyTags operation are in cache too
+    if ( msg.operation() == NotificationMessageV2::ModifyTags ) {
+      if ( !tagCache->ensureCached( ( msg.addedTags() + msg.removedTags() ).toList(), mTagFetchScope ) ) {
+        allCached = false;
+      }
+    }
+
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
     Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
       if ( !collectionCache->ensureCached( entity.id, mCollectionFetchScope ) ) {
@@ -443,7 +453,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
     }
   } else if ( msg.type() == NotificationMessageV2::Tags ) {
     Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      if ( !tagCache->ensureCached( entity.id, mTagFetchScope ) ) {
+      if ( !tagCache->ensureCached( QList<Tag::Id>() << entity.id, mTagFetchScope ) ) {
         allCached = false;
         break;
       }
@@ -452,7 +462,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
   return allCached;
 }
 
-bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
+bool MonitorPrivate::emitNotification( const NotificationMessageV3 &msg )
 {
   const Collection parent = collectionCache->retrieve( msg.parentCollection() );
   Collection destParent;
@@ -471,9 +481,12 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
     Item::List items = itemCache->retrieve( msg.uids() );
     someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
   } else if ( msg.type() == NotificationMessageV2::Tags ) {
-    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-      const Tag tag = tagCache->retrieve( entity.id );
+    const Tag::List tags = tagCache->retrieve( msg.uids() );
+    Q_FOREACH ( const Tag &tag, tags ) {
       someoneWasListening = emitTagNotification( msg, tag );
+      if ( !someoneWasListening ) {
+        break;
+      }
     }
   }
 
@@ -483,7 +496,7 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
   return someoneWasListening;
 }
 
-void MonitorPrivate::updatePendingStatistics( const NotificationMessageV2& msg )
+void MonitorPrivate::updatePendingStatistics( const NotificationMessageV3 &msg )
 {
   if ( msg.type() == NotificationMessageV2::Items ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
@@ -534,12 +547,12 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-int MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  )
+int MonitorPrivate::translateAndCompress( QQueue< NotificationMessageV3 >& notificationQueue, const NotificationMessageV3& msg  )
 {
   // We have to split moves into insert or remove if the source or destination
   // is not monitored.
   if ( msg.operation() != NotificationMessageV2::Move ) {
-    return NotificationMessageV2::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
+    return NotificationMessageV3::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
   }
 
   bool sourceWatched = false;
@@ -564,28 +577,28 @@ int MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notific
   }
 
   if ( ( sourceWatched && destWatched ) || ( !collectionMoveTranslationEnabled && msg.type() == NotificationMessageV2::Collections ) ) {
-    return NotificationMessageV2::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
+    return NotificationMessageV3::appendAndCompress( notificationQueue, msg ) ? 1 : 0;
   }
 
   if ( sourceWatched )
   {
     // Transform into a removal
-    NotificationMessageV2 removalMessage = msg;
+    NotificationMessageV3 removalMessage = msg;
     removalMessage.setOperation( NotificationMessageV2::Remove );
     removalMessage.setParentDestCollection( -1 );
-    return NotificationMessageV2::appendAndCompress( notificationQueue, removalMessage ) ? 1 : 0;
+    return NotificationMessageV3::appendAndCompress( notificationQueue, removalMessage ) ? 1 : 0;
   }
 
   // Transform into an insertion
-  NotificationMessageV2 insertionMessage = msg;
+  NotificationMessageV3 insertionMessage = msg;
   insertionMessage.setOperation( NotificationMessageV2::Add );
   insertionMessage.setParentCollection( msg.parentDestCollection() );
   insertionMessage.setParentDestCollection( -1 );
   // We don't support batch insertion, so we have to do it one by one
-  const NotificationMessageV2::List split = splitMessage( insertionMessage, false );
+  const NotificationMessageV3::List split = splitMessage( insertionMessage, false );
   int appended = 0;
-  Q_FOREACH (const NotificationMessageV2 &insertion, split ) {
-    if ( NotificationMessageV2::appendAndCompress( notificationQueue, insertion ) ) {
+  Q_FOREACH (const NotificationMessageV3 &insertion, split ) {
+    if ( NotificationMessageV3::appendAndCompress( notificationQueue, insertion ) ) {
       ++appended;
     }
   }
@@ -601,12 +614,12 @@ int MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notific
   fetchJobDone --> pipeline ?dataAvailable --> emit
  */
 
-void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
+void MonitorPrivate::slotNotify( const NotificationMessageV3::List &msgs )
 {
   int appendedMessages = 0;
   int modifiedMessages = 0;
   int erasedMessages = 0;
-  Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
+  Q_FOREACH ( const NotificationMessageV3 &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     bool needsSplit = true;
@@ -647,7 +660,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
     // (and thus neither is flagsModified), splitMessage() will convert the
     // notification to regular Modify with "FLAGS" part changed
     if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
-      const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
+      const NotificationMessageV3::List split = splitMessage( msg, !supportsBatch );
       pendingNotifications << split.toList();
       appendedMessages += split.count();
     }
@@ -667,7 +680,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 void MonitorPrivate::flushPipeline()
 {
   while ( !pipeline.isEmpty() ) {
-    const NotificationMessageV2 msg = pipeline.head();
+    const NotificationMessageV3 msg = pipeline.head();
     if ( ensureDataAvailable( msg ) ) {
       // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
       // being called again) and we end up dequeuing an empty pipeline
@@ -689,7 +702,7 @@ void MonitorPrivate::dispatchNotifications()
 {
   // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
   while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
-    const NotificationMessageV2 msg = pendingNotifications.dequeue();
+    const NotificationMessageV3 msg = pendingNotifications.dequeue();
     if ( ensureDataAvailable( msg ) && pipeline.isEmpty() ) {
       emitNotification( msg );
     } else {
@@ -698,8 +711,7 @@ void MonitorPrivate::dispatchNotifications()
   }
 }
 
-bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, const Item::List &items,
-                                            const Collection &collection, const Collection &collectionDest  )
+bool MonitorPrivate::emitItemsNotification( const NotificationMessageV3 &msg, const Item::List& items, const Collection& collection, const Collection& collectionDest  )
 {
   Q_ASSERT( msg.type() == NotificationMessageV2::Items );
   Collection col = collection;
@@ -713,6 +725,12 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
     // HACK: destination resource is delivered in the parts field...
     if ( !msg.itemParts().isEmpty() )
       colDest.setResource( QString::fromLatin1( *(msg.itemParts().begin()) ) );
+  }
+
+  Tag::List addedTags, removedTags;
+  if ( msg.operation() == NotificationMessageV2::ModifyTags ) {
+    addedTags = tagCache->retrieve( msg.addedTags().toList() );
+    removedTags = tagCache->retrieve( msg.removedTags().toList() );
   }
 
   QMap<NotificationMessageV2::Id,NotificationMessageV2::Entity> msgEntities = msg.entities();
@@ -839,9 +857,8 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       }
       return handled;
     case NotificationMessageV2::ModifyTags:
-      if ( q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) {
-        Q_ASSERT( its.count() == 1 );
-        emit q_ptr->itemChanged( its.first(), QSet<QByteArray>() );
+      if ( q_ptr->receivers( SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) ) > 0 ) {
+        emit q_ptr->itemsTagsChanged( its, addedTags.toSet(), removedTags.toSet() );
         return true;
       }
       return false;
@@ -852,8 +869,7 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
   return false;
 }
 
-bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV2 &msg, const Collection &col,
-                                                 const Collection &par, const Collection &dest )
+bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV3 &msg, const Collection& col, const Collection& par, const Collection& dest )
 {
   Q_ASSERT( msg.type() == NotificationMessageV2::Collections );
   Collection parent = par;
@@ -920,7 +936,7 @@ bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV2 &ms
   return false;
 }
 
-bool MonitorPrivate::emitTagNotification( const NotificationMessageV2 &msg, const Tag &tag )
+bool MonitorPrivate::emitTagNotification( const NotificationMessageV3 &msg, const Tag& tag )
 {
   Q_ASSERT( msg.type() == NotificationMessageV2::Tags );
 
@@ -948,7 +964,7 @@ bool MonitorPrivate::emitTagNotification( const NotificationMessageV2 &msg, cons
 }
 
 
-void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
+void MonitorPrivate::invalidateCaches( const NotificationMessageV3 &msg )
 {
   // remove invalidates
   if ( msg.operation() == NotificationMessageV2::Remove ) {
@@ -958,9 +974,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
     } else if ( msg.type() == NotificationMessageV2::Items ) {
       itemCache->invalidate( msg.uids() );
     } else if ( msg.type() == NotificationMessageV2::Tags ) {
-      Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
-        tagCache->invalidate( entity.id );
-      }
+      tagCache->invalidate( msg.uids() );
     }
   }
 
@@ -976,9 +990,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
     } else if ( msg.type() == NotificationMessageV2::Items ) {
       itemCache->update( msg.uids(), mItemFetchScope );
     } else if ( msg.type() == NotificationMessageV2::Tags ) {
-      Q_FOREACH( quint64 uid, msg.uids() ) {
-        tagCache->update( uid, mTagFetchScope );
-      }
+      tagCache->update( msg.uids(), mTagFetchScope );
     }
   }
 }

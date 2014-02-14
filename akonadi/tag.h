@@ -20,6 +20,16 @@
 #ifndef AKONADI_TAG_H
 #define AKONADI_TAG_H
 
+#include <akonadi_export.h>
+#include <QString>
+
+namespace Akonadi {
+class Tag;
+}
+
+AKONADI_EXPORT uint qHash( const Akonadi::Tag & );
+
+
 #include <akonadi/attributeentity.h>
 #include <QVector>
 #include <QSharedPointer>
@@ -52,7 +62,7 @@ public:
     Tag &operator=(const Tag &);
     //Avoid slicing
     AttributeEntity &operator=(const AttributeEntity &);
-    bool operator==(const Tag &);
+    bool operator==(const Tag &) const;
 
     static Tag fromUrl( const KUrl &url );
 

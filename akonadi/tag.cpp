@@ -80,7 +80,7 @@ AttributeEntity& Tag::operator=(const AttributeEntity &other)
   return operator=(*static_cast<const Tag*>(&other));
 }
 
-bool Tag::operator==(const Tag &other)
+bool Tag::operator==(const Tag &other) const
 {
     if (isValid() && other.isValid()) {
         return d->id == other.d->id;
@@ -185,4 +185,9 @@ QByteArray Tag::type() const
 bool Tag::isValid() const
 {
     return d->id >= 0;
+}
+
+uint qHash( const Tag &tag )
+{
+  return qHash( tag.id() );
 }

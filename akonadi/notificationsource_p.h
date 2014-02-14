@@ -25,7 +25,7 @@
 #include "entity.h"
 #include "tag.h"
 #include "akonadiprivate_export.h"
-#include <notificationmessagev2_p.h>
+#include <notificationmessagev3_p.h>
 
 namespace Akonadi
 {
@@ -50,7 +50,7 @@ class AKONADI_TESTS_EXPORT NotificationSource: public QObject
     QObject* source() const;
 
   Q_SIGNALS:
-    void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
+    void notifyV3( const Akonadi::NotificationMessageV3::List &msgs );
 };
 
 }
