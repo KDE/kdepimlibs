@@ -23,7 +23,7 @@
 
 #include "akonadi_export.h"
 
-#include <Akonadi/Attribute>
+#include <akonadi/attribute.h>
 #include <QMap>
 
 namespace Akonadi {
