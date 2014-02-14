@@ -74,7 +74,9 @@ class FavoriteCollectionsModel::Private
     {
       if ( collectionIds.contains(col) ) {
         select(col);
-        reference(col);
+        if ( !referencedCollections.contains( col ) ) {
+          reference(col);
+        }
       }
     }
 
