@@ -59,6 +59,7 @@ class AddTransportDialog : public KDialog
     Private *const d;
 
     Q_PRIVATE_SLOT( d, void updateOkButton() )
+    Q_PRIVATE_SLOT( d, void doubleClicked() )
 };
 
 } // namespace MailTransport
