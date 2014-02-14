@@ -158,7 +158,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV3 &msg, bool all
           && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
           )
        )
-    || ( op == NotificationMessageV2::ModifyTags && q_ptr->receivers( SIGNAL(itemTagsChanged(Akonadi::Item::List,QSet<Tag>,QSet<Tag>)) ) == 0 )
+    || ( op == NotificationMessageV2::ModifyTags && q_ptr->receivers( SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
                                            && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0

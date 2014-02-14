@@ -424,8 +424,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param removedTags Tags that have been removed from each item in @p items
      * @since 4.13
      */
-    void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Tag> &addedTags,
-                                                             const QSet<Tag> &removedTags );
+    void itemsTagsChanged( const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags,
+                                                             const QSet<Akonadi::Tag> &removedTags );
 
     /**
      * This signal is emitted if a monitored item has been moved between two collections
