@@ -170,13 +170,13 @@ void Monitor::setTypeMonitored( Monitor::Type type, bool monitored )
   if ( !d->types.contains( type ) && monitored ) {
     d->types.insert( type );
     if ( d->notificationSource ) {
-      d->notificationSource->setMonitoredType( static_cast<int>( type ), true );
+      d->notificationSource->setMonitoredType( static_cast<NotificationMessageV2::Type>( type ), true );
     }
   } else if ( !monitored ) {
     if ( d->types.remove( type ) ) {
       d->cleanOldNotifications();
       if ( d->notificationSource ) {
-        d->notificationSource->setMonitoredType( static_cast<int>( type ), false );
+        d->notificationSource->setMonitoredType( static_cast<NotificationMessageV2::Type>( type ), false );
       }
     }
   }

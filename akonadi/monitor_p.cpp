@@ -117,7 +117,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
       notificationSource->setMonitoredTag( tagId, true );
     }
     Q_FOREACH ( Monitor::Type type, types ) {
-      notificationSource->setMonitoredType( static_cast<int>( type ), true );
+      notificationSource->setMonitoredType( static_cast<NotificationMessageV2::Type>( type ), true );
     }
   }
 }

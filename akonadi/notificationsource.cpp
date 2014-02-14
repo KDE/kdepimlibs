@@ -96,10 +96,10 @@ void NotificationSource::setMonitoredTag( Tag::Id id, bool monitored )
   Q_UNUSED( ok );
 }
 
-void NotificationSource::setMonitoredType( int type, bool monitored )
+void NotificationSource::setMonitoredType( NotificationMessageV2::Type type, bool monitored )
 {
   const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredType",
-                                             Q_ARG( int, type ),
+                                             Q_ARG( Akonadi::NotificationMessageV2::Type, type ),
                                              Q_ARG( bool, monitored ) );
   Q_ASSERT( ok );
   Q_UNUSED( ok );
