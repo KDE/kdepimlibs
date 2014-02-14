@@ -135,7 +135,7 @@ void MonitorPrivate::invalidateItemCache( qint64 id )
 
 void MonitorPrivate::invalidateTagCache( qint64 id )
 {
-  tagCache->update( id );
+  tagCache->update( id, mTagFetchScope );
 }
 
 int MonitorPrivate::pipelineSize() const
@@ -977,7 +977,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
       itemCache->update( msg.uids(), mItemFetchScope );
     } else if ( msg.type() == NotificationMessageV2::Tags ) {
       Q_FOREACH( quint64 uid, msg.uids() ) {
-        tagCache->update( uid );
+        tagCache->update( uid, mTagFetchScope );
       }
     }
   }
