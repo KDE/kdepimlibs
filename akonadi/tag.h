@@ -107,5 +107,6 @@ private:
 
 Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)
+Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
 
 #endif
