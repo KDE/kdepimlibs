@@ -838,6 +838,13 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
         handled = true;
       }
       return handled;
+    case NotificationMessageV2::ModifyTags:
+      if ( q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) {
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemChanged( its.first(), QSet<QByteArray>() );
+        return true;
+      }
+      return false;
     default:
       kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
   }
