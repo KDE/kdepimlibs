@@ -20,7 +20,7 @@
 #ifndef AKONADI_TAG_H
 #define AKONADI_TAG_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QString>
 
 namespace Akonadi {
