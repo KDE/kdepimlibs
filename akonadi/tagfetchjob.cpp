@@ -164,39 +164,13 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
                 } else if (key == "PARENT") {
                     tag.setParent(Tag(value.toLongLong()));
                 } else {
-                    int version = 0;
-                    QByteArray plainKey(key);
-                    ProtocolHelper::PartNamespace ns;
-
-                    ImapParser::splitVersionedKey(key, plainKey, version);
-                    plainKey = ProtocolHelper::decodePartIdentifier(plainKey, ns);
-
-                    switch (ns) {
-                        case ProtocolHelper::PartAttribute:
-                        {
-                            Attribute* attr = AttributeFactory::createAttribute(plainKey);
-                            Q_ASSERT(attr);
-                            if ( value == "[FILE]" ) {
-                                ++i;
-                                QFile file(QString::fromUtf8(value));
-                                if (file.open(QFile::ReadOnly)) {
-                                    attr->deserialize(file.readAll());
-                                } else {
-                                    kWarning() << "Failed to open attribute file: " << value;
-                                    delete attr;
-                                    attr = 0;
-                                }
-                            } else {
-                                attr->deserialize(value);
-                            }
-                            if (attr) {
-                                tag.addAttribute(attr);
-                            }
-                            break;
-                        }
-                        default:
-                            kWarning() << "Unknown item part type:" << key;
+                    Attribute *attr = AttributeFactory::createAttribute(key);
+                    if (!attr) {
+                      kWarning() << "Unknown tag attribute" << key;
+                      continue;
                     }
+                    attr->deserialize(value);
+                    tag.addAttribute(attr);
                 }
             }
 
