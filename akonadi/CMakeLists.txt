@@ -188,6 +188,8 @@ set( akonadikde_LIB_SRC
   typepluginloader.cpp
   attributeentity.cpp
   tag.cpp
+  tagmodel.cpp
+  tagmodel_p.cpp
   tagattribute.cpp
   tagcreatejob.cpp
   tagfetchscope.cpp
@@ -402,6 +404,7 @@ install( FILES
   statisticsproxymodel.h
   tagattribute.h
   tag.h
+  tagmodel.h
   tagcreatejob.h
   tagfetchjob.h
   tagfetchscope.h
