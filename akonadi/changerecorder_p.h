@@ -43,7 +43,6 @@ class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivat
     virtual void notificationsErased();
 
     virtual void slotNotify( const NotificationMessageV3::List &msgs );
-    virtual bool emitNotification(const Akonadi::NotificationMessageV3& msg);
 
     QString notificationsFileName() const;
 
