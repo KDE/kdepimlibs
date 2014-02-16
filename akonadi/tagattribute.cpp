@@ -37,7 +37,7 @@ public:
     QString icon;
     QColor backgroundColor;
     QColor textColor;
-    QFont font;
+    QString font;
     bool inToolbar;
     QString shortcut;
     int priority;
@@ -97,7 +97,7 @@ QByteArray TagAttribute::serialized() const
   QList<QByteArray> l;
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
-  l << ImapParser::quote( d->font.toString().toUtf8() );
+  l << ImapParser::quote( d->font.toUtf8() );
   l << ImapParser::quote( d->shortcut.toUtf8() );
   l << ImapParser::quote( QString::number(d->inToolbar).toUtf8() );
   {
@@ -150,7 +150,7 @@ void TagAttribute::deserialize(const QByteArray &data)
     Q_ASSERT( size >= 7);
     d->name = QString::fromUtf8(l[0]);
     d->icon = QString::fromUtf8(l[1]);
-    d->font = QFont(QString::fromUtf8(l[2]));
+    d->font = QString::fromUtf8(l[2]);
     d->shortcut = QString::fromUtf8(l[3]);
     d->inToolbar = QString::fromUtf8(l[4]).toInt();
     if (!l[5].isEmpty()) {
@@ -184,12 +184,12 @@ QColor TagAttribute::textColor() const
     return d->textColor;
 }
 
-void TagAttribute::setFont(const QFont& font)
+void TagAttribute::setFont(const QString& font)
 {
     d->font = font;
 }
 
-QFont TagAttribute::font() const
+QString TagAttribute::font() const
 {
     return d->font;
 }

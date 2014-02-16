@@ -68,8 +68,8 @@ class AKONADI_EXPORT TagAttribute : public Attribute
     QColor backgroundColor() const;
     void setTextColor( const QColor &color );
     QColor textColor() const;
-    void setFont( const QFont &font );
-    QFont font() const;
+    void setFont( const QString &fontKey );
+    QString font() const;
     void setInToolbar(bool);
     bool inToolbar() const;
     void setShortcut(const QString &);
