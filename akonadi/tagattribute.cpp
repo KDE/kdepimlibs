@@ -27,8 +27,12 @@ using namespace Akonadi;
 
 class TagAttribute::Private
 {
-  public:
-    Private() : inToolbar( false ) {}
+public:
+    Private()
+        :inToolbar( false ),
+        priority(-1)
+    {}
+
     QString name;
     QString icon;
     QColor backgroundColor;
@@ -36,6 +40,7 @@ class TagAttribute::Private
     QFont font;
     bool inToolbar;
     QString shortcut;
+    int priority;
 };
 
 TagAttribute::TagAttribute() :
@@ -83,6 +88,7 @@ TagAttribute * TagAttribute::clone() const
     attr->d->font = d->font;
     attr->d->inToolbar = d->inToolbar;
     attr->d->shortcut = d->shortcut;
+    attr->d->priority = d->priority;
     return attr;
 }
 
@@ -114,6 +120,7 @@ QByteArray TagAttribute::serialized() const
     }
     l << '(' + ImapParser::join( components, " " ) + ')';
   }
+  l << ImapParser::quote( QString::number(d->priority).toUtf8() );
   return '(' + ImapParser::join( l, " " ) + ')';
 }
 
@@ -152,6 +159,9 @@ void TagAttribute::deserialize(const QByteArray &data)
     if (!l[6].isEmpty()) {
         d->textColor = parseColor(l[6]);
     }
+    if (l.size() >= 8) {
+        d->priority = QString::fromUtf8(l[7]).toInt();
+    }
 }
 
 QColor TagAttribute::backgroundColor() const
@@ -189,7 +199,7 @@ void TagAttribute::setInToolbar(bool inToolbar)
     d->inToolbar = inToolbar;
 }
 
-bool TagAttribute::inToolbar()
+bool TagAttribute::inToolbar() const
 {
     return d->inToolbar;
 }
@@ -199,9 +209,18 @@ void TagAttribute::setShortcut(const QString &shortcut)
     d->shortcut = shortcut;
 }
 
-QString TagAttribute::shortcut()
+QString TagAttribute::shortcut() const
 {
     return d->shortcut;
 }
 
+void TagAttribute::setPriority(int priority)
+{
+    d->priority = priority;
+}
+
+int TagAttribute::priority() const
+{
+    return d->priority;
+}
 

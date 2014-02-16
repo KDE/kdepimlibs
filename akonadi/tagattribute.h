@@ -71,9 +71,23 @@ class AKONADI_EXPORT TagAttribute : public Attribute
     void setFont( const QFont &font );
     QFont font() const;
     void setInToolbar(bool);
-    bool inToolbar();
+    bool inToolbar() const;
     void setShortcut(const QString &);
-    QString shortcut();
+    QString shortcut() const;
+
+    /**
+     * Sets the priority of the tag.
+     * The priority is primarily used for presentation, e.g. for sorting.
+     * If only one tag can be displayed for a given item, the one with the highest
+     * priority should be shown.
+     */
+    void setPriority(int priority);
+
+    /**
+     * Returns the priority of the tag.
+     * The default value is -1
+     */
+    int priority() const;
 
     /* reimpl */
     QByteArray type() const;
