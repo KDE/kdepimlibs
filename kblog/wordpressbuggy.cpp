@@ -28,7 +28,6 @@
 #include <KLocalizedString>
 #include <KDateTime>
 
-#include <kio/http.h>
 #include <kio/job.h>
 
 #include <QtCore/QStringList>

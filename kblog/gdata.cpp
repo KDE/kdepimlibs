@@ -29,7 +29,6 @@
 #include <syndication/category.h>
 
 #include <kio/netaccess.h>
-#include <kio/http.h>
 #include <kio/job.h>
 #include <KDebug>
 #include <KLocalizedString>
