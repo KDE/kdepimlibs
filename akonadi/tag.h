@@ -38,17 +38,23 @@ AKONADI_EXPORT uint qHash( const Akonadi::Tag & );
 namespace Akonadi {
 
 /**
- * The following types are defined initially:
- * * PLAIN:
- * ** gid = displayName
- * ** immutable
- * ** no hierarchy (no parent)
+ * An Akonadi Tag.
  */
 class AKONADI_EXPORT Tag : public AttributeEntity
 {
 public:
     typedef QList<Tag> List;
     typedef qint64 Id;
+
+    /**
+     * The PLAIN type has the following properties:
+     * * gid == displayName
+     * * immutable
+     * * no hierarchy (no parent)
+     *
+     * PLAIN tags are general purpose tags that are easy to map by backends.
+     */
+    static const char* PLAIN;
 
     Tag();
     explicit Tag(Id id);
@@ -97,6 +103,12 @@ public:
     Tag parent() const;
 
     bool isValid() const;
+
+    /**
+     * Returns true if the tag is immutable (cannot be modified after creation).
+     * Note that the immutability does not affect the attributes.
+     */
+    bool isImmutable() const;
 
 private:
     class Private;

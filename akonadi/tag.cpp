@@ -22,6 +22,8 @@
 
 using namespace Akonadi;
 
+const char* Akonadi::Tag::PLAIN = "PLAIN";
+
 struct Akonadi::Tag::Private {
     Private()
         :id(-1)
@@ -53,6 +55,7 @@ Tag::Tag(const QString& name)
     d(new Private)
 {
     d->gid = name.toUtf8();
+    d->type = PLAIN;
 }
 
 Tag::Tag(const Tag &other)
@@ -185,6 +188,11 @@ QByteArray Tag::type() const
 bool Tag::isValid() const
 {
     return d->id >= 0;
+}
+
+bool Tag::isImmutable() const
+{
+    return (d->type.isEmpty() || d->type == PLAIN);
 }
 
 uint qHash( const Tag &tag )
