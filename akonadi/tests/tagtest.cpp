@@ -221,16 +221,21 @@ void TagTest::testMonitor()
 {
   Akonadi::Monitor monitor;
   monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+  monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
 
   Akonadi::Tag createdTag;
   {
     QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
     QVERIFY(addedSpy.isValid());
-    TagCreateJob *createjob = new TagCreateJob(Tag("gid2"), this);
+    Tag tag("gid2");
+    tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
+    QVERIFY(tag.hasAttribute<Akonadi::TagAttribute>());
+    TagCreateJob *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     //We usually pick up signals from the previous tests as well (due to server-side notification caching)
     QTRY_VERIFY(addedSpy.count() >= 1);
     QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createjob->tag().id());
+    QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
     createdTag = createjob->tag();
   }
 
