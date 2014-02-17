@@ -46,6 +46,7 @@ private Q_SLOTS:
     void initTestCase();
 
     void testCreateFetch();
+    void testDelete();
     void testAttributes();
     void testTagItem();
     void testMonitor();
@@ -86,34 +87,96 @@ void TagTest::testCreateFetch()
         QCOMPARE(fetchJob->tags().size(), 0);
     }
 }
+
+void TagTest::testDelete()
+{
+    Tag tag1;
+    {
+      tag1.setGid("tag1");
+      TagCreateJob *createjob = new TagCreateJob(tag1, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag1 = createjob->tag();
+    }
+    Tag tag2;
+    {
+      tag2.setGid("tag2");
+      TagCreateJob *createjob = new TagCreateJob(tag2, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag2 = createjob->tag();
+    }
+    {
+      TagDeleteJob *deleteJob = new TagDeleteJob(tag1, this);
+      AKVERIFYEXEC(deleteJob);
+    }
+
+    {
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QCOMPARE(fetchJob->tags().first().gid(), tag2.gid());
+    }
+    {
+      TagDeleteJob *deleteJob = new TagDeleteJob(tag2, this);
+      AKVERIFYEXEC(deleteJob);
+    }
+}
+
+
 void TagTest::testAttributes()
 {
     Tag tag;
-    tag.setGid("gid2");
-    TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
-    attr->setDisplayName("name");
-    attr->setInToolbar(true);
-    tag.addAttribute(attr);
-    TagCreateJob *createjob = new TagCreateJob(tag, this);
-    AKVERIFYEXEC(createjob);
-    QVERIFY(createjob->tag().isValid());
-
     {
-        TagFetchJob *fetchJob = new TagFetchJob(createjob->tag(), this);
-        fetchJob->fetchScope().fetchAttribute<TagAttribute>();
-        AKVERIFYEXEC(fetchJob);
-        QCOMPARE(fetchJob->tags().size(), 1);
-        QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());
-        //we need to clone because the returned attribute is just a reference and destroyed on the next line
-        //FIXME we should find a better solution for this (like returning a smart pointer or value object)
-        QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
-        QVERIFY(tagAttr);
-        QCOMPARE(tagAttr->displayName(), QLatin1String("name"));
-        QCOMPARE(tagAttr->inToolbar(), true);
+      tag.setGid("gid2");
+      TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+      attr->setDisplayName("name");
+      attr->setInToolbar(true);
+      tag.addAttribute(attr);
+      TagCreateJob *createjob = new TagCreateJob(tag, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag = createjob->tag();
 
-        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
-        AKVERIFYEXEC(deleteJob);
+      {
+          TagFetchJob *fetchJob = new TagFetchJob(createjob->tag(), this);
+          fetchJob->fetchScope().fetchAttribute<TagAttribute>();
+          AKVERIFYEXEC(fetchJob);
+          QCOMPARE(fetchJob->tags().size(), 1);
+          QVERIFY(fetchJob->tags().first().hasAttribute<TagAttribute>());
+          //we need to clone because the returned attribute is just a reference and destroyed on the next line
+          //FIXME we should find a better solution for this (like returning a smart pointer or value object)
+          QScopedPointer<TagAttribute> tagAttr(fetchJob->tags().first().attribute<TagAttribute>()->clone());
+          QVERIFY(tagAttr);
+          QCOMPARE(tagAttr->displayName(), QLatin1String("name"));
+          QCOMPARE(tagAttr->inToolbar(), true);
+      }
     }
+    //Try fetching multiple items
+    Tag tag2;
+    {
+      tag2.setGid("gid22");
+      TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+      attr->setDisplayName("name2");
+      attr->setInToolbar(true);
+      tag2.addAttribute(attr);
+      TagCreateJob *createjob = new TagCreateJob(tag2, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag2 = createjob->tag();
+
+      {
+          TagFetchJob *fetchJob = new TagFetchJob(Tag::List() << tag << tag2, this);
+          fetchJob->fetchScope().fetchAttribute<TagAttribute>();
+          AKVERIFYEXEC(fetchJob);
+          QCOMPARE(fetchJob->tags().size(), 2);
+          QVERIFY(fetchJob->tags().at(0).hasAttribute<TagAttribute>());
+          QVERIFY(fetchJob->tags().at(1).hasAttribute<TagAttribute>());
+      }
+    }
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(Tag::List() << tag << tag2, this);
+    AKVERIFYEXEC(deleteJob);
 }
 
 void TagTest::testTagItem()
