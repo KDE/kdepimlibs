@@ -86,11 +86,11 @@ void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
     Q_D(TagCreateJob);
 
     if ( tag == "*" ) {
-        int begin = data.indexOf("TAGAPPEND");
+        int begin = data.indexOf("TAGFETCH");
         if ( begin >= 0 ) {
             // split fetch response into key/value pairs
             QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 9);
+            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
 
             for (int i = 0; i < fetchResponse.count() - 1; i += 2) {
                 const QByteArray key = fetchResponse.value(i);
