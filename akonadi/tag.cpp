@@ -199,3 +199,9 @@ uint qHash( const Tag &tag )
 {
   return qHash( tag.id() );
 }
+
+QDebug& operator<<(QDebug& debug, const Tag& tag)
+{
+  debug << "Akonadi::Tag( ID" << tag.id() << ", GID" << tag.gid() << ", parent" << tag.parent().id() << ")";
+  return debug;
+}
