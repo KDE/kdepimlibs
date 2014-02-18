@@ -21,7 +21,9 @@
 
 #include "tagwidget.h"
 
-#include "autoqpointer_p.h"
+#include <akonadi/tagmodel.h>
+#include <akonadi/changerecorder.h>
+
 #include "kedittagsdialog_p.h"
 
 #include <kicon.h>
@@ -34,6 +36,12 @@
 TagWidget::TagWidget( QWidget *parent )
   : QWidget( parent )
 {
+  Akonadi::ChangeRecorder *recorder = new Akonadi::ChangeRecorder( this );
+  recorder->setChangeRecordingEnabled( false );
+  recorder->setTypeMonitored( Akonadi::Monitor::Tags );
+
+  mModel = new Akonadi::TagModel( recorder, this );
+
   QHBoxLayout *layout = new QHBoxLayout( this );
   mTagLabel = new KSqueezedTextLabel;
   mTagLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
@@ -52,20 +60,20 @@ TagWidget::~TagWidget()
 {
 }
 
-void TagWidget::setTags( const QVector<Nepomuk2::Tag> &tags )
+void TagWidget::setTags( const Akonadi::Tag::List &tags )
 {
   mTags = tags;
   updateView();
 }
 
-QVector<Nepomuk2::Tag> TagWidget::tags() const
+Akonadi::Tag::List TagWidget::tags() const
 {
   return mTags;
 }
 
 void TagWidget::editTags()
 {
-  AutoQPointer<KEditTagsDialog> dlg = new KEditTagsDialog( mTags, this );
+  QScopedPointer<KEditTagsDialog> dlg( new KEditTagsDialog( mTags, mModel, this ) );
   if ( dlg->exec() ) {
     mTags = dlg->tags();
     updateView();
@@ -74,13 +82,17 @@ void TagWidget::editTags()
 
 void TagWidget::updateView()
 {
-  QString text;
-  foreach ( const Nepomuk2::Tag &tag, mTags ) {
-    const QString separator = ( tag == mTags.last() ? QString() : QLatin1String( ", " ) );
-    text += tag.genericLabel() + separator;
+  QStringList tagsNames;
+  // Load the real tag names from the model
+  for (int i = 0; i < mModel->rowCount(); ++i) {
+    const QModelIndex index = mModel->index( i, 0 );
+    const Akonadi::Tag tag = mModel->data( index, Akonadi::TagModel::TagRole ).value<Akonadi::Tag>();
+    if ( mTags.contains( tag ) ) {
+      tagsNames << tag.name();
+    }
   }
 
-  qobject_cast<KSqueezedTextLabel*>( mTagLabel )->setText( text );
+  mTagLabel->setText( tagsNames.join( QLatin1String( ", " ) ) );
 }
 
 #include "tagwidget.h"
