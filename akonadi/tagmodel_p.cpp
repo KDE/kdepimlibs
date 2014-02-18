@@ -55,7 +55,7 @@ void TagModelPrivate::init(ChangeRecorder *monitor)
   q->connect(fetchJob, SIGNAL(tagsReceived(Akonadi::Tag::List)),
              q, SLOT(tagsFetched(Akonadi::Tag::List)));
   q->connect(fetchJob, SIGNAL(finished(KJob*)),
-             q, SLOT(tagsFetched(KJob*)));
+             q, SLOT(tagsFetchDone(KJob*)));
 }
 
 QModelIndex TagModelPrivate::indexForTag(const qint64 tagId) const
@@ -124,14 +124,20 @@ void TagModelPrivate::monitoredTagAdded(const Tag &tag)
   }
 }
 
-void TagModelPrivate::removeTagsRecursively(qint64 parentTag)
+void TagModelPrivate::removeTagsRecursively(qint64 tagId)
 {
-  const Tag::List childTags = mChildTags.take(parentTag);
+  const Tag tag = mTags.value(tagId);
+
+  // Remove all children first
+  const Tag::List childTags = mChildTags.take(tagId);
   Q_FOREACH (const Tag &child, childTags) {
     removeTagsRecursively(child.id());
   }
 
-  mTags.remove(parentTag);
+  // Remove the actual tag
+  Tag::List &siblings = mChildTags[tag.parent().id()];
+  siblings.removeOne(tag);
+  mTags.remove(tag.id());
 }
 
 void TagModelPrivate::monitoredTagRemoved(const Tag &tag)
