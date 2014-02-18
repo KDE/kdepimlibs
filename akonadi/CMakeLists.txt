@@ -192,6 +192,7 @@ set( akonadikde_LIB_SRC
   tagmodel_p.cpp
   tagattribute.cpp
   tagcreatejob.cpp
+  tagmodifyjob.cpp
   tagfetchscope.cpp
   tagfetchjob.cpp
   tagdeletejob.cpp

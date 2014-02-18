@@ -117,3 +117,9 @@ Attribute *AttributeEntity::attribute(const QByteArray & type) const
     }
     return 0;
 }
+
+QSet<QByteArray>& AttributeEntity::removedAttributes() const
+{
+    return d_ptr->mDeletedAttributes;
+}
+

@@ -153,6 +153,9 @@ public:
       return hasAttribute( dummy.type() );
     }
 private:
+    friend class TagModifyJob;
+    QSet<QByteArray> &removedAttributes() const;
+
     class Private;
     QSharedPointer<Private> d_ptr;
 };

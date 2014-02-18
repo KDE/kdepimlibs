@@ -27,6 +27,7 @@
 #include <akonadi/tagdeletejob.h>
 #include <akonadi/tagattribute.h>
 #include <akonadi/tagfetchscope.h>
+#include <tagmodifyjob.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -47,6 +48,7 @@ private Q_SLOTS:
 
     void testCreateFetch();
     void testDelete();
+    void testModify();
     void testAttributes();
     void testTagItem();
     void testMonitor();
@@ -123,6 +125,63 @@ void TagTest::testDelete()
     }
 }
 
+void TagTest::testModify()
+{
+    Tag tag;
+    {
+      tag.setGid("gid");
+      TagCreateJob *createjob = new TagCreateJob(tag, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag = createjob->tag();
+    }
+
+    //We can add an attribute
+    {
+        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
+        attr->setDisplayName("display name");
+        tag.addAttribute(attr);
+        tag.setParent(Tag(0));
+        tag.setType("mytype");
+        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        AKVERIFYEXEC(modJob);
+
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QVERIFY(fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
+    }
+    //We can update an attribute
+    {
+        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
+        attr->setDisplayName("display name2");
+        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        AKVERIFYEXEC(modJob);
+
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QVERIFY(fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(fetchJob->tags().first().attribute<Akonadi::TagAttribute>()->displayName(), attr->displayName());
+    }
+    //We can clear an attribute
+    {
+        tag.removeAttribute<Akonadi::TagAttribute>();
+        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        AKVERIFYEXEC(modJob);
+
+        TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QVERIFY(!fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
+    }
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
+}
 
 void TagTest::testAttributes()
 {
