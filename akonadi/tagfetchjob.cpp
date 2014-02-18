@@ -164,8 +164,7 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
                 } else if (key == "PARENT") {
                     tag.setParent(Tag(value.toLongLong()));
                 } else {
-                    const QByteArray attrName = key.mid(4);//Strip ATR:
-                    Attribute *attr = AttributeFactory::createAttribute(attrName);
+                    Attribute *attr = AttributeFactory::createAttribute(key);
                     if (!attr) {
                       kWarning() << "Unknown tag attribute" << key;
                       continue;

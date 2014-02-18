@@ -72,7 +72,7 @@ void TagCreateJob::doStart()
     }
     command += ImapParser::join(list, " ");
     command += " "; // list of parts
-    const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mTag, true);
+    const QByteArray attrs = ProtocolHelper::attributesToByteArray(d->mTag, false);
     if (!attrs.isEmpty()) {
         command += attrs;
     }
