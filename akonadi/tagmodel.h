@@ -52,8 +52,8 @@ class AKONADI_EXPORT TagModel : public QAbstractItemModel
     explicit TagModel( ChangeRecorder *recorder, QObject *parent );
     virtual ~TagModel();
 
-    virtual int columnCount( const QModelIndex &parent ) const;
-    virtual int rowCount( const QModelIndex &parent ) const;
+    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
     virtual QVariant data( const QModelIndex &index, int role ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
@@ -66,7 +66,7 @@ class AKONADI_EXPORT TagModel : public QAbstractItemModel
     */
 
     virtual QModelIndex parent( const QModelIndex &child ) const;
-    virtual QModelIndex index( int row, int column, const QModelIndex &parent ) const;
+    virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
 
   protected:
     Q_DECLARE_PRIVATE( TagModel )
