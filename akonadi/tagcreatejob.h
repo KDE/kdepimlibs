@@ -49,6 +49,14 @@ public:
      */
     Tag tag() const;
 
+    /**
+     * Merges the tag by GID if it is already existing, and returns the merged version.
+     * This is false by default.
+     *
+     * Note that the returned tag does not contain attributes.
+     */
+    void setMergeIfExisting(bool merge);
+
 protected:
     virtual void doStart();
     virtual void doHandleResponse(const QByteArray &tag, const QByteArray &data);

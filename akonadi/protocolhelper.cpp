@@ -559,3 +559,29 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
 
   item.d_ptr->resetChangeLog();
 }
+
+void ProtocolHelper::parseTagFetchResult( const QList<QByteArray> &lineTokens, Tag &tag )
+{
+  for (int i = 0; i < lineTokens.count() - 1; i += 2) {
+    const QByteArray key = lineTokens.value(i);
+    const QByteArray value = lineTokens.value(i + 1);
+
+    if (key == "UID") {
+      tag.setId(value.toLongLong());
+    } else if (key == "GID") {
+      tag.setGid(value);
+    } else if (key == "REMOTEID") {
+      tag.setRemoteId(value);
+    } else if (key == "PARENT") {
+      tag.setParent(Tag(value.toLongLong()));
+    } else {
+      Attribute *attr = AttributeFactory::createAttribute(key);
+      if (!attr) {
+        kWarning() << "Unknown tag attribute" << key;
+        continue;
+      }
+      attr->deserialize(value);
+      tag.addAttribute(attr);
+    }
+  }
+}

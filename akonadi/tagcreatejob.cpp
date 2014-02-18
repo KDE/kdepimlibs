@@ -29,12 +29,13 @@ struct Akonadi::TagCreateJobPrivate : public JobPrivate
 {
     TagCreateJobPrivate(TagCreateJob *parent)
         :JobPrivate(parent),
-        mUid(-1)
+        mMerge(false)
     {
     }
 
     Tag mTag;
-    Tag::Id mUid;
+    Tag mResultTag;
+    bool mMerge;
 };
 
 TagCreateJob::TagCreateJob(const Akonadi::Tag &tag, QObject *parent)
@@ -42,6 +43,12 @@ TagCreateJob::TagCreateJob(const Akonadi::Tag &tag, QObject *parent)
 {
     Q_D(TagCreateJob);
     d->mTag = tag;
+}
+
+void TagCreateJob::setMergeIfExisting(bool merge)
+{
+    Q_D(TagCreateJob);
+    d->mMerge = merge;
 }
 
 void TagCreateJob::doStart()
@@ -61,6 +68,10 @@ void TagCreateJob::doStart()
     QList<QByteArray> list;
     list << "GID";
     list << ImapParser::quote(d->mTag.gid());
+
+    if (d->mMerge) {
+        list << "MERGE";
+    }
 
     if (!d->mTag.remoteId().isEmpty()) {
         list << "RID";
@@ -91,20 +102,11 @@ void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
             // split fetch response into key/value pairs
             QList<QByteArray> fetchResponse;
             ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
-
-            for (int i = 0; i < fetchResponse.count() - 1; i += 2) {
-                const QByteArray key = fetchResponse.value(i);
-                const QByteArray value = fetchResponse.value(i + 1);
-
-                if (key == "UID") {
-                    d->mUid = value.toLongLong();
-                }
+            if (!d->mMerge) {
+              //If merge is enabled there is the possibility that existing attributes etc are not valid anymore
+              d->mResultTag = d->mTag;
             }
-
-            if (d->mUid < 0) {
-                kWarning() << "got invalid tag back";
-                return;
-            }
+            ProtocolHelper::parseTagFetchResult(fetchResponse, d->mResultTag);
         }
     }
 }
@@ -112,7 +114,5 @@ void TagCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
 Tag TagCreateJob::tag() const
 {
     Q_D(const TagCreateJob);
-    Tag tag(d->mTag);
-    tag.setId(d->mUid);
-    return tag;
+    return d->mResultTag;
 }

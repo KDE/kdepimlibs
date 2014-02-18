@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testCreateFetch();
     void testDelete();
     void testModify();
+    void testCreateMerge();
     void testAttributes();
     void testTagItem();
     void testMonitor();
@@ -177,6 +178,30 @@ void TagTest::testModify()
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QVERIFY(!fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
+    }
+
+    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    AKVERIFYEXEC(deleteJob);
+}
+
+void TagTest::testCreateMerge()
+{
+    Tag tag;
+    {
+      tag.setGid("gid");
+      TagCreateJob *createjob = new TagCreateJob(tag, this);
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      tag = createjob->tag();
+    }
+    {
+      Tag tag2;
+      tag2.setGid("gid");
+      TagCreateJob *createjob = new TagCreateJob(tag2, this);
+      createjob->setMergeIfExisting( true );
+      AKVERIFYEXEC(createjob);
+      QVERIFY(createjob->tag().isValid());
+      QCOMPARE(createjob->tag().id(), tag.id());
     }
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);

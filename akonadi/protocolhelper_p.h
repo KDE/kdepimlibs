@@ -223,6 +223,8 @@ class ProtocolHelper
       Parses a single line from an item fetch job result into an Item object.
      */
     static void parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0 );
+    static void parseTagFetchResult( const QList<QByteArray> &lineTokens, Tag &tag );
+
 };
 
 }

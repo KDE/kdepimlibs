@@ -147,32 +147,10 @@ void TagFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &data
         if (begin >= 0) {
             // split fetch response into key/value pairs
             QList<QByteArray> fetchResponse;
-            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 9);
+            ImapParser::parseParenthesizedList(data, fetchResponse, begin + 8);
 
             Tag tag;
-
-            for (int i = 0; i < fetchResponse.count() - 1; i += 2) {
-                const QByteArray key = fetchResponse.value(i);
-                const QByteArray value = fetchResponse.value(i + 1);
-
-                if (key == "UID") {
-                    tag.setId(value.toLongLong());
-                } else if (key == "GID") {
-                    tag.setGid(value);
-                } else if (key == "REMOTEID") {
-                    tag.setRemoteId(value);
-                } else if (key == "PARENT") {
-                    tag.setParent(Tag(value.toLongLong()));
-                } else {
-                    Attribute *attr = AttributeFactory::createAttribute(key);
-                    if (!attr) {
-                      kWarning() << "Unknown tag attribute" << key;
-                      continue;
-                    }
-                    attr->deserialize(value);
-                    tag.addAttribute(attr);
-                }
-            }
+            ProtocolHelper::parseTagFetchResult(fetchResponse, tag);
 
             if (tag.isValid() ) {
                 d->mResultTags.append(tag);
