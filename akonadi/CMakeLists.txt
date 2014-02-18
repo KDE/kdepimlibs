@@ -406,6 +406,7 @@ install( FILES
   tagattribute.h
   tag.h
   tagmodel.h
+  tagmodifyjob.h
   tagcreatejob.h
   tagfetchjob.h
   tagfetchscope.h
