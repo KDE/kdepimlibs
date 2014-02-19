@@ -253,7 +253,16 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
   // iterate over the cards
   VCard::List::ConstIterator listEnd( list.end() );
   for ( cardIt = list.begin(); cardIt != listEnd; ++cardIt ) {
+	/* 
+	 * Initialization of the card
+	 * MUST start with
+	 * BEGIN:VCARD
+	 * VERSION=<version>
+	 */
     text.append( "BEGIN:VCARD\r\n" );
+    text.append( "VERSION:" );
+    text.append( ( *cardIt ).line( QLatin1String( "VERSION" ) ).value().toByteArray() );
+    text.append( "\r\n" );
 
     idents = ( *cardIt ).identifiers();
     for ( identIt = idents.constBegin(); identIt != idents.constEnd(); ++identIt ) {
@@ -263,6 +272,10 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
       for ( lineIt = lines.constBegin(); lineIt != lines.constEnd(); ++lineIt ) {
         QVariant val = ( *lineIt ).value();
         if ( val.isValid() ) {
+          // Skipping the VERSION field (already processed)
+          if ( ( *lineIt ).identifier() == QLatin1String( "VERSION" ) ) {
+            continue;
+          }
           if ( ( *lineIt ).hasGroup() ) {
             textLine = ( *lineIt ).group().toLatin1() + '.' + ( *lineIt ).identifier().toLatin1();
           } else {
