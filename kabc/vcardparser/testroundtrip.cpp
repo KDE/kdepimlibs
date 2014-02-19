@@ -25,6 +25,8 @@
 #include <qtest_kde.h>
 
 #include <QObject>
+#include <QString>
+#include <QByteArray>
 
 using namespace KABC;
 
@@ -137,33 +139,47 @@ void RoundtripTest::validate( VCardConverter::Version version,
     VCardConverter converter;
     const QByteArray outputData = converter.createVCards( list, version );
 
+    /* FIX
+     * Plain text files *.ref in the git repository must have Unix line endings. (CR)
+     * However, the parser generates DOS line endings. (CR+LF) (according to RFC).
+     * So we remove all '\r's from the generated output.  */
+    QByteArray processedOutputData = outputData;
+    int index = outputData.indexOf( '\r' );
+    while ( index != -1 ) {
+      processedOutputData.remove( index, 1 );
+      index = processedOutputData.indexOf( '\r', index );
+    }
+
     QFile outputFile( QFileInfo( outputDir, outputFileName ).absoluteFilePath() );
     QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
 
     const QByteArray outputRefData = outputFile.readAll();
-    QCOMPARE( outputData.size(), outputRefData.size() );
+    QCOMPARE( processedOutputData.size(), outputRefData.size() );
 
-    const QList<QByteArray> outputLines = outputData.split( '\n' );
+    const QList<QByteArray> outputLines = processedOutputData.split( '\n' );
     const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
     QCOMPARE( outputLines.count(), outputRefLines.count() );
+
+    const QByteArray versionString( ( version == VCardConverter::v2_1 ) ? "2.1"
+                                    : ( version == VCardConverter::v3_0 ) ? "3.0"
+                                    : "4.0" );
 
     for ( int i = 0; i < outputLines.count(); ++i ) {
       const QByteArray actual = outputLines[ i ];
       const QByteArray expect = outputRefLines[ i ];
 
       if ( actual != expect ) {
-        qCritical() << "Mismatch in "
-          << ((version == VCardConverter::v2_1) ? "v2.1"
-             : (version == VCardConverter::v3_0) ? "v3.0"
-             : "v4.0")
-          << " output line"
-          << ( i + 1 );
-        QCOMPARE( actual.count(), expect.count() );
-
+        qCritical() << "Mismatch in v" << versionString << " output line" << ( i + 1 );
         qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
+        QCOMPARE( actual.count(), expect.count() );
         QCOMPARE( actual, expect );
       }
     }
+
+    // Second line is VERSION:<version n°>
+    QByteArray versionExpected = "VERSION:";
+    versionExpected.append( versionString );
+    QCOMPARE( outputLines[ 1 ], versionExpected );
   }
 }
 
