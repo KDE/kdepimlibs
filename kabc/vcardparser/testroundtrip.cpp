@@ -150,10 +150,6 @@ void RoundtripTest::validate( VCardConverter::Version version,
       index = processedOutputData.indexOf( '\r', index );
     }
 
-    QFile outputFile( QFileInfo( outputDir, outputFileName ).absoluteFilePath() );
-    QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
-
-    const QByteArray outputRefData = outputFile.readAll();
     QCOMPARE( processedOutputData.size(), outputRefData.size() );
 
     const QList<QByteArray> outputLines = processedOutputData.split( '\n' );
@@ -201,7 +197,6 @@ void RoundtripTest::validate( VCardConverter::Version version,
         qCritical() << "Mismatch in v4.0 output line" << ( i + 1 );
 
         qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
-        QCOMPARE( actual.count(), expect.count() );
         QCOMPARE( actual, expect );
       }
     }
