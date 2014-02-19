@@ -18,6 +18,7 @@
     Boston, MA 02110-1301, USA.
 */
 
+
 #include "addressee.h"
 #include "vcardconverter.h"
 
@@ -45,6 +46,12 @@ class RoundtripTest : public QObject
     void initTestCase();
     void testVCardRoundtrip_data();
     void testVCardRoundtrip();
+
+	private:
+		void validate( VCardConverter::Version version,
+                   const QDir& outputDir,
+                   const QString& outputFileName,
+                   const Addressee::List list );
 };
 
 // check the validity of our test data set
@@ -116,10 +123,21 @@ void RoundtripTest::testVCardRoundtrip()
   const Addressee::List list = converter.parseVCards( inputData );
   QVERIFY( !list.isEmpty() );
 
-  if ( !output2_1File.isEmpty() ) {
-    const QByteArray outputData = converter.createVCards( list, VCardConverter::v2_1 );
+  validate( VCardConverter::v2_1, mOutput2_1Dir, output2_1File, list );
+  validate( VCardConverter::v3_0, mOutput3_0Dir, output3_0File, list );
+  validate( VCardConverter::v4_0, mOutput4_0Dir, output4_0File, list );
+}
 
-    QFile outputFile( QFileInfo( mOutput2_1Dir, output2_1File ).absoluteFilePath() );
+void RoundtripTest::validate( VCardConverter::Version version,
+                              const QDir& outputDir,
+                              const QString& outputFileName,
+                              const Addressee::List list )
+{
+  if ( !outputFileName.isEmpty() ) {
+    VCardConverter converter;
+    const QByteArray outputData = converter.createVCards( list, version );
+
+    QFile outputFile( QFileInfo( outputDir, outputFileName ).absoluteFilePath() );
     QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
 
     const QByteArray outputRefData = outputFile.readAll();
@@ -134,62 +152,15 @@ void RoundtripTest::testVCardRoundtrip()
       const QByteArray expect = outputRefLines[ i ];
 
       if ( actual != expect ) {
-        qCritical() << "Mismatch in v2.1 output line" << ( i + 1 );
+        qCritical() << "Mismatch in "
+          << ((version == VCardConverter::v2_1) ? "v2.1"
+             : (version == VCardConverter::v3_0) ? "v3.0"
+             : "v4.0")
+          << " output line"
+          << ( i + 1 );
         QCOMPARE( actual.count(), expect.count() );
 
         qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
-        QCOMPARE( actual, expect );
-      }
-    }
-  }
-
-  if ( !output3_0File.isEmpty() ) {
-    const QByteArray outputData = converter.createVCards( list, VCardConverter::v3_0 );
-
-    QFile outputFile( QFileInfo( mOutput3_0Dir, output3_0File ).absoluteFilePath() );
-    QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
-
-    const QByteArray outputRefData = outputFile.readAll();
-//    QCOMPARE( outputData.size(), outputRefData.size() );
-
-    const QList<QByteArray> outputLines = outputData.split( '\n' );
-    const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
-    QCOMPARE( outputLines.count(), outputRefLines.count() );
-
-    for ( int i = 0; i < outputLines.count(); ++i ) {
-      const QByteArray actual = outputLines[ i ];
-      const QByteArray expect = outputRefLines[ i ];
-
-      if ( actual != expect ) {
-        qCritical() << "Mismatch in v3.0 output line" << ( i + 1 );
-
-        qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
-        QCOMPARE( actual.count(), expect.count() );
-        QCOMPARE( actual, expect );
-      }
-    }
-  }
-
-  if ( !output4_0File.isEmpty() ) {
-    const QByteArray outputData = converter.createVCards( list, VCardConverter::v4_0 );
-    QFile outputFile( QFileInfo( mOutput4_0Dir, output4_0File ).absoluteFilePath() );
-    QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
-
-    const QByteArray outputRefData = outputFile.readAll();
-
-    const QList<QByteArray> outputLines = outputData.split( '\n' );
-    const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
-    QCOMPARE( outputLines.count(), outputRefLines.count() );
-
-    for ( int i = 0; i < outputLines.count(); ++i ) {
-      const QByteArray actual = outputLines[ i ];
-      const QByteArray expect = outputRefLines[ i ];
-
-      if ( actual != expect ) {
-        qCritical() << "Mismatch in v4.0 output line" << ( i + 1 );
-
-        qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
-        QCOMPARE( actual.count(), expect.count() );
         QCOMPARE( actual, expect );
       }
     }
