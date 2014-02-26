@@ -1,5 +1,7 @@
 /*
-    Copyright 2009 Constantin Berzan <exit3219@gmail.com>
+    This file is part of Akonadi
+
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +19,33 @@
     02110-1301, USA.
 */
 
-#ifndef RACETEST_H
-#define RACETEST_H
+#ifndef AKONADI_TAGMANAGEMENTDIALOG_H
+#define AKONADI_TAGMANAGEMENTDIALOG_H
 
-#include <QtCore/QObject>
-#include <QList>
+#include "akonadi_export.h"
 
-class KProcess;
+#include <KDialog>
+#include "akonadi/tag.h"
+
+namespace Akonadi {
 
 /**
-  This tests the ability of LocalFolders to exist peacefully in multiple processes.
-  The main instance (normally the first one created) is supposed to create the
-  resource and collections, while the other instances are supposed to wait and
-  then just fetch the collections.
+ * A dialog to manage tags.
+ *
+ * @since 4.13
  */
-class RaceTest : public QObject
+class AKONADI_EXPORT TagManagementDialog : public KDialog
 {
     Q_OBJECT
-
-private Q_SLOTS:
-    void initTestCase();
-    void testMultipleProcesses_data();
-    void testMultipleProcesses();
-    void killZombies();
+public:
+    explicit TagManagementDialog(QWidget *parent = 0);
+    virtual ~TagManagementDialog();
 
 private:
-    QList<KProcess *> procs;
-
+    class Private;
+    QSharedPointer<Private> d;
 };
+
+}
 
 #endif

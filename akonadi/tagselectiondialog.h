@@ -1,7 +1,7 @@
 /*
-    This file is part of Akonadi Contact.
+    This file is part of Akonadi
 
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,35 +19,40 @@
     02110-1301, USA.
 */
 
-#ifndef CATEGORIESEDITWIDGET_H
-#define CATEGORIESEDITWIDGET_H
+#ifndef AKONADI_TAGSELECTIONDIALOG_H
+#define AKONADI_TAGSELECTIONDIALOG_H
 
-#include <QWidget>
+#include "akonadi_export.h"
 
-#include <kabc/addressee.h>
+#include <KDialog>
+#include "akonadi/tag.h"
 
 namespace Akonadi {
-    class TagWidget;
-}
 
 /**
- * @short A widget for editing the categories of a contact.
+ * A widget that shows a tag selection and provides means to edit that selection.
+ *
+ * TODO A standalone dialog version that takes an item and takes care of writing back the changes would be useful.
+ * @since 4.13
  */
-class CategoriesEditWidget : public QWidget
+class AKONADI_EXPORT TagSelectionDialog : public KDialog
 {
     Q_OBJECT
-
 public:
-    explicit CategoriesEditWidget(QWidget *parent = 0);
-    ~CategoriesEditWidget();
+    explicit TagSelectionDialog(QWidget *parent = 0);
+    virtual ~TagSelectionDialog();
 
-    void loadContact(const KABC::Addressee &contact);
-    void storeContact(KABC::Addressee &contact) const;
+    void setSelection(const Akonadi::Tag::List &tags);
+    Akonadi::Tag::List selection() const;
 
-    void setReadOnly(bool readOnly);
+Q_SIGNALS:
+    void selectionChanged(const Akonadi::Tag::List &tags);
 
 private:
-    Akonadi::TagWidget *mTagWidget;
+    class Private;
+    QSharedPointer<Private> d;
 };
+
+}
 
 #endif
