@@ -301,6 +301,11 @@ class KONTACTINTERFACE_EXPORT Plugin : public QObject, virtual public KXMLGUICli
      */
     bool disabled() const;
 
+    /**
+     * @since 4.13
+     */
+    virtual void shortcutChanged();
+
   public Q_SLOTS:
     /**
      * @internal usage
