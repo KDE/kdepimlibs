@@ -119,7 +119,7 @@ Comment[zh_TW]=設定 KDE 資源
 
 X-KDE-Keywords=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
 X-KDE-Keywords[bs]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap, resursi, kontakt resursi, alarmni resursi
-X-KDE-Keywords[ca]=recursos,recurs de konnector,recurs de contacte,recurs de calendari,recurs de notes,recurs d'alarma,imap
+X-KDE-Keywords[ca]=recursos,recurs de konnector,recurs de contactes,recurs de calendari,recurs de notes,recurs d'alarmes,imap
 X-KDE-Keywords[ca@valencia]=recursos,recurs de konnector,recurs de contacte,recurs de calendari,recurs de notes,recurs d'alarma,imap
 X-KDE-Keywords[da]=ressourcer,konnector-ressource,kontakt-ressource,kalender-ressource,note-ressource,alarm-ressource,imap
 X-KDE-Keywords[de]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap
@@ -138,6 +138,7 @@ X-KDE-Keywords[kk]=resources,konnector resource,contact resource,calendar resour
 X-KDE-Keywords[km]=ធនធាម ធនធាន konnector ធនធាន​ទំនាក់ទំនង ធនធាន​ប្រតិទិន ធនធាន​ចំណាំ ធនធាន​ការ​ជូន​ដំណឹង imap
 X-KDE-Keywords[ko]=resources,konnector resource,contact resource,calendar resource,notes resource,alarm resource,imap,자원,연락처 자원,달력 자원,메모 자원,알람 자원
 X-KDE-Keywords[nb]=ressurser, konnector ressurs, kontaktressurs, kalenderressurs, merknadsressurs, varslingsressurs, imap
+X-KDE-Keywords[nds]=Ressourcen,konnector-Ressource,Kontakt-Ressource,Kalenner-Ressource,Notiz-Ressource,Alarm-Ressource,IMAP
 X-KDE-Keywords[nl]=hulpbronnen,konnector-hulpbron,contactpersoon-hulpbron,agenda-hulpbron, notities-hulpbron,herinneringen-hulpbron,imap
 X-KDE-Keywords[pl]=zasoby,zasoby konnector,zasoby kontaktu,zasoby kalendarz,zasoby notatek,zasoby alarmu,imap
 X-KDE-Keywords[pt]=recursos,recurso do konector,recurso de contacto,recurso de calendário,recurso de notas,recurso de alarme,IMAP
