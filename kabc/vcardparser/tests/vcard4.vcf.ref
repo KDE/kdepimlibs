@@ -3,6 +3,7 @@ VERSION:3.0
 EMAIL:hello@ximian.com
 LABEL;TYPE=work:401 Park Drive  3 West\nBoston\, MA 02215\nUSA
 N:;;;;
+FN:
 NOTE:Welcome to the Ximian Addressbook.
 ORG:Ximian\, Inc.
 TEL;TYPE=VOICE;TYPE=WORK:(617) 236-0442
