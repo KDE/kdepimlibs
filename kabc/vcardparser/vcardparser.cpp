@@ -259,9 +259,10 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
 	 * BEGIN:VCARD
 	 * VERSION=<version>
 	 */
+    QByteArray versionText = ( *cardIt ).line( QLatin1String( "VERSION" ) ).value().toByteArray();
     text.append( "BEGIN:VCARD\r\n" );
     text.append( "VERSION:" );
-    text.append( ( *cardIt ).line( QLatin1String( "VERSION" ) ).value().toByteArray() );
+    text.append( versionText );
     text.append( "\r\n" );
 
     idents = ( *cardIt ).identifiers();
@@ -271,7 +272,10 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
       // iterate over the lines
       for ( lineIt = lines.constBegin(); lineIt != lines.constEnd(); ++lineIt ) {
         QVariant val = ( *lineIt ).value();
-        if ( val.isValid() ) {
+        // FN field is required for versions 3.0 and 4.0
+        if ( val.isValid() ||
+              ( ( *identIt ) == QLatin1String( "FN" ) &&
+                ( versionText == QByteArray( "3.0" ) || versionText == QByteArray( "4.0" ) ) ) ) {
           // Skipping the VERSION field (already processed)
           if ( ( *lineIt ).identifier() == QLatin1String( "VERSION" ) ) {
             continue;
@@ -332,7 +336,7 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
           }
           addEscapes( output, ( *lineIt ).identifier() == QLatin1String( "CATEGORIES" ) );
 
-          if ( !output.isEmpty() ) {
+          if ( !output.isEmpty() || ( *identIt ) == QLatin1String( "FN" ) ) {
             textLine.append( ':' + output );
 
             if ( textLine.length() > FOLD_WIDTH ) { // we have to fold the line
