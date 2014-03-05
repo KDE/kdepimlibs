@@ -21,6 +21,7 @@
 
 #include "addressee.h"
 #include "vcardconverter.h"
+#include "vcardparser.h"
 
 #include <qtest_kde.h>
 
@@ -184,6 +185,11 @@ void RoundtripTest::validate( VCardConverter::Version version,
     QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
 
     const QByteArray outputRefData = outputFile.readAll();
+    if ( processedOutputData.size() != outputRefData.size() ) {
+      qDebug() << processedOutputData;
+      qDebug() << outputRefData;
+    }
+    QCOMPARE( processedOutputData.size(), outputRefData.size() );
 
     const QList<QByteArray> outputLines = processedOutputData.split( '\n' );
     const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
@@ -193,9 +199,14 @@ void RoundtripTest::validate( VCardConverter::Version version,
                                     : ( version == VCardConverter::v3_0 ) ? "3.0"
                                     : "4.0" );
 
+    bool nFieldExists = false;
+    bool fnFieldExists = false;
     for ( int i = 0; i < outputLines.count(); ++i ) {
       const QByteArray actual = outputLines[ i ];
       const QByteArray expect = outputRefLines[ i ];
+
+      nFieldExists |= actual.startsWith( "N:" );
+      fnFieldExists |= actual.startsWith( "FN:" );
 
       if ( actual != expect ) {
         qCritical() << "Mismatch in v" << versionString << " output line" << ( i + 1 );
@@ -203,6 +214,19 @@ void RoundtripTest::validate( VCardConverter::Version version,
         QCOMPARE( actual.count(), expect.count() );
         QCOMPARE( actual, expect );
       }
+    }
+
+    switch ( version ) { 
+      case VCardConverter::v2_1:
+        QVERIFY( nFieldExists );
+        break;
+      case VCardConverter::v3_0:
+        QVERIFY( fnFieldExists );
+        QVERIFY( nFieldExists );
+        break;
+      case VCardConverter::v4_0:
+        QVERIFY( fnFieldExists );
+        break;
     }
 
     // Second line is VERSION:<version n°>
