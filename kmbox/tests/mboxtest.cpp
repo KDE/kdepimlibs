@@ -144,8 +144,36 @@ void MboxTest::testProcMailLock()
   QVERIFY( !QFile( lockFileName() ).exists() );
 }
 
+void MboxTest::testConcurrentAccess()
+{
+  // tests if mbox works correctly when another program locks the file
+  // and appends new messages
+
+  MBox mbox;
+
+  if ( !mbox.setLockType( MBox::ProcmailLockfile ) ) {
+    QEXPECT_FAIL( "", "This test only works when procmail is installed.", Abort );
+    QVERIFY( false );
+  }
+
+  ThreadFillsMBox thread( fileName() );  // locks the mbox file and adds a new message
+  thread.start();
+
+  QVERIFY( mbox.load( fileName() ) );
+
+  MBoxEntry entry = mbox.appendMessage( mMail1 );
+
+  // as the thread appended sEntry1, the offset for the now appended message
+  // must be greater
+  QVERIFY( static_cast<int>(entry.messageOffset()) > sEntry1.length() );
+
+  thread.wait();
+}
+
 void MboxTest::testAppend()
 {
+  removeTestFile();
+
   QFileInfo info( fileName() );
   QCOMPARE( info.size(), static_cast<qint64>( 0 ) );
 
@@ -430,4 +458,32 @@ void MboxTest::testHeaders()
 void MboxTest::cleanupTestCase()
 {
   mTempDir->unlink();
+}
+
+//---------------------------------------------------------------------
+
+ThreadFillsMBox::ThreadFillsMBox( const QString &fileName )
+{
+  mbox = new MBox;
+  QVERIFY( mbox->load( fileName ) );
+  mbox->setLockType( MBox::ProcmailLockfile );
+  mbox->lock();
+}
+
+void ThreadFillsMBox::run()
+{
+  QTest::qSleep( 2000 );
+
+  QFile file( mbox->fileName() );
+  file.open( QIODevice::WriteOnly | QIODevice::Append );
+
+  QByteArray message = KMime::CRLFtoLF( sEntry1 );
+  file.write(QByteArray("From test@local.local ") +
+                QDateTime::currentDateTime().toString(Qt::ISODate).toUtf8() + "\n");
+  file.write( message );
+  file.write( "\n\n" );
+  file.close();
+
+  mbox->unlock();
+  delete mbox;
 }

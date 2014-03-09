@@ -65,7 +65,6 @@ void MBoxPrivate::close()
 void MBoxPrivate::initLoad( const QString &fileName )
 {
   mMboxFile.setFileName( KUrl( fileName ).toLocalFile() );
-  mInitialMboxFileSize = mMboxFile.size();
   mAppendedEntries.clear();
   mEntries.clear();
 }
