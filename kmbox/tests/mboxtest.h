@@ -21,6 +21,7 @@
 #define MBOXTEST_H
 
 #include <QObject>
+#include <QThread>
 
 #include "../mbox.h"
 
@@ -34,6 +35,7 @@ class MboxTest : public QObject
     void testSetLockMethod();
     void testLockBeforeLoad();
     void testProcMailLock();
+    void testConcurrentAccess();
     void testAppend();
     void testSaveAndLoad();
     void testBlankLines();
@@ -52,6 +54,20 @@ class MboxTest : public QObject
     KTempDir *mTempDir;
     KMime::Message::Ptr mMail1;
     KMime::Message::Ptr mMail2;
+};
+
+class ThreadFillsMBox : public QThread
+{
+  Q_OBJECT
+
+  public:
+    ThreadFillsMBox( const QString &fileName );
+
+  protected:
+    virtual void run();
+
+  private:
+    KMBox::MBox *mbox;
 };
 
 #endif // MBOXTEST_H
