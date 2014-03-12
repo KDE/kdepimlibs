@@ -423,7 +423,8 @@ void TransportManagerPrivate::readConfig()
   QRegExp re( QLatin1String( "^Transport (.+)$" ) );
   QStringList groups = config->groupList().filter( re );
   foreach ( const QString &s, groups ) {
-    re.indexIn( s );
+    if (re.indexIn( s ) == -1)
+        continue;
     Transport *t = 0;
 
     // see if we happen to have that one already

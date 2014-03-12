@@ -25,7 +25,7 @@
 using namespace KMBox;
 
 MBoxPrivate::MBoxPrivate( MBox *mbox )
-  : mInitialMboxFileSize( 0 ), mMBox( mbox ),
+  : mInitialMboxFileSize( 0 ), mMBox( mbox ), mReadOnly( false ),
     mSeparatorMatcher( QLatin1String( "^From .*[0-9][0-9]:[0-9][0-9]" ) )
 {
   connect( &mUnlockTimer, SIGNAL(timeout()), SLOT(unlockMBox()) );
@@ -65,7 +65,6 @@ void MBoxPrivate::close()
 void MBoxPrivate::initLoad( const QString &fileName )
 {
   mMboxFile.setFileName( KUrl( fileName ).toLocalFile() );
-  mInitialMboxFileSize = mMboxFile.size();
   mAppendedEntries.clear();
   mEntries.clear();
 }

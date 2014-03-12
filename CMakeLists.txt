@@ -104,7 +104,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.11.41")
+  set(Akonadi_MIN_VERSION "1.11.80")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 
@@ -116,22 +116,6 @@ if (NOT KDEPIM_ONLY_KLEO)
   set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
   find_package(SharedMimeInfo)
   set_package_properties(SharedMimeInfo PROPERTIES DESCRIPTION "shared-mime-info" URL "http://freedesktop.org/wiki/Software/shared-mime-info" TYPE REQUIRED PURPOSE "Information about filetypes")
-
-
-  set(SDO_MIN_VERSION 0.11)
-  set(SOPRANO_MIN_VERSION 2.9)
-
-  find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
-  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared desktop ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontology information for use with Nepomuk")
-
-  find_package(Soprano)
-  set_package_properties(Soprano PROPERTIES DESCRIPTION "Soprano" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
-  if (Soprano_FOUND)
-  include(SopranoAddOntology)
-  endif()
-
-#  find_package(NepomukCore)
-#  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "NepomukCore"  URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   set(LIBICAL_MIN_VERSION "0.42")
   find_package(Libical)

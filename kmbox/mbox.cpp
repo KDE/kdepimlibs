@@ -156,6 +156,8 @@ bool MBox::load( const QString &fileName )
     return false;
   }
 
+  d->mInitialMboxFileSize = d->mMboxFile.size();  // AFTER the file has been locked
+
   QByteArray line;
   QByteArray prevSeparator;
   quint64 offs = 0; // The offset of the next message to read.

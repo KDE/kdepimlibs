@@ -26,7 +26,7 @@ using namespace KPIMUtils;
  * Fake backend
  */
 NetworkAccessHelper::NetworkAccessHelper( QObject *parent )
-  : QObject( parent )
+  : QObject( parent ), d_ptr(0)
 {
 }
 

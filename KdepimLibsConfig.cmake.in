@@ -53,9 +53,6 @@ set(KALARM_USE_KRESOURCES @KALARM_USE_KRESOURCES@)
 
 # Make sure to load the exported targets only once
 # For the rest of this script it doesn't matter that much
-if(NOT TARGET nepomukcore)
-   find_package(NepomukCore NO_MODULE)
-endif()
 if(NOT TARGET KDEPIMLibs__kabc)
    get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
    include("${_currentDir}/KDEPimLibsLibraryTargetsWithPrefix.cmake")
