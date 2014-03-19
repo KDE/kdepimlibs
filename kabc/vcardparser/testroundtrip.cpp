@@ -204,62 +204,6 @@ void RoundtripTest::validate( VCardConverter::Version version,
     versionExpected.append( versionString );
     QCOMPARE( outputLines[ 1 ], versionExpected );
   }
-
-  if ( !output4_0File.isEmpty() ) {
-    const QByteArray outputData = converter.createVCards( list, VCardConverter::v4_0 );
-    QFile outputFile( QFileInfo( mOutput4_0Dir, output4_0File ).absoluteFilePath() );
-    QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
-
-    const QByteArray outputRefData = outputFile.readAll();
-    if ( processedOutputData.size() != outputRefData.size() ) {
-      qDebug() << processedOutputData;
-      qDebug() << outputRefData;
-    }
-    QCOMPARE( processedOutputData.size(), outputRefData.size() );
-
-    const QList<QByteArray> outputLines = processedOutputData.split( '\n' );
-    const QList<QByteArray> outputRefLines = outputRefData.split( '\n' );
-    QCOMPARE( outputLines.count(), outputRefLines.count() );
-
-    const QByteArray versionString( ( version == VCardConverter::v2_1 ) ? "2.1"
-                                    : ( version == VCardConverter::v3_0 ) ? "3.0"
-                                    : "4.0" );
-
-    bool nFieldExists = false;
-    bool fnFieldExists = false;
-    for ( int i = 0; i < outputLines.count(); ++i ) {
-      const QByteArray actual = outputLines[ i ];
-      const QByteArray expect = outputRefLines[ i ];
-
-      nFieldExists |= actual.startsWith( "N:" );
-      fnFieldExists |= actual.startsWith( "FN:" );
-
-      if ( actual != expect ) {
-        qCritical() << "Mismatch in v" << versionString << " output line" << ( i + 1 );
-        qCritical() << "\nActual:" << actual << "\nExpect:" << expect;
-        QCOMPARE( actual.count(), expect.count() );
-        QCOMPARE( actual, expect );
-      }
-    }
-
-    switch ( version ) { 
-      case VCardConverter::v2_1:
-        QVERIFY( nFieldExists );
-        break;
-      case VCardConverter::v3_0:
-        QVERIFY( fnFieldExists );
-        QVERIFY( nFieldExists );
-        break;
-      case VCardConverter::v4_0:
-        QVERIFY( fnFieldExists );
-        break;
-    }
-
-    // Second line is VERSION:<version n°>
-    QByteArray versionExpected = "VERSION:";
-    versionExpected.append( versionString );
-    QCOMPARE( outputLines[ 1 ], versionExpected );
-  }
 }
 
 QTEST_KDEMAIN( RoundtripTest, NoGUI )
