@@ -27,7 +27,6 @@ if (NOT KDEPIM_NO_KRESOURCES)
 endif()
 install_headers( KTNEF )
 install_headers( Mailtransport )
-install_headers( Syndication )
 install_headers( KPIMTextEdit )
 
 endif()

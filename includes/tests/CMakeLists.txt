@@ -55,7 +55,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}/ktnef
   ${CMAKE_BINARY_DIR}/mailtransport
   ${CMAKE_BINARY_DIR}/microblog
-  ${CMAKE_BINARY_DIR}/syndication
   ${Boost_INCLUDE_DIR}
 )
 
@@ -80,7 +79,6 @@ if (NOT KDEPIM_NO_KRESOURCES)
 endif()
 add_includes( KTNEF )
 add_includes( Mailtransport )
-add_includes( Syndication )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_STRICT_ITERATORS )
 kde4_add_executable( headertest header_compile.cpp )
