@@ -29,14 +29,23 @@ set(kmime_LIB_SRCS
    kautodeletehash.cpp)
 
 
-add_library(kmime ${kmime_LIB_SRCS})
-generate_export_header(kmime)
+add_library(KF5KMime ${kmime_LIB_SRCS})
 
-target_link_libraries(kmime KF5::ItemViews KF5::Codecs KF5::KDE4Support)
+generate_export_header(KF5KMime BASE_NAME kmime)
 
-set_target_properties(kmime PROPERTIES VERSION ${KMIME_VERSION_STRING} SOVERSION ${KMIME_SOVERSION})
+add_library(KF5::KMime ALIAS KF5KMime)
 
-install(TARGETS kmime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kmime>")
+
+target_link_libraries(KF5KMime
+    KF5::ItemViews
+    KF5::Codecs
+    KF5::KDE4Support
+)
+
+set_target_properties(KF5KMime PROPERTIES VERSION ${KMIME_VERSION_STRING} SOVERSION ${KMIME_SOVERSION})
+
+install(TARGETS KF5KMime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
          boolflags.h
