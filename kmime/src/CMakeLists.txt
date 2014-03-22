@@ -34,7 +34,7 @@ generate_export_header(kmime)
 
 target_link_libraries(kmime KF5::ItemViews KF5::Codecs KF5::KDE4Support)
 
-set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kmime PROPERTIES VERSION ${KMIME_VERSION_STRING} SOVERSION ${KMIME_SOVERSION})
 
 install(TARGETS kmime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
