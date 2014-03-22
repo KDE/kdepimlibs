@@ -1,7 +1,6 @@
 project(kdepimlibs)
 
-# Temporary: Make sure we use the right CMake Version
-cmake_minimum_required(VERSION 2.8.10.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12)
 # Enable CMake's Automoc
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOMOC_RELAXED_MODE ON)
