@@ -18,5 +18,5 @@ set(KMime_HEADERS
 
 install(FILES
         ${KMime_HEADERS}
-        DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel
+        DESTINATION ${INCLUDE_INSTALL_DIR}/KMime COMPONENT Devel
 )
