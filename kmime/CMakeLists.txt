@@ -33,6 +33,7 @@ include_directories(${KMime_BINARY_DIR})
 ########### Targets ###########
 add_subdirectory(src)
 add_subdirectory(includes)
+add_subdirectory(autotests)
 add_subdirectory(tests)
 
 ########### CMake Config Files ###########
