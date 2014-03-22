@@ -23,7 +23,7 @@ set(kmime_LIB_SRCS
    kmime_contentindex.cpp
    kmime_headers.cpp
    kmime_message.cpp
-   kmime_newsarticle.cpp
+#  kmime_newsarticle.cpp # FIXME: Reenable when kpimutils is done
    kmime_dateformatter.cpp
    boolflags.cpp
    kautodeletehash.cpp)
