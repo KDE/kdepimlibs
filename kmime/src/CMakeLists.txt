@@ -2,8 +2,8 @@ include(CheckTimezone)
 
 configure_file(config-kmime.h.cmake ${KMime_BINARY_DIR}/src/config-kmime.h)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
-
+# Turn exceptions on
+kde_enable_exceptions()
 
 ########### next target ###############
 
