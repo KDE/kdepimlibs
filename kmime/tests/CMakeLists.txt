@@ -2,35 +2,29 @@ include(CheckIncludeFile)
 check_include_file(getopt.h HAVE_GETOPT_H)
 
 if(HAVE_GETOPT_H)
-    set(test_kmime_header_parsing_SRCS test_kmime_header_parsing.cpp )
 
-    add_executable(test_kmime_header_parsing TEST ${test_kmime_header_parsing_SRCS})
+########### next target ###############
 
-    target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
+  add_executable(test_kmime_header_parsing test_kmime_header_parsing.cpp)
+  add_test(test_kmime_header_parsing test_kmime_header_parsing)
+  target_link_libraries(test_kmime_header_parsing KF5KMime ${KDE4_KDECORE_LIBS})
+
+########### next target ###############
+
+  add_executable(test_mdn test_mdn.cpp)
+  add_test(test_mdn test_mdn)
+  target_link_libraries(test_mdn KF5KMime ${KDE4_KDECORE_LIBS})
+
 endif()
 
 ########### next target ###############
 
-set(test_charfreq_SRCS test_charfreq.cpp )
-
-add_executable(test_charfreq TEST ${test_charfreq_SRCS})
-
-target_link_libraries(test_charfreq  kmime ${KDE4_KDECORE_LIBS} )
+add_executable(test_charfreq test_charfreq.cpp)
+add_test(test_charfreq test_charfreq)
+target_link_libraries(test_charfreq KF5KMime ${KDE4_KDECORE_LIBS})
 
 ########### next target ###############
 
-if(HAVE_GETOPT_H)
-    set(test_mdn_SRCS test_mdn.cpp )
-
-    add_executable(test_mdn TEST ${test_mdn_SRCS})
-
-    target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
-endif()
-
-########### next target ###############
-
-set(test_dates_SRCS test_dates.cpp )
-
-add_executable(test_dates TEST ${test_dates_SRCS})
-
-target_link_libraries(test_dates  kmime ${KDE4_KDECORE_LIBS} )
+add_executable(test_dates test_dates.cpp)
+add_test(test_dates test_dates)
+target_link_libraries(test_dates KF5KMime ${KDE4_KDECORE_LIBS})
