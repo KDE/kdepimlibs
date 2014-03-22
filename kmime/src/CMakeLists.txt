@@ -40,7 +40,7 @@ install(TARGETS kmime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
          boolflags.h
-         ${KMime_BINARY_DIR}/kmime_export.h
+         ${KMime_BINARY_DIR}/src/kmime_export.h
          kmime_charfreq.h
          kmime_codecs.h
          kmime_content.h
