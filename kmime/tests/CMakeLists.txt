@@ -1,5 +1,7 @@
-include_directories(${CMAKE_SOURCE_DIR}/kmime)
-include_directories(${CMAKE_BINARY_DIR}/kmime)
+include_directories(${KMime_SOURCE_DIR})
+include_directories(${KMime_BINARY_DIR})
+
 remove_definitions(-DQT_USE_QSTRINGBUILDER)
-add_subdirectory( manual )
-add_subdirectory( auto )
+
+add_subdirectory(manual)
+add_subdirectory(auto)
