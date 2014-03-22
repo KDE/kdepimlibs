@@ -1,6 +1,6 @@
 
-#include "kmime/kmime_headers.h"
-#include "kmime/kmime_header_parsing.h"
+#include "kmime_headers.h"
+#include "kmime_header_parsing.h"
 
 #include <kcomponentdata.h>
 
