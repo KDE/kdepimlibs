@@ -6,7 +6,6 @@ project(KMime)
 find_package(ECM 0.0.11 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${KMime_SOURCE_DIR}/cmake)
 
-include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
 include(ECMPackageConfigHelpers)
 include(ECMSetupVersion)
@@ -31,10 +30,9 @@ find_package(KF5 NO_MODULE REQUIRED COMPONENTS Codecs ItemViews KDE4Support)
 ########### Includes ###########
 include_directories(${KMime_BINARY_DIR})
 
-
-
 ########### Targets ###########
 add_subdirectory(src)
+add_subdirectory(includes)
 add_subdirectory(tests)
 
 ########### CMake Config Files ###########
