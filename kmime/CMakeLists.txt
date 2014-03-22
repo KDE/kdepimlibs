@@ -16,6 +16,7 @@ include(KDEFrameworkCompilerSettings)
 
 
 set(KF5_VERSION "4.97.0")
+set(QT_REQUIRED_VERSION "5.2.0")
 
 # FIXME: KF5KMime ? KF5Mime ?
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMIME
