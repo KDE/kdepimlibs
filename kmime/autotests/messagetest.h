@@ -20,7 +20,7 @@
 #ifndef MESSAGE_TEST_H
 #define MESSAGE_TEST_H
 
-#include <kmime/kmime_message.h>
+#include "kmime_message.h"
 #include <QtCore/QObject>
 #include <boost/shared_ptr.hpp>
 

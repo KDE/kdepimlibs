@@ -17,9 +17,9 @@
   02110-1301, USA.
 */
 
-#include "../../kmime_message.h"
-#include "../../kmime_message_p.h"
-#include "../../kmime_headers_p.h"
+#include "kmime_message.h"
+#include "kmime_message_p.h"
+#include "kmime_headers_p.h"
 
 #include <qtest_kde.h>
 #include <QObject>
