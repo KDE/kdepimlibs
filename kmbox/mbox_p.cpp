@@ -21,6 +21,7 @@
 
 #include <KDebug>
 #include <KUrl>
+#include <QLocale>
 
 using namespace KMBox;
 
@@ -102,12 +103,15 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
     separator += from->addresses().first() + ' ';
   }
 
+  // format dateTime according to the mbox "standard" RFC4155
   KMime::Headers::Date *date = mail.date( false );
+  QDateTime dateTime;
   if ( !date || date->isEmpty() ) {
-    separator += QDateTime::currentDateTime().toString( Qt::TextDate ).toUtf8() + '\n';
+    dateTime = QDateTime::currentDateTimeUtc();
   } else {
-    separator += date->as7BitString( false ) + '\n';
+    dateTime = date->dateTime().toUtc().dateTime();
   }
+  separator += QLocale::c().toString(dateTime, QLatin1String("ddd MMM dd HH:mm:ss yyyy")).toUtf8() + '\n';
 
   return separator;
 }
