@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(kmime)
+project(KMime)
 
 # ECM setup
 find_package(ECM 0.0.11 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${kmime_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${KMime_SOURCE_DIR}/cmake)
 
 include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
@@ -29,7 +29,7 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMIME
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS Codecs ItemViews KDE4Support)
 
 ########### Includes ###########
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${KMime_BINARY_DIR})
 
 
 
@@ -41,14 +41,14 @@ add_subdirectory(tests)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5KMime")
 
 ecm_configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KF5KMimeConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KMimeConfig.cmake"
+  "${KMime_SOURCE_DIR}/KF5KMimeConfig.cmake.in"
+  "${KMime_BINARY_DIR}/KF5KMimeConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KMimeConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KMimeConfigVersion.cmake"
+  "${KMime_BINARY_DIR}/KF5KMimeConfig.cmake"
+  "${KMime_BINARY_DIR}/KF5KMimeConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
@@ -56,18 +56,18 @@ install(FILES
 install(EXPORT KF5KMimeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5KMimeTargets.cmake NAMESPACE KF5::)
 
 install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/kmime_version.h
+   ${KMime_BINARY_DIR}/kmime_version.h
   DESTINATION ${INCLUDE_INSTALL_DIR}
   COMPONENT Devel
 )
 
-if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${KMime_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
 
 
 include(CheckTimezone)
-configure_file (config-kmime.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kmime.h)
+configure_file (config-kmime.h.cmake ${KMime_BINARY_DIR}/config-kmime.h)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 
@@ -107,7 +107,7 @@ install(TARGETS kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_
 
 install( FILES
          boolflags.h
-         ${CMAKE_CURRENT_BINARY_DIR}/kmime_export.h
+         ${KMime_BINARY_DIR}/kmime_export.h
          kmime_charfreq.h
          kmime_codecs.h
          kmime_content.h
