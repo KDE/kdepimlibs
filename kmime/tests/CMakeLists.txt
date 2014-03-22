@@ -1,3 +1,6 @@
+include(CheckIncludeFile)
+check_include_file(getopt.h HAVE_GETOPT_H)
+
 if(HAVE_GETOPT_H)
     set(test_kmime_header_parsing_SRCS test_kmime_header_parsing.cpp )
 
