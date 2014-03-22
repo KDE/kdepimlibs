@@ -36,9 +36,9 @@ target_link_libraries(kmime KF5::ItemViews KF5::Codecs KF5::KDE4Support)
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
-install(TARGETS kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kmime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install( FILES
+install(FILES
          boolflags.h
          ${KMime_BINARY_DIR}/kmime_export.h
          kmime_charfreq.h
@@ -52,4 +52,5 @@ install( FILES
          kmime_newsarticle.h
          kmime_dateformatter.h
          kmime_util.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel)
+         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel
+)
