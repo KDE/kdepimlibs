@@ -4,7 +4,7 @@ project(kmime)
 
 # ECM setup
 find_package(ECM 0.0.11 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${kmime_SOURCE_DIR}/cmake)
 
 include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
