@@ -1,32 +1,60 @@
-project(kxmlrpcclient)
+cmake_minimum_required(VERSION 2.8.12)
 
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS KIO KDE4Support)
+project(KXmlRpcClient)
 
-add_subdirectory(autotests)
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-########### next target ###############
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
 
-set(kxmlrpcclient_LIB_SRCS
-  client.cpp
-  query.cpp
+set(KF5_VERSION "4.97.0")
+
+# FIXME: KXmlRpcClient ? KXMLRPCClient ?
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KXMLRPCCLIENT
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kxmlrpcclient_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5XmlRpcClientConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_library(kxmlrpcclient ${LIBRARY_TYPE} ${kxmlrpcclient_LIB_SRCS})
-generate_export_header(kxmlrpcclient)
+########### Find packages ###########
+find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS KIO KDE4Support)
 
-target_link_libraries(kxmlrpcclient KF5::KIOCore KF5::KDE4Support)
+########### Targets ###########
+add_subdirectory(src)
+#add_subdirectory(autotests)
 
-set_target_properties(kxmlrpcclient PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5XmlRpcClient")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5XmlRpcClientConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5XmlRpcClientConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
-
-install(TARGETS kxmlrpcclient EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### install files ###############
 
 install(FILES
-  client.h
-  ${CMAKE_CURRENT_BINARY_DIR}/kxmlrpcclient_export.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient COMPONENT Devel
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5XmlRpcClientConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5XmlRpcClientConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
+
+install(EXPORT KF5XmlRpcClientTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5XmlRpcClientTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kxmlrpcclient_version.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}
+  COMPONENT Devel
+)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${KXmlRpcClient_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
