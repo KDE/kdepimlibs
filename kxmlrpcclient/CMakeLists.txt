@@ -2,7 +2,7 @@ project(kxmlrpcclient)
 
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS KIO KDE4Support)
 
-add_subdirectory(tests)
+add_subdirectory(autotests)
 
 ########### next target ###############
 
