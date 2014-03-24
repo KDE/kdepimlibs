@@ -27,9 +27,14 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KPIMUTILS
 ########### Find packages ###########
 find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS ItemViews Emoticons)
 
+# FIXME: remove this if/endif when KMime is split.
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+endif()
+
 ########### Targets ###########
 add_subdirectory(src)
-add_subdirectory(autests)
+#add_subdirectory(autotests)
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5PimUtils")
