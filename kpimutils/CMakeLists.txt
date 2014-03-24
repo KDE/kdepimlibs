@@ -15,7 +15,6 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
-
 set(KF5_VERSION "4.97.0")
 
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KPIMUTILS
@@ -56,7 +55,8 @@ install(EXPORT KF5PimUtilsTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE 
 
 install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/kpimutils_version.h
-  DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel
+   DESTINATION ${INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
 )
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
