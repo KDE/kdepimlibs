@@ -35,20 +35,35 @@ set_target_properties(KF5PimUtils PROPERTIES
     EXPORT_NAME PimUtils
 )
 
+ecm_generate_headers(KPimUtils_CamelCase_HEADERS
+  HEADER_NAMES
+  Email
+  KFileIO
+  LinkLocator
+  ProgressIndicatorLabel
+  ProgressIndicatorWidget
+  SpellingFilter
+  REQUIRED_HEADERS KPimUtils_HEADERS
+  PREFIX KPIMUtils
+)
+
+
 install(TARGETS KF5PimUtils EXPORT KF5PimUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
+    ${KPimUtils_CamelCase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/KPIMUtils
+    COMPONENT Devel
+)
+
+# FIXME: The other headers don't have CamelCase headers in KDE4, is that expected?
+install(FILES
   ${KPimUtils_BINARY_DIR}/src/kpimutils_export.h
-  email.h
+  ${KPimUtils_HEADERS}
   emailvalidator.h
-  linklocator.h
-  spellingfilter.h
-  kfileio.h
-  supertrait.h
-  processes.h
   networkaccesshelper.h
-  progressindicatorwidget.h
-  progressindicatorlabel.h
+  processes.h
+  supertrait.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils
   COMPONENT Devel
 )
