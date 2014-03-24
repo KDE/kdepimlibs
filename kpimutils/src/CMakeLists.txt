@@ -1,3 +1,5 @@
+# FIXME: Make it build with this flag
+remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 
 set(kpimutils_SRCS
   email.cpp
