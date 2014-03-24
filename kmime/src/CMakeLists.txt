@@ -33,7 +33,7 @@ set(kmime_LIB_SRCS
 
 add_library(KF5KMime ${kmime_LIB_SRCS})
 
-generate_export_header(KF5KMime BASE_NAME kmime)
+generate_export_header(KF5KMime BASE_NAME KMime)
 
 add_library(KF5::KMime ALIAS KF5KMime)
 
@@ -45,7 +45,11 @@ target_link_libraries(KF5KMime
     KF5::KDE4Support
 )
 
-set_target_properties(KF5KMime PROPERTIES VERSION ${KMIME_VERSION_STRING} SOVERSION ${KMIME_SOVERSION})
+set_target_properties(KF5KMime PROPERTIES
+    VERSION ${KMIME_VERSION_STRING}
+    SOVERSION ${KMIME_SOVERSION}
+    EXPORT_NAME KMime
+)
 
 install(TARGETS KF5KMime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
