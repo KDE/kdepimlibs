@@ -1,55 +1,59 @@
-project(kpimutils)
+cmake_minimum_required(VERSION 2.8.12)
 
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS ItemViews Emoticons)
+project(KPimUtils)
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5321)
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-add_subdirectory(tests)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
 
-include_directories(
-  ../kmime
-  ${CMAKE_CURRENT_BINARY_DIR}/../kmime
+
+set(KF5_VERSION "4.97.0")
+
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KPIMUTILS
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kpiutils_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5PimUtilsConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-set(kpimutils_LIB_SRCS
-  email.cpp
-  emailvalidator.cpp
-  linklocator.cpp
-  spellingfilter.cpp
-  kfileio.cpp
-  processes.cpp
-  progressindicatorwidget.cpp
-  progressindicatorlabel.cpp
-  networkaccesshelper_fake.cpp
+########### Find packages ###########
+find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS ItemViews Emoticons)
+
+########### Targets ###########
+add_subdirectory(src)
+add_subdirectory(autests)
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5PimUtils")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5PimUtilsConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimUtilsConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
-
-add_library(kpimutils ${LIBRARY_TYPE} ${kpimutils_LIB_SRCS})
-generate_export_header(kpimutils)
-
-target_link_libraries(kpimutils KF5::ItemViews KF5::Emoticons kmime)
-
-  target_link_libraries(kpimutils  KF5::Solid toolhelp)
-set_target_properties(kpimutils PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-
-install(TARGETS kpimutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### install files ###############
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/kpimutils_export.h
-  email.h
-  emailvalidator.h
-  linklocator.h
-  spellingfilter.h
-  kfileio.h
-  supertrait.h
-  processes.h
-  networkaccesshelper.h
-  progressindicatorwidget.h
-  progressindicatorlabel.h
-DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils COMPONENT Devel)
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimUtilsConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimUtilsConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5PimUtilsTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5PimUtilsTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kpimutils_version.h
+  DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel
+)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
