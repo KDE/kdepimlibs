@@ -19,7 +19,7 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "4.97.0")
 
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KPIMUTILS
-                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kpiutils_version.h"
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kpimutils_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5PimUtilsConfigVersion.cmake"
                         SOVERSION 5
 )
