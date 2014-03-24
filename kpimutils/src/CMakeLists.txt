@@ -27,16 +27,6 @@ target_link_libraries(KF5PimUtils
     KF5::KMime
 )
 
-# FIXME ?
-#
-#  target_link_libraries(kpimutils  KF5::Solid toolhelp)
-
-set_target_properties(KF5PimUtils PROPERTIES
-    VERSION ${KPIMUTILS_VERSION_STRING}
-    SOVERSION ${KPIMUTILS_SOVERSION}
-    EXPORT_NAME PimUtils
-)
-
 ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   HEADER_NAMES
   Email
