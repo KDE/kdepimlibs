@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(kdepimlibs)
 
 # Uncomment when one of these subdir is building
@@ -15,7 +17,7 @@ add_subdirectory(kimap)
 #add_subdirectory(kmbox)
 add_subdirectory(kmime)
 #add_subdirectory(kpimidentities)
-#add_subdirectory(kpimutils)
+add_subdirectory(kpimutils)
 #add_subdirectory(kpimtextedit)
 #add_subdirectory(ktnef)
 add_subdirectory(kxmlrpcclient)
