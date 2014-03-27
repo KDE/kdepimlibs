@@ -17,7 +17,7 @@ target_link_libraries(KF5XmlRpcClient KF5::KIOCore KF5::KDE4Support)
 set_target_properties(KF5XmlRpcClient PROPERTIES
     VERSION ${KXMLRPCCLIENT_VERSION_STRING}
     SOVERSION ${KXMLRPCCLIENT_SOVERSION}
-    EXPORT_NAME KXmlRpcClient
+    EXPORT_NAME XmlRpcClient
 )
 
 ecm_generate_headers(KXmlRpcClient_CamelCase_HEADERS
