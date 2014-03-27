@@ -3,28 +3,35 @@ cmake_minimum_required(VERSION 2.8.12)
 project(kdepimlibs)
 
 # Uncomment when one of these subdir is building
-#add_subdirectory(gpgme++)
-#add_subdirectory(qgpgme)
+
+# These subdirectories don't depend on anything from kdepimlibs.
+# They shall be built first
+add_subdirectory(kmime)
 add_subdirectory(kabc)
 add_subdirectory(kcalcore)
+add_subdirectory(syndication)
+add_subdirectory(kxmlrpcclient)
+add_subdirectory(kholidays)
+###############################
+
+
+#add_subdirectory(gpgme++)
+#add_subdirectory(qgpgme)
 #add_subdirectory(kblog)
 #add_subdirectory(kcalutils)
 add_subdirectory(akonadi)
 add_subdirectory(akonadi-kmime)
-add_subdirectory(kholidays)
+
 add_subdirectory(kimap)
 #add_subdirectory(kioslave)
 #add_subdirectory(kldap)
 #add_subdirectory(kmbox)
-add_subdirectory(kmime)
 #add_subdirectory(kpimidentities)
 add_subdirectory(kpimutils)
 #add_subdirectory(kpimtextedit)
 #add_subdirectory(ktnef)
-add_subdirectory(kxmlrpcclient)
 #add_subdirectory(mailtransport)
 #add_subdirectory(microblog)
-add_subdirectory(syndication)
 #add_subdirectory(kontactinterface)
 
 feature_summary(WHAT ALL
