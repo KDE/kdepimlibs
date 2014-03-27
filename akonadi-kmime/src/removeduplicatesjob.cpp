@@ -22,10 +22,11 @@
 
 #include <QAbstractItemModel>
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchscope.h>
-#include <kmime/kmime_message.h>
+#include <itemfetchjob.h>
+#include <itemdeletejob.h>
+#include <itemfetchscope.h>
+
+#include <kmime_message.h>
 
 #include <KLocalizedString>
 

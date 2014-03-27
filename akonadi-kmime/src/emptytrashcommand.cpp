@@ -20,17 +20,18 @@
 #include "emptytrashcommand_p.h"
 #include "util_p.h"
 #include "imapsettings.h"
+#include "specialmailcollections.h"
 
 #include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "akonadi/entitytreemodel.h"
-#include "akonadi/kmime/specialmailcollections.h"
-#include "akonadi/itemfetchjob.h"
-#include "akonadi/itemdeletejob.h"
-#include "akonadi/agentmanager.h"
-#include "kmime/kmime_message.h"
+
+#include <entitytreemodel.h>
+#include <itemfetchjob.h>
+#include <itemdeletejob.h>
+#include <agentmanager.h>
+#include <kmime_message.h>
 
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel *model, QObject *parent)
     : CommandBase(parent)

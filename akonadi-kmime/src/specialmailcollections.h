@@ -22,7 +22,7 @@
 
 #include "akonadi-kmime_export.h"
 
-#include "akonadi/specialcollections.h"
+#include <specialcollections.h>
 
 namespace Akonadi {
 

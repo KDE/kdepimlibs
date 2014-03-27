@@ -21,8 +21,8 @@
 #ifndef REMOVEDUPLICATESJOB_H
 #define REMOVEDUPLICATESJOB_H
 
-#include <akonadi/job.h>
-#include <akonadi/collection.h>
+#include <job.h>
+#include <collection.h>
 
 #include "akonadi-kmime_export.h"
 

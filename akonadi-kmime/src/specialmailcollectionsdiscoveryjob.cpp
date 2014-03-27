@@ -19,7 +19,9 @@
 
 #include "specialmailcollectionsdiscoveryjob.h"
 #include "specialmailcollections.h"
-#include <kmime/kmime_message.h>
+
+#include <kmime_message.h>
+
 #include <QStringList>
 
 using namespace Akonadi;

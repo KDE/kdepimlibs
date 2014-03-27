@@ -20,11 +20,12 @@
 #include "messagemodel.h"
 #include "messageparts.h"
 
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
-#include <akonadi/session.h>
+#include <itemfetchscope.h>
+#include <monitor.h>
+#include <session.h>
 
-#include <kmime/kmime_message.h>
+#include <kmime_message.h>
+
 #include <boost/shared_ptr.hpp>
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 

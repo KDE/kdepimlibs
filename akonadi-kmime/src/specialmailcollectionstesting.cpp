@@ -18,10 +18,10 @@
 */
 
 #include "specialmailcollectionstesting_p.h"
-
-#include "../specialcollections_p.h"
 #include "specialmailcollections.h"
 #include "specialmailcollectionssettings.h"
+
+#include <specialcollections.h>
 
 using namespace Akonadi;
 

@@ -28,25 +28,26 @@
 #include "movetotrashcommand_p.h"
 #include "specialmailcollections.h"
 #include "removeduplicatesjob.h"
-
-#include "akonadi/agentfilterproxymodel.h"
-#include "akonadi/agentinstance.h"
-#include "akonadi/agentinstancecreatejob.h"
-#include "akonadi/agentmanager.h"
-#include "akonadi/agenttypedialog.h"
-#include "akonadi/collectionstatistics.h"
-#include "akonadi/entitytreemodel.h"
-#include "akonadi/kmime/messagestatus.h"
 #include "util_p.h"
-#include "akonadi/mimetypechecker.h"
-#include "akonadi/subscriptiondialog_p.h"
+
+#include <agentfilterproxymodel.h>
+#include <agentinstance.h>
+#include <agentinstancecreatejob.h>
+#include <agentmanager.h>
+#include <agenttypedialog.h>
+#include <collectionstatistics.h>
+#include <entitytreemodel.h>
+#include <mimetypechecker.h>
+#include <subscriptiondialog_p.h>
+
+#include <messagestatus.h>
+#include <kmime_message.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kicon.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
-#include <kmime/kmime_message.h>
 
 #include <QtCore/QPointer>
 #include <QItemSelectionModel>

@@ -21,9 +21,9 @@
 #include "messagethreadingattribute.h"
 #include "messagemodel.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <attributefactory.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QString>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2013 David Faure <faure@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,21 +17,31 @@
     02110-1301, USA.
 */
 
-#ifndef SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
-#define SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
+#include "messagefolderattribute.h"
 
-#include "akonadi-kmime_export.h"
-#include <akonadi/specialcollectionsdiscoveryjob.h>
+#include <attributefactory.h>
 
-namespace Akonadi {
+#ifndef KDELIBS_STATIC_LIBS
+namespace {
 
-class AKONADI_KMIME_EXPORT SpecialMailCollectionsDiscoveryJob : public SpecialCollectionsDiscoveryJob
+// Anonymous namespace; function is invisible outside this file.
+bool messagefolder_dummy()
 {
-    Q_OBJECT
-public:
-    SpecialMailCollectionsDiscoveryJob(QObject *parent = 0);
-};
-
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
+    return true;
 }
 
-#endif /* SPECIALMAILCOLLECTIONSDISCOVERYJOB_H */
+// Called when this library is loaded.
+const bool registered = messagefolder_dummy();
+
+} // namespace
+
+#else
+
+extern bool ___AkonadiKMime____INIT()
+{
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
+    return true;
+}
+
+#endif

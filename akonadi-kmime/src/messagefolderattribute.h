@@ -21,7 +21,8 @@
 #define AKONADI_MESSAGEFOLDERATTRIBUTE_H
 
 #include "akonadi-kmime_export.h"
-#include <akonadi/attribute.h>
+
+#include <attribute.h>
 
 #include <QtCore/QByteArray>
 

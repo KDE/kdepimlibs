@@ -21,11 +21,11 @@
 #include "util_p.h"
 #include "movecommand_p.h"
 #include "imapsettings.h"
+#include "specialmailcollections.h"
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/entitytreemodel.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <entitytreemodel.h>
 
 MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Collection::List &folders, QObject *parent)
     : CommandBase(parent)

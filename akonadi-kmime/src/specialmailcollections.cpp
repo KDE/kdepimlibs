@@ -18,15 +18,16 @@
 */
 
 #include "specialmailcollections.h"
-#include "akonadi/specialcollectionattribute_p.h"
-#include "akonadi/entitydisplayattribute.h"
-#include "akonadi/collectionmodifyjob.h"
 #include "specialmailcollectionssettings.h"
+
+#include <specialcollectionattribute.h>
+#include <entitydisplayattribute.h>
+#include <collectionmodifyjob.h>
+#include <agentinstance.h>
+#include <servermanager.h>
 
 #include <KGlobal>
 #include <KLocalizedString>
-#include "akonadi/agentinstance.h"
-#include "akonadi/servermanager.h"
 
 using namespace Akonadi;
 

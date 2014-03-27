@@ -21,10 +21,10 @@
 #define MARKASCOMMAND_H
 
 #include "commandbase_p.h"
+#include "messagestatus.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <collection.h>
+#include <item.h>
 
 #include <QList>
 

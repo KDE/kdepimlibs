@@ -17,44 +17,43 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EMPTYTRASHCOMMAND_P_H
-#define EMPTYTRASHCOMMAND_P_H
+#ifndef MOVETOTRASHCOMMAND_H
+#define MOVETOTRASHCOMMAND_H
 
-#include <commandbase_p.h>
+#include "commandbase_p.h"
 
-#include "akonadi/agentinstance.h"
-#include "akonadi/collection.h"
+#include <collection.h>
+#include <item.h>
+
+#include <QList>
 
 class QAbstractItemModel;
 class KJob;
-
-class EmptyTrashCommand : public CommandBase
+class MoveToTrashCommand : public CommandBase
 {
     Q_OBJECT
-
 public:
-    EmptyTrashCommand(const QAbstractItemModel *model, QObject *parent);
-    EmptyTrashCommand(const Akonadi::Collection &folder, QObject *parent);
+    MoveToTrashCommand(const QAbstractItemModel *model, const QList< Akonadi::Item > &msgList, QObject *parent = 0);
+    MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Collection::List &folders, QObject *parent = 0);
+
     /*reimp*/ void execute();
 
 private Q_SLOTS:
-    void slotExpungeJob(KJob *job);
-    void slotDeleteJob(KJob *job);
-
-protected Q_SLOTS:
-    void emitResult(Result result);
+    void slotFetchDone(KJob *job);
+    void slotMoveDone(const Result &result);
 
 private:
-    void expunge(const Akonadi::Collection &col);
-    Akonadi::AgentInstance::List agentInstances();
+    void moveMessages();
+    Akonadi::Collection trashCollectionFromResource(const Akonadi::Collection &col);
     Akonadi::Collection trashCollectionFolder();
+    Akonadi::Collection findTrashFolder(const Akonadi::Collection &folder);
     Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
-    bool folderIsTrash(const Akonadi::Collection &col);
 
-    const QAbstractItemModel *mModel;
+    Akonadi::Collection::List mFolders;
+    QList<Akonadi::Item> mMessages;
     Akonadi::Collection::Id the_trashCollectionFolder;
-    Akonadi::Collection mFolder;
-    int mNumberOfTrashToEmpty;
+    const QAbstractItemModel *mModel;
+    int mFolderListJobCount;
 };
 
-#endif // EMPTYTRASHCOMMAND_P_H
+#endif // MOVETOTRASHCOMMAND_H

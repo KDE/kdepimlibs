@@ -19,9 +19,10 @@
 
 #include "markascommand_p.h"
 #include "util_p.h"
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
+
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
 
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert, QObject *parent)
     : CommandBase(parent)

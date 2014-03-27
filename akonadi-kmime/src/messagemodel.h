@@ -21,8 +21,9 @@
 #define AKONADI_MESSAGEMODEL_H
 
 #include "akonadi-kmime_export.h"
-#include <akonadi/itemmodel.h>
-#include <akonadi/job.h>
+
+#include <itemmodel.h>
+#include <job.h>
 
 #if defined(MAKE_AKONADI_KMIME_LIB)
 #  define AKONADI_IGNORE_DEPRECATED_WARNINGS

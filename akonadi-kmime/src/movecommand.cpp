@@ -20,8 +20,8 @@
 #include "movecommand_p.h"
 #include "util_p.h"
 
-#include <akonadi/itemmovejob.h>
-#include <akonadi/itemdeletejob.h>
+#include <itemmovejob.h>
+#include <itemdeletejob.h>
 
 MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
                          const QList<Akonadi::Item> &msgList,

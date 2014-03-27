@@ -23,7 +23,7 @@
 
 #include <KDebug>
 
-#include <akonadi/attributefactory.h>
+#include <attributefactory.h>
 
 using namespace Akonadi;
 

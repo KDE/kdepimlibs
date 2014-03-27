@@ -24,7 +24,7 @@
 
 #include "akonadi-kmime_export.h"
 
-#include <akonadi/standardactionmanager.h>
+#include <standardactionmanager.h>
 
 #include <QtCore/QObject>
 

@@ -17,43 +17,30 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MOVETOTRASHCOMMAND_H
-#define MOVETOTRASHCOMMAND_H
+#ifndef MOVECOMMAND_H
+#define MOVECOMMAND_H
 
 #include "commandbase_p.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <collection.h>
+#include <item.h>
 
 #include <QList>
 
-class QAbstractItemModel;
 class KJob;
-class MoveToTrashCommand : public CommandBase
+class MoveCommand : public CommandBase
 {
     Q_OBJECT
 public:
-    MoveToTrashCommand(const QAbstractItemModel *model, const QList< Akonadi::Item > &msgList, QObject *parent = 0);
-    MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Collection::List &folders, QObject *parent = 0);
-
-    /*reimp*/ void execute();
+    MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = 0);
+    void execute();
 
 private Q_SLOTS:
-    void slotFetchDone(KJob *job);
-    void slotMoveDone(const Result &result);
+    void slotMoveResult(KJob *job);
 
 private:
-    void moveMessages();
-    Akonadi::Collection trashCollectionFromResource(const Akonadi::Collection &col);
-    Akonadi::Collection trashCollectionFolder();
-    Akonadi::Collection findTrashFolder(const Akonadi::Collection &folder);
-    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
-
-    Akonadi::Collection::List mFolders;
+    Akonadi::Collection mDestFolder;
     QList<Akonadi::Item> mMessages;
-    Akonadi::Collection::Id the_trashCollectionFolder;
-    const QAbstractItemModel *mModel;
-    int mFolderListJobCount;
 };
 
-#endif // MOVETOTRASHCOMMAND_H
+#endif // MOVECOMMAND_H

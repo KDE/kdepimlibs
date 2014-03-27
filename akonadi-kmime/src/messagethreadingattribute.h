@@ -21,8 +21,9 @@
 #define AKONADI_MESSAGETHREADINGATTRIBUTE_H
 
 #include "akonadi-kmime_export.h"
-#include <akonadi/attribute.h>
-#include <akonadi/item.h>
+
+#include <attribute.h>
+#include <item.h>
 
 namespace Akonadi {
 

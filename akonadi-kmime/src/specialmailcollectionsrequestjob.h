@@ -21,9 +21,9 @@
 #define AKONADI_SPECIALMAILCOLLECTIONSREQUESTJOB_H
 
 #include "akonadi-kmime_export.h"
+#include "specialmailcollections.h"
 
-#include <akonadi/specialcollectionsrequestjob.h>
-#include <akonadi/kmime/specialmailcollections.h>
+#include <specialcollectionsrequestjob.h>
 
 namespace Akonadi {
 

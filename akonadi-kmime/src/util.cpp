@@ -18,14 +18,15 @@
 */
 
 #include "util_p.h"
-#include "../dbusconnectionpool.h"
 #include "imapsettings.h"
-#include "akonadi/servermanager.h"
+
+#include <servermanager.h>
+#include <dbusconnectionpool.h>
 
 #include <assert.h>
-#include <kio/jobclasses.h>
 #include <KDebug>
 #include <KIO/JobUiDelegate>
+#include <KIO/Job>
 
 namespace Util
 {
