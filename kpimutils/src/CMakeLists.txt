@@ -27,6 +27,15 @@ target_link_libraries(KF5PimUtils
     KF5::KMime
 )
 
+set_target_properties(KF5PimUtils PROPERTIES
+    VERSION ${KPIMUTILS_VERSION_STRING}
+    SOVERSION ${KPIMUTILS_SOVERSION}
+    EXPORT_NAME PimUtils
+)
+
+install(TARGETS KF5PimUtils EXPORT KF5PimUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+########### Generate Headers ###############
 ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   HEADER_NAMES
   Email
@@ -38,9 +47,6 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   REQUIRED_HEADERS KPimUtils_HEADERS
   PREFIX KPIMUtils
 )
-
-
-install(TARGETS KF5PimUtils EXPORT KF5PimUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     ${KPimUtils_CamelCase_HEADERS}
