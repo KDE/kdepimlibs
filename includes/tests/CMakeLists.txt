@@ -38,16 +38,13 @@ include_directories(
   ${CMAKE_BINARY_DIR}/akonadi/kmime
   ${CMAKE_BINARY_DIR}/akonadi/notes
   ${CMAKE_BINARY_DIR}/akonadi/socialutils
-  ${CMAKE_BINARY_DIR}/kabc
 
   ${CMAKE_BINARY_DIR}/kalarmcal
   ${CMAKE_BINARY_DIR}/kcalutils
   ${CMAKE_BINARY_DIR}/kholidays
-  ${CMAKE_BINARY_DIR}/kimap
   ${CMAKE_BINARY_DIR}/kldap
   ${CMAKE_BINARY_DIR}/kontactinterface
   ${CMAKE_BINARY_DIR}/kmbox
-  ${CMAKE_BINARY_DIR}/kmime
   ${CMAKE_BINARY_DIR}/kpimidentities
   ${CMAKE_BINARY_DIR}/kpimtextedit
   ${CMAKE_BINARY_DIR}/kpimutils
@@ -59,7 +56,6 @@ include_directories(
 )
 
 add_includes( Akonadi )
-add_includes( KABC )
 add_includes( KAlarmCal )
 add_includes( KCalUtils )
 if (NOT KDEPIM_NO_KCAL)

@@ -9,7 +9,6 @@ endmacro()
 
 install_headers( Akonadi )
 install_headers( KAlarmCal )
-install_headers( KABC )
 if (NOT KDEPIM_NO_KCAL)
   install_headers( KBlog )
 endif()
