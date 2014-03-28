@@ -45,7 +45,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kldap
   ${CMAKE_BINARY_DIR}/kontactinterface
   ${CMAKE_BINARY_DIR}/kmbox
-  ${CMAKE_BINARY_DIR}/kpimidentities
   ${CMAKE_BINARY_DIR}/kpimtextedit
   ${CMAKE_BINARY_DIR}/kpimutils
   ${CMAKE_BINARY_DIR}/kresources
@@ -63,7 +62,6 @@ if (NOT KDEPIM_NO_KCAL)
 endif()
 add_includes( KLDAP )
 add_includes( KontactInterface )
-add_includes( KPIMIdentities )
 add_includes( KPIMTextEdit )
 if (NOT KDEPIM_NO_KRESOURCES)
   add_includes( KResources )

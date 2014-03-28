@@ -1,7 +1,3 @@
-if (NOT KDEPIM_ONLY_KLEO)
-
-# Qt5: Port
-# add_subdirectory( tests )
 
 macro(install_headers _dir)
   install( DIRECTORY ${_dir} DESTINATION ${INCLUDE_INSTALL_DIR}/KDE )
@@ -15,10 +11,6 @@ endif()
 install_headers( KCalUtils )
 install_headers( KLDAP )
 install_headers( KontactInterface )
-install_headers( KPIMIdentities )
-if (NOT KDEPIM_NO_KRESOURCES)
-  install_headers( KResources )
-endif()
 install_headers( KTNEF )
 install_headers( Mailtransport )
 install_headers( KPIMTextEdit )
