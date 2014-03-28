@@ -1,5 +1,3 @@
-remove_definitions(-DQT_USE_QSTRINGBUILDER)
-
 include(ECMMarkAsTest)
 
 set(QT_REQUIRED_VERSION "5.2.0")
@@ -16,7 +14,6 @@ macro(ADD_KMIME_TEST)
       KF5KMime
       Qt5::Test
     )
-    target_include_directories(${_testName} PRIVATE "${KMime_SOURCE_DIR}/src")
     set_target_properties(${_testName} PROPERTIES COMPILE_FLAGS -DTEST_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
     ecm_mark_as_test(${_testName})
   endforeach()
