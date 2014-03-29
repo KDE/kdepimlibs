@@ -12,6 +12,8 @@ generate_export_header(KF5XmlRpcClient BASE_NAME kxmlrpcclient)
 
 add_library(KF5::XmlRpcClient ALIAS KF5XmlRpcClient)
 
+target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kxmlrpcclient>")
+
 target_link_libraries(KF5XmlRpcClient KF5::KIOCore KF5::KDE4Support)
 
 set_target_properties(KF5XmlRpcClient PROPERTIES
