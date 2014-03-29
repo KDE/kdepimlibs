@@ -10,6 +10,7 @@ generate_export_header(KF5Mbox BASE_NAME kmbox)
 
 add_library(KF5::Mbox ALIAS KF5Mbox)
 
+target_include_directories(KF5Mbox INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kmbox>")
 target_include_directories(KF5Mbox PUBLIC "$<BUILD_INTERFACE:${KMbox_SOURCE_DIR}/src;${KMbox_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Mbox
