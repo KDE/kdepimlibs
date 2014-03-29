@@ -24,7 +24,7 @@
 #ifndef KBLOG_BLOG_H
 #define KBLOG_BLOG_H
 
-#include <kblog/kblog_export.h>
+#include <kblog_export.h>
 
 #include <QtCore/QObject>
 

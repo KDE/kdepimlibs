@@ -23,7 +23,7 @@
 #ifndef KBLOG_BLOGMEDIA_H
 #define KBLOG_BLOGMEDIA_H
 
-#include <kblog/kblog_export.h>
+#include <kblog_export.h>
 
 #include <QtCore/QtAlgorithms>
 

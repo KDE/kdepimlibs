@@ -1,55 +1,67 @@
-project(kblog)
+cmake_minimum_required(VERSION 2.8.12)
 
-find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Test)
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons KIO)
+project(KBlog)
 
-include_directories( ${Boost_INCLUDE_DIR} "${syndication_BINARY_DIR}"
-  ${kcalcore_BINARY_DIR}
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
+include(GenerateExportHeader)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+
+set(KF5_VERSION "4.97.0")
+
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KBLOG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kblog_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5BlogConfigVersion.cmake"
+                        SOVERSION 5
 )
 
+########### Find packages ###########
+find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS CoreAddons KDE4Support KIO)
 
-#add_subdirectory( tests )
+# FIXME: remove this if/endif when KMime is split.
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  find_package(KF5CalendarCore ${KF5_VERSION} CONFIG REQUIRED)
+  find_package(KF5Syndication ${KF5_VERSION} CONFIG REQUIRED)
+  find_package(KF5XmlRpcClient ${KF5_VERSION} CONFIG REQUIRED)
+endif()
 
-########### next target ###############
+########### Targets ###########
+add_subdirectory(src)
+add_subdirectory(autotests)
 
-set(kblog_LIB_SRCS
-   blog.cpp
-   blogpost.cpp
-   blogcomment.cpp
-   blogmedia.cpp
-   blogger1.cpp
-   gdata.cpp
-   # livejournal.cpp
-   metaweblog.cpp
-   movabletype.cpp
-   wordpressbuggy.cpp
-   )
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Blog")
 
-include_directories(
-  ${CMAKE_BINARY_DIR}/kcal
-  ${CMAKE_BINARY_DIR}/kxmlrpcclient
-  ${CMAKE_BINARY_DIR}/syndication
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5BlogConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5BlogConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-add_definitions(
-  -DKCAL_DEPRECATED=
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5BlogConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5BlogConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
-# This one won't be needed when CMake 2.8.13 is depended on.
-add_definitions(
-  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+
+install(EXPORT KF5BlogTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5BlogTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kblog_version.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
 )
 
-
-add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
-generate_export_header(kblog)
-
-target_link_libraries(kblog kxmlrpcclient syndication kcalcore KF5::CoreAddons KF5::KIOCore)
-
-set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-
-install(TARGETS kblog EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-########### install files ##############
-
-install( FILES kblog_export.h blog.h blogpost.h blogcomment.h blogmedia.h blogger1.h gdata.h metaweblog.h movabletype.h wordpressbuggy.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/kblog COMPONENT Devel)
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${KBlog_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()

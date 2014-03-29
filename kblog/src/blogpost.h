@@ -23,7 +23,7 @@
 #ifndef KBLOG_BLOGPOSTING_H
 #define KBLOG_BLOGPOSTING_H
 
-#include <kblog/kblog_export.h>
+#include <kblog_export.h>
 
 #include <kurl.h>
 #include <kcalcore/journal.h>
