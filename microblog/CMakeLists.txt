@@ -1,32 +1,66 @@
-project(microblog)
+cmake_minimum_required(VERSION 2.8.12)
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5328)
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+project(MicroBlog)
 
-find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Xml)
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-include_directories (${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR} ${QT_INCLUDES})
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
 
-set(microblog_LIB_SRCS
-   statusitem.cpp
-   )
 
-include_directories(
-  ${CMAKE_BINARY_DIR}/kpimutils
+set(KF5_VERSION "4.97.0")
+
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX MICROBLOG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/microblog_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MicroBlogConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
-generate_export_header(microblog)
+########### Find packages ###########
+# FIXME: remove this if/endif when Kdepimlibs is split.
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
+endif()
 
-target_link_libraries(microblog KF5::CoreAddons Qt5::Xml kpimutils )
+########### Targets ###########
+add_subdirectory(src)
 
-set_target_properties(microblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5MicroBlog")
 
-install(TARGETS microblog EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MicroBlogConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MicroBlogConfig.cmake"
+  INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
 
-install( FILES
-         statusitem.h
-         ${CMAKE_CURRENT_BINARY_DIR}/microblog_export.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/microblog COMPONENT Devel)
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MicroBlogConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MicroBlogConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5MicroBlogTargets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    FILE KF5MicroBlogTargets.cmake
+    NAMESPACE KF5::
+)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/microblog_version.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
+)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${MicroBlog_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
