@@ -22,6 +22,7 @@ add_subdirectory(kpimidentities)
 add_subdirectory(kcalutils)
 add_subdirectory(kmbox)
 add_subdirectory(kblog)
+add_subdirectory(microblog)
 
 #add_subdirectory(gpgme++)
 #add_subdirectory(qgpgme)
@@ -29,7 +30,6 @@ add_subdirectory(kblog)
 #add_subdirectory(kldap)
 #add_subdirectory(ktnef)
 #add_subdirectory(mailtransport)
-#add_subdirectory(microblog)
 #add_subdirectory(kontactinterface)
 
 feature_summary(WHAT ALL
