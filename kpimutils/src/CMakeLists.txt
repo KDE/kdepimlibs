@@ -19,6 +19,7 @@ generate_export_header(KF5PimUtils BASE_NAME kpimutils)
 
 add_library(KF5::PimUtils ALIAS KF5PimUtils)
 
+target_include_directories(KF5PimUtils INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kpimutils>")
 target_include_directories(KF5PimUtils PUBLIC "$<BUILD_INTERFACE:${KPimUtils_SOURCE_DIR}/src;${KPimUtils_BINARY_DIR}/src>")
 
 target_link_libraries(KF5PimUtils
