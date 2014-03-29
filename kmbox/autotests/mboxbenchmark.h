@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 
-#include "../mbox.h"
+#include "mbox.h"
 
 class KTempDir;
 

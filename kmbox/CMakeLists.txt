@@ -1,39 +1,65 @@
-project(kmbox)
+cmake_minimum_required(VERSION 2.8.12)
 
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS CoreAddons)
+project(KMbox)
 
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-set(kmbox_LIB_SRCS
-    mboxentry.cpp
-    mbox_p.cpp
-    mbox.cpp
+include(GenerateExportHeader)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+
+set(KF5_VERSION "4.97.0")
+
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMBOX
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kmbox_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MboxConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_subdirectory(tests)
+########### Find packages ###########
+find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS CoreAddons)
 
-add_library(kmbox ${LIBRARY_TYPE} ${kmbox_LIB_SRCS})
-generate_export_header(kmbox)
+# FIXME: remove this if/endif when Kdepimlibs is split.
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+endif()
 
-include_directories(
-  ${CMAKE_BINARY_DIR}/kmime
+########### Targets ###########
+add_subdirectory(src)
+add_subdirectory(autotests)
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Mbox")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MboxConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MboxConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
-
-target_link_libraries(kmbox
-  KF5::CoreAddons
-  kmime
-  kpimutils # TODO KF5 remove this
-)
-
-set_target_properties(kmbox PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-install(TARGETS kmbox EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/kmbox_export.h
-  mbox.h
-  mboxentry.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kmbox
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MboxConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MboxConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
+
+install(EXPORT KF5MboxTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MboxTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kmbox_version.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
+)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${KMbox_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
