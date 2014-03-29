@@ -56,7 +56,6 @@ include_directories(
 
 add_includes( Akonadi )
 add_includes( KAlarmCal )
-add_includes( KCalUtils )
 if (NOT KDEPIM_NO_KCAL)
   add_includes( KBlog )
 endif()
