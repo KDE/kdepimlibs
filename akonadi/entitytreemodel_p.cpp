@@ -1117,7 +1117,10 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
     return;
   }
 
-  m_items[ item.id() ].apply( item );
+  //otherwise this overwrites the copy of the real collection with one of the virtual collectoin
+  if (!item.parentCollection().isVirtual()) {
+    m_items[ item.id() ].apply( item );
+  }
 
   const QModelIndexList indexes = indexesForItem( item );
   foreach ( const QModelIndex &index, indexes ) {
