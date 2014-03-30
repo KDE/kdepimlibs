@@ -84,6 +84,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Entity
     EntityAnnotationsAttribute
     EntityDeletedAttribute
+    EntityDisplayAttribute
     EntityHiddenAttribute
     Exception
     IndexPolicyAttribute
@@ -214,6 +215,7 @@ ecm_generate_headers(AkonadiCore_jobs_HEADERS
     ItemDeleteJob
     ItemFetchJob
     ItemModifyJob
+    ItemMoveJob
     ItemSearchJob
     Job
     LinkJob
@@ -268,6 +270,7 @@ target_link_libraries(KF5AkonadiCore
     KF5::ItemModels
     KF5::KIOCore
     KF5::KDE4Support
+    KF5::PimUtils
     ${AKONADI_COMMON_LIBRARIES}
 )
 

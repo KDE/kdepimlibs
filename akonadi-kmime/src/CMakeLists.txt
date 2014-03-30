@@ -1,13 +1,19 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
+# FIXME Delete this block when akonadi-kmime is split
+# If building the monolithic kdepimlibs, kcfg2dbus.xsl is in akonadi/
+if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-KMime_SOURCE_DIR}")
+  set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
+endif()
+
+
 # generates a D-Bus interface description from a KConfigXT file
 macro(kcfg_generate_dbus_interface _kcfg _name)
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
     COMMAND ${LIBXSLT_XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
-    ## TODO KF5: ${AKONADI_DATA_INSTALL_DIR}
-    ${CMAKE_INSTALL_PREFIX}/${DATA_INSTALL_DIR}/akonadi/kcfg2dbus.xsl
+    ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl
     ${_kcfg}
     > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
     ${_kcfg}
