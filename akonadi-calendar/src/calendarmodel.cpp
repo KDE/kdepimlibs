@@ -20,8 +20,8 @@
 
 #include "calendarmodel_p.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
 #include <kcalcore/journal.h>

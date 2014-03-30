@@ -26,9 +26,9 @@
 #include "calendarsettings.h"
 #include "utils_p.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/contact/contactsearchjob.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/contact/contactsearchjob.h>
 
 #include <kcalcore/event.h>
 #include <kcalcore/freebusy.h>

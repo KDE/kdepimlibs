@@ -1,5 +1,4 @@
 kde_enable_exceptions()
-set(AKONADI_DBUS_INTERFACES_DIR "/usr/share/dbus-1/interfaces") # TODO
 
 # TODO: Add a cmake option for this and enable it on jenkins
 set( PLEASE_TEST_INVITATIONS FALSE)
@@ -41,18 +40,6 @@ set(akonadicalendar_LIB_SRC
   standardcalendaractionmanager.cpp
   todopurger.cpp
   utils_p.cpp
-)
-
-include_directories(
-  ${CMAKE_BINARY_DIR}/kpimutils
-  ${CMAKE_BINARY_DIR}/kmime
-  ${CMAKE_BINARY_DIR}/kcalcore
-  ${CMAKE_BINARY_DIR}/kcalutils
-  ${CMAKE_BINARY_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/mailtransport
-  ${CMAKE_BINARY_DIR}/kpimidentities
-  ${CMAKE_BINARY_DIR}/akonadi/contact
-  ${CMAKE_BINARY_DIR}/kabc
 )
 
 kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)

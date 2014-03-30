@@ -25,11 +25,11 @@
 
 #include <kcalcore/icalformat.h>
 #include <kcalcore/attendee.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/itemdeletejob.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/qtest_akonadi.h>
 
 #include <kcalcore/event.h>
 

@@ -21,7 +21,7 @@
 
 #include "mailclient_p.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <kcalcore/attendee.h>
 #include <kcalcore/incidence.h>
