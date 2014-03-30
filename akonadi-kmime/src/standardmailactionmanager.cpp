@@ -38,7 +38,7 @@
 #include <collectionstatistics.h>
 #include <entitytreemodel.h>
 #include <mimetypechecker.h>
-#include <subscriptiondialog_p.h>
+#include <subscriptiondialog.h>
 
 #include <messagestatus.h>
 #include <kmime_message.h>
