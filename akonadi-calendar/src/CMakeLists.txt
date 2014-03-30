@@ -30,7 +30,7 @@ set(akonadicalendar_LIB_SRC
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusydownloadjob_p.cpp
-  freebusymanager.cpp
+  # freebusymanager.cpp TODO
   freebusyproviderbase.cpp
   mailclient_p.cpp
   mailscheduler_p.cpp
@@ -90,7 +90,6 @@ install( FILES
   incidencechanger.h
   itiphandler.h
   fetchjobcalendar.h
-  freebusymanager.h
   freebusyproviderbase.h
   publishdialog.h
   standardcalendaractionmanager.h
