@@ -18,7 +18,6 @@ include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "4.97.0")
 
-# FIXME ? KF5AbcConfig ? KF5AddressBookConfig ? anything else ?
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADIKMIME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiKMimeConfigVersion.cmake"
@@ -27,8 +26,11 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADIKMIME
 
 ########### Find packages ###########
 find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS KIO KDE4Support)
-find_package(KF5Akonadi REQUIRED)
-find_package(KF5KMime REQUIRED)
+if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-KMime_SOURCE_DIR})
+  find_package(KF5Akonadi CONFIG REQUIRED)
+  find_package(KF5KMime CONFIG REQUIRED)
+  find_package(KF5PimUtils CONFIG REQUIRED)
+endif()
 
 find_package(LibXslt)
 set_package_properties(LibXslt PROPERTIES
