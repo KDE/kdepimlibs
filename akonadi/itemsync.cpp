@@ -20,6 +20,7 @@
 
 #include "itemsync.h"
 
+#include "job_p.h"
 #include "collection.h"
 #include "item.h"
 #include "item_p.h"
@@ -39,12 +40,12 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class ItemSync::Private
+class Akonadi::ItemSyncPrivate : public JobPrivate
 {
 public:
-    Private(ItemSync *parent)
-        : q(parent)
-        , mTransactionMode(SingleTransaction)
+    ItemSyncPrivate(ItemSync *parent)
+        : JobPrivate(parent)
+        , mTransactionMode(ItemSync::SingleTransaction)
         , mCurrentTransaction(0)
         , mTransactionJobs(0)
         , mPendingJobs(0)
@@ -56,6 +57,7 @@ public:
         , mLocalListDone(false)
         , mDeliveryDone(false)
         , mFinished(false)
+        , mLocalListStarted( false )
     {
         // we want to fetch all data by default
         mFetchScope.fetchFullPayload();
@@ -72,8 +74,10 @@ public:
     void deleteItems(const Item::List &items);
     void slotTransactionResult(KJob *job);
     Job *subjobParent() const;
+    void fetchLocalItems();
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
 
-    ItemSync *q;
+    Q_DECLARE_PUBLIC(ItemSync)
     Collection mSyncCollection;
     QHash<Item::Id, Akonadi::Item> mLocalItemsById;
     QHash<QString, Akonadi::Item> mLocalItemsByRemoteId;
@@ -103,10 +107,12 @@ public:
     bool mLocalListDone;
     bool mDeliveryDone;
     bool mFinished;
+    bool mLocalListStarted;
 };
 
-void ItemSync::Private::createLocalItem(const Item &item)
+void ItemSyncPrivate::createLocalItem(const Item &item)
 {
+    Q_Q(ItemSync);
     // don't try to do anything in error state
     if (q->error()) {
         return;
@@ -116,8 +122,9 @@ void ItemSync::Private::createLocalItem(const Item &item)
     q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
 }
 
-void ItemSync::Private::checkDone()
+void ItemSyncPrivate::checkDone()
 {
+    Q_Q(ItemSync);
     q->setProcessedAmount(KJob::Bytes, mProgress);
     if (mPendingJobs > 0 || !mDeliveryDone || mTransactionJobs > 0) {
         return;
@@ -131,19 +138,19 @@ void ItemSync::Private::checkDone()
 }
 
 ItemSync::ItemSync(const Collection &collection, QObject *parent)
-    : Job(parent)
-    , d(new Private(this))
+    : Job(new ItemSyncPrivate(this), parent)
 {
+    Q_D(ItemSync);
     d->mSyncCollection = collection;
 }
 
 ItemSync::~ItemSync()
 {
-    delete d;
 }
 
 void ItemSync::setFullSyncItems(const Item::List &items)
 {
+    Q_D(ItemSync);
     Q_ASSERT(!d->mIncremental);
     if (!d->mStreaming) {
         d->mDeliveryDone = true;
@@ -160,6 +167,7 @@ void ItemSync::setFullSyncItems(const Item::List &items)
 
 void ItemSync::setTotalItems(int amount)
 {
+    Q_D(ItemSync);
     Q_ASSERT(!d->mIncremental);
     Q_ASSERT(amount >= 0);
     setStreamingEnabled(true);
@@ -174,6 +182,7 @@ void ItemSync::setTotalItems(int amount)
 
 void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Item::List &removedItems)
 {
+    Q_D(ItemSync);
     d->mIncremental = true;
     if (!d->mStreaming) {
         d->mDeliveryDone = true;
@@ -190,27 +199,23 @@ void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Ite
 
 void ItemSync::setFetchScope(ItemFetchScope &fetchScope)
 {
+    Q_D(ItemSync);
     d->mFetchScope = fetchScope;
 }
 
 ItemFetchScope &ItemSync::fetchScope()
 {
+    Q_D(ItemSync);
     return d->mFetchScope;
 }
 
 void ItemSync::doStart()
 {
-    ItemFetchJob *job = new ItemFetchJob(d->mSyncCollection, this);
-    job->setFetchScope(d->mFetchScope);
-
-    // we only can fetch parts already in the cache, otherwise this will deadlock
-    job->fetchScope().setCacheOnly(true);
-
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)));
 }
 
 bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
 {
+    Q_D(ItemSync);
     // we are in error state, better not change anything at all anymore
     if (error()) {
         return false;
@@ -269,7 +274,38 @@ bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
     return false;
 }
 
-void ItemSync::Private::slotLocalListDone(KJob *job)
+void ItemSyncPrivate::fetchLocalItems()
+{
+    Q_Q( ItemSync );
+    if ( mLocalListStarted ) {
+        return;
+    }
+    mLocalListStarted = true;
+    ItemFetchJob* job;
+    if ( mIncremental ) {
+        if ( mRemoteItems.isEmpty() ) {
+            // The fetch job produces an error with an empty set
+            mLocalListDone = true;
+            execute();
+            return;
+        }
+        // We need to fetch the items only to detect if they are new or modified
+        job = new ItemFetchJob( mRemoteItems, q );
+        job->setFetchScope( mFetchScope );
+        // We use this to check if items are available locally, so errors are inevitable
+        job->fetchScope().setIgnoreRetrievalErrors( true );
+    } else {
+        job = new ItemFetchJob( mSyncCollection, q );
+        job->setFetchScope( mFetchScope );
+    }
+
+    // we only can fetch parts already in the cache, otherwise this will deadlock
+    job->fetchScope().setCacheOnly( true );
+
+    QObject::connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
+}
+
+void ItemSyncPrivate::slotLocalListDone(KJob *job)
 {
     if (!job->error()) {
         const Item::List list = static_cast<ItemFetchJob *>(job)->items();
@@ -287,9 +323,22 @@ void ItemSync::Private::slotLocalListDone(KJob *job)
     execute();
 }
 
-void ItemSync::Private::execute()
+QString ItemSyncPrivate::jobDebuggingString() const /*Q_DECL_OVERRIDE*/
 {
+  // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
+  // started, so this requires passing jobDebuggingString to jobEnded().
+  return QString::fromLatin1("Collection %1 (%2)").arg(mSyncCollection.id()).arg(mSyncCollection.name());
+}
+
+void ItemSyncPrivate::execute()
+{
+    Q_Q(ItemSync);
     if (!mLocalListDone) {
+        // Start fetching local items only once the delivery is done for incremental fetch,
+        // so we can fetch only the required items
+        if (mDeliveryDone || !mIncremental) {
+            fetchLocalItems();
+        }
         return;
     }
 
@@ -299,16 +348,16 @@ void ItemSync::Private::execute()
         return;
     }
 
-    if ((mTransactionMode == SingleTransaction && !mCurrentTransaction) || mTransactionMode == MultipleTransactions) {
+    if ((mTransactionMode == ItemSync::SingleTransaction && !mCurrentTransaction) || mTransactionMode == ItemSync::MultipleTransactions) {
         ++mTransactionJobs;
         mCurrentTransaction = new TransactionSequence(q);
         mCurrentTransaction->setAutomaticCommittingEnabled(false);
-        connect(mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)));
+        QObject::connect(mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)));
     }
 
     processItems();
     if (!mDeliveryDone) {
-        if (mTransactionMode == MultipleTransactions && mCurrentTransaction) {
+        if (mTransactionMode == ItemSync::MultipleTransactions && mCurrentTransaction) {
             mCurrentTransaction->commit();
             mCurrentTransaction = 0;
         }
@@ -334,8 +383,9 @@ void ItemSync::Private::execute()
     checkDone();
 }
 
-void ItemSync::Private::processItems()
+void ItemSyncPrivate::processItems()
 {
+    Q_Q(ItemSync);
     // added / updated
     foreach (Item remoteItem, mRemoteItems) {    //krazy:exclude=foreach non-const is needed here
 #ifndef NDEBUG
@@ -372,8 +422,9 @@ void ItemSync::Private::processItems()
     mRemoteItems.clear();
 }
 
-void ItemSync::Private::deleteItems(const Item::List &items)
+void ItemSyncPrivate::deleteItems(const Item::List &items)
 {
+    Q_Q(ItemSync);
     // if in error state, better not change anything anymore
     if (q->error()) {
         return;
@@ -419,7 +470,7 @@ void ItemSync::Private::deleteItems(const Item::List &items)
     }
 }
 
-void ItemSync::Private::slotLocalDeleteDone(KJob *)
+void ItemSyncPrivate::slotLocalDeleteDone(KJob *)
 {
     mPendingJobs--;
     mProgress++;
@@ -427,7 +478,7 @@ void ItemSync::Private::slotLocalDeleteDone(KJob *)
     checkDone();
 }
 
-void ItemSync::Private::slotLocalChangeDone(KJob *job)
+void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
     Q_UNUSED(job);
     mPendingJobs--;
@@ -436,7 +487,7 @@ void ItemSync::Private::slotLocalChangeDone(KJob *job)
     checkDone();
 }
 
-void ItemSync::Private::slotTransactionResult(KJob *job)
+void ItemSyncPrivate::slotTransactionResult(KJob *job)
 {
     --mTransactionJobs;
     if (mCurrentTransaction == job) {
@@ -446,21 +497,24 @@ void ItemSync::Private::slotTransactionResult(KJob *job)
     checkDone();
 }
 
-Job *ItemSync::Private::subjobParent() const
+Job *ItemSyncPrivate::subjobParent() const
 {
-    if (mCurrentTransaction && mTransactionMode != NoTransaction) {
+    Q_Q(const ItemSync);
+    if (mCurrentTransaction && mTransactionMode != ItemSync::NoTransaction) {
         return mCurrentTransaction;
     }
-    return q;
+    return const_cast<ItemSync *>(q);
 }
 
 void ItemSync::setStreamingEnabled(bool enable)
 {
+    Q_D(ItemSync);
     d->mStreaming = enable;
 }
 
 void ItemSync::deliveryDone()
 {
+    Q_D(ItemSync);
     Q_ASSERT(d->mStreaming);
     d->mDeliveryDone = true;
     d->execute();
@@ -483,6 +537,7 @@ void ItemSync::slotResult(KJob *job)
 
 void ItemSync::rollback()
 {
+    Q_D(ItemSync);
     setError(UserCanceled);
     if (d->mCurrentTransaction) {
         d->mCurrentTransaction->rollback();
@@ -493,6 +548,7 @@ void ItemSync::rollback()
 
 void ItemSync::setTransactionMode(ItemSync::TransactionMode mode)
 {
+    Q_D(ItemSync);
     d->mTransactionMode = mode;
 }
 
