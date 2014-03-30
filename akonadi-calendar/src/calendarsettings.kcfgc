@@ -1,0 +1,9 @@
+File=calendarsettings.kcfg
+ClassName=CalendarSettings
+NameSpace=Akonadi
+Singleton=true
+ItemAccessors=true
+Mutators=true
+Visibility=AKONADI_CALENDAR_EXPORT
+SetUserTexts=true
+IncludeFiles=akonadi/calendar/akonadi-calendar_export.h
