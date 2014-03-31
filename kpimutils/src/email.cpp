@@ -120,7 +120,7 @@ KPIMUtils::EmailParseResult splitAddressInternal( const QByteArray  address,
                                                   QByteArray &comment,
                                                   bool allowMultipleAddresses )
 {
-  //  kDebug() << "address";
+  //  qDebug() << "address";
   displayName = "";
   addrSpec = "";
   comment = "";
@@ -275,9 +275,9 @@ KPIMUtils::EmailParseResult splitAddressInternal( const QByteArray  address,
     }
   }
   /*
-    kDebug() << "display-name : \"" << displayName << "\"";
-    kDebug() << "comment      : \"" << comment << "\"";
-    kDebug() << "addr-spec    : \"" << addrSpec << "\"";
+    qDebug() << "display-name : \"" << displayName << "\"";
+    qDebug() << "comment      : \"" << comment << "\"";
+    qDebug() << "addr-spec    : \"" << addrSpec << "\"";
   */
   return AddressOk;
 }
@@ -680,7 +680,7 @@ QByteArray KPIMUtils::extractEmailAddress( const QByteArray &address )
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
     if ( result != AddressEmpty ) {
-      kDebug()
+      qDebug()
         << "Input:" << address << "\nError:"
         << emailParseResultToString( result );
     }
@@ -705,7 +705,7 @@ QByteArray KPIMUtils::firstEmailAddress( const QByteArray &addresses )
   if ( result != AddressOk ) {
     addrSpec = QByteArray();
     if ( result != AddressEmpty ) {
-      kDebug()
+      qDebug()
         << "Input: aStr\nError:"
         << emailParseResultToString( result );
     }
@@ -984,7 +984,7 @@ QString KPIMUtils::toIdn( const QString &addrSpec )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
 {
-  //  kDebug() << str;
+  //  qDebug() << str;
   if ( str.isEmpty() ) {
     return str;
   }
@@ -1012,7 +1012,7 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
     }
   }
   /*
-    kDebug() << "normalizedAddressList: \""
+    qDebug() << "normalizedAddressList: \""
              << normalizedAddressList.join( ", " )
              << "\"";
   */
@@ -1022,7 +1022,7 @@ QString KPIMUtils::normalizeAddressesAndDecodeIdn( const QString &str )
 //-----------------------------------------------------------------------------
 QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
 {
-  //kDebug() << str;
+  //qDebug() << str;
   if ( str.isEmpty() ) {
     return str;
   }
@@ -1047,7 +1047,7 @@ QString KPIMUtils::normalizeAddressesAndEncodeIdn( const QString &str )
   }
 
   /*
-    kDebug() << "normalizedAddressList: \""
+    qDebug() << "normalizedAddressList: \""
              << normalizedAddressList.join( ", " )
              << "\"";
   */

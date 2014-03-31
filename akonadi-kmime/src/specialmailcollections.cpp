@@ -175,7 +175,7 @@ void SpecialMailCollections::verifyI18nDefaultCollection(Type type)
 void SpecialMailCollections::slotCollectionModified(KJob *job)
 {
     if (job->error()) {
-        kDebug() << " Error when we modified collection";
+        qDebug() << " Error when we modified collection";
         return;
     }
 }

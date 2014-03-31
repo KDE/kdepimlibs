@@ -80,7 +80,7 @@ void RaceTest::testMultipleProcesses()
     AgentInstance::List instances = AgentManager::self()->instances();
     foreach (const AgentInstance &instance, instances) {
         if (types.contains(instance.type())) {
-            kDebug() << "Removing instance of type" << instance.type().identifier();
+            qDebug() << "Removing instance of type" << instance.type().identifier();
             AgentManager::self()->removeInstance(instance);
             QTest::kWaitForSignal(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)));
         }
@@ -93,7 +93,7 @@ void RaceTest::testMultipleProcesses()
     QSignalSpy *errorSpy[MAXCOUNT];
     QSignalSpy *finishedSpy[MAXCOUNT];
     for (int i = 0; i < count; i++) {
-        kDebug() << "Starting process" << i + 1 << "of" << count;
+        qDebug() << "Starting process" << i + 1 << "of" << count;
         KProcess *proc = new KProcess;
         procs.append(proc);
         proc->setProgram(REQUESTER_EXE);
@@ -102,7 +102,7 @@ void RaceTest::testMultipleProcesses()
         proc->start();
         QTest::qWait(delay);
     }
-    kDebug() << "Launched" << count << "processes.";
+    qDebug() << "Launched" << count << "processes.";
 
     int seconds = 0;
     int error, finished;
@@ -120,7 +120,7 @@ void RaceTest::testMultipleProcesses()
                 finished++;
             }
         }
-        kDebug() << seconds << "seconds elapsed." << error << "processes error'd,"
+        qDebug() << seconds << "seconds elapsed." << error << "processes error'd,"
                  << finished << "processes finished.";
 
         if (error + finished >= count) {
@@ -129,7 +129,7 @@ void RaceTest::testMultipleProcesses()
 
 #if 0
         if (seconds >= TIMEOUT_SECONDS) {
-            kDebug() << "Timeout, gdb master!";
+            qDebug() << "Timeout, gdb master!";
             QTest::qWait(1000 * 1000);
         }
 #endif
@@ -139,11 +139,11 @@ void RaceTest::testMultipleProcesses()
     QCOMPARE(error, 0);
     QCOMPARE(finished, count);
     for (int i = 0; i < count; i++) {
-        kDebug() << "Checking exit status of process" << i + 1 << "of" << count;
+        qDebug() << "Checking exit status of process" << i + 1 << "of" << count;
         QCOMPARE(finishedSpy[i]->count(), 1);
         QList<QVariant> args = finishedSpy[i]->takeFirst();
         if (args[0].toInt() != 2) {
-            kDebug() << "Exit status" << args[0].toInt() << ", expected 2. Timeout, gdb master!";
+            qDebug() << "Exit status" << args[0].toInt() << ", expected 2. Timeout, gdb master!";
             QTest::qWait(1000 * 1000);
         }
         QCOMPARE(args[0].toInt(), 2);
@@ -163,7 +163,7 @@ void RaceTest::killZombies()
     while (!procs.isEmpty()) {
         // These processes probably hung, and will never recover, so we need to kill them.
         // (This happens if the last test failed.)
-        kDebug() << "Killing zombies from the past.";
+        qDebug() << "Killing zombies from the past.";
         KProcess *proc = procs.takeFirst();
         proc->kill();
         proc->deleteLater();

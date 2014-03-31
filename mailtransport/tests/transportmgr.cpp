@@ -70,7 +70,7 @@ void TransportMgr::removeAllBtnClicked()
     QList<Transport *> transports = manager->transports();
     for ( int i=0; i < transports.count(); i++ ) {
         MailTransport::Transport *transport = transports.at( i );
-        kDebug() << transport->host();
+        qDebug() << transport->host();
         manager->removeTransport( transport->id() );
     }
 }
@@ -91,7 +91,7 @@ void TransportMgr::sendBtnClicked()
   TransportJob *job;
   job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
   if ( !job ) {
-    kDebug() << "Invalid transport!";
+    qDebug() << "Invalid transport!";
     return;
   }
   job->setSender( mSenderEdit->text() );
@@ -112,7 +112,7 @@ void TransportMgr::sendBtnClicked()
 void TransportMgr::cancelBtnClicked()
 {
   if ( mCurrentJob ) {
-    kDebug() << "kill success:" << mCurrentJob->kill();
+    qDebug() << "kill success:" << mCurrentJob->kill();
   }
   mCurrentJob = 0;
 }
@@ -131,20 +131,20 @@ int main( int argc, char **argv )
 
 void TransportMgr::jobResult( KJob *job )
 {
-  kDebug() << job->error() << job->errorText();
+  qDebug() << job->error() << job->errorText();
   mCurrentJob = 0;
 }
 
 void TransportMgr::jobPercent( KJob *job, unsigned long percent )
 {
   Q_UNUSED( job );
-  kDebug() << percent << "%";
+  qDebug() << percent << "%";
 }
 
 void TransportMgr::jobInfoMessage( KJob *job, const QString &info, const QString &info2 )
 {
   Q_UNUSED( job );
-  kDebug() << info;
-  kDebug() << info2;
+  qDebug() << info;
+  qDebug() << info2;
 }
 

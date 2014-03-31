@@ -96,7 +96,7 @@ void AttributeTest::testSerialization()
     DispatchModeAttribute::DispatchMode mode = DispatchModeAttribute::Automatic;
     QDateTime date = QDateTime::currentDateTime();
     // The serializer does not keep track of milliseconds, so forget them.
-    kDebug() << "ms" << date.toString( "z" );
+    qDebug() << "ms" << date.toString( "z" );
     int ms = date.toString( "z" ).toInt();
     date = date.addMSecs( -ms );
     DispatchModeAttribute *a = new DispatchModeAttribute( mode );

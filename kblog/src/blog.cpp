@@ -51,7 +51,7 @@ Blog::Blog( const KUrl &server, BlogPrivate &dd, QObject *parent,
 
 Blog::~Blog()
 {
-  kDebug() << "~Blog()";
+  qDebug() << "~Blog()";
   delete d_ptr;
 }
 
@@ -142,5 +142,5 @@ BlogPrivate::BlogPrivate() : q_ptr(0)
 
 BlogPrivate::~BlogPrivate()
 {
-  kDebug() << "~BlogPrivate()";
+  qDebug() << "~BlogPrivate()";
 }

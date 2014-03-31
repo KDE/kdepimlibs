@@ -108,7 +108,7 @@ void EmptyTrashCommand::expunge(const Akonadi::Collection &col)
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(col, this);
         connect(job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)));
     } else {
-        kDebug() << " Try to expunge an invalid collection :" << col;
+        qDebug() << " Try to expunge an invalid collection :" << col;
         emitResult(Failed);
     }
 }

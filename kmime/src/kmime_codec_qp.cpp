@@ -292,7 +292,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
                                      char* &dcursor, const char * const dend )
 {
   if ( mWithCRLF ) {
-    kWarning() << "CRLF output for decoders isn't yet supported!";
+    qWarning() << "CRLF output for decoders isn't yet supported!";
   }
 
   while ( scursor != send && dcursor != dend ) {
@@ -336,7 +336,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
     uchar value = 255;
 
     if ( mExpectLF && ch != '\n' ) {
-      kWarning() << "QuotedPrintableDecoder:"
+      qWarning() << "QuotedPrintableDecoder:"
         "illegally formed soft linebreak or lonely CR!";
       mInsideHexChar = false;
       mExpectLF = false;
@@ -362,7 +362,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
             }
             // else fall through
           default:
-            kWarning() << "QuotedPrintableDecoder:"
+            qWarning() << "QuotedPrintableDecoder:"
               "illegally formed hex char! Outputting verbatim.";
             mBadChar = ch;
             mFlushing = true;
@@ -418,7 +418,7 @@ bool QuotedPrintableDecoder::decode( const char* &scursor,
       } else if ( ch == '\r' ) {
         mExpectLF = true;
       } else {
-        //kWarning() << "QuotedPrintableDecoder:" << ch <<
+        //qWarning() << "QuotedPrintableDecoder:" << ch <<
         //  "illegal character in input stream!";
         *dcursor++ = char( ch );
       }

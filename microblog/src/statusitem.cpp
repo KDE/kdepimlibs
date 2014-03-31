@@ -68,7 +68,7 @@ void StatusItem::Private::init()
         }
         node = node.nextSibling();
     }
-    //kDebug() << status;
+    //qDebug() << status;
 
     dateTime = QDateTime::fromString( status.value( QLatin1String("created_at") ).toLower().mid( 4 ),
                                       QLatin1String("MMM dd H:mm:ss +0000 yyyy") );
@@ -76,9 +76,9 @@ void StatusItem::Private::init()
     dateTime = dateTime.toLocalTime();
 
     if ( !dateTime.isValid() ) {
-        kDebug() << "Unable to parse" << status.value( QLatin1String("created_at") ).toLower().mid( 4 );
+        qDebug() << "Unable to parse" << status.value( QLatin1String("created_at") ).toLower().mid( 4 );
     }
-    //kDebug() << dateTime;
+    //qDebug() << dateTime;
 }
 
 StatusItem::StatusItem()  :  d( new Private )

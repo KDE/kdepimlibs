@@ -343,7 +343,7 @@ void SMTPConfigWidget::ensureValidAuthSelection()
 void SMTPConfigWidget::encryptionChanged( int enc )
 {
   Q_D( SMTPConfigWidget );
-  kDebug() << enc;
+  qDebug() << enc;
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {

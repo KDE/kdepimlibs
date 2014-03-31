@@ -46,7 +46,7 @@ bool MBoxPrivate::open()
   }
 
   if ( !mMboxFile.open( QIODevice::ReadWrite ) ) { // messages file
-    kDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
+    qDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
              << mMboxFile.errorString();
     return false;
   }

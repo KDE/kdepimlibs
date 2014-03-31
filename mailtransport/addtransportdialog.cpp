@@ -161,7 +161,7 @@ void AddTransportDialog::accept()
     using namespace Akonadi;
     AgentInstanceCreateJob *cjob = new AgentInstanceCreateJob( d->selectedType().agentType() );
     if ( !cjob->exec() ) {
-      kWarning() << "Failed to create agent instance of type"
+      qWarning() << "Failed to create agent instance of type"
         << d->selectedType().agentType().identifier();
       return;
     }

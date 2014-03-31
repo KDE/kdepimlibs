@@ -274,7 +274,7 @@ QString descriptionFor( DispositionType d,
       return i18n( dispositionTypes[i].description );
     }
   }
-  kWarning() << "KMime::MDN::descriptionFor(): No such disposition type:"
+  qWarning() << "KMime::MDN::descriptionFor(): No such disposition type:"
              << ( int )d;
   return QString();
 }

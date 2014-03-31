@@ -29,7 +29,7 @@ QTEST_KDEMAIN( RFC2231Test, NoGUI )
 void RFC2231Test::testRFC2231decode()
 {
   QByteArray encCharset;
-  kDebug() << KMime::decodeRFC2231String( QByteArray(), encCharset, "utf-8", false );
+  qDebug() << KMime::decodeRFC2231String( QByteArray(), encCharset, "utf-8", false );
 
  /// empty
   QCOMPARE( KMime::decodeRFC2231String( QByteArray(), encCharset, "utf-8", false ), QString() );
@@ -38,7 +38,7 @@ void RFC2231Test::testRFC2231decode()
   // utf-8
   QCOMPARE( KMime::decodeRFC2231String( "utf-8''Ingo%20Kl%C3%B6cker <kloecker@kde.org>", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
-  kDebug() << "Charset:" << encCharset;
+  qDebug() << "Charset:" << encCharset;
   QCOMPARE( KMime::decodeRFC2231String( "iso8859-1''Ingo%20Kl%C3%B6cker <kloecker@kde.org>", encCharset, "iso8859-1", false ),
             QString::fromUtf8( "Ingo KlÃ¶cker <kloecker@kde.org>" ) );
   QCOMPARE( KMime::decodeRFC2231String( "utf-8''Ingo%20Kl%C3%B6cker", encCharset, "utf-8", false ),

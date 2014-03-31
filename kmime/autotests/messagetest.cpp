@@ -580,7 +580,7 @@ void MessageTest::testOutlookAttachmentNaming()
   attachment->contentDisposition()->setDisposition( Headers::CDattachment );
   attachment->contentDisposition()->setFilename( QString::fromUtf8( "å.diff" ) );
   attachment->assemble();
-  kDebug() << "got:" << attachment->contentDisposition()->as7BitString( false );
+  qDebug() << "got:" << attachment->contentDisposition()->as7BitString( false );
   QCOMPARE( attachment->contentDisposition()->as7BitString( false ), QByteArray( "attachment; filename=\"=?ISO-8859-1?Q?=E5=2Ediff?=\"" ) );
   KMime::setUseOutlookAttachmentEncoding( false );
 }

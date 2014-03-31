@@ -371,7 +371,7 @@ static bool stringToMailbox( const QByteArray &address,
   const char *cursor = address.constData();
   if ( !parseAngleAddr( cursor, cursor + address.length(), addrSpec ) ) {
     if ( !parseAddrSpec( cursor, cursor + address.length(), addrSpec ) ) {
-      kWarning() << "Invalid address";
+      qWarning() << "Invalid address";
       return false;
     }
   }
@@ -908,7 +908,7 @@ QByteArray Parametrized::as7BitString( bool withHeaderType ) const
     } else {
       if ( useOutlookAttachmentEncoding() ) {
         rv += it.key().toLatin1() + '=';
-        kDebug() << "doing:" << it.value() << QLatin1String( d->encCS );
+        qDebug() << "doing:" << it.value() << QLatin1String( d->encCS );
         rv += "\"" + encodeRFC2047String( it.value(), d->encCS ) + "\"";
       } else {
         rv += it.key().toLatin1() + "*=";
@@ -1081,7 +1081,7 @@ void Ident::appendIdentifier( const QByteArray &id )
   if ( parseAngleAddr( cursor, cursor + tmp.length(), msgId ) ) {
     d->msgIdList.append( msgId );
   } else {
-    kWarning() << "Unable to parse address spec!";
+    qWarning() << "Unable to parse address spec!";
   }
 }
 

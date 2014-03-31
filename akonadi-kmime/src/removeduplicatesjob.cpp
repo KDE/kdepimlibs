@@ -44,7 +44,7 @@ public:
     void fetchItem()
     {
         Akonadi::Collection collection = mFolders.value(mJobCount - 1);
-        kDebug() << "Processing collection" << collection.name() << "(" << collection.id() << ")";
+        qDebug() << "Processing collection" << collection.name() << "(" << collection.id() << ")";
 
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection, mParent);
         job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
@@ -97,7 +97,7 @@ public:
                             bodyHashes.insert(mainId, qHash(items.value(mainId).payload<KMime::Message::Ptr>()->encodedContent()));
                         }
                         uint hash = qHash(message->encodedContent());
-                        kDebug() << idStr << bodyHashes.value(mainId) << hash;
+                        qDebug() << idStr << bodyHashes.value(mainId) << hash;
                         if (bodyHashes.value(mainId) == hash) {
                             duplicates[mainId].append(i);
                         }
@@ -125,7 +125,7 @@ public:
             fetchItem();
         } else {
             if (mDuplicateItems.isEmpty()) {
-                kDebug() << "No duplicates, I'm done here";
+                qDebug() << "No duplicates, I'm done here";
                 mParent->emitResult();
                 return;
             } else {
@@ -138,7 +138,7 @@ public:
 
     void slotDeleteDone(KJob *job)
     {
-        kDebug() << "Job done";
+        qDebug() << "Job done";
 
         mParent->setError(job->error());
         mParent->setErrorText(job->errorText());
@@ -180,10 +180,10 @@ RemoveDuplicatesJob::~RemoveDuplicatesJob()
 
 void RemoveDuplicatesJob::doStart()
 {
-    kDebug();
+    qDebug();
 
     if (d->mFolders.isEmpty()) {
-        kWarning() << "No collections to process";
+        qWarning() << "No collections to process";
         emitResult();
         return;
     }
@@ -193,7 +193,7 @@ void RemoveDuplicatesJob::doStart()
 
 bool RemoveDuplicatesJob::doKill()
 {
-    kDebug() << "Killed!";
+    qDebug() << "Killed!";
 
     d->mKilled = true;
     if (d->mCurrentJob) {

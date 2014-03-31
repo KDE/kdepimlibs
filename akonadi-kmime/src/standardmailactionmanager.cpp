@@ -496,7 +496,7 @@ public:
         }
 
         QByteArray typeStr = action->data().toByteArray();
-        kDebug() << "Mark mail as: " << typeStr;
+        qDebug() << "Mark mail as: " << typeStr;
 
         bool invert = false;
         if (typeStr.startsWith('!')) {
@@ -532,7 +532,7 @@ public:
         Q_ASSERT(action);
 
         QByteArray typeStr = action->data().toByteArray();
-        kDebug() << "Mark all as: " << typeStr;
+        qDebug() << "Mark all as: " << typeStr;
 
         const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
         if (collections.isEmpty()) {

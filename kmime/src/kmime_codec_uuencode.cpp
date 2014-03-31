@@ -112,7 +112,7 @@ void UUDecoder::searchForBegin( const char* &scursor, const char * const send )
     } else if ( mSawBegin ) {
       // OK, skip stuff until the next \n
     } else {
-      kWarning() << "UUDecoder: garbage before \"begin\", resetting parser";
+      qWarning() << "UUDecoder: garbage before \"begin\", resetting parser";
       mIntoBeginLine = 0;
     }
   }
@@ -157,7 +157,7 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
         }
         continue;
       } else {
-        kWarning() << "UUDecoder: invalid line octet count looks like \"end\" (mIntoEndLine ="
+        qWarning() << "UUDecoder: invalid line octet count looks like \"end\" (mIntoEndLine ="
                    << mIntoEndLine << ")!";
         mIntoEndLine = 0;
         // fall through...

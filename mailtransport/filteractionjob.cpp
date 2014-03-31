@@ -69,17 +69,17 @@ void FilterActionJob::Private::fetchResult( KJob *job )
 void FilterActionJob::Private::traverseItems()
 {
   Q_ASSERT( functor );
-  kDebug() << "Traversing" << items.count() << "items.";
+  qDebug() << "Traversing" << items.count() << "items.";
   foreach ( const Item &item, items ) {
     if ( functor->itemAccepted( item ) ) {
       functor->itemAction( item, q );
-      kDebug() << "Added subjob for item" << item.id();
+      qDebug() << "Added subjob for item" << item.id();
     }
   }
   if ( q->subjobs().isEmpty() ) {
-    kDebug() << "No subjobs; I am done";
+    qDebug() << "No subjobs; I am done";
   } else {
-    kDebug() << "Have subjobs; Done when last of them is";
+    qDebug() << "Have subjobs; Done when last of them is";
   }
   q->commit();
 }
@@ -119,7 +119,7 @@ FilterActionJob::~FilterActionJob()
 void FilterActionJob::doStart()
 {
   if ( d->collection.isValid() ) {
-    kDebug() << "Fetching collection" << d->collection.id();
+    qDebug() << "Fetching collection" << d->collection.id();
     ItemFetchJob *fjob = new ItemFetchJob( d->collection, this );
     Q_ASSERT( d->functor );
     d->fetchScope = d->functor->fetchScope();

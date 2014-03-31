@@ -267,8 +267,8 @@ void ContentTest::testEncodedContent()
 
   // Test that multiple calls do not corrupt anything.
   QByteArray encc = msg->encodedContent();
-  //kDebug() << "original data" << data;
-  //kDebug() << "encodedContent" << encc;
+  //qDebug() << "original data" << data;
+  //qDebug() << "encodedContent" << encc;
   QCOMPARE( msg->encodedContent(), data );
   QCOMPARE( msg->encodedContent(), data );
   QCOMPARE( msg->encodedContent(), data );
@@ -456,8 +456,8 @@ void ContentTest::testMultipartMixed()
 
   // assemble again
   msg->assemble();
-  //kDebug() << "expected assembled content" << parsedWithPreambleAndEpilogue;
-  //kDebug() << "actual new encoded content" << msg->encodedContent();
+  //qDebug() << "expected assembled content" << parsedWithPreambleAndEpilogue;
+  //qDebug() << "actual new encoded content" << msg->encodedContent();
   QCOMPARE( msg->encodedContent(), parsedWithPreambleAndEpilogue );
   delete msg;
 
@@ -487,8 +487,8 @@ void ContentTest::testMultipartMixed()
 
   msg->assemble();
   QByteArray encc = msg->encodedContent();
-  //kDebug() << "expected assembled content" << assembled;
-  //kDebug() << "actual encoded content" << encc;
+  //qDebug() << "expected assembled content" << assembled;
+  //qDebug() << "actual encoded content" << encc;
   QCOMPARE( msg->encodedContent(), assembled );
 }
 
@@ -724,8 +724,8 @@ void ContentTest::testFreezing()
   msg->setFrozen( true );
 
   // The data should be untouched before parsing.
-  //kDebug() << "original data" << data;
-  //kDebug() << "data from message" << msg->encodedContent();
+  //qDebug() << "original data" << data;
+  //qDebug() << "data from message" << msg->encodedContent();
   QCOMPARE( msg->encodedContent(), data );
 
   // The data should remain untouched after parsing.

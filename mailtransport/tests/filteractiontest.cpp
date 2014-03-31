@@ -153,7 +153,7 @@ void FilterActionTest::testMassModifyCollection()
     unacc.append( createItem( col, false ) );
   }
   FilterActionJob *mjob = new FilterActionJob( col, new MyFunctor, this );
-  kDebug() << "Executing FilterActionJob.";
+  qDebug() << "Executing FilterActionJob.";
   AKVERIFYEXEC( mjob );
   ItemFetchJob *fjob = new ItemFetchJob( col, this );
   fjob->fetchScope().fetchAllAttributes();

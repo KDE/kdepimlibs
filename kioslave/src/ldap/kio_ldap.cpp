@@ -49,7 +49,7 @@ int kdemain( int argc, char **argv )
   kDebug(7125) << "Starting kio_ldap instance";
 
   if ( argc != 4 ) {
-    kError() << "Usage kio_ldap protocol pool app" << endl;
+    qCritical() << "Usage kio_ldap protocol pool app" << endl;
     return -1;
   }
 
@@ -87,7 +87,7 @@ void LDAPProtocol::LDAPErr( int err )
   }
   if ( err == KLDAP_SUCCESS ) return;
 
-  kDebug() << "error code: " << err << " msg: " << LdapConnection::errorString(err) <<
+  qDebug() << "error code: " << err << " msg: " << LdapConnection::errorString(err) <<
     extramsg << "'" << endl;
   QString msg;
   msg = mServer.url().prettyUrl();

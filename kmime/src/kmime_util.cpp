@@ -66,7 +66,7 @@ QByteArray cachedCharset( const QByteArray &name )
   }
 
   c_harsetCache.append( name.toUpper() );
-  //kDebug() << "KNMimeBase::cachedCharset() number of cs" << c_harsetCache.count();
+  //qDebug() << "KNMimeBase::cachedCharset() number of cs" << c_harsetCache.count();
   return c_harsetCache.last();
 }
 
@@ -79,7 +79,7 @@ QByteArray cachedLanguage( const QByteArray &name )
   }
 
   l_anguageCache.append( name.toUpper() );
-  //kDebug() << "KNMimeBase::cachedCharset() number of cs" << c_harsetCache.count();
+  //qDebug() << "KNMimeBase::cachedCharset() number of cs" << c_harsetCache.count();
   return l_anguageCache.last();
 }
 
@@ -518,7 +518,7 @@ QString decodeRFC2231String( const QByteArray &str, QByteArray &usedCS, const QB
     }
     p++;
   }
-  kDebug() << "Got pre-decoded:" << st;
+  qDebug() << "Got pre-decoded:" << st;
   QString result;
   const QTextCodec * charsetcodec = KCharsets::charsets()->codecForName( QString::fromLatin1( charset ) );
   if ( !charsetcodec || forceCS )
@@ -549,7 +549,7 @@ QByteArray uniqueString()
 
   for ( int i = 0; i < 10; i++ ) {
     pos = (int) ( 61.0 * rand() / ( RAND_MAX + 1.0 ) );
-    //kDebug() << pos;
+    //qDebug() << pos;
     p[i] = chars[pos];
   }
 
@@ -872,7 +872,7 @@ KMIME_EXPORT QString balanceBidiState( const QString &input )
         openDirChangers--;
       } else {
         // One PDF too much, remove it
-        kWarning() << "Possible Unicode spoofing (unexpected PDF) detected in" << input;
+        qWarning() << "Possible Unicode spoofing (unexpected PDF) detected in" << input;
         result.remove( i - numPDFsRemoved, 1 );
         numPDFsRemoved++;
       }
@@ -880,7 +880,7 @@ KMIME_EXPORT QString balanceBidiState( const QString &input )
   }
 
   if ( openDirChangers > 0 ) {
-    kWarning() << "Possible Unicode spoofing detected in" << input;
+    qWarning() << "Possible Unicode spoofing detected in" << input;
 
     // At PDF chars to the end until the correct state is restored.
     // As a special exception, when encountering quoted strings, place the PDF before

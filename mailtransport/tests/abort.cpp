@@ -45,13 +45,13 @@ void Runner::sendAbort()
 {
   const AgentInstance mda = DispatcherInterface().dispatcherInstance();
   if ( !mda.isValid() ) {
-    kDebug() << "Invalid instance; waiting.";
+    qDebug() << "Invalid instance; waiting.";
     QTimer::singleShot( 1000, this, SLOT(sendAbort()) );
     return;
   }
 
   mda.abortCurrentTask();
-  kDebug() << "Told the MDA to abort.";
+  qDebug() << "Told the MDA to abort.";
   KApplication::exit( 0 );
 }
 

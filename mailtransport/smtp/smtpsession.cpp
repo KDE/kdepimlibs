@@ -67,7 +67,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void error( int id, const QString &msg )
     {
-      kDebug() << id << msg;
+      qDebug() << id << msg;
       // clear state so further replies don't end up in failed commands etc.
       currentCommand = 0;
       currentTransactionState = 0;
@@ -97,7 +97,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     bool startSsl()
     {
-      kDebug();
+      qDebug();
       Q_ASSERT( socket );
       socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
       socket->ignoreSslErrors();
@@ -110,7 +110,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
            socket->encryptionMode() != KTcpSocket::SslClientMode ||
            cipher.isNull() ||
            cipher.usedBits() == 0 ) {
-        kDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
+        qDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
                  << ", cipher.usedBits() is" << cipher.usedBits()
                  << ", the socket says:" <<  socket->errorString()
                  << "and the list of SSL errors contains"
@@ -122,7 +122,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
           return false;
         }
       } else {
-        kDebug() << "TLS negotiation done.";
+        qDebug() << "TLS negotiation done.";
         return true;
       }
     }
@@ -133,7 +133,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void socketConnected()
     {
-      kDebug();
+      qDebug();
       if ( destination.protocol() == QLatin1String( "smtps" ) ) {
         if ( !startSsl() ) {
           error( KIO::ERR_SLAVE_DEFINED, i18n( "SSL negotiation failed." ) );
@@ -143,14 +143,14 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void socketDisconnected()
     {
-      kDebug();
+      qDebug();
       emit q->result( q );
       q->deleteLater();
     }
 
     void socketError( KTcpSocket::Error err )
     {
-      kDebug() << err;
+      qDebug() << err;
       error( KIO::ERR_CONNECTION_BROKEN, socket->errorString() );
 
       if ( socket->state() != KTcpSocket::ConnectedState ) {
@@ -252,7 +252,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       }
 
       if ( ts->failed() ) {
-        kDebug() << "transaction state failed: " << ts->errorCode() << ts->errorMessage();
+        qDebug() << "transaction state failed: " << ts->errorCode() << ts->errorMessage();
         if ( errorMessage.isEmpty() ) {
           errorMessage = ts->errorMessage();
         }
@@ -335,10 +335,10 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
 
     void receivedNewData()
     {
-      kDebug();
+      qDebug();
       while ( socket->canReadLine() ) {
         const QByteArray buffer = socket->readLine();
-        kDebug() << "S: >>" << buffer << "<<";
+        qDebug() << "S: >>" << buffer << "<<";
         currentResponse.parseLine( buffer, buffer.size() );
         // ...until the response is complete or the parser is so confused
         // that it doesn't think a RSET would help anymore:
@@ -545,7 +545,7 @@ SmtpSession::SmtpSession( QObject *parent ) :
   QObject( parent ),
   d( new SmtpSessionPrivate( this ) )
 {
-  kDebug();
+  qDebug();
   d->socket = new KTcpSocket( this );
   connect( d->socket, SIGNAL(connected()), SLOT(socketConnected()) );
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
@@ -562,7 +562,7 @@ SmtpSession::SmtpSession( QObject *parent ) :
 
 SmtpSession::~SmtpSession()
 {
-  kDebug();
+  qDebug();
   delete d;
 }
 
@@ -578,7 +578,7 @@ void SmtpSession::setUseTLS( bool useTLS )
 
 void SmtpSession::connectToHost( const KUrl &url )
 {
-  kDebug() << url;
+  qDebug() << url;
   d->socket->connectToHost( url.host(), url.port() );
 }
 

@@ -37,53 +37,53 @@ using namespace KBlog;
 WordpressBuggy::WordpressBuggy( const KUrl &server, QObject *parent )
   : MovableType( server, *new WordpressBuggyPrivate, parent )
 {
-  kDebug();
+  qDebug();
 }
 
 WordpressBuggy::WordpressBuggy( const KUrl &server, WordpressBuggyPrivate &dd,
                                 QObject *parent )
   : MovableType( server, dd, parent )
 {
-  kDebug();
+  qDebug();
 }
 
 WordpressBuggy::~WordpressBuggy()
 {
-  kDebug();
+  qDebug();
 }
 
 void WordpressBuggy::createPost( KBlog::BlogPost *post )
 {
   // reimplemented because we do this:
   // http://comox.textdrive.com/pipermail/wp-testers/2005-July/000284.html
-  kDebug();
+  qDebug();
   Q_D( WordpressBuggy );
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
   if ( d->mCategoriesList.isEmpty() ) {
-    kDebug() << "No categories in the cache yet. Have to fetch them first.";
+    qDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mCreatePostCache << post;
     connect( this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
              this,SLOT(slotTriggerCreatePost()) );
     listCategories();
   }
   else {
-    kDebug() << "createPost()";
+    qDebug() << "createPost()";
     if ( !post ) {
-      kError() << "WordpressBuggy::createPost: post is a null pointer";
+      qCritical() << "WordpressBuggy::createPost: post is a null pointer";
       emit error ( Other, i18n( "Post is a null pointer." ) );
       return;
     }
-    kDebug() << "Creating new Post with blogId" << blogId();
+    qDebug() << "Creating new Post with blogId" << blogId();
 
     bool publish = post->isPrivate();
     // If we do setPostCategories() later than we disable publishing first.
     if ( !post->categories().isEmpty() ) {
       post->setPrivate( true );
       if ( d->mSilentCreationList.contains( post ) ) {
-        kDebug() << "Post already in mSilentCreationList, this *should* never happen!";
+        qDebug() << "Post already in mSilentCreationList, this *should* never happen!";
       } else {
         d->mSilentCreationList << post;
       }
@@ -147,7 +147,7 @@ void WordpressBuggy::createPost( KBlog::BlogPost *post )
     d->mCreatePostMap[ job ] = post;
 
     if ( !job ) {
-      kWarning() << "Failed to create job for: " << url().url();
+      qWarning() << "Failed to create job for: " << url().url();
     }
 
     job->addMetaData(
@@ -169,14 +169,14 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
 {
   // reimplemented because we do this:
   // http://comox.textdrive.com/pipermail/wp-testers/2005-July/000284.html
-  kDebug();
+  qDebug();
   Q_D( WordpressBuggy );
 
   // we need mCategoriesList to be loaded first, since we cannot use the post->categories()
   // names later, but we need to map them to categoryId of the blog
   d->loadCategories();
   if ( d->mCategoriesList.isEmpty() ) {
-    kDebug() << "No categories in the cache yet. Have to fetch them first.";
+    qDebug() << "No categories in the cache yet. Have to fetch them first.";
     d->mModifyPostCache << post;
     connect( this,SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
              this,SLOT(slotTriggerModifyPost()) );
@@ -184,12 +184,12 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
   }
   else {
     if ( !post ) {
-      kError() << "WordpressBuggy::modifyPost: post is a null pointer";
+      qCritical() << "WordpressBuggy::modifyPost: post is a null pointer";
       emit error ( Other, i18n( "Post is a null pointer." ) );
       return;
     }
 
-    kDebug() << "Uploading Post with postId" << post->postId();
+    qDebug() << "Uploading Post with postId" << post->postId();
 
     QString xmlMarkup = QLatin1String("<?xml version=\"1.0\"?>");
     xmlMarkup += QLatin1String("<methodCall>");
@@ -254,7 +254,7 @@ void WordpressBuggy::modifyPost( KBlog::BlogPost *post )
     d->mModifyPostMap[ job ] = post;
 
     if ( !job ) {
-      kWarning() << "Failed to create job for: " << url().url();
+      qWarning() << "Failed to create job for: " << url().url();
     }
 
     job->addMetaData(
@@ -280,7 +280,7 @@ WordpressBuggyPrivate::WordpressBuggyPrivate()
 
 WordpressBuggyPrivate::~WordpressBuggyPrivate()
 {
-  kDebug();
+  qDebug();
 }
 
 QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
@@ -297,7 +297,7 @@ QList<QVariant> WordpressBuggyPrivate::defaultArgs( const QString &id )
 
 void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 {
-  kDebug();
+  qDebug();
 
   KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
@@ -308,7 +308,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
   mCreatePostMap.remove( job );
 
   if ( job->error() != 0 ) {
-    kError() << "slotCreatePost error:" << job->errorString();
+    qCritical() << "slotCreatePost error:" << job->errorString();
     emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
@@ -317,21 +317,21 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
   if ( rxError.indexIn( data ) != -1 ) {
     rxError = QRegExp( QLatin1String("<string>(.+)</string>") );
     if ( rxError.indexIn( data ) != -1 ) {
-      kDebug() << "RegExp of faultString failed.";
+      qDebug() << "RegExp of faultString failed.";
     }
-    kDebug() << rxError.cap( 1 );
+    qDebug() << rxError.cap( 1 );
     emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap( 1 ), post );
     return;
   }
 
   QRegExp rxId( QLatin1String("<string>(.+)</string>") );
   if ( rxId.indexIn( data ) == -1 ) {
-    kError() << "Could not regexp the id out of the result:" << data;
+    qCritical() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( WordpressBuggy::XmlRpc,
                        i18n( "Could not regexp the id out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( \"<string>(.+)</string>\" ) matches" << rxId.cap( 1 );
+  qDebug() << "QRegExp rx( \"<string>(.+)</string>\" ) matches" << rxId.cap( 1 );
 
   post->setPostId( rxId.cap( 1 ) );
   if ( mSilentCreationList.contains(  post ) )
@@ -339,7 +339,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
     // set the categories and publish afterwards
     setPostCategories( post, !post->isPrivate() );
   } else {
-    kDebug() << "emitting createdPost()"
+    qDebug() << "emitting createdPost()"
                 << "for title: \"" << post->title();
     emit q->createdPost( post );
     post->setStatus( KBlog::BlogPost::Created );
@@ -348,7 +348,7 @@ void WordpressBuggyPrivate::slotCreatePost( KJob *job )
 
 void WordpressBuggyPrivate::slotModifyPost( KJob *job )
 {
-  kDebug();
+  qDebug();
 
   KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
@@ -357,7 +357,7 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   mModifyPostMap.remove( job );
   Q_Q( WordpressBuggy );
   if ( job->error() != 0 ) {
-    kError() << "slotModifyPost error:" << job->errorString();
+    qCritical() << "slotModifyPost error:" << job->errorString();
     emit q->errorPost( WordpressBuggy::XmlRpc, job->errorString(), post );
     return;
   }
@@ -366,24 +366,24 @@ void WordpressBuggyPrivate::slotModifyPost( KJob *job )
   if ( rxError.indexIn( data ) != -1 ) {
     rxError = QRegExp( QLatin1String("<string>(.+)</string>") );
     if ( rxError.indexIn( data ) != -1 ) {
-      kDebug() << "RegExp of faultString failed.";
+      qDebug() << "RegExp of faultString failed.";
     }
-    kDebug() << rxError.cap( 1 );
+    qDebug() << rxError.cap( 1 );
     emit q->errorPost( WordpressBuggy::XmlRpc, rxError.cap( 1 ), post );
     return;
   }
 
   QRegExp rxId( QLatin1String("<boolean>(.+)</boolean>") );
   if ( rxId.indexIn( data ) == -1 ) {
-    kError() << "Could not regexp the id out of the result:" << data;
+    qCritical() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( WordpressBuggy::XmlRpc,
                        i18n( "Could not regexp the id out of the result." ), post );
     return;
   }
-  kDebug() << "QRegExp rx( \"<boolean>(.+)</boolean>\" ) matches" << rxId.cap( 1 );
+  qDebug() << "QRegExp rx( \"<boolean>(.+)</boolean>\" ) matches" << rxId.cap( 1 );
 
   if ( rxId.cap( 1 ).toInt() == 1 ) {
-    kDebug() << "Post successfully updated.";
+    qDebug() << "Post successfully updated.";
     if ( mSilentCreationList.contains( post ) ) {
       post->setStatus( KBlog::BlogPost::Created );
       emit q->createdPost( post );

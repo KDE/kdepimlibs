@@ -129,7 +129,7 @@ void KPIMUtils::getProcessesIdForName( const QString &processName, QList<int> &p
         }
       }
       pids.append( (int)pe32.th32ProcessID );
-      kDebug() << "found PID: " << (int)pe32.th32ProcessID;
+      qDebug() << "found PID: " << (int)pe32.th32ProcessID;
     }
   } while ( Process32Next( h, &pe32 ) );
   CloseHandle( h );
@@ -142,7 +142,7 @@ bool KPIMUtils::otherProcessesExist( const QString &processName )
   int myPid = getpid();
   foreach ( int pid, pids ) {
     if ( myPid != pid ) {
-//      kDebug() << "Process ID is " << pid;
+//      qDebug() << "Process ID is " << pid;
       return true;
     }
   }
@@ -203,7 +203,7 @@ void KPIMUtils::activateWindowForProcess( const QString &executableName )
   int foundPid = 0;
   foreach ( int pid, pids ) {
     if ( myPid != pid ) {
-      kDebug() << "activateWindowForProcess(): PID to activate:" << pid;
+      qDebug() << "activateWindowForProcess(): PID to activate:" << pid;
       foundPid = pid;
       break;
     }

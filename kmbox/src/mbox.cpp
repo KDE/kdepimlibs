@@ -72,7 +72,7 @@ MBoxEntry MBox::appendMessage( const KMime::Message::Ptr &entry )
   const QByteArray rawEntry = MBoxPrivate::escapeFrom( entry->encodedContent() );
 
   if ( rawEntry.size() <= 0 ) {
-    kDebug() << "Message added to folder `" << d->mMboxFile.fileName()
+    qDebug() << "Message added to folder `" << d->mMboxFile.fileName()
              << "' contains no data. Ignoring it.";
     return MBoxEntry();
   }
@@ -152,7 +152,7 @@ bool MBox::load( const QString &fileName )
   d->initLoad( fileName );
 
   if ( !lock() ) {
-    kDebug() << "Failed to lock";
+    qDebug() << "Failed to lock";
     return false;
   }
 
@@ -245,7 +245,7 @@ bool MBox::lock()
 
     rc = QProcess::execute( QLatin1String( "lockfile" ), args );
     if ( rc != 0 ) {
-      kDebug() << "lockfile -l20 -r5 " << d->mMboxFile.fileName()
+      qDebug() << "lockfile -l20 -r5 " << d->mMboxFile.fileName()
                << ": Failed (" << rc << ") switching to read only mode";
       d->mReadOnly = true; // In case the MBox object was created read/write we
       // set it to read only when locking failed.
@@ -259,7 +259,7 @@ bool MBox::lock()
     rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
 
     if ( rc != 0 ) {
-      kDebug() << "mutt_dotlock " << d->mMboxFile.fileName()
+      qDebug() << "mutt_dotlock " << d->mMboxFile.fileName()
                << ": Failed (" << rc << ") switching to read only mode";
       d->mReadOnly = true; // In case the MBox object was created read/write we
       // set it to read only when locking failed.
@@ -274,7 +274,7 @@ bool MBox::lock()
     rc = QProcess::execute( QLatin1String( "mutt_dotlock" ), args );
 
     if ( rc != 0 ) {
-      kDebug() << "mutt_dotlock -p " << d->mMboxFile.fileName() << ":"
+      qDebug() << "mutt_dotlock -p " << d->mMboxFile.fileName() << ":"
                << ": Failed (" << rc << ") switching to read only mode";
       d->mReadOnly = true;
     } else {
@@ -340,7 +340,7 @@ bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> 
   if ( deletedEntries.size() == d->mEntries.size() ) {
     d->mEntries.clear();
     d->mMboxFile.resize( 0 );
-    kDebug() << "Purge comleted successfully, unlocking the file.";
+    qDebug() << "Purge comleted successfully, unlocking the file.";
     return unlock();
   }
 
@@ -410,7 +410,7 @@ bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> 
   d->mMboxFile.resize( writeOffset );
   d->mEntries = resultingEntryList;
 
-  kDebug() << "Purge comleted successfully, unlocking the file.";
+  qDebug() << "Purge comleted successfully, unlocking the file.";
   if ( movedEntries ) {
     *movedEntries = tmpMovedEntries;
   }
@@ -443,7 +443,7 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     QByteArray line = d->mMboxFile.readLine();
 
     if ( !d->isMBoxSeparator( line ) ) {
-      kDebug() << "[MBox::readEntry] Invalid entry at:" << offset;
+      qDebug() << "[MBox::readEntry] Invalid entry at:" << offset;
       if ( !wasLocked ) {
         unlock();
       }
@@ -474,7 +474,7 @@ QByteArray MBox::readRawMessage( const MBoxEntry &entry )
     QByteArray line = buffer.readLine();
 
     if ( !d->isMBoxSeparator( line ) ) {
-      kDebug() << "[MBox::readEntry] Invalid appended entry at:" << offset;
+      qDebug() << "[MBox::readEntry] Invalid appended entry at:" << offset;
       if ( !wasLocked ) {
         unlock();
       }
@@ -525,7 +525,7 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
   const bool wasLocked = d->mFileLocked;
   if ( !wasLocked ) {
     if (!lock()) {
-       kDebug() << "Failed to lock";
+       qDebug() << "Failed to lock";
        return QByteArray();
     }
   }
@@ -610,21 +610,21 @@ bool MBox::save( const QString &fileName )
 bool MBox::setLockType( LockType ltype )
 {
   if ( d->mFileLocked ) {
-    kDebug() << "File is currently locked.";
+    qDebug() << "File is currently locked.";
     return false; // Don't change the method if the file is currently locked.
   }
 
   switch ( ltype ) {
     case ProcmailLockfile:
       if ( KStandardDirs::findExe( QLatin1String( "lockfile" ) ).isEmpty() ) {
-        kDebug() << "Could not find the lockfile executable";
+        qDebug() << "Could not find the lockfile executable";
         return false;
       }
       break;
     case MuttDotlock: // fall through
     case MuttDotlockPrivileged:
       if ( KStandardDirs::findExe( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
-        kDebug() << "Could not find the mutt_dotlock executable";
+        qDebug() << "Could not find the mutt_dotlock executable";
         return false;
       }
       break;

@@ -40,7 +40,7 @@ void showJobError(KJob *job)
     if (kiojob && kiojob->ui()) {
         kiojob->ui()->showErrorMessage();
     } else {
-        kWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
+        qWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
     }
 }
 

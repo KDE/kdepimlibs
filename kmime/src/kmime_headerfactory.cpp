@@ -82,7 +82,7 @@ Headers::Base *HeaderFactory::createHeader( const QByteArray &type )
   if ( maker ) {
     return maker->create();
   } else {
-    //kError() << "Unknown header type" << type;
+    //qCritical() << "Unknown header type" << type;
     //return new Headers::Generic;
     return 0;
   }
@@ -102,12 +102,12 @@ bool HeaderFactory::registerHeaderMaker( const QByteArray &type, HeaderMakerBase
   if ( type.isEmpty() ) {
     // This is probably a generic (but not abstract) header,
     // like Address or MailboxList.  We cannot register those.
-    kWarning() << "Tried to register header with empty type.";
+    qWarning() << "Tried to register header with empty type.";
     return false;
   }
   const QByteArray ltype = type.toLower();
   if ( d->headerMakers.contains( ltype ) ) {
-    kWarning() << "Header of type" << type << "already registered.";
+    qWarning() << "Header of type" << type << "already registered.";
     // TODO should we make this an error?
     return false;
   }

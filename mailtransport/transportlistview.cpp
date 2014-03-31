@@ -65,7 +65,7 @@ void TransportListView::editItem( QTreeWidgetItem *item, int column )
     const int id = item->data( 0, Qt::UserRole ).toInt();
     Transport *t = TransportManager::self()->transportById( id );
     if ( !t ) {
-      kWarning() << "Transport" << id << "not known by manager.";
+      qWarning() << "Transport" << id << "not known by manager.";
       return;
     }
     if ( TransportManager::self()->defaultTransportId() == t->id() ) {
@@ -78,7 +78,7 @@ void TransportListView::commitData( QWidget *editor )
 {
   if ( selectedItems().isEmpty() ) {
     // transport was deleted by someone else???
-    kDebug() << "No selected item.";
+    qDebug() << "No selected item.";
     return;
   }
   QTreeWidgetItem *item = selectedItems().first();
@@ -88,10 +88,10 @@ void TransportListView::commitData( QWidget *editor )
   const int id = item->data( 0, Qt::UserRole ).toInt();
   Transport *t = TransportManager::self()->transportById( id );
   if ( !t ) {
-    kWarning() << "Transport" << id << "not known by manager.";
+    qWarning() << "Transport" << id << "not known by manager.";
     return;
   }
-  kDebug() << "Renaming transport" << id << "to" << edit->text();
+  qDebug() << "Renaming transport" << id << "to" << edit->text();
   t->setName( edit->text() );
   t->forceUniqueName();
   t->writeConfig();

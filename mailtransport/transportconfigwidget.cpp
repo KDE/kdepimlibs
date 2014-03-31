@@ -55,7 +55,7 @@ TransportConfigWidget::~ TransportConfigWidget()
 void TransportConfigWidget::init( Transport *transport )
 {
   Q_D( TransportConfigWidget );
-  kDebug() << "this" << this << "d" << d;
+  qDebug() << "this" << this << "d" << d;
   Q_ASSERT( transport );
   d->transport = transport;
 
@@ -76,6 +76,6 @@ void TransportConfigWidget::apply()
   d->manager->updateSettings();
   d->transport->forceUniqueName();
   d->transport->writeConfig();
-  kDebug() << "Config written.";
+  qDebug() << "Config written.";
 }
 

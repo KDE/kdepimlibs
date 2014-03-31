@@ -217,11 +217,11 @@ Transport *TransportManager::createTransport() const
 void TransportManager::addTransport( Transport *transport )
 {
   if ( d->transports.contains( transport ) ) {
-    kDebug() << "Already have this transport.";
+    qDebug() << "Already have this transport.";
     return;
   }
 
-  kDebug() << "Added transport" << transport;
+  qDebug() << "Added transport" << transport;
   d->transports.append( transport );
   d->validateDefault();
   emitChangesCommitted();
@@ -233,7 +233,7 @@ void TransportManager::schedule( TransportJob *job )
 
   // check if the job is waiting for the wallet
   if ( !job->transport()->isComplete() ) {
-    kDebug() << "job waits for wallet:" << job;
+    qDebug() << "job waits for wallet:" << job;
     d->walletQueue << job;
     loadPasswordsAsync();
     return;
@@ -252,7 +252,7 @@ void TransportManager::createDefaultTransport()
     t->writeConfig();
     addTransport( t );
   } else {
-    kWarning() << "KEMailSettings does not contain a valid transport.";
+    qWarning() << "KEMailSettings does not contain a valid transport.";
   }
 }
 
@@ -286,7 +286,7 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
     using namespace Akonadi;
     AgentInstance instance = AgentManager::self()->instance( transport->host() );
     if ( !instance.isValid() ) {
-      kWarning() << "Invalid resource instance" << transport->host();
+      qWarning() << "Invalid resource instance" << transport->host();
     }
     instance.configure( parent ); // Async...
     transport->writeConfig();
@@ -401,7 +401,7 @@ void TransportManager::removeTransport( int id )
     using namespace Akonadi;
     const AgentInstance instance = AgentManager::self()->instance( t->host() );
     if ( !instance.isValid() ) {
-      kWarning() << "Could not find resource instance.";
+      qWarning() << "Could not find resource instance.";
     }
     AgentManager::self()->removeInstance( instance );
   }
@@ -430,7 +430,7 @@ void TransportManagerPrivate::readConfig()
     // see if we happen to have that one already
     foreach ( Transport *old, oldTransports ) {
       if ( old->currentGroup() == QLatin1String( "Transport " ) + re.cap( 1 ) ) {
-        kDebug() << "reloading existing transport:" << s;
+        qDebug() << "reloading existing transport:" << s;
         t = old;
         t->d->passwordNeedsUpdateFromWallet = true;
         t->readConfig();
@@ -514,7 +514,7 @@ void TransportManagerPrivate::fillTypes()
         type.d->mName = atype.name();
         type.d->mDescription = atype.description();
         types << type;
-        kDebug() << "Found Akonadi type" << atype.name();
+        qDebug() << "Found Akonadi type" << atype.name();
       }
     }
 
@@ -525,7 +525,7 @@ void TransportManagerPrivate::fillTypes()
         q, SLOT(agentTypeRemoved(Akonadi::AgentType)) );
   }
 
-  kDebug() << "Have SMTP, Sendmail, and" << types.count() - 2 << "Akonadi types.";
+  qDebug() << "Have SMTP, Sendmail, and" << types.count() - 2 << "Akonadi types.";
 }
 
 void TransportManager::emitChangesCommitted()
@@ -544,7 +544,7 @@ void TransportManagerPrivate::slotTransportsChanged()
     return;
   }
 
-  kDebug();
+  qDebug();
   config->reparseConfiguration();
   // FIXME: this deletes existing transport objects!
   readConfig();
@@ -624,7 +624,7 @@ void TransportManager::loadPasswords()
 
 void TransportManager::loadPasswordsAsync()
 {
-  kDebug();
+  qDebug();
 
   // check if there is anything to do at all
   bool found = false;
@@ -665,7 +665,7 @@ void TransportManager::loadPasswordsAsync()
 
 void TransportManagerPrivate::slotWalletOpened( bool success )
 {
-  kDebug();
+  qDebug();
   walletAsyncOpen = false;
   if ( !success ) {
     walletOpenFailed = true;
@@ -753,7 +753,7 @@ void TransportManagerPrivate::agentTypeAdded( const Akonadi::AgentType &atype )
     type.d->mName = atype.name();
     type.d->mDescription = atype.description();
     types << type;
-    kDebug() << "Added new Akonadi type" << atype.name();
+    qDebug() << "Added new Akonadi type" << atype.name();
   }
 }
 
@@ -764,7 +764,7 @@ void TransportManagerPrivate::agentTypeRemoved( const Akonadi::AgentType &atype 
     if ( type.type() == Transport::EnumType::Akonadi &&
          type.agentType() == atype ) {
       types.removeAll( type );
-      kDebug() << "Removed Akonadi type" << atype.name();
+      qDebug() << "Removed Akonadi type" << atype.name();
     }
   }
 }

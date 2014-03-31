@@ -187,7 +187,7 @@ bool Base64Decoder::decode( const char* &scursor, const char * const send,
         if ( mStepNo == 0 || mStepNo == 1 ) {
           if ( !mSawPadding ) {
             // malformed
-            kWarning() << "Base64Decoder: unexpected padding"
+            qWarning() << "Base64Decoder: unexpected padding"
               "character in input stream";
           }
           mSawPadding = true;
@@ -209,7 +209,7 @@ bool Base64Decoder::decode( const char* &scursor, const char * const send,
     }
 
     if ( mSawPadding ) {
-      kWarning() << "Base64Decoder: Embedded padding character"
+      qWarning() << "Base64Decoder: Embedded padding character"
         "encountered!";
       return true;
     }

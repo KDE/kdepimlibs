@@ -116,7 +116,7 @@ void MessageQueueJob::Private::outboxRequestResult( KJob *job )
   started = true;
 
   if ( job->error() ) {
-    kError() << "Failed to get the Outbox folder:" << job->error() << job->errorString();
+    qCritical() << "Failed to get the Outbox folder:" << job->error() << job->errorString();
     q->setError( job->error() );
     q->emitResult();
     return;

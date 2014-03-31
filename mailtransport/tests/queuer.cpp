@@ -47,7 +47,7 @@ using namespace MailTransport;
 MessageQueuer::MessageQueuer()
 {
   if ( !Akonadi::Control::start() ) {
-    kFatal() << "Could not start Akonadi server.";
+    qFatal() << "Could not start Akonadi server.";
   }
 
   mComboBox = new TransportComboBox( this );
@@ -76,14 +76,14 @@ MessageQueuer::MessageQueuer()
 void MessageQueuer::sendNowClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode default (Automatic).";
+  qDebug() << "DispatchMode default (Automatic).";
   qjob->start();
 }
 
 void MessageQueuer::sendQueuedClicked()
 {
   MessageQueueJob *qjob = createQueueJob();
-  kDebug() << "DispatchMode Manual.";
+  qDebug() << "DispatchMode Manual.";
   qjob->dispatchModeAttribute().setDispatchMode( DispatchModeAttribute::Manual );
   qjob->start();
 }
@@ -103,7 +103,7 @@ void MessageQueuer::sendOnDateClicked()
   if ( !dialog ) {
     return;
   }
-  kDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
+  qDebug() << "DispatchMode AfterDueDate" << dt->dateTime();
   MessageQueueJob *qjob = createQueueJob();
   qjob->dispatchModeAttribute().setDispatchMode( DispatchModeAttribute::Automatic );
   qjob->dispatchModeAttribute().setSendAfter( dt->dateTime() );
@@ -117,7 +117,7 @@ MessageQueueJob *MessageQueuer::createQueueJob()
   // No headers; need a '\n' to separate headers from body.
   // TODO: use real headers
   msg->setContent( QByteArray( "\n" ) + mMailEdit->document()->toPlainText().toLatin1() );
-  kDebug() << "msg:" << msg->encodedContent( true );
+  qDebug() << "msg:" << msg->encodedContent( true );
 
   MessageQueueJob *job = new MessageQueueJob();
   job->setMessage( msg );
@@ -157,22 +157,22 @@ int main( int argc, char **argv )
 void MessageQueuer::jobResult( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "job error:" << job->errorText();
+    qDebug() << "job error:" << job->errorText();
   } else {
-    kDebug() << "job success.";
+    qDebug() << "job success.";
   }
 }
 
 void MessageQueuer::jobPercent( KJob *job, unsigned long percent )
 {
   Q_UNUSED( job );
-  kDebug() << percent << "%";
+  qDebug() << percent << "%";
 }
 
 void MessageQueuer::jobInfoMessage( KJob *job, const QString &info, const QString &info2 )
 {
   Q_UNUSED( job );
-  kDebug() << info;
-  kDebug() << info2;
+  qDebug() << info;
+  qDebug() << info2;
 }
 

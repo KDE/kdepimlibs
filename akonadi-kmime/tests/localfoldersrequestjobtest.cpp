@@ -161,7 +161,7 @@ void LocalFoldersRequestJobTest::testMixedRequest()
     {
         knutOutbox.setName(QLatin1String("my_outbox"));
         knutOutbox.setParentCollection(res1);
-        kDebug() << res1;
+        qDebug() << res1;
         knutOutbox.addAttribute(new SpecialCollectionAttribute("outbox"));
         CollectionCreateJob *cjob = new CollectionCreateJob(knutOutbox, this);
         AKVERIFYEXEC(cjob);

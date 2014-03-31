@@ -144,7 +144,7 @@ void MarkAsCommand::slotModifyItemDone(KJob *job)
     mMarkJobCount--;
     //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
     if (job && job->error()) {
-        kDebug() << " Error trying to set item status:" << job->errorText();
+        qDebug() << " Error trying to set item status:" << job->errorText();
         emitResult(Failed);
     }
     if (mMarkJobCount == 0 && mFolderListJobCount == 0) {
