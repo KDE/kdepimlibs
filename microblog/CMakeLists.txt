@@ -25,6 +25,8 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX MICROBLOG
                         SOVERSION 5
 )
 
+find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS KDE4Support)
+
 ########### Find packages ###########
 # FIXME: remove this if/endif when Kdepimlibs is split.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
