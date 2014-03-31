@@ -1,26 +1,21 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+include(ECMMarkAsTest)
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/kxmlrpcclient
-  ${CMAKE_BINARY_DIR}/kxmlrpcclient
-  ${KDE4_KIO_INCLUDES}
-)
+find_package(Qt5Test CONFIG REQUIRED)
 
 ########### next target ###############
 
-set(testclient_SRCS testclient.cpp )
+set(testclient_SRCS testclient.cpp)
 
+add_executable(testclient ${testclient_SRCS})
+add_test(testclient testclient)
+ecm_mark_as_test(testclient)
+target_link_libraries(testclient KF5XmlRpcClient Qt5::Test)
 
-kde4_add_unit_test(testclient TESTNAME kxmlrpc-testclient  ${testclient_SRCS})
+########### next target ###############
 
-target_link_libraries(testclient  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} kxmlrpcclient)
+set(testquery_SRCS testquery.cpp)
 
-########## next target ##############
-
-set(testquery_SRCS testquery.cpp )
-
-
-kde4_add_unit_test(testquery TESTNAME kxmlrpc-testquery  ${testquery_SRCS})
-
-target_link_libraries(testquery  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} kxmlrpcclient)
-
+add_executable(testquery ${testclient_SRCS})
+add_test(testquery testquery)
+ecm_mark_as_test(testquery)
+target_link_libraries(testquery KF5XmlRpcClient Qt5::Test)
