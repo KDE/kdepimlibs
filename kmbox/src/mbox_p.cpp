@@ -111,7 +111,7 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
   } else {
     dateTime = date->dateTime().toUtc().dateTime();
   }
-  separator += QLocale::c().toString(dateTime, QLatin1String("ddd MMM dd HH:mm:ss yyyy")).toUtf8() + '\n';
+  separator += QLocale::c().toString(dateTime, QStringLiteral("ddd MMM dd HH:mm:ss yyyy")).toUtf8() + '\n';
 
   return separator;
 }

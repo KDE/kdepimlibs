@@ -113,27 +113,27 @@ void GData::listRecentPosts( const QStringList &labels, int number,
 {
   qDebug();
   Q_D( GData );
-  QString urlString( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/posts/default") );
+  QString urlString( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default") );
   if ( ! labels.empty() ) {
-    urlString += QLatin1String("/-/") + labels.join( QLatin1String("/") );
+    urlString += QStringLiteral("/-/") + labels.join( QStringLiteral("/") );
   }
   qDebug() << "listRecentPosts()";
   KUrl url( urlString );
 
   if ( !upMinTime.isNull() ) {
-    url.addQueryItem( QLatin1String("updated-min"), upMinTime.toString() );
+    url.addQueryItem( QStringLiteral("updated-min"), upMinTime.toString() );
   }
 
   if ( !upMaxTime.isNull() ) {
-    url.addQueryItem( QLatin1String("updated-max"), upMaxTime.toString() );
+    url.addQueryItem( QStringLiteral("updated-max"), upMaxTime.toString() );
   }
 
   if ( !pubMinTime.isNull() ) {
-    url.addQueryItem( QLatin1String("published-min"), pubMinTime.toString() );
+    url.addQueryItem( QStringLiteral("published-min"), pubMinTime.toString() );
   }
 
   if ( !pubMaxTime.isNull() ) {
-    url.addQueryItem( QLatin1String("published-max"), pubMaxTime.toString() );
+    url.addQueryItem( QStringLiteral("published-max"), pubMaxTime.toString() );
   }
 
   Syndication::Loader *loader = Syndication::Loader::create();
@@ -163,8 +163,8 @@ void GData::listComments( KBlog::BlogPost *post )
            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
            this,
            SLOT(slotListComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)) );
-  loader->loadFrom( QString(QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1Char('/') +
-                    post->postId() + QLatin1String("/comments/default")) );
+  loader->loadFrom( QString(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QLatin1Char('/') +
+                    post->postId() + QStringLiteral("/comments/default")) );
 }
 
 void GData::listAllComments()
@@ -214,50 +214,50 @@ void GData::modifyPost( KBlog::BlogPost *post )
     return;
   }
 
-  QString atomMarkup = QLatin1String("<entry xmlns='http://www.w3.org/2005/Atom'>");
-  atomMarkup += QLatin1String("<id>tag:blogger.com,1999:blog-") + blogId();
-  atomMarkup += QLatin1String(".post-") + post->postId() + QLatin1String("</id>");
-  atomMarkup += QLatin1String("<published>") + post->creationDateTime().toString() + QLatin1String("</published>");
-  atomMarkup += QLatin1String("<updated>") + post->modificationDateTime().toString() + QLatin1String("</updated>");
-  atomMarkup += QLatin1String("<title type='text'>") + post->title() + QLatin1String("</title>");
+  QString atomMarkup = QStringLiteral("<entry xmlns='http://www.w3.org/2005/Atom'>");
+  atomMarkup += QStringLiteral("<id>tag:blogger.com,1999:blog-") + blogId();
+  atomMarkup += QStringLiteral(".post-") + post->postId() + QStringLiteral("</id>");
+  atomMarkup += QStringLiteral("<published>") + post->creationDateTime().toString() + QStringLiteral("</published>");
+  atomMarkup += QStringLiteral("<updated>") + post->modificationDateTime().toString() + QStringLiteral("</updated>");
+  atomMarkup += QStringLiteral("<title type='text'>") + post->title() + QStringLiteral("</title>");
   if ( post->isPrivate() ) {
-    atomMarkup += QLatin1String("<app:control xmlns:app='http://purl.org/atom/app#'>");
-    atomMarkup += QLatin1String("<app:draft>yes</app:draft></app:control>");
+    atomMarkup += QStringLiteral("<app:control xmlns:app='http://purl.org/atom/app#'>");
+    atomMarkup += QStringLiteral("<app:draft>yes</app:draft></app:control>");
   }
-  atomMarkup += QLatin1String("<content type='xhtml'>");
-  atomMarkup += QLatin1String("<div xmlns='http://www.w3.org/1999/xhtml'>");
+  atomMarkup += QStringLiteral("<content type='xhtml'>");
+  atomMarkup += QStringLiteral("<div xmlns='http://www.w3.org/1999/xhtml'>");
   atomMarkup += post->content();
-  atomMarkup += QLatin1String("</div></content>");
+  atomMarkup += QStringLiteral("</div></content>");
   QList<QString>::ConstIterator it = post->tags().constBegin();
   QList<QString>::ConstIterator end = post->tags().constEnd();
   for ( ; it != end; ++it ) {
-    atomMarkup += QLatin1String("<category scheme='http://www.blogger.com/atom/ns#' term='") + ( *it ) + QLatin1String("' />");
+    atomMarkup += QStringLiteral("<category scheme='http://www.blogger.com/atom/ns#' term='") + ( *it ) + QStringLiteral("' />");
   }
-  atomMarkup += QLatin1String("<author>");
+  atomMarkup += QStringLiteral("<author>");
   if ( !fullName().isEmpty() ) {
-    atomMarkup += QLatin1String("<name>") + fullName() + QLatin1String("</name>");
+    atomMarkup += QStringLiteral("<name>") + fullName() + QStringLiteral("</name>");
   }
-  atomMarkup += QLatin1String("<email>") + username() + QLatin1String("</email>");
-  atomMarkup += QLatin1String("</author>");
-  atomMarkup += QLatin1String("</entry>");
+  atomMarkup += QStringLiteral("<email>") + username() + QStringLiteral("</email>");
+  atomMarkup += QStringLiteral("</author>");
+  atomMarkup += QStringLiteral("</entry>");
   QByteArray postData;
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
-      KUrl( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/posts/default/") + post->postId() ),
+      KUrl( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId() ),
       KIO::HideProgressInfo );
 
   Q_ASSERT( job );
 
   d->mModifyPostMap[ job ] = post;
 
-  job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: application/atom+xml; charset=utf-8") );
-  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
-  job->addMetaData( QLatin1String("UserAgent"), userAgent() );
-  job->addMetaData( QLatin1String("customHTTPHeader"),
-                    QLatin1String("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
-                    QLatin1String("\r\nX-HTTP-Method-Override: PUT") );
+  job->addMetaData( QStringLiteral("content-type"), QStringLiteral("Content-Type: application/atom+xml; charset=utf-8") );
+  job->addMetaData( QStringLiteral("ConnectTimeout"), QStringLiteral("50") );
+  job->addMetaData( QStringLiteral("UserAgent"), userAgent() );
+  job->addMetaData( QStringLiteral("customHTTPHeader"),
+                    QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
+                    QStringLiteral("\r\nX-HTTP-Method-Override: PUT") );
 
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotModifyPost(KJob*)) );
@@ -279,45 +279,45 @@ void GData::createPost( KBlog::BlogPost *post )
     return;
   }
 
-  QString atomMarkup = QLatin1String("<entry xmlns='http://www.w3.org/2005/Atom'>");
-  atomMarkup += QLatin1String("<title type='text'>") + post->title() + QLatin1String("</title>");
+  QString atomMarkup = QStringLiteral("<entry xmlns='http://www.w3.org/2005/Atom'>");
+  atomMarkup += QStringLiteral("<title type='text'>") + post->title() + QStringLiteral("</title>");
   if ( post->isPrivate() ) {
-    atomMarkup += QLatin1String("<app:control xmlns:app='http://purl.org/atom/app#'>");
-    atomMarkup += QLatin1String("<app:draft>yes</app:draft></app:control>");
+    atomMarkup += QStringLiteral("<app:control xmlns:app='http://purl.org/atom/app#'>");
+    atomMarkup += QStringLiteral("<app:draft>yes</app:draft></app:control>");
   }
-  atomMarkup += QLatin1String("<content type='xhtml'>");
-  atomMarkup += QLatin1String("<div xmlns='http://www.w3.org/1999/xhtml'>");
+  atomMarkup += QStringLiteral("<content type='xhtml'>");
+  atomMarkup += QStringLiteral("<div xmlns='http://www.w3.org/1999/xhtml'>");
   atomMarkup += post->content(); // FIXME check for Utf
-  atomMarkup += QLatin1String("</div></content>");
+  atomMarkup += QStringLiteral("</div></content>");
   QList<QString>::ConstIterator it = post->tags().constBegin();
   QList<QString>::ConstIterator end = post->tags().constEnd();
   for ( ; it != end; ++it ) {
-    atomMarkup += QLatin1String("<category scheme='http://www.blogger.com/atom/ns#' term='") + ( *it ) + QLatin1String("' />");
+    atomMarkup += QStringLiteral("<category scheme='http://www.blogger.com/atom/ns#' term='") + ( *it ) + QStringLiteral("' />");
   }
-  atomMarkup += QLatin1String("<author>");
+  atomMarkup += QStringLiteral("<author>");
   if ( !fullName().isEmpty() ) {
-    atomMarkup += QLatin1String("<name>") + fullName() + QLatin1String("</name>");
+    atomMarkup += QStringLiteral("<name>") + fullName() + QStringLiteral("</name>");
   }
-  atomMarkup += QLatin1String("<email>") + username() + QLatin1String("</email>");
-  atomMarkup += QLatin1String("</author>");
-  atomMarkup += QLatin1String("</entry>");
+  atomMarkup += QStringLiteral("<email>") + username() + QStringLiteral("</email>");
+  atomMarkup += QStringLiteral("</author>");
+  atomMarkup += QStringLiteral("</entry>");
 
   QByteArray postData;
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
-    KUrl( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/posts/default") ),
+    KUrl( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default") ),
     KIO::HideProgressInfo );
 
   Q_ASSERT ( job );
   d->mCreatePostMap[ job ] = post;
 
-  job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: application/atom+xml; charset=utf-8") );
-  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
-  job->addMetaData( QLatin1String("UserAgent"), userAgent() );
-  job->addMetaData( QLatin1String("customHTTPHeader"),
-                    QLatin1String("Authorization: GoogleLogin auth=") + d->mAuthenticationString );
+  job->addMetaData( QStringLiteral("content-type"), QStringLiteral("Content-Type: application/atom+xml; charset=utf-8") );
+  job->addMetaData( QStringLiteral("ConnectTimeout"), QStringLiteral("50") );
+  job->addMetaData( QStringLiteral("UserAgent"), userAgent() );
+  job->addMetaData( QStringLiteral("customHTTPHeader"),
+                    QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString );
 
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotCreatePost(KJob*)) );
@@ -342,21 +342,21 @@ void GData::removePost( KBlog::BlogPost *post )
   QByteArray postData;
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
-    KUrl( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/posts/default/") + post->postId() ),
+    KUrl( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId() ),
     KIO::HideProgressInfo );
 
   d->mRemovePostMap[ job ] = post;
 
   if ( !job ) {
     qWarning() << "Unable to create KIO job for http://www.blogger.com/feeds/"
-               << blogId() << QLatin1String("/posts/default/") + post->postId();
+               << blogId() << QStringLiteral("/posts/default/") + post->postId();
   }
 
-  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
-  job->addMetaData( QLatin1String("UserAgent"), userAgent() );
-  job->addMetaData( QLatin1String("customHTTPHeader"),
-                    QLatin1String("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
-                    QLatin1String("\r\nX-HTTP-Method-Override: DELETE") );
+  job->addMetaData( QStringLiteral("ConnectTimeout"), QStringLiteral("50") );
+  job->addMetaData( QStringLiteral("UserAgent"), userAgent() );
+  job->addMetaData( QStringLiteral("customHTTPHeader"),
+                    QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
+                    QStringLiteral("\r\nX-HTTP-Method-Override: DELETE") );
 
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotRemovePost(KJob*)) );
@@ -382,13 +382,13 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     emit errorComment( Atom, i18n( "Authentication failed." ), post, comment );
     return;
   }
-  QString atomMarkup = QLatin1String("<entry xmlns='http://www.w3.org/2005/Atom'>");
-  atomMarkup += QLatin1String("<title type=\"text\">") + comment->title() + QLatin1String("</title>");
-  atomMarkup += QLatin1String("<content type=\"html\">") + comment->content() + QLatin1String("</content>");
-  atomMarkup += QLatin1String("<author>");
-  atomMarkup += QLatin1String("<name>") + comment->name() + QLatin1String("</name>");
-  atomMarkup += QLatin1String("<email>") + comment->email() + QLatin1String("</email>");
-  atomMarkup += QLatin1String("</author></entry>");
+  QString atomMarkup = QStringLiteral("<entry xmlns='http://www.w3.org/2005/Atom'>");
+  atomMarkup += QStringLiteral("<title type=\"text\">") + comment->title() + QStringLiteral("</title>");
+  atomMarkup += QStringLiteral("<content type=\"html\">") + comment->content() + QStringLiteral("</content>");
+  atomMarkup += QStringLiteral("<author>");
+  atomMarkup += QStringLiteral("<name>") + comment->name() + QStringLiteral("</name>");
+  atomMarkup += QStringLiteral("<email>") + comment->email() + QStringLiteral("</email>");
+  atomMarkup += QStringLiteral("</author></entry>");
 
   QByteArray postData;
   qDebug() <<  postData;
@@ -396,7 +396,7 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
   stream.writeRawData( atomMarkup.toUtf8(), atomMarkup.toUtf8().length() );
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost( postData,
-    KUrl( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/") + post->postId() + QLatin1String("/comments/default") ),
+    KUrl( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() + QStringLiteral("/comments/default") ),
     KIO::HideProgressInfo );
 
   d->mCreateCommentMap[ job ][post] = comment;
@@ -406,11 +406,11 @@ void GData::createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
                << blogId() << "/" << post->postId() << "/comments/default";
   }
 
-  job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: application/atom+xml; charset=utf-8") );
-  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
-  job->addMetaData( QLatin1String("customHTTPHeader"),
-                    QLatin1String("Authorization: GoogleLogin auth=") + d->mAuthenticationString );
-  job->addMetaData( QLatin1String("UserAgent"), userAgent() );
+  job->addMetaData( QStringLiteral("content-type"), QStringLiteral("Content-Type: application/atom+xml; charset=utf-8") );
+  job->addMetaData( QStringLiteral("ConnectTimeout"), QStringLiteral("50") );
+  job->addMetaData( QStringLiteral("customHTTPHeader"),
+                    QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString );
+  job->addMetaData( QStringLiteral("UserAgent"), userAgent() );
 
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotCreateComment(KJob*)) );
@@ -441,8 +441,8 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
   QByteArray postData;
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-    KUrl( QLatin1String("http://www.blogger.com/feeds/") + blogId() + QLatin1String("/") + post->postId() +
-          QLatin1String("/comments/default/") + comment->commentId() ), KIO::HideProgressInfo );
+    KUrl( QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() +
+          QStringLiteral("/comments/default/") + comment->commentId() ), KIO::HideProgressInfo );
   d->mRemoveCommentMap[ job ][ post ] = comment;
 
   if ( !job ) {
@@ -451,11 +451,11 @@ void GData::removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
                << "/comments/default/" << comment->commentId();
   }
 
-  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
-  job->addMetaData( QLatin1String("UserAgent"), userAgent() );
-  job->addMetaData( QLatin1String("customHTTPHeader"),
-                    QLatin1String("Authorization: GoogleLogin auth=") +
-                    d->mAuthenticationString + QLatin1String("\r\nX-HTTP-Method-Override: DELETE") );
+  job->addMetaData( QStringLiteral("ConnectTimeout"), QStringLiteral("50") );
+  job->addMetaData( QStringLiteral("UserAgent"), userAgent() );
+  job->addMetaData( QStringLiteral("customHTTPHeader"),
+                    QStringLiteral("Authorization: GoogleLogin auth=") +
+                    d->mAuthenticationString + QStringLiteral("\r\nX-HTTP-Method-Override: DELETE") );
 
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotRemoveComment(KJob*)) );
@@ -476,17 +476,17 @@ bool GDataPrivate::authenticate()
   qDebug();
   Q_Q( GData );
   QByteArray data;
-  KUrl authGateway( QLatin1String("https://www.google.com/accounts/ClientLogin") );
-  authGateway.addQueryItem( QLatin1String("Email"), q->username() );
-  authGateway.addQueryItem( QLatin1String("Passwd"), q->password() );
-  authGateway.addQueryItem( QLatin1String("source"), q->userAgent() );
-  authGateway.addQueryItem( QLatin1String("service"), QLatin1String("blogger") );
+  KUrl authGateway( QStringLiteral("https://www.google.com/accounts/ClientLogin") );
+  authGateway.addQueryItem( QStringLiteral("Email"), q->username() );
+  authGateway.addQueryItem( QStringLiteral("Passwd"), q->password() );
+  authGateway.addQueryItem( QStringLiteral("source"), q->userAgent() );
+  authGateway.addQueryItem( QStringLiteral("service"), QStringLiteral("blogger") );
   if ( !mAuthenticationTime.isValid() ||
        QDateTime::currentDateTime().toTime_t() - mAuthenticationTime.toTime_t() > TIMEOUT ||
        mAuthenticationString.isEmpty() ) {
     KIO::Job *job = KIO::http_post( authGateway, QByteArray(), KIO::HideProgressInfo );
     if ( KIO::NetAccess::synchronousRun( job, (QWidget*)0, &data, &authGateway ) ) {
-      QRegExp rx( QLatin1String("Auth=(.+)") );
+      QRegExp rx( QStringLiteral("Auth=(.+)") );
       if ( rx.indexIn( QLatin1String(data) ) != -1 ) {
         qDebug() << "RegExp got authentication string:" << rx.cap( 1 );
         mAuthenticationString = rx.cap( 1 );
@@ -510,7 +510,7 @@ void GDataPrivate::slotFetchProfileId( KJob *job )
   KIO::StoredTransferJob *stj = qobject_cast<KIO::StoredTransferJob*>( job );
   const QString data = QString::fromUtf8( stj->data(), stj->data().size() );
   if ( !job->error() ) {
-    QRegExp pid( QLatin1String("http://www.blogger.com/profile/(\\d+)") );
+    QRegExp pid( QStringLiteral("http://www.blogger.com/profile/(\\d+)") );
     if ( pid.indexIn( data ) != -1 ) {
       q->setProfileId( pid.cap( 1 ) );
       qDebug() << "QRegExp bid( 'http://www.blogger.com/profile/(\\d+)' matches" << pid.cap( 1 );
@@ -548,14 +548,14 @@ void GDataPrivate::slotListBlogs( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
-    QRegExp rx( QLatin1String("blog-(\\d+)") );
+    QRegExp rx( QStringLiteral("blog-(\\d+)") );
     QMap<QString,QString> blogInfo;
     if ( rx.indexIn( ( *it )->id() ) != -1 ) {
       qDebug() << "QRegExp rx( 'blog-(\\d+)' matches" << rx.cap( 1 );
-      blogInfo[QLatin1String("id")] = rx.cap( 1 );
-      blogInfo[QLatin1String("title")] = ( *it )->title();
-      blogInfo[QLatin1String("url")] = ( *it )->link();
-      blogInfo[QLatin1String("summary")] = ( *it )->description(); //TODO fix/add more
+      blogInfo[QStringLiteral("id")] = rx.cap( 1 );
+      blogInfo[QStringLiteral("title")] = ( *it )->title();
+      blogInfo[QStringLiteral("url")] = ( *it )->link();
+      blogInfo[QStringLiteral("summary")] = ( *it )->description(); //TODO fix/add more
       blogsList << blogInfo;
     } else {
       qCritical() << "QRegExp rx( 'blog-(\\d+)' does not match anything in:"
@@ -592,7 +592,7 @@ void GDataPrivate::slotListComments( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogComment comment;
-    QRegExp rx( QLatin1String("post-(\\d+)") );
+    QRegExp rx( QStringLiteral("post-(\\d+)") );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
       qCritical() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the comment id path." ) );
@@ -638,7 +638,7 @@ void GDataPrivate::slotListAllComments( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogComment comment;
-    QRegExp rx( QLatin1String("post-(\\d+)") );
+    QRegExp rx( QStringLiteral("post-(\\d+)") );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
       qCritical() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the comment id path." ) );
@@ -690,7 +690,7 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
     BlogPost post;
-    QRegExp rx( QLatin1String("post-(\\d+)") );
+    QRegExp rx( QStringLiteral("post-(\\d+)") );
     if ( rx.indexIn( ( *it )->id() ) == -1 ) {
       qCritical() << "QRegExp rx( 'post-(\\d+)' does not match" << rx.cap( 1 );
       emit q->error( GData::Other, i18n( "Could not regexp the post id path." ) );
@@ -757,7 +757,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
   QList<Syndication::ItemPtr>::ConstIterator it = items.constBegin();
   QList<Syndication::ItemPtr>::ConstIterator end = items.constEnd();
   for ( ; it != end; ++it ) {
-    QRegExp rx( QLatin1String("post-(\\d+)") );
+    QRegExp rx( QStringLiteral("post-(\\d+)") );
     if ( rx.indexIn( ( *it )->id() ) != -1 &&
          rx.cap( 1 ) == postId ) {
       qDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
@@ -806,7 +806,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
     return;
   }
 
-  QRegExp rxId( QLatin1String("post-(\\d+)") ); //FIXME check and do better handling, esp the creation date time
+  QRegExp rxId( QStringLiteral("post-(\\d+)") ); //FIXME check and do better handling, esp the creation date time
   if ( rxId.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -815,7 +815,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
   }
   qDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
-  QRegExp rxPub( QLatin1String("<published>(.+)</published>") );
+  QRegExp rxPub( QStringLiteral("<published>(.+)</published>") );
   if ( rxPub.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the published time out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -824,7 +824,7 @@ void GDataPrivate::slotCreatePost( KJob *job )
   }
   qDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
-  QRegExp rxUp( QLatin1String("<updated>(.+)</updated>") );
+  QRegExp rxUp( QStringLiteral("<updated>(.+)</updated>") );
   if ( rxUp.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the update time out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -860,7 +860,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
     return;
   }
 
-  QRegExp rxId( QLatin1String("post-(\\d+)") ); //FIXME check and do better handling, esp creation date time
+  QRegExp rxId( QStringLiteral("post-(\\d+)") ); //FIXME check and do better handling, esp creation date time
   if ( rxId.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -869,7 +869,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
   }
   qDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
-  QRegExp rxPub( QLatin1String("<published>(.+)</published>") );
+  QRegExp rxPub( QStringLiteral("<published>(.+)</published>") );
   if ( rxPub.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the published time out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -878,7 +878,7 @@ void GDataPrivate::slotModifyPost( KJob *job )
   }
   qDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
-  QRegExp rxUp( QLatin1String("<updated>(.+)</updated>") );
+  QRegExp rxUp( QStringLiteral("<updated>(.+)</updated>") );
   if ( rxUp.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the update time out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -941,7 +941,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   }
 
 // TODO check for result and fit appropriately
-  QRegExp rxId( QLatin1String("post-(\\d+)") );
+  QRegExp rxId( QStringLiteral("post-(\\d+)") );
   if ( rxId.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the id out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -950,7 +950,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   }
   qDebug() << "QRegExp rx( 'post-(\\d+)' ) matches" << rxId.cap( 1 );
 
-  QRegExp rxPub( QLatin1String("<published>(.+)</published>") );
+  QRegExp rxPub( QStringLiteral("<published>(.+)</published>") );
   if ( rxPub.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the published time out of the result:" << data;
     emit q->errorPost( GData::Atom,
@@ -959,7 +959,7 @@ void GDataPrivate::slotCreateComment( KJob *job )
   }
   qDebug() << "QRegExp rx( '<published>(.+)</published>' ) matches" << rxPub.cap( 1 );
 
-  QRegExp rxUp( QLatin1String("<updated>(.+)</updated>") );
+  QRegExp rxUp( QStringLiteral("<updated>(.+)</updated>") );
   if ( rxUp.indexIn( data ) == -1 ) {
     qCritical() << "Could not regexp the update time out of the result:" << data;
     emit q->errorPost( GData::Atom,

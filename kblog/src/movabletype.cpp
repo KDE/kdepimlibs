@@ -66,7 +66,7 @@ void MovableType::listRecentPosts( int number )
     QList<QVariant> args( d->defaultArgs( blogId() ) );
     args << QVariant( number );
     d->mXmlRpcClient->call(
-      QLatin1String("metaWeblog.getRecentPosts"), args,
+      QStringLiteral("metaWeblog.getRecentPosts"), args,
       this, SLOT(slotListRecentPosts(QList<QVariant>,QVariant)),
       this, SLOT(slotError(int,QString,QVariant)),
       QVariant( number ) );
@@ -81,7 +81,7 @@ void MovableType::listTrackBackPings( KBlog::BlogPost *post )
   unsigned int i = d->mCallCounter++;
   d->mCallMap[ i ] = post;
   d->mXmlRpcClient->call(
-    QLatin1String("mt.getTrackbackPings"), args,
+    QStringLiteral("mt.getTrackbackPings"), args,
     this, SLOT(slotListTrackbackPings(QList<QVariant>,QVariant)),
     this, SLOT(slotError(int,QString,QVariant)),
     QVariant( i ) );
@@ -291,7 +291,7 @@ void MovableTypePrivate::slotFetchPost( const QList<QVariant> &result, const QVa
     unsigned int i= mCallCounter++;
     mCallMap[ i ] = post;
     mXmlRpcClient->call(
-      QLatin1String("mt.getPostCategories"), args,
+      QStringLiteral("mt.getPostCategories"), args,
       q, SLOT(slotGetPostCategories(QList<QVariant>,QVariant)),
       q, SLOT(slotError(int,QString,QVariant)),
       QVariant( i ) );
@@ -347,12 +347,12 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
   QStringList categories = post->categories();
   for ( int j = 0; j < categories.count(); j++ ) {
      for ( int k = 0; k < mCategoriesList.count(); k++ ) {
-       if ( mCategoriesList[k][QLatin1String("name")] == categories[j] ) {
-         qDebug() << "Matched category with name: " << categories[ j ] << " and id: " << mCategoriesList[ k ][ QLatin1String("categoryId") ];
+       if ( mCategoriesList[k][QStringLiteral("name")] == categories[j] ) {
+         qDebug() << "Matched category with name: " << categories[ j ] << " and id: " << mCategoriesList[ k ][ QStringLiteral("categoryId") ];
          QMap<QString,QVariant> category;
          //the first in the QStringList of post->categories()
          // is the primary category
-         category[QLatin1String("categoryId")] = mCategoriesList[k][QLatin1String("categoryId")].toInt();
+         category[QStringLiteral("categoryId")] = mCategoriesList[k][QStringLiteral("categoryId")].toInt();
          catList << QVariant( category );
          break;
        }
@@ -364,7 +364,7 @@ void MovableTypePrivate::setPostCategories( BlogPost *post, bool publishAfterCat
   args << QVariant( catList );
 
   mXmlRpcClient->call(
-    QLatin1String("mt.setPostCategories"), args,
+    QStringLiteral("mt.setPostCategories"), args,
     q, SLOT(slotSetPostCategories(QList<QVariant>,QVariant)),
     q, SLOT(slotError(int,QString,QVariant)),
     QVariant( i ) );
@@ -392,7 +392,7 @@ void MovableTypePrivate::slotGetPostCategories(const QList<QVariant>& result,con
     QList<QVariant>::ConstIterator it = categoryList.constBegin();
     QList<QVariant>::ConstIterator end = categoryList.constEnd();
     for ( ; it != end; it++ ) {
-      newCatList << ( *it ).toMap()[ QLatin1String("categoryName") ].toString();
+      newCatList << ( *it ).toMap()[ QStringLiteral("categoryName") ].toString();
     }
     qDebug() << "categories list: " << newCatList;
     post->setCategories( newCatList );
@@ -463,54 +463,54 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  qDebug() << endl << "Keys:" << mapkeys.join( QLatin1String(", ") );
+  qDebug() << endl << "Keys:" << mapkeys.join( QStringLiteral(", ") );
   qDebug() << endl;
 
   KDateTime dt =
-    KDateTime( postInfo[QLatin1String("dateCreated")].toDateTime(), KDateTime::UTC );
+    KDateTime( postInfo[QStringLiteral("dateCreated")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setCreationDateTime( dt.toLocalZone() );
   }
 
   dt =
-    KDateTime( postInfo[QLatin1String("lastModified")].toDateTime(), KDateTime::UTC );
+    KDateTime( postInfo[QStringLiteral("lastModified")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
     post->setModificationDateTime( dt.toLocalZone() );
   }
 
-  post->setPostId( postInfo[QLatin1String("postid")].toString().isEmpty() ? postInfo[QLatin1String("postId")].toString() :
-                   postInfo[QLatin1String("postid")].toString() );
+  post->setPostId( postInfo[QStringLiteral("postid")].toString().isEmpty() ? postInfo[QStringLiteral("postId")].toString() :
+                   postInfo[QStringLiteral("postid")].toString() );
 
-  QString title( postInfo[QLatin1String("title")].toString() );
-  QString description( postInfo[QLatin1String("description")].toString() );
-  QStringList categoryIdList = postInfo[QLatin1String("categories")].toStringList();
+  QString title( postInfo[QStringLiteral("title")].toString() );
+  QString description( postInfo[QStringLiteral("description")].toString() );
+  QStringList categoryIdList = postInfo[QStringLiteral("categories")].toStringList();
   QStringList categories;
   // since the metaweblog definition is ambigious, we try different
   // category mappings
   for ( int i = 0; i < categoryIdList.count(); i++ ) {
     for ( int k = 0; k < mCategoriesList.count(); k++ ) {
-      if ( mCategoriesList[ k ][ QLatin1String("name") ] == categoryIdList[ i ] ) {
-        categories << mCategoriesList[ k ][ QLatin1String("name") ];
-      } else if ( mCategoriesList[ k ][ QLatin1String("categoryId") ] == categoryIdList[ i ]) {
-        categories << mCategoriesList[ k ][ QLatin1String("name") ];
+      if ( mCategoriesList[ k ][ QStringLiteral("name") ] == categoryIdList[ i ] ) {
+        categories << mCategoriesList[ k ][ QStringLiteral("name") ];
+      } else if ( mCategoriesList[ k ][ QStringLiteral("categoryId") ] == categoryIdList[ i ]) {
+        categories << mCategoriesList[ k ][ QStringLiteral("name") ];
       }
     }
   }
 
   //TODO 2 new keys are:
   // String mt_convert_breaks, the value for the convert_breaks field
-  post->setSlug( postInfo[QLatin1String("wp_slug")].toString() );
-  post->setAdditionalContent( postInfo[QLatin1String("mt_text_more")].toString() );
+  post->setSlug( postInfo[QStringLiteral("wp_slug")].toString() );
+  post->setAdditionalContent( postInfo[QStringLiteral("mt_text_more")].toString() );
   post->setTitle( title );
   post->setContent( description );
-  post->setCommentAllowed( (bool)postInfo[QLatin1String("mt_allow_comments")].toInt() );
-  post->setTrackBackAllowed( (bool)postInfo[QLatin1String("mt_allow_pings")].toInt() );
-  post->setSummary( postInfo[QLatin1String("mt_excerpt")].toString() );
-  post->setTags( postInfo[QLatin1String("mt_keywords")].toStringList() );
-  post->setLink( postInfo[QLatin1String("link")].toString() );
-  post->setPermaLink( postInfo[QLatin1String("permaLink")].toString() );
-  QString postStatus = postInfo[QLatin1String("post_status")].toString();
-  if ( postStatus != QLatin1String("publish") &&
+  post->setCommentAllowed( (bool)postInfo[QStringLiteral("mt_allow_comments")].toInt() );
+  post->setTrackBackAllowed( (bool)postInfo[QStringLiteral("mt_allow_pings")].toInt() );
+  post->setSummary( postInfo[QStringLiteral("mt_excerpt")].toString() );
+  post->setTags( postInfo[QStringLiteral("mt_keywords")].toStringList() );
+  post->setLink( postInfo[QStringLiteral("link")].toString() );
+  post->setPermaLink( postInfo[QStringLiteral("permaLink")].toString() );
+  QString postStatus = postInfo[QStringLiteral("post_status")].toString();
+  if ( postStatus != QStringLiteral("publish") &&
        !postStatus.isEmpty() ) {
     /**
      * Maybe this field wasn't set by server! so, on that situation, we will assume it as non-Private,
@@ -549,9 +549,9 @@ void MovableTypePrivate::slotListTrackBackPings(
     QMap<QString,QString> tping;
     qDebug() << "MIDDLE:" << ( *it ).typeName();
     const QMap<QString, QVariant> trackBackInfo = ( *it ).toMap();
-    tping[ QLatin1String("title") ] = trackBackInfo[ QLatin1String("pingTitle")].toString();
-    tping[ QLatin1String("url") ] = trackBackInfo[ QLatin1String("pingURL")].toString();
-    tping[ QLatin1String("ip") ] = trackBackInfo[ QLatin1String("pingIP")].toString();
+    tping[ QStringLiteral("title") ] = trackBackInfo[ QStringLiteral("pingTitle")].toString();
+    tping[ QStringLiteral("url") ] = trackBackInfo[ QStringLiteral("pingURL")].toString();
+    tping[ QStringLiteral("ip") ] = trackBackInfo[ QStringLiteral("pingIP")].toString();
     trackBackList << tping;
   }
   qDebug() << "Emitting listedTrackBackPings()";
@@ -567,17 +567,17 @@ bool MovableTypePrivate::readArgsFromPost( QList<QVariant> *args, const BlogPost
     return false;
   }
   QMap<QString, QVariant> map;
-  map[QLatin1String("categories")] = post.categories();
-  map[QLatin1String("description")] = post.content();
+  map[QStringLiteral("categories")] = post.categories();
+  map[QStringLiteral("description")] = post.content();
   if ( !post.additionalContent().isEmpty() ) {
-    map[QLatin1String("mt_text_more")] = post.additionalContent();
+    map[QStringLiteral("mt_text_more")] = post.additionalContent();
   }
-  map[QLatin1String("title")] = post.title();
-  map[QLatin1String("dateCreated")] = post.creationDateTime().dateTime().toUTC();
-  map[QLatin1String("mt_allow_comments")] = (int)post.isCommentAllowed();
-  map[QLatin1String("mt_allow_pings")] = (int)post.isTrackBackAllowed();
-  map[QLatin1String("mt_excerpt")] = post.summary();
-  map[QLatin1String("mt_keywords")] = post.tags().join( QLatin1String(",") );
+  map[QStringLiteral("title")] = post.title();
+  map[QStringLiteral("dateCreated")] = post.creationDateTime().dateTime().toUTC();
+  map[QStringLiteral("mt_allow_comments")] = (int)post.isCommentAllowed();
+  map[QStringLiteral("mt_allow_pings")] = (int)post.isTrackBackAllowed();
+  map[QStringLiteral("mt_excerpt")] = post.summary();
+  map[QStringLiteral("mt_keywords")] = post.tags().join( QStringLiteral(",") );
   //map["mt_tb_ping_urls"] check for that, i think this should only be done on the server.
   *args << map;
   *args << QVariant( !post.isPrivate() );
