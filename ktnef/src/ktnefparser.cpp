@@ -34,7 +34,7 @@
 #include "ktnefmessage.h"
 #include "ktnefdefs.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmimetype.h>
 #include <ksavefile.h>
 

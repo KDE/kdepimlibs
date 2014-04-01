@@ -35,7 +35,7 @@
 #include "kmime_codec_qp.h"
 #include "kmime_util.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <cassert>
 

@@ -23,7 +23,7 @@
 
 #include "kpimutils/email.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <qtest_kde.h>
 

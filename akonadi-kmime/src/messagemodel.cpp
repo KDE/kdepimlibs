@@ -29,7 +29,7 @@
 #include <boost/shared_ptr.hpp>
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <klocalizedstring.h>

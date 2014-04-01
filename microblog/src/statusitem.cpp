@@ -18,7 +18,7 @@
 */
 
 #include "statusitem.h"
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QDateTime>
 #include <QDomElement>

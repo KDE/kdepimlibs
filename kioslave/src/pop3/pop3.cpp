@@ -36,7 +36,7 @@ extern "C" {
 #include <QByteArray>
 #include <QRegExp>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 #include <kcodecs.h>

@@ -23,7 +23,7 @@
 
 
 #include <qtest_kde.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 // GUI test, since the smileys use GUI stuff
 QTEST_KDEMAIN( LinkLocatorTest, GUI )

@@ -33,7 +33,7 @@
 #include "ktnefpropertyset.h"
 #include "ktnefdefs.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QDateTime>

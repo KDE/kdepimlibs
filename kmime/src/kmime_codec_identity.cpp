@@ -34,7 +34,7 @@
 
 #include "kmime_codec_identity.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QByteArray>
 
