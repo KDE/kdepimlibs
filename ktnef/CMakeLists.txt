@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(ktnef)
+project(KTnef)
 
 # ECM setup
 find_package(ECM 0.0.11 CONFIG REQUIRED)
