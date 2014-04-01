@@ -1,3 +1,5 @@
+remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+
 set(ktnef_SRCS
   ktnefparser.cpp
   ktnefproperty.cpp
@@ -20,7 +22,12 @@ target_include_directories(KF5KTnef INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INS
 target_include_directories(KF5KTnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR}/src;${KTnef_BINARY_DIR}/src>")
 
 target_link_libraries(KF5KTnef
-  KF5::KIOCore KF5::KDE4Support kabc kcalcore kcalutils
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::KAbc
+  KF5::KDE4Support
+  KF5::KIOCore
+  KF5::PimUtils
 )
 
 set_target_properties(KF5KTnef PROPERTIES
@@ -31,22 +38,30 @@ set_target_properties(KF5KTnef PROPERTIES
 
 install(TARGETS KF5KTnef EXPORT KF5KTnefTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-#install(FILES
-#    ${KImap_CamelCase_HEADERS}
-#    DESTINATION ${INCLUDE_INSTALL_DIR}/KImap
-#    COMPONENT Devel
-#)
+ecm_generate_headers(KTnef_CamelCase_HEADERS
+  HEADER_NAMES
+  Formatter
+  KTNEFAttach
+  KTNEFDefs
+  KTNEFMessage
+  KTNEFParser
+  KTNEFProperty
+  KTNEFPropertySet
+  KTNEFWriter
+
+  REQUIRED_HEADERS KTnef_HEADERS
+  PREFIX Syndication
+)
 
 install(FILES
-    formatter.h
+    ${KTnef_CamelCase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/KTNEF
+    COMPONENT Devel
+)
+
+install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/ktnef_export.h
-    ktnefattach.h
-    ktnefdefs.h
-    ktnefmessage.h
-    ktnefparser.h
-    ktnefproperty.h
-    ktnefpropertyset.h
-    ktnefwriter.h
+    ${KTnef_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef COMPONENT Devel
 )
 
