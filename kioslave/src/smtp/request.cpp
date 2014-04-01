@@ -33,7 +33,7 @@
 
 #include <kurl.h>
 #include <QtCore/QUrl>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <assert.h>
 
@@ -78,7 +78,7 @@ namespace KioSMTP {
         request.setSize( value.toUInt() );
       else
         kWarning(7112) << "while parsing query: unknown query item \""
-                       << key << "\" with value \"" << value << "\"" << endl;
+                       << key << "\" with value \"" << value << "\"" ;
     }
 
     return request;

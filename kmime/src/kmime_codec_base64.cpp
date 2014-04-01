@@ -32,7 +32,7 @@
 
 #include "kmime_codec_base64.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <cassert>
 

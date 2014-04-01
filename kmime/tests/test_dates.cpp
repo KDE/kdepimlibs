@@ -1,6 +1,6 @@
 #include "kmime_dateformatter.h"
 #include "kmime_header_parsing.h"
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcomponentdata.h>
 using namespace KMime;
 

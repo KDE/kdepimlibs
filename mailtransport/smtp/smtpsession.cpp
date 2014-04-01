@@ -170,7 +170,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
       ssize_t numWritten, cmdline_len = cmdline.length();
       if ( ( numWritten = socket->write( cmdline ) ) != cmdline_len ) {
         kDebug( 7112 ) << "Tried to write " << cmdline_len << " bytes, but only "
-                     << numWritten << " were written!" << endl;
+                     << numWritten << " were written!" ;
         error( KIO::ERR_SLAVE_DEFINED, i18n ( "Writing to socket failed." ) );
         return false;
       }

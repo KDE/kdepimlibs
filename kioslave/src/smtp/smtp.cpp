@@ -55,7 +55,7 @@ using KioSMTP::SMTPSessionInterface;
 
 #include <kemailsettings.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>
@@ -261,7 +261,7 @@ bool SMTPProtocol::sendCommandLine( const QByteArray & cmdline ) {
   ssize_t numWritten, cmdline_len = cmdline.length();
   if ( (numWritten = write( cmdline.data(), cmdline_len ) )!= cmdline_len ) {
     kDebug(7112) << "Tried to write " << cmdline_len << " bytes, but only "
-                 << numWritten << " were written!" << endl;
+                 << numWritten << " were written!" ;
     error( KIO::ERR_SLAVE_DEFINED, i18n ("Writing to socket failed.") );
     return false;
   }

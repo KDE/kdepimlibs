@@ -19,7 +19,7 @@
 
 #include "messagetest.h"
 #include <qtest_kde.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 using namespace KMime;
 

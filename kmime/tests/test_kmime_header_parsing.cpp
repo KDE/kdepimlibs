@@ -46,7 +46,7 @@ static const int tokenTypesLen = sizeof tokenTypes / sizeof *tokenTypes;
 
 void usage( const char * msg=0 ) {
   if ( msg && *msg ) {
-    cerr << msg << endl;
+    cerr << msg ;
   }
   cerr <<
     "usage: test_kmime_header_parsing "
@@ -54,10 +54,10 @@ void usage( const char * msg=0 ) {
     "\n"
     "  --token <tokentype>       interpret input as <tokentype> and output\n"
     "  (-t)                      in parsed form. Currently defined values of\n"
-    "                            <tokentype> are:" << endl;
+    "                            <tokentype> are:" ;
   for ( int i = 0 ; i < tokenTypesLen ; ++i ) {
     cerr << "                               " << tokenTypes[i]
-         << endl;
+         ;
   }
   cerr << "\n"
     "  --headerfield <fieldtype> interpret input as header field <fieldtype>\n"
@@ -65,7 +65,7 @@ void usage( const char * msg=0 ) {
     "\n"
     "  --header                  parse an RFC2822 header. Iterates over all\n"
     "  (-h)                      header fields and outputs them in parsed form."
-    << endl;
+    ;
   exit( 1 );
 }
 
@@ -153,9 +153,9 @@ int main( int argc, char * argv[] ) {
       bool ok = indata.size() >= 1 && *iit++ == '=' &&
       parseEncodedWord( iit, iend, result, language, charset );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result:\n" << result << endl
-           << "language:\n" << language.data() << endl;
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result:\n" << result 
+           << "language:\n" << language.data() ;
     }
     break;
   case 1:
@@ -163,9 +163,9 @@ int main( int argc, char * argv[] ) {
       QString result = "with 8bit: ";
       bool ok = parseAtom( iit, iend, result, true );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
 
       result = "without 8bit: ";
 #ifdef COMPILE_FAIL
@@ -175,9 +175,9 @@ int main( int argc, char * argv[] ) {
       ok = parseAtom( iit, iend, result, false );
 #endif
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 2:
@@ -185,9 +185,9 @@ int main( int argc, char * argv[] ) {
       QString result = "with 8bit: ";
       bool ok = parseToken( iit, iend, result, true );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
 
       result = "without 8bit: ";
 #ifdef COMPILE_FAIL
@@ -197,9 +197,9 @@ int main( int argc, char * argv[] ) {
       ok = parseToken( iit, iend, result, false );
 #endif
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 3:
@@ -209,9 +209,9 @@ int main( int argc, char * argv[] ) {
       bool ok = *iit++ == '"' &&
            parseGenericQuotedString( iit, iend, result, withCRLF, '"', '"' );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 4:
@@ -221,9 +221,9 @@ int main( int argc, char * argv[] ) {
       bool ok = *iit++ == '[' &&
            parseGenericQuotedString( iit, iend, result, withCRLF, '[', ']' );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 5:
@@ -233,9 +233,9 @@ int main( int argc, char * argv[] ) {
       bool ok = *iit++ == '(' &&
                 parseComment( iit, iend, result, withCRLF, true );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 6:
@@ -243,9 +243,9 @@ int main( int argc, char * argv[] ) {
       QString result;
       bool ok = parsePhrase( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 7:
@@ -253,9 +253,9 @@ int main( int argc, char * argv[] ) {
       QString result;
       bool ok = parseDotAtom( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 8:
@@ -263,9 +263,9 @@ int main( int argc, char * argv[] ) {
       QString result;
       bool ok = parseDomain( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result:\n" << result
-           << endl;
+           ;
     }
     break;
   case 9:
@@ -273,12 +273,12 @@ int main( int argc, char * argv[] ) {
       QStringList result;
       bool ok = parseObsRoute( iit, iend, result, withCRLF, true /*save*/ );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result: " << result.count() << " domains:"
-           << endl;
+           ;
       for ( QStringList::ConstIterator it = result.constBegin() ;
            it != result.constEnd() ; ++it ) {
-        cout << ( *it ) << endl;
+        cout << ( *it ) ;
       }
     }
     break;
@@ -287,10 +287,10 @@ int main( int argc, char * argv[] ) {
       KMime::Types::AddrSpec result;
       bool ok = parseAddrSpec( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result.localPart:\n" << result.localPart << endl
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result.localPart:\n" << result.localPart 
            << "result.domain:\n" << result.domain
-           << endl;
+           ;
     }
     break;
   case 11:
@@ -298,10 +298,10 @@ int main( int argc, char * argv[] ) {
       KMime::Types::AddrSpec result;
       bool ok = parseAngleAddr( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result.localPart:\n" << result.localPart << endl
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result.localPart:\n" << result.localPart 
            << "result.domain:\n" << result.domain
-           << endl;
+           ;
     }
     break;
   case 12:
@@ -309,11 +309,11 @@ int main( int argc, char * argv[] ) {
       KMime::Types::Mailbox result;
       bool ok = parseMailbox( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result.displayName:\n" << result.name() << endl
-           << "result.addrSpec.localPart:\n" << result.addrSpec().localPart << endl
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result.displayName:\n" << result.name() 
+           << "result.addrSpec.localPart:\n" << result.addrSpec().localPart 
            << "result.addrSpec.domain:\n" << result.addrSpec().domain
-           << endl;
+           ;
     }
     break;
   case 13:
@@ -321,19 +321,19 @@ int main( int argc, char * argv[] ) {
       KMime::Types::Address result;
       bool ok = parseGroup( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result.displayName:\n" << result.displayName
-           << endl;
+           ;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
             it = result.mailboxList.constBegin();
             it != result.mailboxList.constEnd() ; ++it, ++i ) {
         cout << "result.mailboxList[" << i << "].displayName:\n"
-             << ( *it ).name() << endl
+             << ( *it ).name() 
              << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-             << ( *it ).addrSpec().localPart << endl
+             << ( *it ).addrSpec().localPart 
              << "result.mailboxList[" << i << "].addrSpec.domain:\n"
-             << ( *it ).addrSpec().domain << endl;
+             << ( *it ).addrSpec().domain ;
       }
     }
     break;
@@ -342,20 +342,20 @@ int main( int argc, char * argv[] ) {
       KMime::Types::Address result;
       bool ok = parseAddress( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result.displayName:\n"
-           << endl;
+           ;
       int i = 0;
       for ( QList<KMime::Types::Mailbox>::ConstIterator
            it = result.mailboxList.constBegin();
            it != result.mailboxList.constEnd() ; ++it, ++i ) {
         cout << "result.mailboxList[" << i << "].displayName:\n"
-             << ( *it ).name() << endl
+             << ( *it ).name() 
              << "result.mailboxList[" << i << "].addrSpec.localPart:\n"
-             << ( *it ).addrSpec().localPart << endl
+             << ( *it ).addrSpec().localPart 
              << "result.mailboxList[" << i << "].addrSpec.domain:\n"
              << ( *it ).addrSpec().domain
-             << endl;
+             ;
       }
     }
     break;
@@ -364,24 +364,24 @@ int main( int argc, char * argv[] ) {
       QList<KMime::Types::Address> result;
       bool ok = parseAddressList( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl;
+      cout << ( ok ? "OK" : "BAD" ) ;
       int j = 0;
       for ( QList<KMime::Types::Address>::ConstIterator
            jt = result.constBegin() ; jt != result.constEnd() ; ++jt, ++j ) {
         cout << "result[" << j << "].displayName:\n"
              << ( *jt ).displayName
-             << endl;
+             ;
         int i = 0;
         for ( QList<KMime::Types::Mailbox>::ConstIterator
            it = ( *jt ).mailboxList.begin();
            it != ( *jt ).mailboxList.end() ; ++it, ++i ) {
           cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"
-           << ( *it ).name() << endl
+           << ( *it ).name() 
            << "result[" << j << "].mailboxList[" << i << "].addrSpec.localPart:\n"
-           << ( *it ).addrSpec().localPart << endl
+           << ( *it ).addrSpec().localPart 
            << "result[" << j << "].mailboxList[" << i << "].addrSpec.domain:\n"
            << ( *it ).addrSpec().domain
-           << endl;
+           ;
         }
       }
     }
@@ -391,12 +391,12 @@ int main( int argc, char * argv[] ) {
       QPair<QString, KMime::Types::QStringOrQPair> result;
       bool ok = parseParameter( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result.first (attribute):\n" << result.first << endl
-           << "result.second.qstring (value):\n" << result.second.qstring << endl
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result.first (attribute):\n" << result.first 
+           << "result.second.qstring (value):\n" << result.second.qstring 
            << "result.second.qpair (value):\n"
            << QByteArray( result.second.qpair.first, result.second.qpair.second + 1 ).data()
-           << endl;
+           ;
     }
     break;
   case 17:
@@ -404,19 +404,19 @@ int main( int argc, char * argv[] ) {
       QMap<QString, KMime::Types::QStringOrQPair> result;
       bool ok = parseRawParameterList( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result: " << result.count() << " raw parameters:"
-           << endl;
+           ;
       int i = 0;
       for ( QMap<QString, KMime::Types::QStringOrQPair>::ConstIterator it = result.constBegin();
             it != result.constEnd() ; ++it, ++i ) {
         cout << "result[" << i << "].key() (attribute):\n"
-             << it.key() << endl
+             << it.key() 
              << "result[" << i << "].data().qstring (value):\n"
-             << it.value().qstring << endl
+             << it.value().qstring 
              << "result[" << i << "].data().qpair (value):\n"
              << QByteArray( it.value().qpair.first, it.value().qpair.second + 1 ).data()
-             << endl;
+             ;
       }
     }
     break;
@@ -425,17 +425,17 @@ int main( int argc, char * argv[] ) {
       QMap<QString, QString> result;
       bool ok = parseParameterList( iit, iend, result, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result: " << result.count() << " parameters:"
-           << endl;
+           ;
       int i = 0;
       for ( QMap<QString, QString>::Iterator it = result.begin() ;
             it != result.end() ; ++it, ++i ) {
         cout << "result[" << i << "].key() (attribute):\n"
-             << it.key() << endl
+             << it.key() 
              << "result[" << i << "].data() (value):\n"
              << it.value()
-             << endl;
+             ;
       }
     }
     break;
@@ -448,13 +448,13 @@ int main( int argc, char * argv[] ) {
       bool ok = parseTime( iit, iend, hour, mins, secs,
                            secsEastOfGMT, timeZoneKnown, withCRLF );
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
-           << "result.hour: " << hour << endl
-           << "result.mins: " << mins << endl
-           << "result.secs: " << secs << endl
-           << "result.secsEastOfGMT: " << secsEastOfGMT << endl
+      cout << ( ok ? "OK" : "BAD" ) 
+           << "result.hour: " << hour 
+           << "result.mins: " << mins 
+           << "result.secs: " << secs 
+           << "result.secsEastOfGMT: " << secsEastOfGMT 
            << "result.timeZoneKnown: " << timeZoneKnown
-           << endl;
+           ;
     }
     break;
   case 20:
@@ -463,11 +463,11 @@ int main( int argc, char * argv[] ) {
       bool ok =  parseDateTime( iit, iend, result, withCRLF );
       time_t timet = result.toTime_t();
 
-      cout << ( ok ? "OK" : "BAD" ) << endl
+      cout << ( ok ? "OK" : "BAD" ) 
            << "result.time (in local timezone): " << ctime( &timet )
            << "result.secsEastOfGMT: " << result.utcOffset()
            << " (" << result.utcOffset() / 60 << "mins)"
-           << endl;
+           ;
     }
     break;
   default:

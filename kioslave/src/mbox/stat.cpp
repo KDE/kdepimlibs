@@ -21,7 +21,7 @@
 #include "readmbox.h"
 #include "urlinfo.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kio/global.h>
 
 #include <sys/stat.h>

@@ -1,6 +1,6 @@
 #include <kio/global.h>
 #include <kio/authinfo.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #define KIOSMTP_COMPARATORS // for TransactionState::operator==
 #include "fakesession.h"
@@ -587,7 +587,7 @@ void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
            << preload << ", "
            << ungetLast << ", "
            << slaveDotStuff << ", "
-           << mailEndsInNewline << " ) =====" << endl;
+           << mailEndsInNewline << " ) =====" ;
 
   FakeSession smtp;
   if ( slaveDotStuff )

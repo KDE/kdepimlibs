@@ -26,7 +26,7 @@
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 
@@ -49,7 +49,7 @@ int kdemain( int argc, char **argv )
   kDebug(7125) << "Starting kio_ldap instance";
 
   if ( argc != 4 ) {
-    qCritical() << "Usage kio_ldap protocol pool app" << endl;
+    qCritical() << "Usage kio_ldap protocol pool app" ;
     return -1;
   }
 
@@ -88,7 +88,7 @@ void LDAPProtocol::LDAPErr( int err )
   if ( err == KLDAP_SUCCESS ) return;
 
   qDebug() << "error code: " << err << " msg: " << LdapConnection::errorString(err) <<
-    extramsg << "'" << endl;
+    extramsg << "'" ;
   QString msg;
   msg = mServer.url().prettyUrl();
   if ( !extramsg.isEmpty() ) msg += extramsg;
@@ -175,7 +175,7 @@ void LDAPProtocol::controlsFromMetaData( LdapControls &serverctrls,
     Ldif::splitControl( val, oid, critical, value );
     kDebug(7125) << "server ctrl #" << i << " value: " << val <<
       " oid: " << oid << " critical: " << critical << " value: " <<
-      QString::fromUtf8( value, value.size() ) << endl;
+      QString::fromUtf8( value, value.size() ) ;
     LdapControl ctrl( oid, val, critical );
     serverctrls.append( ctrl );
     i++;
@@ -186,7 +186,7 @@ void LDAPProtocol::controlsFromMetaData( LdapControls &serverctrls,
     Ldif::splitControl( val, oid, critical, value );
     kDebug(7125) << "client ctrl #" << i << " value: " << val <<
       " oid: " << oid << " critical: " << critical << " value: " <<
-      QString::fromUtf8( value, value.size() ) << endl;
+      QString::fromUtf8( value, value.size() ) ;
     LdapControl ctrl( oid, val, critical );
     clientctrls.append( ctrl );
     i++;
@@ -282,7 +282,7 @@ void LDAPProtocol::setHost( const QString& host, quint16 port,
   mServer.setPassword( password );
 
   kDebug(7125) << "setHost: " << host << " port: " << port << " user: " <<
-    user << " pass: [protected]" << endl;
+    user << " pass: [protected]" ;
 }
 
 void LDAPProtocol::openConnection()
@@ -610,7 +610,7 @@ void LDAPProtocol::put( const KUrl &_url, int, KIO::JobFlags flags )
               kDebug(7125) << "kio_ldap_modrdn olddn:" << ldif.dn().toString() <<
                 " newRdn: " <<  ldif.newRdn() <<
                 " newSuperior: " << ldif.newSuperior() <<
-                " deloldrdn: " << ldif.delOldRdn() << endl;
+                " deloldrdn: " << ldif.delOldRdn() ;
               ldaperr = mOp.rename_s( ldif.dn(), ldif.newRdn(),
                 ldif.newSuperior(), ldif.delOldRdn() );
               break;

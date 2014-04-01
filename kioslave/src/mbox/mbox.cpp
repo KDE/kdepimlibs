@@ -24,7 +24,7 @@
 
 #include <QString>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 #include <kcomponentdata.h>
 #include <kglobal.h>

@@ -29,12 +29,12 @@ int main( int argc, char **argv ) {
   for ( int i = 1 /*not program*/ ; i < argc ; i++ ) {
     QFile in( argv[i] );
     if ( !in.open( QIODevice::ReadOnly ) ) {
-      cerr << argv[i] << ": does not exist!" << endl;
+      cerr << argv[i] << ": does not exist!" ;
       continue;
     }
     QByteArray ba = in.readAll();
     CharFreq cf( ba );
-    cout << argv[i] << ": " << typeToString( cf.type() ) << endl;
+    cout << argv[i] << ": " << typeToString( cf.type() ) ;
   }
   return 0;
 }
