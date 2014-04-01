@@ -25,7 +25,9 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADIKMIME
 )
 
 ########### Find packages ###########
-find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS KIO KDE4Support)
+find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-KMime_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
   find_package(KF5KMime CONFIG REQUIRED)

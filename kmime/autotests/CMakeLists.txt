@@ -1,7 +1,7 @@
 include(ECMMarkAsTest)
 
 set(QT_REQUIRED_VERSION "5.2.0")
-find_package(Qt5 ${QT_REQUIRED_VERSION} NO_MODULE REQUIRED COMPONENTS Test)
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 # Turn exceptions on
 kde_enable_exceptions()

@@ -27,7 +27,9 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMIME
 )
 
 ########### Find packages ###########
-find_package(KF5 NO_MODULE REQUIRED COMPONENTS Codecs ItemViews KDE4Support)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 ########### Targets ###########
 add_subdirectory(src)

@@ -25,7 +25,9 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KPIMUTILS
 )
 
 ########### Find packages ###########
-find_package(KF5 ${KF5_VERSION} CONFIG REQUIRED COMPONENTS ItemViews Emoticons KDE4Support)
+find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Emoticons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 # FIXME: remove this if/endif when KMime is split.
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
