@@ -497,7 +497,7 @@ bool MailboxList::parse( const char* &scursor, const char *const send,
   for ( it = maybeAddressList.begin(); it != maybeAddressList.end() ; ++it ) {
     if ( !( *it ).displayName.isEmpty() ) {
       KMIME_WARN << "mailbox groups in header disallowing them! Name: \""
-                 << ( *it ).displayName << "\"" ;
+                 << ( *it ).displayName << "\"" << endl;
     }
     d->mailboxList += ( *it ).mailboxList;
   }
@@ -522,7 +522,7 @@ bool SingleMailbox::parse( const char* &scursor, const char *const send,
 
   if ( d->mailboxList.count() > 1 ) {
     KMIME_WARN << "multiple mailboxes in header allowing only a single one!"
-               ;
+               << endl;
   }
   return true;
 }
@@ -719,7 +719,7 @@ bool Token::parse( const char* &scursor, const char *const send, bool isCRLF )
   eatCFWS( scursor, send, isCRLF );
   if ( scursor != send ) {
     KMIME_WARN << "trailing garbage after token in header allowing "
-      "only a single token!" ;
+      "only a single token!" << endl;
   }
   return true;
 }
@@ -866,7 +866,7 @@ bool DotAtom::parse( const char* &scursor, const char *const send,
   eatCFWS( scursor, send, isCRLF );
   if ( scursor != send ) {
     KMIME_WARN << "trailing garbage after dot-atom in header allowing "
-      "only a single dot-atom!" ;
+      "only a single dot-atom!" << endl;
   }
   return true;
 }
@@ -1131,7 +1131,7 @@ bool SingleIdent::parse( const char* &scursor, const char * const send,
 
   if ( d->msgIdList.count() > 1 ) {
     KMIME_WARN << "more than one msg-id in header "
-               << "allowing only a single one!" ;
+               << "allowing only a single one!" << endl;
   }
   return true;
 }
@@ -1206,7 +1206,7 @@ bool ReturnPath::parse( const char* &scursor, const char * const send,
     // check that there was no display-name:
     if ( maybeMailbox.hasName() ) {
       KMIME_WARN << "display-name \"" << maybeMailbox.name()
-                 << "\" in Return-Path!" ;
+                 << "\" in Return-Path!" << endl;
     }
   }
   d->mailbox = maybeMailbox;
@@ -1215,7 +1215,7 @@ bool ReturnPath::parse( const char* &scursor, const char * const send,
   eatCFWS( scursor, send, isCRLF );
   // and warn if it wasn't:
   if ( scursor != send ) {
-    KMIME_WARN << "trailing garbage after angle-addr in Return-Path!" ;
+    KMIME_WARN << "trailing garbage after angle-addr in Return-Path!" << endl;
   }
   return true;
 }

@@ -36,7 +36,7 @@
 #include "transactionstate.h"
 
 #include <klocalizedstring.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kio/slavebase.h> // for test_commands, where SMTPProtocol is not derived from TCPSlaveBase
 
 #include <QtCore/QUrl>

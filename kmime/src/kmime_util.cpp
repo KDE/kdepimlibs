@@ -37,7 +37,7 @@
 #include <klocalizedstring.h>
 #include <kcharsets.h>
 #include <kcodecs.h>
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <QtCore/QList>
 #include <QtCore/QString>

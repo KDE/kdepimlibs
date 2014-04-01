@@ -32,7 +32,7 @@
 
 #include "kmime_codec_uuencode.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <cassert>
 

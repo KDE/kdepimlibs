@@ -18,7 +18,7 @@
  */
 #include "urlinfo.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kurl.h>
 
 #include <QFileInfo>

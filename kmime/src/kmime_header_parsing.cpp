@@ -1625,7 +1625,7 @@ static void decodeRFC2231Value( Codec* &rfc2231Codec,
 
   if ( !dec->decode( decCursor, decEnd, bit, bend ) ) {
     KMIME_WARN << rfc2231Codec->name()
-               << "codec lies about its maxDecodedSizeFor()" 
+               << "codec lies about its maxDecodedSizeFor()" << endl
                << "result may be truncated";
   }
 

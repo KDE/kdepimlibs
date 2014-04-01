@@ -16,11 +16,11 @@ using std::endl;
 
 void usage( const char * msg=0 ) {
   if ( msg ) {
-    cerr << msg ;
+    cerr << msg << endl;
   }
   cerr << "usage: test_mdn <options>\n"
-          "where options include the following:" 
-       << "FIXME" ;
+          "where options include the following:" << endl
+       << "FIXME" << endl;
   exit( 1 );
 }
 

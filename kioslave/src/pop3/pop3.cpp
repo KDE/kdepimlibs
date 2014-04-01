@@ -36,7 +36,7 @@ extern "C" {
 #include <QByteArray>
 #include <QRegExp>
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 #include <kcodecs.h>
@@ -676,7 +676,7 @@ bool POP3Protocol::pop3_open()
       if (startSsl()) {
         kDebug(7105) << "TLS mode has been enabled.";
       } else {
-        kDebug(7105) << "TLS mode setup has failed. Aborting." ;
+        kDebug(7105) << "TLS mode setup has failed. Aborting." << endl;
         error(ERR_SLAVE_DEFINED,
               i18n("Your POP3 server claims to "
                    "support TLS but negotiation "

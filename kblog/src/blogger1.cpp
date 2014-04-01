@@ -465,8 +465,8 @@ bool Blogger1Private::readPostFromMap(
     return false;
   }
   QStringList mapkeys = postInfo.keys();
-  qDebug()  << "Keys:" << mapkeys.join( QStringLiteral(", ") );
-  qDebug() ;
+  qDebug() << endl << "Keys:" << mapkeys.join( QStringLiteral(", ") );
+  qDebug() << endl;
 
   KDateTime dt( postInfo[QStringLiteral("dateCreated")].toDateTime(), KDateTime::UTC );
   if ( dt.isValid() && !dt.isNull() ) {
