@@ -1,69 +1,41 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(ktnef)
 
+# ECM setup
+find_package(ECM 0.0.11 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
+include(GenerateExportHeader)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+
+
+# FIXME: Do we want the same versions in kdepimlibs and kf5?
+set(KF5_VERSION "4.97.0")
+
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KTNEF
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/ktnef_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KTnefConfigVersion.cmake"
+                        SOVERSION 5
+)
+
+########### Find packages ###########
 find_package(KF5 NO_MODULE REQUIRED COMPONENTS KIO KDE4Support)
+
+# FIXME: remove this if/endif when KCalCore is split.
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  find_package(KF5CalendarCore ${KF5_VERSION} CONFIG REQUIRED)
+endif()
+
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 
+add_subdirectory(src)
 add_subdirectory(tests)
-
-########### next target ###############
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/kabc
-  ${CMAKE_BINARY_DIR}/kabc
-  ${kcalcore_BINARY_DIR}
-)
-
-set(ktnef_LIB_SRCS
-  ktnefparser.cpp
-  ktnefproperty.cpp
-  ktnefattach.cpp
-  mapi.cpp
-  ktnefpropertyset.cpp
-  ktnefmessage.cpp
-  ktnefwriter.cpp
-  lzfu.cpp
-  formatter.cpp
-)
-
-include_directories(
-  ${CMAKE_BINARY_DIR}/kcalcore
-  ${CMAKE_BINARY_DIR}/kcalutils
-  ${CMAKE_BINARY_DIR}/kabc
-  ${CMAKE_BINARY_DIR}/kcal
-  ${CMAKE_BINARY_DIR}/kpimutils
-)
-
-add_definitions(
-  -DKCAL_DEPRECATED=
-)
-# This one won't be needed when CMake 2.8.13 is depended on.
-add_definitions(
-  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
-)
-
-add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
-generate_export_header(ktnef)
-
-target_link_libraries(ktnef KF5::KIOCore KF5::KDE4Support kabc kcalcore kcalutils)
-
-set_target_properties(ktnef PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION})
-
-install(TARGETS ktnef EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### install files ###############
-
-install(FILES
-  formatter.h
-  ${CMAKE_CURRENT_BINARY_DIR}/ktnef_export.h
-  ktnefattach.h
-  ktnefdefs.h
-  ktnefmessage.h
-  ktnefparser.h
-  ktnefproperty.h
-  ktnefpropertyset.h
-  ktnefwriter.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef COMPONENT Devel
-)

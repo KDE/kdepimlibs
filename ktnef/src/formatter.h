@@ -35,7 +35,6 @@
 
 #include <QtCore/QString>
 
-#include <kcalcore/memorycalendar.h>
 
 #include "ktnef_export.h"
 
