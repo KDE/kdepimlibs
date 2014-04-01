@@ -27,7 +27,6 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KXMLRPCCLIENT
 
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 ########### Targets ###########
 add_subdirectory(src)

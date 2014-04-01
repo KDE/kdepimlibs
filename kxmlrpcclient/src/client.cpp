@@ -25,9 +25,9 @@
 #include "query.h"
 
 #include <kio/job.h>
-#include <kdebug.h>
 
 #include <QtCore/QVariant>
+#include <QtCore/QDebug>
 
 using namespace KXmlRpc;
 
@@ -38,7 +38,7 @@ class Client::Private
 
     void queryFinished( Query * );
 
-    KUrl mUrl;
+    QUrl mUrl;
     QString mUserAgent;
     bool mDigestAuth;
     QList<Query*> mPendingQueries;
@@ -55,7 +55,7 @@ Client::Client( QObject *parent )
 {
 }
 
-Client::Client( const KUrl &url, QObject *parent )
+Client::Client( const QUrl &url, QObject *parent )
   : QObject( parent ), d( new Private )
 {
   d->mUrl = url;
@@ -73,12 +73,12 @@ Client::~Client()
   delete d;
 }
 
-void Client::setUrl( const KUrl &url )
+void Client::setUrl( const QUrl &url )
 {
-  d->mUrl = url.isValid() ? url : KUrl();
+  d->mUrl = url.isValid() ? url : QUrl();
 }
 
-KUrl Client::url() const
+QUrl Client::url() const
 {
   return d->mUrl;
 }

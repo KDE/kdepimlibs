@@ -20,10 +20,10 @@
 
 #include "query.h"
 
-#include <kdebug.h>
 #include <klocalizedstring.h>
-#include <kurl.h>
 
+#include <QtCore/QUrl>
+#include <QtCore/QDebug>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
 #include <QtXml/QDomDocument>
@@ -408,9 +408,9 @@ void Query::call( const QString &server,
   QMap<QString, QString>::const_iterator mapIter;
   QByteArray postData;
   QDataStream stream( &postData, QIODevice::WriteOnly );
-  stream.writeRawData( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
+  stream.writeRawData( xmlMarkup.toUtf8().constData(), xmlMarkup.toUtf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, KIO::HideProgressInfo );
+  KIO::TransferJob *job = KIO::http_post( QUrl( server ), postData, KIO::HideProgressInfo );
 
   if ( !job ) {
     qWarning() << "Unable to create KIO job for" << server;

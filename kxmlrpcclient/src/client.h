@@ -26,8 +26,7 @@
 
 #include "kxmlrpcclient_export.h"
 
-#include <kurl.h>
-
+#include <QtCore/QUrl>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
@@ -41,7 +40,7 @@ namespace KXmlRpc {
   This is the main interface to the XML-RPC client library.
 
   @code
-    KXmlRpc::Client *c = new Client(KUrl( "http://localhost" ), this);
+    KXmlRpc::Client *c = new Client(QUrl( "http://localhost" ), this);
     c->setUserAgent( "Test/1.0" );
     c->call( "xmlrpc.command1", "Hi!",
        this, SLOT( gotData( const QList<QVariant>&, const QVariant ) ),
@@ -68,7 +67,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param url the url of the xml-rpc server.
       @param parent the parent of this object, defaults to NULL.
      */
-    explicit Client( const KUrl &url, QObject *parent = 0 );
+    explicit Client( const QUrl &url, QObject *parent = 0 );
 
     /**
       Destroys the XML-RPC Client.
@@ -80,7 +79,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @see setUrl()
      */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
       Sets the url the Client will connect to.
@@ -89,7 +88,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @see url()
      */
-    void setUrl( const KUrl &url );
+    void setUrl( const QUrl &url );
 
     /**
       Returns the user agent string currently used by the Client.

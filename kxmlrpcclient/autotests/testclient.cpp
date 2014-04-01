@@ -19,11 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "testclient.h"
 
-QTEST_KDEMAIN( TestClient, NoGUI )
+QTEST_GUILESS_MAIN( TestClient )
 
 #include <kxmlrpcclient/client.h>
 using namespace KXmlRpc;
@@ -31,14 +31,14 @@ using namespace KXmlRpc;
 void TestClient::testValidity()
 {
   Client *c = new Client();
-  c->setUrl( KUrl( "http://test:pass@fake.com/rpc2" ) );
+  c->setUrl( QUrl( "http://test:pass@fake.com/rpc2" ) );
   c->setUserAgent( "Fake/1.0/MozillaCompat" );
   c->setDigestAuthEnabled( true );
-  QVERIFY( c->url() == KUrl( "http://test:pass@fake.com/rpc2" ) );
+  QVERIFY( c->url() == QUrl( "http://test:pass@fake.com/rpc2" ) );
   QVERIFY( c->userAgent() == "Fake/1.0/MozillaCompat" );
   QVERIFY( c->isDigestAuthEnabled() == true );
 
-  Client *other = new Client( KUrl( "http://test:pass@fake.com/rpc2" ) );
+  Client *other = new Client( QUrl( "http://test:pass@fake.com/rpc2" ) );
   QVERIFY( c->url() == other->url() );
 
   delete c;

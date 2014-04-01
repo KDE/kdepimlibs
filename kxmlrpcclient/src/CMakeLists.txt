@@ -1,5 +1,5 @@
 # FIXME: Make it build with this flag
-remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 
 set(kxmlrpcclient_SRCS
   client.cpp
@@ -14,7 +14,7 @@ add_library(KF5::XmlRpcClient ALIAS KF5XmlRpcClient)
 
 target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kxmlrpcclient>")
 
-target_link_libraries(KF5XmlRpcClient KF5::KIOCore KF5::KDE4Support)
+target_link_libraries(KF5XmlRpcClient PUBLIC KF5::KIOCore KF5::I18n PRIVATE Qt5::Xml)
 
 set_target_properties(KF5XmlRpcClient PROPERTIES
     VERSION ${KXMLRPCCLIENT_VERSION_STRING}
