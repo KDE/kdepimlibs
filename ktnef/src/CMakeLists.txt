@@ -25,7 +25,7 @@ target_link_libraries(KF5KTnef
 
 set_target_properties(KF5KTnef PROPERTIES
     VERSION ${KTNEF_VERSION_STRING}
-    SOVERSION $KTNEF_SOVERSION}
+    SOVERSION ${KTNEF_SOVERSION}
     EXPORT_NAME KTnef
 )
 
