@@ -28,7 +28,7 @@ add_subdirectory(microblog)
 #add_subdirectory(qgpgme)
 #add_subdirectory(kioslave)
 #add_subdirectory(kldap)
-#add_subdirectory(ktnef)
+add_subdirectory(ktnef)
 #add_subdirectory(mailtransport)
 #add_subdirectory(kontactinterface)
 
