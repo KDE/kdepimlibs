@@ -510,7 +510,7 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   post->setLink( postInfo[QStringLiteral("link")].toString() );
   post->setPermaLink( postInfo[QStringLiteral("permaLink")].toString() );
   QString postStatus = postInfo[QStringLiteral("post_status")].toString();
-  if ( postStatus != QStringLiteral("publish") &&
+  if ( postStatus != QLatin1String("publish") &&
        !postStatus.isEmpty() ) {
     /**
      * Maybe this field wasn't set by server! so, on that situation, we will assume it as non-Private,

@@ -365,7 +365,7 @@ QString BlogPostPrivate::cleanRichText( QString richText ) const
   richText.replace( QRegExp( QStringLiteral("<p style=\"[^\"]*\">" )), QStringLiteral("<p>") );
 
   // If we're left with empty content then return a clean empty string
-  if ( richText == QStringLiteral("<p></p>") ) {
+  if ( richText == QLatin1String("<p></p>") ) {
     richText.clear();
   }
 
