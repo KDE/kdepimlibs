@@ -30,7 +30,7 @@ add_subdirectory(microblog)
 add_subdirectory(kldap)
 add_subdirectory(ktnef)
 #add_subdirectory(mailtransport)
-#add_subdirectory(kontactinterface)
+add_subdirectory(kontactinterface)
 
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
