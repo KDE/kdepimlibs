@@ -44,6 +44,7 @@ public:
         : JobPrivate(parent)
         , mEmitTimer(0)
         , mValuePool(0)
+        , mCount(0)
     {
         mCollection = Collection::root();
         mDeliveryOptions = ItemFetchJob::Default;
@@ -61,7 +62,11 @@ public:
         mEmitTimer->setSingleShot(true);
         mEmitTimer->setInterval(100);
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
-        q->connect(q, SIGNAL(result(KJob*)), q, SLOT(timeout()));
+    }
+
+    void aboutToFinish()
+    {
+        timeout();
     }
 
     void timeout()
@@ -107,6 +112,7 @@ public:
     QTimer *mEmitTimer;
     ProtocolHelperValuePool *mValuePool;
     ItemFetchJob::DeliveryOptions mDeliveryOptions;
+    int mCount;
 };
 
 void ItemFetchJobPrivate::startFetchJob()
@@ -226,6 +232,8 @@ void ItemFetchJob::doHandleResponse(const QByteArray &tag, const QByteArray &dat
                 return;
             }
 
+            d->mCount++;
+
             if (d->mDeliveryOptions & ItemGetter) {
                 d->mResultItems.append(item);
             }
@@ -300,4 +308,10 @@ ItemFetchJob::DeliveryOptions ItemFetchJob::deliveryOptions() const
     return d->mDeliveryOptions;
 }
 
+int ItemFetchJob::count() const
+{
+    Q_D(const ItemFetchJob);
+
+    return d->mCount;
+}
 #include "moc_itemfetchjob.cpp"

@@ -277,7 +277,7 @@ bool ItemSync::updateItem(const Item &storedItem, Item &newItem)
 void ItemSyncPrivate::fetchLocalItems()
 {
     Q_Q( ItemSync );
-    if ( mLocalListStarted ) {
+    if (mLocalListStarted) {
         return;
     }
     mLocalListStarted = true;
@@ -292,6 +292,7 @@ void ItemSyncPrivate::fetchLocalItems()
         // We need to fetch the items only to detect if they are new or modified
         job = new ItemFetchJob( mRemoteItems, q );
         job->setFetchScope( mFetchScope );
+        job->setCollection( mSyncCollection );
         // We use this to check if items are available locally, so errors are inevitable
         job->fetchScope().setIgnoreRetrievalErrors( true );
     } else {
@@ -433,17 +434,19 @@ void ItemSyncPrivate::deleteItems(const Item::List &items)
     Item::List itemsToDelete;
     foreach (const Item &item, items) {
         Item delItem(item);
-        if (!item.isValid()) {
-            delItem = mLocalItemsByRemoteId.value(item.remoteId());
-        }
+        if (!mIncremental) {
+            if (!item.isValid()) {
+                delItem = mLocalItemsByRemoteId.value(item.remoteId());
+            }
 
-        if (!delItem.isValid()) {
+            if (!delItem.isValid()) {
 #ifndef NDEBUG
-            kWarning() << "Delete item (remoteeId=" << item.remoteId()
-                       << "mimeType=" << item.mimeType()
-                       << ") does not have a valid UID and no item with that remote ID exists either";
+                kWarning() << "Delete item (remoteeId=" << item.remoteId()
+                        << "mimeType=" << item.mimeType()
+                        << ") does not have a valid UID and no item with that remote ID exists either";
 #endif
-            continue;
+                continue;
+            }
         }
 
         if (delItem.remoteId().isEmpty()) {
