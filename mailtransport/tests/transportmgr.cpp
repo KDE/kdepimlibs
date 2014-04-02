@@ -27,7 +27,7 @@
 
 #include <KApplication>
 #include <KCmdLineArgs>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 #include <KLocalizedString>
 #include <KDebug>
@@ -47,14 +47,14 @@ TransportMgr::TransportMgr() :
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
   b = new QPushButton( "&Remove all transports", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(removeAllBtnClicked()) );
-  mSenderEdit = new KLineEdit( this );
-  mSenderEdit->setClickMessage( "Sender" );
-  mToEdit = new KLineEdit( this );
-  mToEdit->setClickMessage( "To" );
-  mCcEdit = new KLineEdit( this );
-  mCcEdit->setClickMessage( "Cc" );
-  mBccEdit = new KLineEdit( this );
-  mBccEdit->setClickMessage( "Bcc" );
+  mSenderEdit = new QLineEdit( this );
+  mSenderEdit->setPlaceholderText( "Sender" );
+  mToEdit = new QLineEdit( this );
+  mToEdit->setPlaceholderText( "To" );
+  mCcEdit = new QLineEdit( this );
+  mCcEdit->setPlaceholderText( "Cc" );
+  mBccEdit = new QLineEdit( this );
+  mBccEdit->setPlaceholderText( "Bcc" );
   mMailEdit = new KTextEdit( this );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );

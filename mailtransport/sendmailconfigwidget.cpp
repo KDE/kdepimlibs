@@ -30,7 +30,7 @@
 #include "ui_sendmailsettings.h"
 
 #include <KStandardDirs>
-#include <KLineEdit>
+#include <QLineEdit>
 
 using namespace MailTransport;
 

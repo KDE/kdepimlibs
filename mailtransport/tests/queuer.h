@@ -25,7 +25,7 @@
 #include <mailtransport/transportcombobox.h>
 
 class KJob;
-class KLineEdit;
+class QLineEdit;
 class KTextEdit;
 
 namespace MailTransport {
@@ -52,7 +52,7 @@ class MessageQueuer : public KVBox
 
   private:
     MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
+    QLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     KTextEdit *mMailEdit;
 
     MailTransport::MessageQueueJob *createQueueJob();

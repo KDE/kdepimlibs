@@ -26,7 +26,7 @@
 #include <mailtransport/transportcombobox.h>
 
 class KJob;
-class KLineEdit;
+class QLineEdit;
 class KTextEdit;
 
 class TransportMgr : public KVBox
@@ -47,7 +47,7 @@ class TransportMgr : public KVBox
 
   private:
     MailTransport::TransportComboBox *mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
+    QLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     KTextEdit *mMailEdit;
     KJob *mCurrentJob;
 };

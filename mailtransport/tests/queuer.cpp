@@ -29,7 +29,7 @@
 #include <KCmdLineArgs>
 #include <KDateTimeWidget>
 #include <KDialog>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 #include <KLocalizedString>
 #include <KTextEdit>
@@ -52,15 +52,15 @@ MessageQueuer::MessageQueuer()
 
   mComboBox = new TransportComboBox( this );
   mComboBox->setEditable( true );
-  mSenderEdit = new KLineEdit( this );
-  mSenderEdit->setClickMessage( "Sender" );
-  mToEdit = new KLineEdit( this );
+  mSenderEdit = new QLineEdit( this );
+  mSenderEdit->setPlaceholderText( "Sender" );
+  mToEdit = new QLineEdit( this );
   mToEdit->setText( "idanoka@gmail.com" );
-  mToEdit->setClickMessage( "To" );
-  mCcEdit = new KLineEdit( this );
-  mCcEdit->setClickMessage( "Cc" );
-  mBccEdit = new KLineEdit( this );
-  mBccEdit->setClickMessage( "Bcc" );
+  mToEdit->setPlaceholderText( "To" );
+  mCcEdit = new QLineEdit( this );
+  mCcEdit->setPlaceholderText( "Cc" );
+  mBccEdit = new QLineEdit( this );
+  mBccEdit->setPlaceholderText( "Bcc" );
   mMailEdit = new KTextEdit( this );
   mMailEdit->setText( "test from queuer!" );
   mMailEdit->setAcceptRichText( false );
