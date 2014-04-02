@@ -64,13 +64,13 @@ class AddTransportDialog::Private
 
 void AddTransportDialog::Private::writeConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AddTransportDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AddTransportDialog" );
   group.writeEntry( "Size", q->size() );
 }
 
 void AddTransportDialog::Private::readConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AddTransportDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AddTransportDialog" );
   const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
   if ( sizeDialog.isValid() ) {
     q->resize( sizeDialog );

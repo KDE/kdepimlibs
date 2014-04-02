@@ -23,7 +23,8 @@
 
 #include <kglobal.h>
 #include <klocalizedstring.h>
-#include <kstandarddirs.h>
+#include <QStandardPaths>
+
 
 using namespace Akonadi;
 
@@ -85,7 +86,7 @@ SpecialMailCollectionsRequestJob::SpecialMailCollectionsRequestJob(QObject *pare
     QVariantMap options;
     options.insert(QLatin1String("Name"), displayNameMap.value("local-mail"));
     options.insert(QLatin1String("TopLevelIsContainer"), true);
-    options.insert(QLatin1String("Path"), QString(KGlobal::dirs()->localxdgdatadir() + QLatin1String("local-mail")));
+    options.insert(QLatin1String("Path"), QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '/' + QLatin1String("local-mail")));
 
     setDefaultResourceType(QLatin1String("akonadi_maildir_resource"));
     setDefaultResourceOptions(options);

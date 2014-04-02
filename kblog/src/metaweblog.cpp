@@ -30,10 +30,11 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KDateTime>
-#include <kstandarddirs.h>
+
 
 #include <QtCore/QFile>
 #include <QtCore/QDataStream>
+#include <QStandardPaths>
 
 using namespace KBlog;
 
@@ -134,7 +135,7 @@ void MetaWeblogPrivate::loadCategories()
   }
 
   QString filename = QStringLiteral("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
-  filename = KStandardDirs::locateLocal( "data", filename, true );
+  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename, true ;
 
   QFile file( filename );
   if ( !file.open( QIODevice::ReadOnly ) ) {
@@ -156,7 +157,7 @@ void MetaWeblogPrivate::saveCategories()
   }
 
   QString filename = QStringLiteral("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
-  filename = KStandardDirs::locateLocal( "data", filename, true );
+  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename, true ;
 
   QFile file( filename );
   if ( !file.open( QIODevice::WriteOnly ) ) {
