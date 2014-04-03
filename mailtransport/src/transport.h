@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_TRANSPORT_H
 #define MAILTRANSPORT_TRANSPORT_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 #include <mailtransport/transportbase.h>
 #include <mailtransport/transporttype.h>
 

@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(KontactInterface)
+project(MailTransport)
 
 # ECM setup
 find_package(ECM 0.0.11 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${MailTransport_SOURCE_DIR}/cmake)
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
@@ -31,8 +31,22 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX MAILTRANSPORT
 
 ########### Find packages ###########
 find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Parts ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
+
+# FIXME: remove this if/endif when KMime is split.
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+endif()
+
+
+find_package(Sasl2)
+set_package_properties(Sasl2 PROPERTIES
+                             DESCRIPTION "The Cyrus-sasl library"
+                             URL "http://www.cyrussasl.org"
+                             TYPE OPTIONAL
+)
+
+
 
 ecm_configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5MailTransportConfig.cmake.in"
@@ -41,10 +55,13 @@ ecm_configure_package_config_file(
 )
 
 
-install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailTransportTargets.cmake NAMESPACE KF5::)
+#install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailTransportTargets.cmake NAMESPACE KF5::)
 
+########### Targets ###########
+add_subdirectory(cmake)
 add_subdirectory(src)
-add_subdirectory(tests)
+#Reactivate it
+#add_subdirectory(tests)
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${KontactInterface_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
