@@ -67,15 +67,15 @@ set(mailtransport_lib_srcs
   addtransportdialog.cpp
 )
 
-kde4_add_ui_files(mailtransport_lib_srcs
-  sendmailsettings.ui
-  addtransportdialog.ui
-  transportmanagementwidget.ui
+qt5_wrap_ui(mailtransport_lib_srcs
+  ui/sendmailsettings.ui
+  ui/addtransportdialog.ui
+  ui/transportmanagementwidget.ui
 )
 if(KDEPIM_MOBILE_UI)
-  kde4_add_ui_files(mailtransport_lib_srcs smtpsettings_mobile.ui)
+  qt5_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_mobile.ui)
 else()
-  kde4_add_ui_files(mailtransport_lib_srcs smtpsettings_desktop.ui)
+  qt5_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_desktop.ui)
 endif()
 
 kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
@@ -86,7 +86,7 @@ target_link_libraries(mailtransport
                       KF5::ItemViews
                       KF5::KDE4Support
                       akonadi-kde
-                      akonadi-kmime
+                      KF5::AkonadiKMime
                       KF5::KMime
 )
 
