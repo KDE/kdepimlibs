@@ -78,7 +78,7 @@ else()
   qt5_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_desktop.ui)
 endif()
 
-kde4_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
+kconfig_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
 add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
 target_link_libraries(mailtransport
