@@ -25,11 +25,11 @@
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
 
-#include <qtest_kde.h>
+#include <QtTest>
 
 using namespace KTnef;
 
-QTEST_KDEMAIN( ParserTest, NoGUI )
+QTEST_GUILESS_MAIN( ParserTest )
 
 void ParserTest::testSingleAttachment()
 {
