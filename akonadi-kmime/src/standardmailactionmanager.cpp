@@ -724,7 +724,7 @@ QAction *StandardMailActionManager::createAction(Type type)
     switch (type) {
     case MarkMailAsRead:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-read")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-read")));
         action->setText(i18n("&Mark Message as Read"));
         action->setIconText(i18n("Mark as Read"));
         d->setHelpText(action,i18n("Mark selected messages as read."));
@@ -737,7 +737,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkMailAsUnread:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-unread")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-unread")));
         action->setText(i18n("&Mark Message as Unread"));
         action->setIconText(i18n("Mark as Unread"));
         d->setHelpText(action,i18n("Mark selected messages as unread."));
@@ -750,7 +750,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkMailAsImportant:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-important")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-important")));
         action->setText(i18n("&Mark Message as Important"));
         action->setIconText(i18n("Mark as Important"));
         d->setHelpText(action,i18n("Mark selected messages as important."));
@@ -762,7 +762,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkMailAsActionItem:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-task")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-task")));
         action->setText(i18n("&Mark Message as Action Item"));
         action->setIconText(i18n("Mark as Action Item"));
         d->setHelpText(action, i18n("Mark selected messages as action items."));
@@ -774,7 +774,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkAllMailAsRead:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-read")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-read")));
         action->setText(i18n("Mark &All Messages as Read"));
         action->setIconText(i18n("Mark All as Read"));
         d->setHelpText(action,i18n("Mark all messages as read."));
@@ -786,7 +786,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkAllMailAsUnread:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-unread")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-unread")));
         action->setText(i18n("Mark &All Messages as Unread"));
         action->setIconText(i18n("Mark All as Unread"));
         d->setHelpText(action, i18n("Mark all messages as unread."));
@@ -798,7 +798,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MarkAllMailAsImportant:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("mail-mark-important")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-important")));
         action->setText(i18n("Mark &All Messages as Important"));
         action->setIconText(i18n("Mark All as Important"));
         d->setHelpText(action,i18n("Mark all messages as important."));
@@ -812,7 +812,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action = new QAction(d->mParentWidget);
         action->setIconText(i18n("Mark All as Action Item"));
         action->setText(i18n("Mark &All Messages as Action Item"));
-        action->setIcon(KIcon(QLatin1String("mail-mark-task")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-task")));
         d->setHelpText(action, i18n("Mark all messages as action items."));
         action->setWhatsThis(i18n("Mark all messages as action items."));
         d->mActions.insert(MarkAllMailAsActionItem, action);
@@ -822,7 +822,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MoveToTrash:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("user-trash")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("user-trash")));
         action->setText(i18n("Move to &Trash"));
         action->setShortcut(QKeySequence(Qt::Key_Delete));
         d->setHelpText(action, i18n("Move selected messages to the trash folder."));
@@ -833,7 +833,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         break;
     case MoveAllToTrash:
         action = new QAction(d->mParentWidget);
-        action->setIcon(KIcon(QLatin1String("user-trash")));
+        action->setIcon(QIcon::fromTheme(QLatin1String("user-trash")));
         action->setText(i18n("Move All to &Trash"));
         d->setHelpText(action,i18n("Move all messages to the trash folder."));
         action->setWhatsThis(i18n("Move all messages to the trash folder."));
