@@ -14,6 +14,7 @@ add_definitions(
   -DMAILTRANSPORT_DEPRECATED_EXPORT=MAILTRANSPORT_EXPORT
 )
 
+
 if(MAILTRANSPORT_INPROCESS_SMTP)
   add_definitions("-DMAILTRANSPORT_INPROCESS_SMTP")
   include_directories(${SASL2_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/kioslave)
@@ -80,8 +81,18 @@ endif()
 
 kconfig_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
 
-add_library(mailtransport ${LIBRARY_TYPE} ${mailtransport_lib_srcs})
-target_link_libraries(mailtransport
+add_library(KF5MailTransport ${mailtransport_lib_srcs})
+
+generate_export_header(KF5MailTransport BASE_NAME mailtransport)
+
+add_library(KF5::MailTransport ALIAS KF5MailTransport)
+
+
+target_include_directories(KF5MailTransport INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/MailTransport>")
+target_include_directories(KF5MailTransport PUBLIC "$<BUILD_INTERFACE:${MailTransport_SOURCE_DIR}/src;${MailTransport_BINARY_DIR}/src>")
+
+
+target_link_libraries(KF5MailTransport
                       KF5::KIOCore
                       KF5::ItemViews
                       KF5::KDE4Support
@@ -90,16 +101,19 @@ target_link_libraries(mailtransport
                       KF5::KMime
 )
 
+set_target_properties(KF5MailTransport PROPERTIES
+    VERSION ${KIMAP_VERSION_STRING}
+    SOVERSION ${KIMAP_SOVERSION}
+    EXPORT_NAME MailTransport
+)
+
+
 if(MAILTRANSPORT_INPROCESS_SMTP)
   target_link_libraries(mailtransport ${SASL2_LIBRARIES} kpimutils)
 endif()
 
-set_target_properties(mailtransport PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
-)
+install(TARGETS KF5MailTransport EXPORT KF5MailTransportLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(TARGETS mailtransport EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 set(mailtransport_kcm_srcs configmodule.cpp)
