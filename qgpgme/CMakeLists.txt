@@ -4,7 +4,7 @@ project(QGpgme)
 
 # ECM setup
 find_package(ECM 0.0.12 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${KLdap_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${QGpgme_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
@@ -20,9 +20,9 @@ include(KDEFrameworkCompilerSettings)
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "4.97.0")
 
-ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KLDAP
-                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kldap_version.h"
-                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KLdapConfigVersion.cmake"
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX QGPGME
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5QGpgmeConfigVersion.cmake"
                         SOVERSION 5
 )
 
@@ -32,23 +32,8 @@ find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 
-find_package(Ldap)
-set_package_properties(Ldap PROPERTIES
-  DESCRIPTION "LDAP (Lightweight Directory Access Protocol) libraries"
-  URL "http://www.openldap.org"
-  TYPE RECOMMENDED
-  PURPOSE "Needed to provide LDAP functionality in KDE"
-)
-
-find_package(Sasl2)
-set_package_properties(Sasl2 PROPERTIES
-                             DESCRIPTION "The Cyrus-sasl library"
-                             URL "http://www.cyrussasl.org"
-                             TYPE OPTIONAL
-)
-
 ########### CMake Config Files ###########
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5KLdap")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5QGpme")
 
 ecm_configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5KLdapConfig.cmake.in"
