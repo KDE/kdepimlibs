@@ -1,4 +1,5 @@
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+# Turn exceptions on
+kde_enable_exceptions()
 
 option(MAILTRANSPORT_INPROCESS_SMTP "false" "Use in-process SMTP instead of KIO slaves (note that this changes the mailtransport license from LGPL to GPL!)")
 
