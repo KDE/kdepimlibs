@@ -1,0 +1,41 @@
+# Turn exceptions on
+kde_enable_exceptions()
+
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
+
+set(akonadinotes_LIB_SRC
+  noteutils.cpp
+)
+
+add_library(KF5AkonadiNotes ${akonadinotes_LIB_SRC})
+
+generate_export_header(KF5AkonadiNotes BASE_NAME akonadi-notes)
+
+add_library(KF5::KF5AkonadiNotes ALIAS KF5AkonadiNotes)
+
+target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiNotes;${Boost_INCLUDE_DIR}>")
+
+
+target_link_libraries(KF5AkonadiNotes
+    KF5::KMime
+    KF5::AkonadiCore
+    KF5::KIOCore
+)
+
+set_target_properties(KF5AkonadiNotes PROPERTIES
+    VERSION ${AKONADINOTES_VERSION_STRING}
+    SOVERSION ${AKONADINOTES_SOVERSION}
+    EXPORT_NAME AkonadiNotes
+)
+
+install(TARGETS
+    KF5AkonadiNotes
+    EXPORT KF5AkonadiNotesTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+install( FILES
+  noteutils.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/notes COMPONENT Devel
+)
+

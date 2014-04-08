@@ -97,7 +97,7 @@ target_link_libraries(KF5MailTransport
                       KF5::KIOCore
                       KF5::ItemViews
                       KF5::KDE4Support
-                      akonadi-kde
+                      KF5::AkonadiCore
                       KF5::AkonadiKMime
                       KF5::KMime
 )
@@ -110,7 +110,7 @@ set_target_properties(KF5MailTransport PROPERTIES
 
 
 if(MAILTRANSPORT_INPROCESS_SMTP)
-  target_link_libraries(mailtransport ${SASL2_LIBRARIES} kpimutils)
+  target_link_libraries(mailtransport ${SASL2_LIBRARIES} KF5::PimUtils)
 endif()
 
 install(TARGETS KF5MailTransport EXPORT KF5MailTransportLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
