@@ -38,11 +38,6 @@
 
 #include "ktnef_export.h"
 
-namespace KCal {
-class Calendar;
-class InvitationFormatterHelper;
-}
-
 namespace KCalUtils {
   class InvitationFormatterHelper;
 }

@@ -45,4 +45,4 @@
  */
 
 // DOXYGEN_PROJECTNAME=KTNEF Library
-// DOXYGEN_REFERENCES=kcal kdecore
+// DOXYGEN_REFERENCES=kcalcore kdecore
