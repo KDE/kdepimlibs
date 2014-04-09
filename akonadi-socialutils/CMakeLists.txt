@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "4.97.0")
 
-ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADIKMIME
+ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiSocialUtilsConfigVersion.cmake"
                         SOVERSION 5
