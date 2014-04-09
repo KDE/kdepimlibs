@@ -127,9 +127,43 @@ kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
 install(TARGETS kcm_mailtransport DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_mailtransport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
+
+
+ecm_generate_headers(MailTransport_CamelCase_HEADERS
+  HEADER_NAMES
+  DispatcherInterface
+  DispatchModeAttribute
+  ErrorAttribute
+  MessageQueueJob
+  PrecommandJob
+  SendmailJob
+  SentBehaviourAttribute
+  ServerTest
+  SmtpJob
+  Socket
+  Transport
+  TransportAttribute
+  TransportBase
+  TransportComboBox
+  TransportConfigDialog
+  TransportJob
+  TransportManagementWidget
+  TransportManager
+  TransportType
+  REQUIRED_HEADERS MailTransport_HEADERS
+  PREFIX Mailtransport
+)
+
+install(FILES
+    ${MailTransport_CamelCase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/Mailtransport
+    COMPONENT Devel
+)
+
+
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_export.h
-
+  ${MailTransport_HEADERS}
   transportjob.h
   sendmailjob.h
   smtpjob.h
