@@ -16,12 +16,6 @@ set(akonadi_social_utils_SRCS
   socialfeeditem.cpp
 )
 
-set(akonadi_social_utils_HDRS
-  ${CMAKE_CURRENT_BINARY_DIR}/libakonadisocialutils_export.h
-  socialnetworkattributes.h
-  imageprovider.h
-  socialfeeditem.h
-)
 add_library(KF5AkonadiSocialUtils ${akonadi_social_utils_SRCS})
 
 generate_export_header(KF5AkonadiSocialUtils BASE_NAME akonadi-socialutils)
@@ -51,6 +45,31 @@ install(TARGETS
     KF5AkonadiSocialUtils
     EXPORT KF5AkonadiSocialUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+ecm_generate_headers(AkonadiSocialUtils_CamelCase_HEADERS
+  HEADER_NAMES
+  ImageProvider
+  SocialFeedItem
+  SocialNetworkAttributes
+  REQUIRED_HEADERS AkonadiSocialUtils_HEADERS
+  PREFIX Akonadi/SocialUtils
+)
+
+install(FILES
+    ${AkonadiSocialUtils_CamelCase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi/SocialUtils
+    COMPONENT Devel
+)
+
+
+set(akonadi_social_utils_HDRS
+  ${AkonadiSocialUtils_HEADERS}
+  ${CMAKE_CURRENT_BINARY_DIR}/libakonadisocialutils_export.h
+  socialnetworkattributes.h
+  imageprovider.h
+  socialfeeditem.h
+)
+
 
 install(FILES ${akonadi_social_utils_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/socialutils)
 
