@@ -21,7 +21,7 @@
 
 #include "libakonadisocialutils_export.h"
 
-#include "akonadi/attribute.h"
+#include "attribute.h"
 
 #include <QString>
 #include <QVariantMap>
