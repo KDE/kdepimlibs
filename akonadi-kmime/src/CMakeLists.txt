@@ -104,3 +104,50 @@ install(TARGETS
     KF5AkonadiKMime
     EXPORT KF5AkonadiKMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+
+ecm_generate_headers(AkonadiKMime_CamelCase_HEADERS
+  HEADER_NAMES
+
+  AddressAttribute
+  MessageFlags
+  MessageFolderAttribute
+  MessageModel
+  MessageParts
+  MessageStatus
+  MessageThreaderProxyModel
+  MessageThreadingAttribute
+  RemoveDuplicatesJob
+  SpecialMailCollections
+  SpecialMailCollectionsDiscoveryJob
+  SpecialMailCollectionsRequestJob
+  REQUIRED_HEADERS AkonadiKMime_HEADERS
+  PREFIX Akonadi/KMime
+)
+
+install(FILES
+    ${AkonadiKMime_CamelCase_HEADERS}
+    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    COMPONENT Devel
+)
+
+install(FILES
+  ${AkonadiKMime_CamelCase_HEADERS}
+  addressattribute.h
+  removeduplicatesjob.h
+  specialmailcollections.h
+  specialmailcollectionsrequestjob.h
+  specialmailcollectionsdiscoveryjob.h
+  standardmailactionmanager.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
+  messagefolderattribute.h
+  messagemodel.h
+  messageparts.h
+  messageflags.h
+  messagestatus.h
+  messagethreadingattribute.h
+  messagethreaderproxymodel.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
+)
+
+
