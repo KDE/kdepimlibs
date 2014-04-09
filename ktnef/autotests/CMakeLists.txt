@@ -1,8 +1,8 @@
 kde_enable_exceptions()
 
 include(ECMMarkAsTest)
-
-find_package(Qt5Test CONFIG REQUIRED)
+set(QT_REQUIRED_VERSION "5.2.0")
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 
 configure_file(config-ktnef-tests.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktnef-tests.h)

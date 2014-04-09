@@ -1,8 +1,8 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include(ECMMarkAsTest)
-
-find_package(Qt5Test CONFIG REQUIRED)
+set(QT_REQUIRED_VERSION "5.2.0")
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 ########### next target ###############
 
