@@ -27,7 +27,7 @@ add_subdirectory(kcalutils)
 add_subdirectory(kmbox)
 add_subdirectory(kblog)
 add_subdirectory(microblog)
-
+#add_subdirectory(kalarmcal)
 #add_subdirectory(gpgme++)
 #add_subdirectory(qgpgme)
 #add_subdirectory(kioslave)
