@@ -25,8 +25,8 @@
 #include <KDebug>
 #include <KGlobal>
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/collection.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include "transportattribute.h"
 

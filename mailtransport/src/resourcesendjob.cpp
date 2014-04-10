@@ -27,10 +27,10 @@
 
 #include <kmime/kmime_message.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/kmime/addressattribute.h>
 
 using namespace Akonadi;

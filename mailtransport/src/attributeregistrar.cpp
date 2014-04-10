@@ -23,7 +23,7 @@
 #include "sentbehaviourattribute.h"
 #include "transportattribute.h"
 
-#include <akonadi/attributefactory.h>
+#include <AkonadiCore/attributefactory.h>
 
 #ifndef KDELIBS_STATIC_LIBS
 namespace {

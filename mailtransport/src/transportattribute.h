@@ -22,7 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <akonadi/attribute.h>
+#include <AkonadiCore/attribute.h>
 
 namespace MailTransport {
 

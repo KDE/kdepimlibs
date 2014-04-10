@@ -22,7 +22,7 @@
 
 #include <mailtransport/mailtransport_export.h>
 
-#include <akonadi/agentinstance.h>
+#include <AkonadiCore/agentinstance.h>
 
 //krazy:excludeall=dpointer
 

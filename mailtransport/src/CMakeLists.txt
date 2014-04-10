@@ -100,6 +100,7 @@ target_link_libraries(KF5MailTransport
                       KF5::AkonadiCore
                       KF5::AkonadiKMime
                       KF5::KMime
+                      KF5KWAllet
 )
 
 set_target_properties(KF5MailTransport PROPERTIES
@@ -143,7 +144,7 @@ ecm_generate_headers(MailTransport_CamelCase_HEADERS
   Socket
   Transport
   TransportAttribute
-  TransportBase
+  #TransportBase
   TransportComboBox
   TransportConfigDialog
   TransportJob

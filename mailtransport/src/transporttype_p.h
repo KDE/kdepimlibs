@@ -23,7 +23,7 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QString>
 
-#include <akonadi/agenttype.h>
+#include <AkonadiCore/agenttype.h>
 
 namespace MailTransport {
 

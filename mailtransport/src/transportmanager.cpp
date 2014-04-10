@@ -52,8 +52,8 @@
 #include <KGlobal>
 #include <KWallet/Wallet>
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentmanager.h>
 
 using namespace MailTransport;
 using namespace KWallet;

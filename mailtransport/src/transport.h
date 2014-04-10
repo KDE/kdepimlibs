@@ -21,7 +21,7 @@
 #define MAILTRANSPORT_TRANSPORT_H
 
 #include <mailtransport_export.h>
-#include <mailtransport/transportbase.h>
+#include <transportbase.h>
 #include <mailtransport/transporttype.h>
 
 class TransportPrivate;

@@ -20,13 +20,13 @@
 #ifndef MAILTRANSPORT_TRANSPORTMANAGER_H
 #define MAILTRANSPORT_TRANSPORTMANAGER_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 #include <mailtransport/transporttype.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
 
-#include <akonadi/agenttype.h>
+#include <AkonadiCore/agenttype.h>
 
 class KJob;
 

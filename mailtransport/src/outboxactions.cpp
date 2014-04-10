@@ -22,7 +22,7 @@
 #include "dispatchmodeattribute.h"
 #include "errorattribute.h"
 
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 
 using namespace Akonadi;

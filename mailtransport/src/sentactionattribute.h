@@ -27,7 +27,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QVariant>
 
-#include <akonadi/attribute.h>
+#include <AkonadiCore/attribute.h>
 
 namespace MailTransport {
 

@@ -21,7 +21,7 @@
 #include "transporttype_p.h"
 #include "transport.h"
 
-#include <akonadi/agentmanager.h>
+#include <AkonadiCore/agentmanager.h>
 
 using namespace MailTransport;
 
