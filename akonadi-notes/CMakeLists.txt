@@ -35,8 +35,8 @@ endif()
 ########### Targets ###########
 
 add_subdirectory(src)
-# TODO: Port tests
-#add_subdirectory(tests)
+# TODO: Port test
+#add_subdirectory(autotests)
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiNotes")
