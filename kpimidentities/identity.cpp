@@ -28,6 +28,7 @@
 
 #include <QMimeData>
 #include <QByteArray>
+#include <QHostInfo>
 
 using namespace KPIMIdentities;
 
@@ -47,6 +48,7 @@ Identity::Identity( const QString &id, const QString &fullName,
   setProperty( QLatin1String(s_replyto), replyToAddr );
   setDictionary( Sonnet::defaultLanguageName() );
   setProperty( QLatin1String(s_disabledFcc), false );
+  setProperty( QLatin1String(s_defaultDomainName), QHostInfo::localHostName());
 }
 
 Identity::~Identity()
@@ -65,7 +67,11 @@ bool Identity::isNull() const
   bool empty = true;
   QHash<QString, QVariant>::const_iterator i = mPropertiesMap.constBegin();
   while ( i != mPropertiesMap.constEnd() ) {
-
+    // Take into account that the defaultDomainName for a null identity is not empty
+    if ( i.key() == QLatin1String(s_defaultDomainName) ) {
+      ++i;
+      continue;
+    }
     // Take into account that the dictionary for a null identity is not empty
     if ( i.key() == QLatin1String(s_dict) ) {
       ++i;
@@ -184,7 +190,8 @@ QDataStream &KPIMIdentities::operator<<
          << i.attachVcard()
          << i.autocorrectionLanguage()
          << i.disabledFcc()
-         << i.pgpAutoSign();
+         << i.pgpAutoSign()
+         << i.defaultDomainName();
 }
 
 QDataStream &KPIMIdentities::operator>>
@@ -217,7 +224,8 @@ QDataStream &KPIMIdentities::operator>>
   >> i.mPropertiesMap[QLatin1String(s_attachVcard)]
   >> i.mPropertiesMap[QLatin1String(s_autocorrectionLanguage)]
   >> i.mPropertiesMap[QLatin1String(s_disabledFcc)]
-  >> i.mPropertiesMap[QLatin1String(s_pgpautosign)];
+  >> i.mPropertiesMap[QLatin1String(s_pgpautosign)]
+  >> i.mPropertiesMap[QLatin1String(s_defaultDomainName)];
 
   i.setProperty( QLatin1String(s_uoid), uoid );
   return stream;
@@ -706,7 +714,17 @@ bool Identity::pgpAutoSign() const
 
 void Identity::setPgpAutoSign(bool autoSign)
 {
-  setProperty( QLatin1String(s_pgpautosign), autoSign );
+    setProperty( QLatin1String(s_pgpautosign), autoSign );
+}
+
+QString Identity::defaultDomainName() const
+{
+    return property( QLatin1String( s_defaultDomainName ) ).toString();
+}
+
+void Identity::setDefaultDomainName(const QString &domainName)
+{
+    setProperty( QLatin1String(s_defaultDomainName), domainName );
 }
 
 
