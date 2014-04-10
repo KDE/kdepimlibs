@@ -32,7 +32,7 @@
 #define MAPI_H
 
 #include <QtCore/QString>
-
+namespace KTnef {
 /**
  * Convert a keycode to a @acronym MAPI tag string.
  * @param key The input code to convert.
@@ -47,5 +47,5 @@ QString mapiTagString( int key );
  * @return A QString containing the named tag string.
  */
 QString mapiNamedTagString( int key, int tag = -1 );
-
+}
 #endif

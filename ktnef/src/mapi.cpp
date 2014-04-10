@@ -31,7 +31,6 @@
 #include "mapi.h"
 #include <QtCore/QMap>
 #include <klocalizedstring.h>
-
 //@cond IGNORE
 static struct
 {
@@ -205,7 +204,7 @@ static QMap<int,QString> MAPI_TagMap;
 static QMap<int,QString> MAPI_NamedTagMap;
 //@endcond
 
-QString mapiTagString( int key )
+QString KTnef::mapiTagString( int key )
 {
   if ( MAPI_TagMap.count() == 0 ) {
     for ( int i=0; MAPI_TagStrings[ i ].str; i++ ) {
@@ -221,7 +220,7 @@ QString mapiTagString( int key )
   }
 }
 
-QString mapiNamedTagString( int key, int tag )
+QString KTnef::mapiNamedTagString( int key, int tag )
 {
   if ( MAPI_NamedTagMap.count() == 0 ) {
     for ( int i=0; MAPI_NamedTagStrings[ i ].str; i++ ) {

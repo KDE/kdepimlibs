@@ -73,7 +73,7 @@ typedef struct _lzfuheader
 #define LENGTH(b) ((b&0xF)+2)
 //@endcond
 
-int lzfu_decompress( QIODevice *input, QIODevice *output )
+int KTnef::lzfu_decompress( QIODevice *input, QIODevice *output )
 {
   unsigned char window[4096];
   unsigned int  wlength = 0, cursor = 0, ocursor = 0;

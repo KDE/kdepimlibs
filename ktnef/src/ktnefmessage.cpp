@@ -83,7 +83,8 @@ const QList<KTNEFAttach *> &KTNEFMessage::attachmentList() const
 KTNEFAttach *KTNEFMessage::attachment( const QString &filename ) const
 {
   QList<KTNEFAttach *>::const_iterator it = d->attachments_.constBegin();
-  for ( ; it != d->attachments_.constEnd(); ++it ) {
+  QList<KTNEFAttach *>::const_iterator end = d->attachments_.constEnd();
+  for ( ; it != end; ++it ) {
     if ( (*it)->name() == filename ) {
       return *it;
     }
@@ -112,7 +113,7 @@ QString KTNEFMessage::rtfString() const
     QBuffer input( &propArray ), output( &rtf );
     if ( input.open( QIODevice::ReadOnly ) &&
          output.open( QIODevice::WriteOnly ) ) {
-      lzfu_decompress( &input, &output );
+      KTnef::lzfu_decompress( &input, &output );
     }
     return QString( rtf );
   }
