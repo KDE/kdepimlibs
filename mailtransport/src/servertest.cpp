@@ -23,8 +23,8 @@
 #include "servertest.h"
 #include "socket.h"
 
-#include <mailtransport/transportbase.h>
-#include <mailtransport/mailtransport_defs.h>
+#include <transportbase.h>
+#include <mailtransport_defs.h>
 
 // Qt
 #include <QHostInfo>

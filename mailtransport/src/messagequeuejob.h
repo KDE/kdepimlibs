@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_MESSAGEQUEUEJOB_H
 #define MAILTRANSPORT_MESSAGEQUEUEJOB_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include "dispatchmodeattribute.h"
 #include "sentactionattribute.h"

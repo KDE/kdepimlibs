@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_SENTBEHAVIOURATTRIBUTE_H
 #define MAILTRANSPORT_SENTBEHAVIOURATTRIBUTE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <AkonadiCore/attribute.h>
 #include <AkonadiCore/collection.h>

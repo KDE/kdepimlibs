@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_DISPATCHERINTERFACE_H
 #define MAILTRANSPORT_DISPATCHERINTERFACE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <AkonadiCore/agentinstance.h>
 

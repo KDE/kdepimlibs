@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_FILTERACTIONJOB_P_H
 #define MAILTRANSPORT_FILTERACTIONJOB_P_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/transactionsequence.h>

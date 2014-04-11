@@ -23,7 +23,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H
 #define MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <QWidget>
 

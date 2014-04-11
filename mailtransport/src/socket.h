@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_SOCKET_H
 #define MAILTRANSPORT_SOCKET_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <QtNetwork/QSslSocket>
 

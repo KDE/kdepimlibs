@@ -96,11 +96,12 @@ target_include_directories(KF5MailTransport PUBLIC "$<BUILD_INTERFACE:${MailTran
 target_link_libraries(KF5MailTransport
                       KF5::KIOCore
                       KF5::ItemViews
-                      KF5::KDE4Support
+                      KF5::KDELibs4Support
                       KF5::AkonadiCore
+                      KF5::AkonadiWidgets
                       KF5::AkonadiKMime
                       KF5::KMime
-                      KF5KWAllet
+                      KF5::Wallet
 )
 
 set_target_properties(KF5MailTransport PROPERTIES
@@ -118,14 +119,16 @@ install(TARGETS KF5MailTransport EXPORT KF5MailTransportLibraryTargets ${INSTALL
 
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
-set(mailtransport_kcm_srcs configmodule.cpp)
-kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
-  target_link_libraries(kcm_mailtransport
-                        KF5::KCMUtils
-                        mailtransport
-  )
+#reactive it
+#set(mailtransport_kcm_srcs configmodule.cpp)
+#kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
+#  target_link_libraries(kcm_mailtransport
+#                        KF5::KCMUtils
+#                        KF5::ConfigWidgets
+#                        mailtransport
+#  )
 
-install(TARGETS kcm_mailtransport DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(TARGETS kcm_mailtransport DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_mailtransport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 

@@ -20,9 +20,9 @@
 #ifndef MAILTRANSPORT_OUTBOXACTIONS_P_H
 #define MAILTRANSPORT_OUTBOXACTIONS_P_H
 
-#include <mailtransport/mailtransport_export.h>
-#include <mailtransport/filteractionjob_p.h>
-#include <mailtransport/transportattribute.h>
+#include <mailtransport_export.h>
+#include <filteractionjob_p.h>
+#include <transportattribute.h>
 
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/job.h>

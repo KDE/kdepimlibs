@@ -24,7 +24,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
 #define MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <KDE/KDialog>
 

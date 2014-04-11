@@ -20,8 +20,8 @@
 #ifndef MAILTRANSPORT_TRANSPORTCOMBOBOX_H
 #define MAILTRANSPORT_TRANSPORTCOMBOBOX_H
 
-#include <mailtransport/mailtransport_export.h>
-#include <mailtransport/transportbase.h>
+#include <mailtransport_export.h>
+#include <transportbase.h>
 
 #include <KDE/KComboBox>
 

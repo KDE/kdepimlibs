@@ -21,7 +21,7 @@
 #ifndef MAILTRANSPORT_SERVERTEST_H
 #define MAILTRANSPORT_SERVERTEST_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 #include <mailtransport/transport.h>
 
 #include <QWidget>

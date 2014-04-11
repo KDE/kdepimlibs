@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_CONFIGMODULE_H
 #define MAILTRANSPORT_CONFIGMODULE_H
 
-#include <KDE/KCModule>
+#include <KCModule>
 
 namespace MailTransport {
 

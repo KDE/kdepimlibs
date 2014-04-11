@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_TRANSPORTATTRIBUTE_H
 #define MAILTRANSPORT_TRANSPORTATTRIBUTE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <AkonadiCore/attribute.h>
 

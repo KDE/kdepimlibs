@@ -22,7 +22,7 @@
 #ifndef MAILTRANSPORT_SENTACTIONATTRIBUTE_H
 #define MAILTRANSPORT_SENTACTIONATTRIBUTE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QVariant>

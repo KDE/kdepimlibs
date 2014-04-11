@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_DISPATCHMODEATTRIBUTE_H
 #define MAILTRANSPORT_DISPATCHMODEATTRIBUTE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <QtCore/QDateTime>
 

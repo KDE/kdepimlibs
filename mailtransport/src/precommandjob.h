@@ -24,7 +24,7 @@
 #ifndef MAILTRANSPORT_PRECOMMANDJOB_H
 #define MAILTRANSPORT_PRECOMMANDJOB_H
 
-#include "mailtransport/mailtransport_export.h"
+#include "mailtransport_export.h"
 
 #include <KDE/KJob>
 

@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_ERRORATTRIBUTE_H
 #define MAILTRANSPORT_ERRORATTRIBUTE_H
 
-#include <mailtransport/mailtransport_export.h>
+#include <mailtransport_export.h>
 
 #include <QtCore/QString>
 

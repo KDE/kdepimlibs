@@ -21,7 +21,7 @@
 
 #include <KDebug>
 
-#include "akonadi/attributefactory.h"
+#include <AkonadiCore/attributefactory.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
