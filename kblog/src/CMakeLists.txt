@@ -25,7 +25,7 @@ target_include_directories(KF5Blog PUBLIC "$<BUILD_INTERFACE:${KBlog_SOURCE_DIR}
 target_link_libraries(KF5Blog
   KF5::CalendarCore
   KF5::CoreAddons
-  KF5::KDE4Support
+  KF5::KDELibs4Support
   KF5::KIOCore
   KF5::Syndication
   KF5::XmlRpcClient

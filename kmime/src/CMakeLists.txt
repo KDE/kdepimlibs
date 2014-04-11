@@ -41,7 +41,7 @@ target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INS
 target_link_libraries(KF5KMime
     KF5::ItemViews
     KF5::Codecs
-    KF5::KDE4Support
+    KF5::KDELibs4Support
 )
 
 set_target_properties(KF5KMime PROPERTIES

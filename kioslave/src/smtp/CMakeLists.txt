@@ -32,7 +32,7 @@ set(kio_smtp_PART_SRCS
 kde4_add_plugin(kio_smtp ${kio_smtp_PART_SRCS})
 
 
-target_link_libraries(kio_smtp  KF5::KIOCore KF5::KDE4Support ${smtp_optional_libs})
+target_link_libraries(kio_smtp  KF5::KIOCore KF5::KDELibs4Support ${smtp_optional_libs})
 
 install(TARGETS kio_smtp  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

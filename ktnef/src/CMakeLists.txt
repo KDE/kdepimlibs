@@ -24,8 +24,8 @@ target_include_directories(KF5KTnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR
 target_link_libraries(KF5KTnef
   KF5::CalendarCore
   KF5::CalendarUtils
-  KF5::KAbc
-  KF5::KDE4Support
+  KF5::Abc
+  KF5::KDELibs4Support
   KF5::KIOCore
   KF5::PimUtils
 )
