@@ -22,7 +22,7 @@
 #ifndef AKONADI_SOCIALUTILS_IMAGEPROVIDER_H
 #define AKONADI_SOCIALUTILS_IMAGEPROVIDER_H
 
-#include "libakonadisocialutils_export.h"
+#include "akonadi-socialutils_export.h"
 
 #include <KDE/KUrl>
 
@@ -41,7 +41,7 @@ class ImageProviderPrivate;
 /**
  * Class fetching avatars/images from network and storing them in KImageCache
  */
-class LIBAKONADISOCIALUTILS_EXPORT ImageProvider : public QObject
+class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
 {
   Q_OBJECT
   public:

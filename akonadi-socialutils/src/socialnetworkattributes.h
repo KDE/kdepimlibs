@@ -19,7 +19,7 @@
 #ifndef AKONADI_SOCIALUTILS_SOCIALNETWORKATTRIBUTES_H
 #define AKONADI_SOCIALUTILS_SOCIALNETWORKATTRIBUTES_H
 
-#include "libakonadisocialutils_export.h"
+#include "akonadi-socialutils_export.h"
 
 #include "attribute.h"
 
@@ -30,7 +30,7 @@ namespace Akonadi {
 
 class SocialNetworkAttributesPrivate;
 
-class LIBAKONADISOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attribute
+class AKONADI_SOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attribute
 {
   public:
     SocialNetworkAttributes();

@@ -20,7 +20,7 @@
 #ifndef AKONADI_SOCIALUTILS_SOCIALFEEDITEM_H
 #define AKONADI_SOCIALUTILS_SOCIALFEEDITEM_H
 
-#include "libakonadisocialutils_export.h"
+#include "akonadi-socialutils_export.h"
 
 #include <QSharedPointer>
 #include <QVariant>
@@ -35,7 +35,7 @@ class SocialFeedItemPrivate;
 /**
  * Class representing one entry in the social feed
  */
-class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
+class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
 {
   public:
     SocialFeedItem();
