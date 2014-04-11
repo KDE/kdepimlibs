@@ -25,7 +25,7 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADINOTES
 )
 
 ########### Find packages ###########
-find_package(KF5KDE4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
