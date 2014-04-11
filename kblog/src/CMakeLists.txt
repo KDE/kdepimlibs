@@ -69,5 +69,5 @@ install(FILES
   COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME KBlog LIB_NAME KF5Blog DEPS "CoreAddons KDE4Support KIOCore Syndication" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME KBlog LIB_NAME KF5Blog DEPS "CoreAddons KDELibs4Support KIOCore Syndication" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

@@ -25,7 +25,7 @@
 
 #include "kmime_export.h"
 #include "kmime_message.h"
-#include <kpimutils/supertrait.h>
+#include <AkonadiCore/supertrait.h>
 
 namespace KMime {
 

@@ -7,7 +7,7 @@ include_directories(
 
 kde4_add_plugin(kio_ldap ${kio_ldap_PART_SRCS})
 
-target_link_libraries(kio_ldap KF5::KIOCore KF5::KDELibs4Support kldap)
+target_link_libraries(kio_ldap KF5::KIOCore KF5::KDELibs4Support KF5::KLdap)
 
 install(TARGETS kio_ldap  DESTINATION ${PLUGIN_INSTALL_DIR})
 

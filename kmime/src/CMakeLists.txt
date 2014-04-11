@@ -69,5 +69,5 @@ install(FILES
          DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5KMime DEPS "Codecs ItemViews KDE4Support" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5KMime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

@@ -62,7 +62,6 @@ install(FILES
   emailvalidator.h
   networkaccesshelper.h
   processes.h
-  supertrait.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils
   COMPONENT Devel
 )
