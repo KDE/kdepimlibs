@@ -81,6 +81,8 @@ generate_export_header(KF5AkonadiKMime BASE_NAME akonadi-kmime)
 add_library(KF5::AkonadiKMime ALIAS KF5AkonadiKMime)
 
 target_include_directories(KF5AkonadiKMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiKMime;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiKMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
+
 
 target_link_libraries(KF5AkonadiKMime
     KF5::KMime

@@ -22,7 +22,7 @@
 #include "../socialfeeditem.h"
 
 #include "akonadi/config-akonadi.h"
-#include <AkonadiCore/item.h>
+#include <item.h>
 
 #include <QtCore/qplugin.h>
 

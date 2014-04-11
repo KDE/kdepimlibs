@@ -1,7 +1,7 @@
 
 # FIXME Delete this block when akonadi-kmime is split
 # If building the monolithic kdepimlibs, kcfg2dbus.xsl is in akonadi/
-if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-KMime_SOURCE_DIR}")
+if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-SocialUtils_SOURCE_DIR}")
   set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
 endif()
 
@@ -20,7 +20,9 @@ generate_export_header(KF5AkonadiSocialUtils BASE_NAME akonadi-socialutils)
 
 add_library(KF5::AkonadiSocialUtils ALIAS KF5AkonadiSocialUtils)
 
+
 target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiSocialUtils;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiSocialUtils PUBLIC "$<BUILD_INTERFACE:${Akonadi-SocialUtils_SOURCE_DIR}/src;${Akonadi-SocialUtils_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiSocialUtils
     KF5::AkonadiCore

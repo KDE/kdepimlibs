@@ -4,7 +4,7 @@ project(QGpgme)
 
 # ECM setup
 find_package(ECM 0.0.12 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${QGpgme_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
@@ -28,38 +28,34 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX QGPGME
 
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5QGpme")
 
 ecm_configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KF5KLdapConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KLdapConfig.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5QGpgmeConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5QGpgmeConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KLdapConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5KLdapConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5QGpgmeConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5QGpgmeConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
 
-install(EXPORT KF5KLdapTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5KLdapTargets.cmake NAMESPACE KF5::)
+install(EXPORT KF5QGpgmeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5QGpgmeTargets.cmake NAMESPACE KF5::)
 
 install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/kldap_version.h
+   ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h
    DESTINATION ${INCLUDE_INSTALL_DIR}
    COMPONENT Devel
 )
 
 ########### Targets ###########
-add_subdirectory(cmake)
 add_subdirectory(src)
-add_subdirectory(autotests)
+add_subdirectory(tests)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${KLdap_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

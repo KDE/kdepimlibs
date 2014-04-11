@@ -14,7 +14,7 @@ generate_export_header(KF5AkonadiNotes BASE_NAME akonadi-notes)
 add_library(KF5::KF5AkonadiNotes ALIAS KF5AkonadiNotes)
 
 target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiNotes;${Boost_INCLUDE_DIR}>")
-
+target_include_directories(KF5AkonadiNotes PUBLIC "$<BUILD_INTERFACE:${Akonadi-Notes_SOURCE_DIR}/src;${Akonadi-Notes_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiNotes
     KF5::KMime

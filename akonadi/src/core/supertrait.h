@@ -1,7 +1,5 @@
 /*
-    This file is part of Akonadi Contact.
-
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,21 +17,34 @@
     02110-1301, USA.
 */
 
-#include "contactmetadataattribute_p.h"
+#ifndef Akonadi_SUPERTRAIT_H
+#define Akonadi_SUPERTRAIT_H
 
-#include <attributefactory.h>
+namespace Akonadi {
 
-namespace {
+  /**
+    @internal
+    @see super_class
+  */
+  template <typename Super>
+  struct SuperClassTrait
+  {
+    typedef Super Type;
+  };
 
-// Anonymous namespace; function is invisible outside this file.
-bool dummy()
-{
-  using namespace Akonadi;
-  AttributeFactory::registerAttribute<ContactMetaDataAttribute>();
-  return true;
+  /**
+    Type trait to provide information about a base class for a given class.
+    Used eg. for the Akonadi payload mechanism.
+
+    To provide base class introspection for own types, extend this trait as follows:
+    @code
+    namespace KPIMUtils
+    {
+      template <> struct SuperClass<MyClass> : public SuperClassTrait<MyBaseClass>{};
+    }
+    @endcode
+  */
+  template <typename Class> struct SuperClass : public SuperClassTrait<Class>{};
 }
 
-// Called when this library is loaded.
-const bool registered = dummy();
-
-} // namespace
+#endif
