@@ -19,9 +19,9 @@
 
 #include "filteractionjob_p.h"
 
-#include <AkonadiCore/collection.h>
-#include <AkonadiCore/itemfetchjob.h>
-#include <AkonadiCore/itemfetchscope.h>
+#include <collection.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
 
 #include <KDebug>
 

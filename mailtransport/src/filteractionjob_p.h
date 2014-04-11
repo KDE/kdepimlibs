@@ -22,8 +22,8 @@
 
 #include <mailtransport_export.h>
 
-#include <AkonadiCore/item.h>
-#include <AkonadiCore/transactionsequence.h>
+#include <item.h>
+#include <transactionsequence.h>
 
 namespace Akonadi {
 

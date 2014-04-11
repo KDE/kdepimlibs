@@ -24,8 +24,8 @@
 #include <filteractionjob_p.h>
 #include <transportattribute.h>
 
-#include <AkonadiCore/itemfetchscope.h>
-#include <AkonadiCore/job.h>
+#include <itemfetchscope.h>
+#include <job.h>
 
 namespace MailTransport {
 

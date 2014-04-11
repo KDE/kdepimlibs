@@ -27,8 +27,8 @@
 #include <KDebug>
 #include <KGlobal>
 
-#include <AkonadiCore/agentinstance.h>
-#include <AkonadiCore/agentinstancecreatejob.h>
+#include <agentinstance.h>
+#include <agentinstancecreatejob.h>
 
 using namespace MailTransport;
 

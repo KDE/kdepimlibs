@@ -22,7 +22,7 @@
 
 #include <mailtransport/transportjob.h>
 
-#include <AkonadiCore/item.h>
+#include <item.h>
 
 namespace MailTransport {
 

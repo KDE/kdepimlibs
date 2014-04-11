@@ -26,9 +26,9 @@
 #include <KDebug>
 #include <KLocalizedString>
 
-#include <AkonadiCore/collection.h>
-#include <AkonadiCore/item.h>
-#include <AkonadiCore/itemcreatejob.h>
+#include <collection.h>
+#include <item.h>
+#include <itemcreatejob.h>
 #include <akonadi/kmime/addressattribute.h>
 #include <akonadi/kmime/messageflags.h>
 #include <akonadi/kmime/specialmailcollections.h>

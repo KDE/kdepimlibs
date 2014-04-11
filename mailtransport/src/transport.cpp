@@ -33,8 +33,8 @@
 #include <KStringHandler>
 #include <KWallet/KWallet>
 
-#include <AkonadiCore/agentinstance.h>
-#include <AkonadiCore/agentmanager.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
 
 using namespace MailTransport;
 using namespace KWallet;

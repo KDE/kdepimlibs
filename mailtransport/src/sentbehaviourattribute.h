@@ -22,8 +22,8 @@
 
 #include <mailtransport_export.h>
 
-#include <AkonadiCore/attribute.h>
-#include <AkonadiCore/collection.h>
+#include <attribute.h>
+#include <collection.h>
 
 namespace MailTransport {
 

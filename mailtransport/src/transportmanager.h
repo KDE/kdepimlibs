@@ -26,7 +26,7 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 
-#include <AkonadiCore/agenttype.h>
+#include <agenttype.h>
 
 class KJob;
 

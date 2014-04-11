@@ -24,7 +24,7 @@
 
 #include <QtCore/QDateTime>
 
-#include <AkonadiCore/attribute.h>
+#include <attribute.h>
 
 namespace MailTransport {
 

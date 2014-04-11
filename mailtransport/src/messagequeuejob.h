@@ -33,7 +33,7 @@
 
 #include <KDE/KCompositeJob>
 
-#include <AkonadiCore/collection.h>
+#include <collection.h>
 #include <akonadi/kmime/addressattribute.h>
 
 #include <kmime/kmime_message.h>

@@ -25,7 +25,7 @@
 
 #include <QtCore/QString>
 
-#include <AkonadiCore/agenttype.h>
+#include <agenttype.h>
 
 namespace MailTransport {
 
