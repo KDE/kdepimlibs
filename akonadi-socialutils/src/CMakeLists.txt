@@ -5,8 +5,6 @@ if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-KMime_SOURCE_DIR}")
   set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
 endif()
 
-include_directories(${QJSON_INCLUDE_DIR})
-
 #REACTIVATE IT
 #add_subdirectory(serializer)
 

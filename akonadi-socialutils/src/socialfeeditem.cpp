@@ -22,7 +22,9 @@
 
 #include <KDateTime>
 
+#if 0
 #include <qjson/qobjecthelper.h>
+#endif
 
 Akonadi::SocialFeedItem::SocialFeedItem()
   : d( new SocialFeedItemPrivate )

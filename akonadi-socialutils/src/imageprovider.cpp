@@ -111,7 +111,8 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
 
   if ( queuedJobs.count() > 0 ) {
     QueuedJobHelper helper = queuedJobs.takeFirst();
-    q->loadImage( helper.who, helper.url, helper.polishImage );
+//QT5 port
+    //q->loadImage( helper.who, helper.url, helper.polishImage );
   }
 
   if ( job->error() ) {
@@ -158,6 +159,8 @@ Akonadi::ImageProvider::~ImageProvider()
   delete d;
 }
 
+//QT5 port
+#if 0
 QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
                                           bool polishImage, KImageCache *cache )
 {
@@ -237,6 +240,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
 
   return QImage();
 }
+#endif
 
 void Akonadi::ImageProvider::abortAllJobs()
 {

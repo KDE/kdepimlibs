@@ -21,8 +21,10 @@
 
 #include <QString>
 
+#if 0
 #include <qjson/serializer.h>
 #include <qjson/parser.h>
+#endif
 
 class Akonadi::SocialNetworkAttributesPrivate
 {
@@ -54,14 +56,20 @@ Akonadi::SocialNetworkAttributes::~SocialNetworkAttributes()
 
 void Akonadi::SocialNetworkAttributes::deserialize( const QByteArray &data )
 {
+#if 0
   QJson::Parser parser;
   d->attributes = parser.parse(data).toMap();
+#endif
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
+#if 0
   QJson::Serializer serializer;
   return serializer.serialize( d->attributes );
+#else
+  return QByteArray();
+#endif
 }
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
