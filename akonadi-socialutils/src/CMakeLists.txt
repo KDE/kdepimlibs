@@ -64,7 +64,7 @@ install(FILES
 
 set(akonadi_social_utils_HDRS
   ${AkonadiSocialUtils_HEADERS}
-  ${CMAKE_CURRENT_BINARY_DIR}/libakonadisocialutils_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_export.h
   socialnetworkattributes.h
   imageprovider.h
   socialfeeditem.h
