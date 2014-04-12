@@ -115,6 +115,7 @@ if(MAILTRANSPORT_INPROCESS_SMTP)
   target_link_libraries(mailtransport ${SASL2_LIBRARIES} KF5::PimUtils)
 endif()
 
+
 install(TARGETS KF5MailTransport EXPORT KF5MailTransportLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})
