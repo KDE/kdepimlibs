@@ -39,6 +39,7 @@ find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
   find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
   find_package(KF5Akonadi CONFIG REQUIRED)
+  find_package(KF5AkonadiKMime CONFIG REQUIRED)
 endif()
 
 
@@ -50,22 +51,27 @@ set_package_properties(Sasl2 PROPERTIES
                              TYPE OPTIONAL
 )
 
-
-
 ecm_configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5MailTransportConfig.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/KF5MailTransportConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MailTransportConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MailTransportConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
 
-#install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailTransportTargets.cmake NAMESPACE KF5::)
+install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailTransportTargets.cmake NAMESPACE KF5::)
 
 ########### Targets ###########
 add_subdirectory(cmake)
 add_subdirectory(src)
 #Reactivate it
 #add_subdirectory(tests)
+
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${KontactInterface_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
