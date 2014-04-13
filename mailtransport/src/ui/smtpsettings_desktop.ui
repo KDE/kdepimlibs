@@ -13,7 +13,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="KTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -153,7 +153,7 @@
             <widget class="QWidget" name="page">
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="KPushButton" name="checkCapabilities">
+               <widget class="QPushButton" name="checkCapabilities">
                 <property name="text">
                  <string>Auto Detect</string>
                 </property>
@@ -247,7 +247,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="KIntNumInput" name="kcfg_port">
+             <widget class="QSpinBox" name="kcfg_port">
               <property name="value">
                <number>25</number>
               </property>
@@ -376,11 +376,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
@@ -390,17 +385,6 @@
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KIntNumInput</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
