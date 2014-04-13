@@ -9,7 +9,6 @@ set(kpimutils_SRCS
   processes.cpp
   progressindicatorwidget.cpp
   progressindicatorlabel.cpp
-  networkaccesshelper_fake.cpp
 )
 
 add_library(KF5PimUtils ${kpimutils_SRCS})
@@ -58,7 +57,6 @@ install(FILES
   ${KPimUtils_BINARY_DIR}/src/kpimutils_export.h
   ${KPimUtils_HEADERS}
   emailvalidator.h
-  networkaccesshelper.h
   processes.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils
   COMPONENT Devel
