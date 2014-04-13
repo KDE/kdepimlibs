@@ -5,7 +5,6 @@ set(kpimutils_SRCS
   email.cpp
   emailvalidator.cpp
   linklocator.cpp
-  spellingfilter.cpp
   kfileio.cpp
   processes.cpp
   progressindicatorwidget.cpp
@@ -44,7 +43,6 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   LinkLocator
   ProgressIndicatorLabel
   ProgressIndicatorWidget
-  SpellingFilter
   REQUIRED_HEADERS KPimUtils_HEADERS
   PREFIX KPIMUtils
 )
