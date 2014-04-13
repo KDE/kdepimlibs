@@ -28,7 +28,7 @@
 #include <QSslSocket>
 
 // KDE
-#include <KDebug>
+#include <QDebug>
 #include <ksocketfactory.h>
 
 using namespace MailTransport;

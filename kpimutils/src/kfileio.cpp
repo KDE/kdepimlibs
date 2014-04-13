@@ -21,7 +21,7 @@
 #include "kfileio.h"
 #include "kpimutils_export.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>

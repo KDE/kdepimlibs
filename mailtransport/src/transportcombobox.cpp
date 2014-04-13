@@ -21,7 +21,7 @@
 #include "transport.h"
 #include "transportmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailTransport;
 

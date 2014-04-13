@@ -22,7 +22,7 @@
 #include "imapsettings.h"
 #include "specialmailcollections.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 

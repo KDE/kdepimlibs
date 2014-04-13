@@ -43,7 +43,7 @@ using namespace KPIMUtils;
 #include <QtCore/QList>
 #include <QtCore/QtDebug>
 
-#include <KDebug>
+#include <QDebug>
 
 // Copy from kdelibs/kinit/kinit_win.cpp
 PSID copySid( PSID from )

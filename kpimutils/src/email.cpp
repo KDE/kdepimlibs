@@ -28,7 +28,7 @@
 
 #include <kmime_util.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KUrl>
 

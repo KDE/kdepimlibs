@@ -23,7 +23,7 @@
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 

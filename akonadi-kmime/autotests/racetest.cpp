@@ -19,7 +19,7 @@
 
 #include "racetest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KProcess>
 
 #include <akonadi/control.h>

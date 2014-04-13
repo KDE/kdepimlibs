@@ -33,7 +33,7 @@
 #include <QLabel>
 #include <QString>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 using namespace MailTransport;

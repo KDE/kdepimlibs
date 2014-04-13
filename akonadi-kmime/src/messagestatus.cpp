@@ -24,7 +24,7 @@
 
 #include "messageflags.h"
 
-#include <KDE/KDebug>
+#include <QDebug>
 
 #include <QtCore/QString>
 

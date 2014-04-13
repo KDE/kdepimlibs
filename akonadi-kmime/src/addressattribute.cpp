@@ -21,7 +21,7 @@
 
 #include <QDataStream>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <attributefactory.h>
 

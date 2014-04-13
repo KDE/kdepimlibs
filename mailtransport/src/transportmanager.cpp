@@ -43,7 +43,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KEMailSettings>
 #include <KLocale>
 #include <KLocalizedString>

@@ -27,7 +27,7 @@
 #include <QTimer>
 
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStringHandler>

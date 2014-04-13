@@ -22,7 +22,7 @@
 
 #include "outboxactions_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 #include <agentmanager.h>

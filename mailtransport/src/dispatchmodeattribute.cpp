@@ -19,7 +19,7 @@
 
 #include "dispatchmodeattribute.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <attributefactory.h>
 

@@ -24,7 +24,7 @@
 #include "transporttype.h"
 #include "ui_addtransportdialog.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 #include <agentinstance.h>

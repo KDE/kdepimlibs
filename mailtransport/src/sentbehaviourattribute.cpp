@@ -20,7 +20,7 @@
 #include "sentbehaviourattribute.h"
 
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 using namespace MailTransport;

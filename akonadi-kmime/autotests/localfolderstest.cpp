@@ -28,7 +28,7 @@
 #include <QFile>
 #include <QSignalSpy>
 
-#include <KDebug>
+#include <QDebug>
 #include <KStandardDirs>
 
 #include <akonadi/agentinstance.h>

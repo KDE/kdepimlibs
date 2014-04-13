@@ -32,7 +32,7 @@
 #include <QTimer>
 
 // KDE
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailTransport;
 

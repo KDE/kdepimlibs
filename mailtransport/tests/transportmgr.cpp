@@ -30,7 +30,7 @@
 #include <QLineEdit>
 #include <KLocale>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KTextEdit>
 
 #include <QPushButton>

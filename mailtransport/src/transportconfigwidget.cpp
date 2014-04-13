@@ -30,7 +30,7 @@
 #include "transportmanager.h"
 
 #include <KConfigDialogManager>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailTransport;
 

@@ -23,7 +23,7 @@
 #include "transportattribute.h"
 #include "transportmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <collection.h>

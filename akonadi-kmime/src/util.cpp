@@ -24,7 +24,7 @@
 #include <dbusconnectionpool.h>
 
 #include <assert.h>
-#include <KDebug>
+#include <QDebug>
 #include <KIO/JobUiDelegate>
 #include <KIO/Job>
 
