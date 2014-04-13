@@ -134,21 +134,9 @@ install(FILES
 )
 
 install(FILES
-  ${AkonadiKMime_CamelCase_HEADERS}
-  addressattribute.h
-  removeduplicatesjob.h
-  specialmailcollections.h
-  specialmailcollectionsrequestjob.h
-  specialmailcollectionsdiscoveryjob.h
-  standardmailactionmanager.h
+  ${AkonadiKMime_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
-  messagefolderattribute.h
-  messagemodel.h
-  messageparts.h
-  messageflags.h
-  messagestatus.h
-  messagethreadingattribute.h
-  messagethreaderproxymodel.h
+  standardmailactionmanager.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
 )
 
