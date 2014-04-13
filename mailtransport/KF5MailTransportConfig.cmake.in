@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
 find_dependency(KF5KDELibs4Support "@KF5_VERSION@")
-find_dependency(KF5KWallet "@KF5_VERSION@")
+find_dependency(KF5Wallet "@KF5_VERSION@")
 find_dependency(Sasl2)
 
 include("${CMAKE_CURRENT_LIST_DIR}/KF5MailTransportTargets.cmake")
