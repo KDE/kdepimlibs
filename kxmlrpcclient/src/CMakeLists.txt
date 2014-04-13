@@ -31,6 +31,15 @@ ecm_generate_headers(KXmlRpcClient_CamelCase_HEADERS
 
 install(TARGETS KF5XmlRpcClient EXPORT KF5XmlRpcClientTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+
+ecm_generate_pri_file(BASE_NAME KXmlRpcClient
+    LIB_NAME KF5XmlRpcClient
+    DEPS "KIOCore I18n" FILENAME_VAR PRI_FILENAME
+)
+
+install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+
 install(FILES
   ${KXmlRpcClient_CamelCase_HEADERS}
   DESTINATION ${INCLUDE_INSTALL_DIR}/KXmlRpcClient
