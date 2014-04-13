@@ -25,13 +25,13 @@
 #include <QDBusConnectionInterface>
 
 
-#include <kmime/kmime_message.h>
+#include <kmime_message.h>
 
 #include <collection.h>
 #include <itemcreatejob.h>
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
-#include <akonadi/kmime/addressattribute.h>
+#include <addressattribute.h>
 
 using namespace Akonadi;
 using namespace KMime;

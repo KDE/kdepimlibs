@@ -26,7 +26,7 @@
 */
 #include "email.h"
 
-#include <kmime/kmime_util.h>
+#include <kmime_util.h>
 
 #include <KDebug>
 #include <KLocalizedString>

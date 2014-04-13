@@ -37,6 +37,7 @@ generate_export_header(KF5KMime BASE_NAME KMime)
 add_library(KF5::KMime ALIAS KF5KMime)
 
 target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kmime>")
+target_include_directories(KF5KMime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
 
 target_link_libraries(KF5KMime
     KF5::ItemViews

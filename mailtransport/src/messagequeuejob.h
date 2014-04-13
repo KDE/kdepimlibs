@@ -34,9 +34,9 @@
 #include <KDE/KCompositeJob>
 
 #include <collection.h>
-#include <akonadi/kmime/addressattribute.h>
+#include <addressattribute.h>
 
-#include <kmime/kmime_message.h>
+#include <kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
 namespace MailTransport {
