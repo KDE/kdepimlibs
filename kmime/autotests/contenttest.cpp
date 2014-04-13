@@ -19,7 +19,7 @@
 
 #include "contenttest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <kmime_content.h>

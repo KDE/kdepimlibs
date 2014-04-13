@@ -19,7 +19,7 @@
 
 #include "headertest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <kmime_headers.h>

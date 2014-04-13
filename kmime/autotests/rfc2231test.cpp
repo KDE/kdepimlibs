@@ -21,7 +21,7 @@
 #include "rfc2231test.h"
 
 #include <kmime_util.h>
-#include <KDebug>
+#include <QDebug>
 using namespace KMime;
 
 QTEST_KDEMAIN( RFC2231Test, NoGUI )

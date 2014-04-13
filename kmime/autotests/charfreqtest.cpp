@@ -20,7 +20,7 @@
 #include "charfreqtest.h"
 #include <qtest_kde.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <kmime_charfreq.h>
 using namespace KMime;

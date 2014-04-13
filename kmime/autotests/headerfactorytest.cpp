@@ -21,7 +21,7 @@
 
 //#include <typeinfo>
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <kmime_headerfactory_p.h>
