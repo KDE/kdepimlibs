@@ -105,8 +105,8 @@ target_link_libraries(KF5MailTransport
 )
 
 set_target_properties(KF5MailTransport PROPERTIES
-    VERSION ${KIMAP_VERSION_STRING}
-    SOVERSION ${KIMAP_SOVERSION}
+    VERSION ${MAILTRANSPORT_VERSION_STRING}
+    SOVERSION ${MAILTRANSPORT_SOVERSION}
     EXPORT_NAME MailTransport
 )
 
