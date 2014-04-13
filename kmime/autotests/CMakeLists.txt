@@ -27,7 +27,7 @@ add_kmime_test(
   headertest
   contenttest
   messagetest
-  #codectest # FIXME build fails
+  codectest
   #headerfactorytest
   rfc2231test
   base64benchmark
