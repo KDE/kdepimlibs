@@ -295,31 +295,6 @@ QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
   return error;
 }
 
-bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
-                                                            const QString &toCheck,
-                                                            const bool recursive,
-                                                            const bool wantItReadable,
-                                                            const bool wantItWritable )
-{
-  QString error =
-    checkAndCorrectPermissionsIfPossible( toCheck, recursive, wantItReadable, wantItWritable );
-
-  // There is no KMessageBox with Retry, Cancel and Details.
-  // so, I can't provide a functionality to recheck. So it now
-  // it is just a warning.
-  if ( !error.isEmpty() ) {
-    qDebug() << "checkPermissions found:" << error;
-    KMessageBox::detailedSorry( parent,
-                                i18n( "Some files or folders do not have the "
-                                      "necessary permissions, please correct "
-                                      "them manually." ),
-                                error, i18n( "Permissions Check" ), 0 );
-    return false;
-  } else {
-    return true;
-  }
-}
-
 bool removeDirAndContentsRecursively( const QString & path )
 {
   bool success = true;

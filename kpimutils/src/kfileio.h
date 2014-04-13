@@ -92,38 +92,6 @@ KPIMUTILS_EXPORT QString checkAndCorrectPermissionsIfPossible( const QString &to
                                               const bool wantItWritable );
 
 /**
-  Checks and corrects the permissions of a file or folder, and if requested all
-  files and folders below. If the permissions are not ok, it tries to correct
-  them. If that fails then a warning with detailled information is given.
-
-  @param  parent         If parent is 0, then the message box becomes an
-                         application-global modal dialog box. If parent
-                         is a widget, the message box becomes modal
-                         relative to parent.
-  @param toCheck         The file or folder of which the permissions should
-                         be checked.
-  @param recursive       Set to true, it will check the contents of a folder
-                         for the permissions recursively. If false only
-                         toCheck will be checked.
-  @param wantItReadable  Set to true, it will check for read permissions.
-                         If the read permissions are not available, there will
-                         be a attempt to correct this.
-  @param wantItWritable  Set to true, it will check for write permissions.
-                         If the write permissions are not available, there
-                         will be a attempt to correct this.
-  @return It will return true if all permissions in the end are ok. If false
-          then the permissions are not ok and it was not possible to correct
-          all errors.
-
-  @deprecated unused, scheduled for removal in KF5.
-*/
-KPIMUTILS_DEPRECATED_EXPORT bool checkAndCorrectPermissionsIfPossibleWithErrorHandling( QWidget *parent,
-                                                            const QString &toCheck,
-                                                            const bool recursive,
-                                                            const bool wantItReadable,
-                                                            const bool wantItWritable );
-
-/**
  * Removed a directory on the local filesystem whether it is empty or not. All
  * contents are irredeemably lost.
  *
