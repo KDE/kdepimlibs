@@ -26,7 +26,7 @@
 #include "transport.h"
 
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 #include <KGlobal>
 
 using namespace MailTransport;
@@ -159,7 +159,7 @@ void TransportManagementWidget::Private::defaultClicked()
 
 void TransportManagementWidget::Private::slotCustomContextMenuRequested( const QPoint &pos )
 {
-  KMenu *menu = new KMenu( q );
+  QMenu *menu = new QMenu( q );
   menu->addAction( i18n( "Add..." ), q, SLOT(addClicked()) );
   QTreeWidgetItem *item = ui.transportList->itemAt( pos );
   if ( item ) {
