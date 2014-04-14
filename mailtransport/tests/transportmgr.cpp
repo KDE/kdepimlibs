@@ -19,11 +19,11 @@
 
 #include "transportmgr.h"
 
-#include <mailtransport/transportconfigdialog.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/transportmanagementwidget.h>
-#include <mailtransport/transportjob.h>
-#include <mailtransport/transport.h>
+#include <transportconfigdialog.h>
+#include <transportmanager.h>
+#include <transportmanagementwidget.h>
+#include <transportjob.h>
+#include <transport.h>
 
 #include <KApplication>
 #include <KCmdLineArgs>

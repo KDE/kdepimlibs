@@ -22,7 +22,7 @@
 #define MESSAGEQUEUER_H
 
 #include <KVBox>
-#include <mailtransport/transportcombobox.h>
+#include <transportcombobox.h>
 
 class KJob;
 class QLineEdit;

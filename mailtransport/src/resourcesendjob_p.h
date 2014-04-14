@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_RESOURCESENDJOB_P_H
 #define MAILTRANSPORT_RESOURCESENDJOB_P_H
 
-#include <mailtransport/transportjob.h>
+#include <transportjob.h>
 
 #include <item.h>
 

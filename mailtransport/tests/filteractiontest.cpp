@@ -29,7 +29,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/qtest_akonadi.h>
-#include <mailtransport/filteractionjob_p.h>
+#include <filteractionjob_p.h>
 
 using namespace Akonadi;
 

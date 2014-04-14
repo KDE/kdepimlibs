@@ -23,7 +23,7 @@
 #ifndef MAILTRANSPORT_SMTPJOB_H
 #define MAILTRANSPORT_SMTPJOB_H
 
-#include <mailtransport/transportjob.h>
+#include <transportjob.h>
 
 namespace KIO {
   class Job;

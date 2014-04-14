@@ -22,7 +22,7 @@
 #define MAILTRANSPORT_SERVERTEST_H
 
 #include <mailtransport_export.h>
-#include <mailtransport/transport.h>
+#include <transport.h>
 
 #include <QWidget>
 #include <QtCore/QHash>

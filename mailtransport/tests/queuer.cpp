@@ -36,10 +36,10 @@
 
 #include <akonadi/control.h>
 
-#include <mailtransport/dispatchmodeattribute.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/transport.h>
+#include <dispatchmodeattribute.h>
+#include <messagequeuejob.h>
+#include <transportmanager.h>
+#include <transport.h>
 
 using namespace KMime;
 using namespace MailTransport;

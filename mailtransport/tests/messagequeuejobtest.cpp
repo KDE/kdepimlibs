@@ -40,13 +40,13 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-#include <mailtransport/dispatchmodeattribute.h>
-#include <mailtransport/errorattribute.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/sentbehaviourattribute.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportattribute.h>
-#include <mailtransport/transportmanager.h>
+#include <dispatchmodeattribute.h>
+#include <errorattribute.h>
+#include <messagequeuejob.h>
+#include <sentbehaviourattribute.h>
+#include <transport.h>
+#include <transportattribute.h>
+#include <transportmanager.h>
 
 #define SPAM_ADDRESS ( QStringList() << "idanoka@gmail.com" )
 

@@ -22,7 +22,7 @@
 
 #include <mailtransport_export.h>
 #include <transportbase.h>
-#include <mailtransport/transporttype.h>
+#include <transporttype.h>
 
 class TransportPrivate;
 

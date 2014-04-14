@@ -21,7 +21,7 @@
 #define MAILTRANSPORT_TRANSPORTMANAGER_H
 
 #include <mailtransport_export.h>
-#include <mailtransport/transporttype.h>
+#include <transporttype.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>

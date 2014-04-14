@@ -28,8 +28,8 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
-#include <mailtransport/filteractionjob_p.h>
-#include <mailtransport/dispatcherinterface.h>
+#include <filteractionjob_p.h>
+#include <dispatcherinterface.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 

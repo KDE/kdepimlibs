@@ -29,7 +29,7 @@
 
 #include <akonadi/control.h>
 
-#include <mailtransport/dispatcherinterface.h>
+#include <dispatcherinterface.h>
 
 using namespace Akonadi;
 using namespace MailTransport;

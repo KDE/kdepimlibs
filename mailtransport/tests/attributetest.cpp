@@ -24,11 +24,11 @@
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/kmime/addressattribute.h>
 
-#include <mailtransport/dispatchmodeattribute.h>
-#include <mailtransport/errorattribute.h>
-#include <mailtransport/sentactionattribute.h>
-#include <mailtransport/sentbehaviourattribute.h>
-#include <mailtransport/transportattribute.h>
+#include <dispatchmodeattribute.h>
+#include <errorattribute.h>
+#include <sentactionattribute.h>
+#include <sentbehaviourattribute.h>
+#include <transportattribute.h>
 
 using namespace Akonadi;
 using namespace MailTransport;
