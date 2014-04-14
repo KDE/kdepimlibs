@@ -4,7 +4,7 @@ project(QGpgme)
 
 # ECM setup
 find_package(ECM 0.0.12 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${QGpgme_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
@@ -26,11 +26,21 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX QGPGME
                         SOVERSION 5
 )
 
+find_package(Gpgme)
+set_package_properties(Gpgme PROPERTIES
+                       URL "http://www.gnupg.org/related_software/gpgme/"
+                       DESCRIPTION "The GnuPG Made Easy (GPGME) library)"
+                       TYPE REQUIRED
+)
+
+
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5QGpme")
+
+
 
 ecm_configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5QGpgmeConfig.cmake.in"
