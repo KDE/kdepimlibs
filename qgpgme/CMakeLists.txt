@@ -45,7 +45,8 @@ install(FILES
   COMPONENT Devel
 )
 
-install(EXPORT KF5QGpgmeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5QGpgmeTargets.cmake NAMESPACE KF5::)
+#reactivate ti
+#install(EXPORT KF5QGpgmeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5QGpgmeTargets.cmake NAMESPACE KF5::)
 
 install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h
@@ -55,8 +56,9 @@ install(FILES
 
 ########### Targets ###########
 add_subdirectory(src)
-add_subdirectory(tests)
+#qt5 reactivate it
+#add_subdirectory(tests)
 
-if ("${CMAKE_BINARY_DIR}" STREQUAL "${KLdap_BINARY_DIR}")
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${QGpgme_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
