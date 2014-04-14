@@ -27,7 +27,7 @@
 #include "mbox_p.h"
 #include "mboxentry_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KStandardDirs>
 #include <KUrl>
 

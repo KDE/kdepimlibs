@@ -19,7 +19,7 @@
 
 #include "mbox_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 #include <QLocale>
 
