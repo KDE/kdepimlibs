@@ -67,7 +67,7 @@ install(FILES
 ########### Targets ###########
 add_subdirectory(src)
 #qt5 reactivate it
-#add_subdirectory(tests)
+#add_subdirectory(autotests)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${QGpgme_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
