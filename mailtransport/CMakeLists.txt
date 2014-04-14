@@ -70,7 +70,7 @@ install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" 
 add_subdirectory(cmake)
 add_subdirectory(src)
 #Reactivate it
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${KontactInterface_BINARY_DIR}")
   feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

@@ -34,7 +34,9 @@
 #include <KLocalizedString>
 #include <KTextEdit>
 
-#include <akonadi/control.h>
+#include <control.h>
+
+#include <QDebug>
 
 #include <dispatchmodeattribute.h>
 #include <messagequeuejob.h>
@@ -47,7 +49,7 @@ using namespace MailTransport;
 MessageQueuer::MessageQueuer()
 {
   if ( !Akonadi::Control::start() ) {
-    qFatal() << "Could not start Akonadi server.";
+    qFatal("Could not start Akonadi server.");
   }
 
   mComboBox = new TransportComboBox( this );

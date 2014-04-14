@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KLocalizedString>
 
-#include <akonadi/control.h>
+#include <control.h>
 
 #include <dispatcherinterface.h>
 

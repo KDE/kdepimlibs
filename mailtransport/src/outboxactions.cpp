@@ -23,7 +23,7 @@
 #include "errorattribute.h"
 
 #include <itemmodifyjob.h>
-#include <akonadi/kmime/messageflags.h>
+#include <messageflags.h>
 
 using namespace Akonadi;
 using namespace MailTransport;

@@ -26,12 +26,12 @@
 #include <KLocalizedString>
 #include <KLocale>
 
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
+#include <collection.h>
+#include <control.h>
 #include <filteractionjob_p.h>
 #include <dispatcherinterface.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
+#include <specialmailcollections.h>
+#include <specialmailcollectionsrequestjob.h>
 
 using namespace Akonadi;
 using namespace MailTransport;

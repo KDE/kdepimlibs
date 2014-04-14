@@ -29,10 +29,10 @@
 #include <collection.h>
 #include <item.h>
 #include <itemcreatejob.h>
-#include <akonadi/kmime/addressattribute.h>
-#include <akonadi/kmime/messageflags.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
+#include <addressattribute.h>
+#include <messageflags.h>
+#include <specialmailcollections.h>
+#include <specialmailcollectionsrequestjob.h>
 
 using namespace Akonadi;
 using namespace KMime;

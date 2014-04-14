@@ -60,7 +60,7 @@ void TransportConfigDialog::Private::okClicked()
   if ( TransportConfigWidget *w = dynamic_cast<TransportConfigWidget*>( configWidget ) ) {
     // It is not an Akonadi transport.
     w->apply();
-    transport->writeConfig();
+    transport->save();
   }
 }
 

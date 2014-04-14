@@ -53,10 +53,6 @@ class SMTPConfigWidget : public TransportConfigWidget
     /** reimpl */
     virtual void apply();
 
-  protected:
-    // TODO probably not needed since no one will inherit from us
-    SMTPConfigWidget( SMTPConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
-
   private Q_SLOTS:
     void checkSmtpCapabilities();
     void passwordsLoaded();
