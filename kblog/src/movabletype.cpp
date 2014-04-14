@@ -28,7 +28,7 @@
 #include <kxmlrpcclient/client.h>
 #include <kio/job.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>
 
@@ -236,7 +236,7 @@ void MovableTypePrivate::slotCreatePost( const QList<QVariant> &result, const QV
   qDebug();
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
-  kDebug () << "TOP:" << result[0].typeName();
+  qDebug () << "TOP:" << result[0].typeName();
   if ( result[0].type() != QVariant::String &&
        result[0].type() != QVariant::Int ) {
     qCritical() << "Could not read the postId, not a string or an integer.";
@@ -276,7 +276,7 @@ void MovableTypePrivate::slotFetchPost( const QList<QVariant> &result, const QVa
 
   //array of structs containing ISO.8601
   // dateCreated, String userid, String postid, String content;
-  kDebug () << "TOP:" << result[0].typeName();
+  qDebug () << "TOP:" << result[0].typeName();
   if ( result[0].type() == QVariant::Map &&
        readPostFromMap( post, result[0].toMap() ) ) {
   } else {

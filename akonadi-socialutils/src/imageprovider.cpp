@@ -21,7 +21,7 @@
 
 #include "imageprovider.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KIO/Job>
 #include <KImageCache>
 

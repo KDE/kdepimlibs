@@ -26,7 +26,7 @@
 
 #include <kxmlrpcclient/client.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>
 
@@ -336,7 +336,7 @@ void LiveJournalPrivate::slotCreatePost( const QList<QVariant> &result, const QV
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
-  kDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
+  qDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     qCritical() << "Could not fetch post's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.
@@ -445,7 +445,7 @@ void LiveJournalPrivate::slotModifyPost( const QList<QVariant> &result, const QV
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
-  kDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
+  qDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     qCritical() << "Could not fetch post's ID out of the result from the server,"
                  << " not a map."; // If not a struct, print error.
@@ -470,7 +470,7 @@ void LiveJournalPrivate::slotRemovePost( const QList<QVariant> &result,
   mCallMap.remove( id.toInt() ); // Remove the post as it is now owned by the signal catcher
 
   // struct containing String anum, String itemid
-  kDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
+  qDebug () << "TOP:" << result[0].typeName(); // Print first return type to the console.
   if ( result[0].type() != QVariant::Map ) { // Make sure the only return type is a struct.
     qCritical() << "Could not fetch post's ID out of the result from the server,"
         << "not a map."; // If not a struct, print error.

@@ -27,7 +27,7 @@
 
 #include <kdeversion.h>
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace KBlog;
 

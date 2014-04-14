@@ -30,7 +30,7 @@
 
 #include <kio/netaccess.h>
 #include <kio/job.h>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>
 
