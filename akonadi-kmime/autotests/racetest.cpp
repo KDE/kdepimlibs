@@ -22,13 +22,13 @@
 #include <QDebug>
 #include <KProcess>
 
-#include <akonadi/control.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/qtest_akonadi.h>
-//#include <akonadi/kmime/localfolders.h>
+#include <control.h>
+#include <agentinstance.h>
+#include <agentinstancecreatejob.h>
+#include <agenttype.h>
+#include <agentmanager.h>
+#include <qtest_akonadi.h>
+//#include <localfolders.h>
 
 #define TIMEOUT_SECONDS 20
 #define MAXCOUNT 10

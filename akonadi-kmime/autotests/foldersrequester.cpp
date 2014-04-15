@@ -25,10 +25,10 @@
 #include <KIcon>
 #include <KLocalizedString>
 
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
+#include <collection.h>
+#include <control.h>
+#include <specialmailcollections.h>
+#include <specialmailcollectionsrequestjob.h>
 
 using namespace Akonadi;
 

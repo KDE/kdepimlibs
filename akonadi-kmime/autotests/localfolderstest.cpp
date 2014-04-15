@@ -31,17 +31,17 @@
 #include <QDebug>
 #include <KStandardDirs>
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/control.h>
-#include <akonadi/qtest_akonadi.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
+#include <collectioncreatejob.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <collectionmodifyjob.h>
+#include <control.h>
+#include <qtest_akonadi.h>
 #include "../../specialcollectionattribute_p.h"
 #include "../../specialcollections_p.h"
-#include <akonadi/kmime/specialmailcollections.h>
+#include <specialmailcollections.h>
 #include <QStandardPaths>
 #include "../specialmailcollectionstesting_p.h"
 #include "../../specialcollectionshelperjobs_p.h"
