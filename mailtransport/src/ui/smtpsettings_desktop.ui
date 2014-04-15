@@ -42,7 +42,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="KLineEdit" name="kcfg_host"/>
+           <widget class="QLineEdit" name="kcfg_host"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="usernameLabel">
@@ -61,7 +61,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="KLineEdit" name="kcfg_userName">
+           <widget class="QLineEdit" name="kcfg_userName">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -84,7 +84,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KLineEdit" name="password">
+           <widget class="QLineEdit" name="password">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -301,7 +301,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="KLineEdit" name="kcfg_localHostname">
+           <widget class="QLineEdit" name="kcfg_localHostname">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -325,7 +325,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KLineEdit" name="kcfg_senderOverwriteAddress">
+           <widget class="QLineEdit" name="kcfg_senderOverwriteAddress">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -342,7 +342,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="KLineEdit" name="kcfg_precommand">
+           <widget class="QLineEdit" name="kcfg_precommand">
             <zorder>precommandLabel</zorder>
            </widget>
           </item>
@@ -373,12 +373,6 @@
    <class>KButtonGroup</class>
    <extends>QGroupBox</extends>
    <header>kbuttongroup.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
