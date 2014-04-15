@@ -32,10 +32,10 @@
 #ifndef KPIMUTILS_EMAIL_H
 #define KPIMUTILS_EMAIL_H
 
-#include <KDE/KUrl>
+#include <QUrl>
 
-#include <QtCore/QStringList>
-#include <QtCore/QByteArray>
+#include <QStringList>
+#include <QByteArray>
 
 #include "kpimutils_export.h"
 
@@ -390,7 +390,7 @@ namespace KPIMUtils {
     * @since 4.4.3
     */
   KPIMUTILS_EXPORT
-  KUrl encodeMailtoUrl( const QString &mailbox );
+  QUrl encodeMailtoUrl( const QString &mailbox );
 
   /**
     * Extracts the mailbox out of the mailto: URL.
@@ -399,7 +399,7 @@ namespace KPIMUtils {
     * @since 4.4.3
     */
   KPIMUTILS_EXPORT
-  QString decodeMailtoUrl( const KUrl &mailtoUrl );
+  QString decodeMailtoUrl( const QUrl &mailtoUrl );
 
 } // namespace
 

@@ -957,7 +957,7 @@ QString KPIMUtils::fromIdn( const QString &addrSpec )
     return addrSpec;
   }
 
-  QString idn = KUrl::fromAce( addrSpec.mid( atPos + 1 ).toLatin1() );
+  QString idn = QUrl::fromAce( addrSpec.mid( atPos + 1 ).toLatin1() );
   if ( idn.isEmpty() ) {
     return QString();
   }
@@ -973,7 +973,7 @@ QString KPIMUtils::toIdn( const QString &addrSpec )
     return addrSpec;
   }
 
-  QString idn = QLatin1String(KUrl::toAce( addrSpec.mid( atPos + 1 )) );
+  QString idn = QLatin1String(QUrl::toAce( addrSpec.mid( atPos + 1 )) );
   if ( idn.isEmpty() ) {
     return addrSpec;
   }
@@ -1100,17 +1100,17 @@ QString KPIMUtils::quoteNameIfNecessary( const QString &str )
   return quoted;
 }
 
-KUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
+QUrl KPIMUtils::encodeMailtoUrl( const QString &mailbox )
 {
   const QByteArray encodedPath = KMime::encodeRFC2047String( mailbox, "utf-8" );
-  KUrl mailtoUrl;
-  mailtoUrl.setProtocol( QLatin1String("mailto") );
+  QUrl mailtoUrl;
+  mailtoUrl.setScheme( QLatin1String("mailto") );
   mailtoUrl.setPath( QLatin1String(encodedPath) );
   return mailtoUrl;
 }
 
-QString KPIMUtils::decodeMailtoUrl( const KUrl &mailtoUrl )
+QString KPIMUtils::decodeMailtoUrl( const QUrl &mailtoUrl )
 {
-  Q_ASSERT( mailtoUrl.protocol().toLower() == QLatin1String("mailto") );
+  Q_ASSERT( mailtoUrl.scheme().toLower() == QLatin1String("mailto") );
   return KMime::decodeRFC2047String( mailtoUrl.path().toUtf8() );
 }

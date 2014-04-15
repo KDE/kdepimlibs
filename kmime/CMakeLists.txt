@@ -4,7 +4,7 @@ project(KMime)
 
 # ECM setup
 find_package(ECM 0.0.12 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${KMime_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${KMime_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGeneratePriFile)
