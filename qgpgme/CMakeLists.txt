@@ -37,6 +37,11 @@ set_package_properties(Gpgme PROPERTIES
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-KMime_SOURCE_DIR})
+  find_package(KF5Gpgmepp CONFIG REQUIRED)
+endif()
+
+
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5QGpme")
 
