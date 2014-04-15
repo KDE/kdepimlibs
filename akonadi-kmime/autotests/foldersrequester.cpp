@@ -22,7 +22,6 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <QDebug>
-#include <KIcon>
 #include <KLocalizedString>
 
 #include <collection.h>

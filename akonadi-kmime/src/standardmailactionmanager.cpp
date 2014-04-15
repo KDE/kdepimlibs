@@ -45,7 +45,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kicon.h>
+
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 
