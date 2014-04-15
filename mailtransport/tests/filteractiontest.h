@@ -23,8 +23,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <collection.h>
+#include <item.h>
 
 
 class FilterActionTest : public QObject

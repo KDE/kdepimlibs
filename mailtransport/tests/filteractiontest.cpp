@@ -18,17 +18,17 @@
 */
 
 #include "filteractiontest.h"
-#include <akonadi/collectionpathresolver_p.h>
+#include <collectionpathresolver_p.h>
 #include <testattribute.h>
 
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/qtest_akonadi.h>
+#include <attributefactory.h>
+#include <collectioncreatejob.h>
+#include <itemcreatejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
+#include <qtest_akonadi.h>
 #include <filteractionjob_p.h>
 
 using namespace Akonadi;

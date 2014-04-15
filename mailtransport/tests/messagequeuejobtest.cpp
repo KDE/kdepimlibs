@@ -22,22 +22,22 @@
 #include <QStringList>
 
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/collectionstatisticsjob.h>
-#include <akonadi/control.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/addressattribute.h>
-#include <akonadi/kmime/messageflags.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
+#include <agentinstance.h>
+#include <agentmanager.h>
+#include <collection.h>
+#include <collectionstatistics.h>
+#include <collectionstatisticsjob.h>
+#include <control.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemdeletejob.h>
+#include <qtest_akonadi.h>
+#include <addressattribute.h>
+#include <messageflags.h>
+#include <specialmailcollections.h>
+#include <specialmailcollectionsrequestjob.h>
 
-#include <kmime/kmime_message.h>
+#include <kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
 #include <dispatchmodeattribute.h>

@@ -20,9 +20,9 @@
 #include "attributetest.h"
 
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/addressattribute.h>
+#include <attributefactory.h>
+#include <qtest_akonadi.h>
+#include <addressattribute.h>
 
 #include <dispatchmodeattribute.h>
 #include <errorattribute.h>

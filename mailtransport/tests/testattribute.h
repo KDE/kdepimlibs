@@ -20,7 +20,7 @@
 #ifndef TESTATTRIBUTE_H
 #define TESTATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include <attribute.h>
 
 /* Attribute used for testing by various unit tests. */
 class TestAttribute : public Akonadi::Attribute
