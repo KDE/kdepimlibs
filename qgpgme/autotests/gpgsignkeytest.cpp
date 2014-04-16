@@ -27,7 +27,7 @@
 
 #include "test_editinteractor.h"
 
-#include <gpgme++/gpgsignkeyeditinteractor.h>
+#include <gpgsignkeyeditinteractor.h>
 
 
 #include <QByteArray>

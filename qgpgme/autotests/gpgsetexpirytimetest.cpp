@@ -27,7 +27,7 @@
 
 #include "test_editinteractor.h"
 
-#include <gpgme++/gpgsetexpirytimeeditinteractor.h>
+#include <gpgsetexpirytimeeditinteractor.h>
 
 #include <iostream>
 #include <stdexcept>

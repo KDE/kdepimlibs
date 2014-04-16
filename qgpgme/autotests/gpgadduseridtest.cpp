@@ -27,7 +27,7 @@
 
 #include "test_editinteractor.h"
 
-#include <gpgme++/gpgadduserideditinteractor.h>
+#include <gpgadduserideditinteractor.h>
 
 #include <memory>
 #include <iostream>

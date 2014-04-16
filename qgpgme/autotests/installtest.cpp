@@ -25,9 +25,9 @@
 #endif
 
 #include <qgpgme/dataprovider.h>
-#include <gpgme++/data.h>
-#include <gpgme++/data_p.h>
-#include <gpgme++/engineinfo.h>
+#include <data.h>
+#include <data_p.h>
+#include <engineinfo.h>
 #include <gpgme.h>
 #include <iostream>
 

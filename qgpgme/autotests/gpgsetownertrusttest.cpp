@@ -27,7 +27,7 @@
 
 #include "test_editinteractor.h"
 
-#include <gpgme++/gpgsetownertrusteditinteractor.h>
+#include <gpgsetownertrusteditinteractor.h>
 
 #include <boost/bind.hpp>
 #include <boost/range.hpp>

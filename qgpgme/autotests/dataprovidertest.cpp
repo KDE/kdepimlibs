@@ -25,8 +25,8 @@
 #endif
 
 #include <qgpgme/dataprovider.h>
-#include <gpgme++/data.h>
-#include <gpgme++/data_p.h>
+#include <data.h>
+#include <data_p.h>
 #include <gpgme.h>
 
 #include <QBuffer>

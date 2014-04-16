@@ -28,12 +28,12 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
-#include <gpgme++/editinteractor.h>
-#include <gpgme++/context.h>
-#include <gpgme++/error.h>
-#include <gpgme++/data.h>
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
+#include <editinteractor.h>
+#include <context.h>
+#include <error.h>
+#include <data.h>
+#include <key.h>
+#include <keylistresult.h>
 
 #include <gpg-error.h>
 
