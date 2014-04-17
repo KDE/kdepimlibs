@@ -137,7 +137,7 @@
         </widget>
        </item>
        <item>
-        <widget class="KButtonGroup" name="kcfg_encryption">
+        <widget class="QGroupBox" name="kcfg_encryption">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -218,6 +218,9 @@
                 <property name="text">
                  <string>&amp;None</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -225,6 +228,9 @@
                 <property name="text">
                  <string>&amp;SSL</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -232,6 +238,9 @@
                 <property name="text">
                  <string>&amp;TLS</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
              </layout>
@@ -251,11 +260,11 @@
             </item>
             <item row="1" column="1">
              <widget class="QSpinBox" name="kcfg_port">
-              <property name="value">
-               <number>25</number>
-              </property>
               <property name="minimum">
                <number>1</number>
+              </property>
+              <property name="value">
+               <number>25</number>
               </property>
              </widget>
             </item>
@@ -370,12 +379,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KButtonGroup</class>
-   <extends>QGroupBox</extends>
-   <header>kbuttongroup.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
@@ -529,4 +532,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

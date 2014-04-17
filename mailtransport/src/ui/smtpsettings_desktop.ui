@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
+    <width>398</width>
     <height>446</height>
    </rect>
   </property>
@@ -137,7 +137,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="KButtonGroup" name="kcfg_encryption">
+        <widget class="QGroupBox" name="kcfg_encryption">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -215,6 +215,9 @@
                 <property name="text">
                  <string>&amp;None</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -222,6 +225,9 @@
                 <property name="text">
                  <string>&amp;SSL</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -229,6 +235,9 @@
                 <property name="text">
                  <string>&amp;TLS</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup</string>
+                </attribute>
                </widget>
               </item>
              </layout>
@@ -248,11 +257,11 @@
             </item>
             <item row="1" column="1">
              <widget class="QSpinBox" name="kcfg_port">
-              <property name="value">
-               <number>25</number>
-              </property>
               <property name="minimum">
                <number>1</number>
+              </property>
+              <property name="value">
+               <number>25</number>
               </property>
              </widget>
             </item>
@@ -342,9 +351,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLineEdit" name="kcfg_precommand">
-            <zorder>precommandLabel</zorder>
-           </widget>
+           <widget class="QLineEdit" name="kcfg_precommand"/>
           </item>
          </layout>
         </widget>
@@ -369,12 +376,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KButtonGroup</class>
-   <extends>QGroupBox</extends>
-   <header>kbuttongroup.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
@@ -546,4 +547,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>
