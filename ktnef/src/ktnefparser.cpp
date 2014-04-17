@@ -36,7 +36,7 @@
 
 #include <qdebug.h>
 #include <kmimetype.h>
-#include <ksavefile.h>
+#include <qsavefile.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDataStream>
@@ -462,8 +462,8 @@ bool KTNEFParser::ParserPrivate::extractAttachmentTo( KTNEFAttach *att,
   if ( !device_->seek( att->offset() ) ) {
     return false;
   }
-  KSaveFile outfile( filename );
-  if ( !outfile.open() ) {
+  QSaveFile outfile( filename );
+  if ( !outfile.open(QIODevice::WriteOnly) ) {
     return false;
   }
 
