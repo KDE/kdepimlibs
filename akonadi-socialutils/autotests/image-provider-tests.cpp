@@ -18,7 +18,7 @@
 */
 
 #include "image-provider-tests.h"
-#include "../imageprovider.h"
+#include "imageprovider.h"
 
 #include <KImageCache>
 
