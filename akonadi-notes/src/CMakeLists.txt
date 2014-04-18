@@ -1,8 +1,6 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
-remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
-
 set(akonadinotes_LIB_SRC
   noteutils.cpp
 )
