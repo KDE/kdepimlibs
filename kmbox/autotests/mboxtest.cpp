@@ -23,7 +23,8 @@
 #include <QtCore/QFile>
 
 #include <qtest_kde.h>
-#include <kstandarddirs.h>
+#include <QStandardPaths>
+#include <KStandardDirs>
 #include <ktempdir.h>
 
 QTEST_KDEMAIN( MboxTest, NoGUI )
@@ -78,13 +79,13 @@ void MboxTest::testSetLockMethod()
 {
   MBox mbox1;
 
-  if ( !KStandardDirs::findExe( QLatin1String( "lockfile" ) ).isEmpty() ) {
+  if ( !QStandardPaths::findExecutable( QLatin1String( "lockfile" ) ).isEmpty() ) {
     QVERIFY( mbox1.setLockType( MBox::ProcmailLockfile ) );
   } else {
     QVERIFY( !mbox1.setLockType( MBox::ProcmailLockfile ) );
   }
 
-  if ( !KStandardDirs::findExe( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
+  if ( !QStandardPaths::findExecutable( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
     QVERIFY( mbox1.setLockType( MBox::MuttDotlock ) );
     QVERIFY( mbox1.setLockType( MBox::MuttDotlockPrivileged ) );
   } else {
@@ -100,12 +101,12 @@ void MboxTest::testLockBeforeLoad()
   // Should fail because it's not known which file to lock.
   MBox mbox;
 
-  if ( !KStandardDirs::findExe( QLatin1String( "lockfile" ) ).isEmpty() ) {
+  if ( !QStandardPaths::findExecutable( QLatin1String( "lockfile" ) ).isEmpty() ) {
     QVERIFY( mbox.setLockType( MBox::ProcmailLockfile ) );
     QVERIFY( !mbox.lock() );
   }
 
-  if ( !KStandardDirs::findExe( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
+  if ( !QStandardPaths::findExecutable( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
     QVERIFY( mbox.setLockType( MBox::MuttDotlock ) );
     QVERIFY( !mbox.lock() );
     QVERIFY( mbox.setLockType( MBox::MuttDotlockPrivileged ) );

@@ -28,7 +28,7 @@
 #include "mboxentry_p.h"
 
 #include <QDebug>
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KUrl>
 
 #include <QtCore/QBuffer>
@@ -616,14 +616,14 @@ bool MBox::setLockType( LockType ltype )
 
   switch ( ltype ) {
     case ProcmailLockfile:
-      if ( KStandardDirs::findExe( QLatin1String( "lockfile" ) ).isEmpty() ) {
+      if ( QStandardPaths::findExecutable( QLatin1String( "lockfile" ) ).isEmpty() ) {
         qDebug() << "Could not find the lockfile executable";
         return false;
       }
       break;
     case MuttDotlock: // fall through
     case MuttDotlockPrivileged:
-      if ( KStandardDirs::findExe( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
+      if ( QStandardPaths::findExecutable( QLatin1String( "mutt_dotlock" ) ).isEmpty() ) {
         qDebug() << "Could not find the mutt_dotlock executable";
         return false;
       }

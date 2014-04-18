@@ -29,7 +29,7 @@
 #include "transportconfigwidget_p.h"
 #include "ui_sendmailsettings.h"
 
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KLineEdit>
 
 using namespace MailTransport;
@@ -68,7 +68,7 @@ void SendmailConfigWidget::init()
     // Locate sendmail.
     // This is imperfect, because it shows the standard path if an empty path
     // is saved in the config.
-    d->ui.kcfg_host->setText( KStandardDirs::findExe( QLatin1String( "sendmail" ) ) );
+    d->ui.kcfg_host->setText( QStandardPaths::findExecutable( QLatin1String( "sendmail" ) ) );
   }
   connect( d->ui.kcfg_host->lineEdit(), SIGNAL(textChanged(QString)),
            SLOT(slotTextChanged(QString)) );
@@ -85,3 +85,4 @@ bool SendmailConfigWidget::pathIsEmpty() const
   Q_D( const SendmailConfigWidget );
   return d->ui.kcfg_host->text().isEmpty();
 }
+
