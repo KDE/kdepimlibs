@@ -47,10 +47,6 @@ set(CMAKE_MODULE_PATH "${KDEPIMLIBS_DATA_DIR}/cmake/modules" "${CMAKE_MODULE_PAT
 # the exports file exports
 set(KDEPIMLIBS_TARGET_PREFIX @KDEPIMLIBS_TARGET_PREFIX@)
 
-set(KDEPIMLIBS_NO_KRESOURCES @KDEPIM_NO_KRESOURCES@)
-set(KDEPIMLIBS_NO_KCAL @KDEPIM_NO_KCAL@)
-set(KALARM_USE_KRESOURCES @KALARM_USE_KRESOURCES@)
-
 # Make sure to load the exported targets only once
 # For the rest of this script it doesn't matter that much
 if(NOT TARGET KDEPIMLibs__kabc)
@@ -78,9 +74,6 @@ _kdepimlibs_set_lib_vars(AKONADI_XML    akonadi-xml)
 _kdepimlibs_set_lib_vars(GPGMEPP        gpgmepp)
 _kdepimlibs_set_lib_vars(KABC           kabc)
 _kdepimlibs_set_lib_vars(KALARMCAL      kalarmcal)
-if (NOT KDEPIMLIBS_NO_KCAL)
-  _kdepimlibs_set_lib_vars(AKONADI_KCAL   akonadi-kcal)
-endif()
 _kdepimlibs_set_lib_vars(KBLOG          kblog)
 _kdepimlibs_set_lib_vars(KCALCORE       kcalcore)
 _kdepimlibs_set_lib_vars(KCALUTILS      kcalutils)
@@ -93,9 +86,6 @@ _kdepimlibs_set_lib_vars(KONTACTINTERFACE kontactinterface)
 _kdepimlibs_set_lib_vars(KPIMIDENTITIES kpimidentities)
 _kdepimlibs_set_lib_vars(KPIMTEXTEDIT   kpimtextedit)
 _kdepimlibs_set_lib_vars(KPIMUTILS      kpimutils)
-if (NOT KDEPIMLIBS_NO_KRESOURCES)
-  _kdepimlibs_set_lib_vars(KRESOURCES     kresources)
-endif()
 _kdepimlibs_set_lib_vars(KTNEF          ktnef)
 _kdepimlibs_set_lib_vars(KXMLRPCCLIENT  kxmlrpcclient)
 _kdepimlibs_set_lib_vars(MAILTRANSPORT  mailtransport)
