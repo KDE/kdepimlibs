@@ -28,6 +28,7 @@ target_link_libraries(KF5AkonadiSocialUtils
     KF5::AkonadiCore
     KF5::AkonadiWidgets
     KF5::KIOCore
+    KF5::CoreAddons
 )
 
 set_target_properties(KF5AkonadiSocialUtils PROPERTIES

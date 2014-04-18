@@ -25,10 +25,9 @@
 #include "akonadi-socialutils_export.h"
 
 #include <KDE/KUrl>
-
+#include <KImageCache>
 class KJob;
 class QImage;
-class KImageCache;
 
 namespace KIO {
   class Job;
@@ -47,8 +46,6 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
   public:
     explicit ImageProvider( QObject *parent = 0 );
     ~ImageProvider();
-//QT5 port
-#if 0
     /**
      * Starts fetching the avatar/image from network
      *
@@ -59,7 +56,6 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
      */
     QImage loadImage( const QString &who, const KUrl &url,
                       bool polishImage = false, KImageCache *cache = 0 );
-#endif
     /**
      * Aborts all running jobs
      */
