@@ -156,13 +156,13 @@ class Query::Private
 bool Query::Private::isMessageResponse( const QDomDocument &doc ) const
 {
   return doc.documentElement().firstChild().toElement().tagName().toLower()
-      == "params";
+      == QLatin1String("params");
 }
 
 bool Query::Private::isFaultResponse( const QDomDocument &doc ) const
 {
   return doc.documentElement().firstChild().toElement().tagName().toLower()
-      == "fault";
+      == QLatin1String("fault");
 }
 
 Result Query::Private::parseMessageResponse( const QDomDocument &doc ) const
@@ -186,8 +186,8 @@ Result Query::Private::parseFaultResponse( const QDomDocument &doc ) const
 
   QDomNode errorNode = doc.documentElement().firstChild().firstChild();
   const QVariant errorVariant = demarshal( errorNode.toElement() );
-  response.mErrorCode = errorVariant.toMap() [ "faultCode" ].toInt();
-  response.mErrorString = errorVariant.toMap() [ "faultString" ].toString();
+  response.mErrorCode = errorVariant.toMap() [ QLatin1String("faultCode") ].toInt();
+  response.mErrorString = errorVariant.toMap() [ QLatin1String("faultString") ].toString();
 
   return response;
 }
@@ -195,22 +195,22 @@ Result Query::Private::parseFaultResponse( const QDomDocument &doc ) const
 QString Query::Private::markupCall( const QString &cmd,
                                     const QList<QVariant> &args ) const
 {
-  QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
+  QString markup = QLatin1String("<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n");
 
-  markup += "<methodName>" + cmd + "</methodName>\r\n";
+  markup += QLatin1String("<methodName>") + cmd + QLatin1String("</methodName>\r\n");
 
   if ( !args.isEmpty() ) {
 
-    markup += "<params>\r\n";
+    markup += QLatin1String("<params>\r\n");
     QList<QVariant>::ConstIterator it = args.begin();
     QList<QVariant>::ConstIterator end = args.end();
     for ( ; it != end; ++it ) {
-      markup += "<param>\r\n" + marshal( *it ) + "</param>\r\n";
+      markup += QLatin1String("<param>\r\n") + marshal( *it ) + QLatin1String("</param>\r\n");
     }
-    markup += "</params>\r\n";
+    markup += QLatin1String("</params>\r\n");
   }
 
-  markup += "</methodCall>\r\n";
+  markup += QLatin1String("</methodCall>\r\n");
 
   return markup;
 }
@@ -220,63 +220,63 @@ QString Query::Private::marshal( const QVariant &arg ) const
   switch ( arg.type() ) {
 
     case QVariant::String:
-      return "<value><string><![CDATA[" + arg.toString() + "]]></string></value>\r\n";
+      return QLatin1String("<value><string><![CDATA[") + arg.toString() + QLatin1String("]]></string></value>\r\n");
     case QVariant::StringList:
       {
         QStringList data = arg.toStringList();
         QStringListIterator dataIterator( data );
         QString markup;
-        markup += "<value><array><data>";
+        markup += QLatin1String("<value><array><data>");
         while ( dataIterator.hasNext() ) {
-          markup += "<value><string><![CDATA[" + dataIterator.next() + "]]></string></value>\r\n";
+          markup += QLatin1String("<value><string><![CDATA[") + dataIterator.next() + QLatin1String("]]></string></value>\r\n");
         }
-        markup += "</data></array></value>";
+        markup += QLatin1String("</data></array></value>");
         return markup;
       }
     case QVariant::Int:
-      return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
+      return QLatin1String("<value><int>") + QString::number( arg.toInt() ) + QLatin1String("</int></value>\r\n");
     case QVariant::Double:
-      return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
+      return QLatin1String("<value><double>") + QString::number( arg.toDouble() ) + QLatin1String("</double></value>\r\n");
     case QVariant::Bool:
       {
-        QString markup = "<value><boolean>";
-        markup += arg.toBool() ? "1" : "0";
-        markup += "</boolean></value>\r\n";
+        QString markup = QLatin1String("<value><boolean>");
+        markup += arg.toBool() ? QLatin1String("1") : QLatin1String("0");
+        markup += QLatin1String("</boolean></value>\r\n");
         return markup;
       }
     case QVariant::ByteArray:
-      return QByteArray(QByteArray("<value><base64>") + arg.toByteArray().toBase64() + QByteArray("</base64></value>\r\n"));
+      return QString::fromLatin1(QByteArray(QByteArray("<value><base64>") + arg.toByteArray().toBase64() + QByteArray("</base64></value>\r\n")));
     case QVariant::DateTime:
       {
-        return "<value><dateTime.iso8601>" +
+        return QLatin1String("<value><dateTime.iso8601>") +
           arg.toDateTime().toString( Qt::ISODate ) +
-          "</dateTime.iso8601></value>\r\n";
+          QLatin1String("</dateTime.iso8601></value>\r\n");
       }
     case QVariant::List:
       {
-        QString markup = "<value><array><data>\r\n";
+        QString markup = QLatin1String("<value><array><data>\r\n");
         const QList<QVariant> args = arg.toList();
         QList<QVariant>::ConstIterator it = args.begin();
         QList<QVariant>::ConstIterator end = args.end();
         for ( ; it != end; ++it ) {
           markup += marshal( *it );
         }
-        markup += "</data></array></value>\r\n";
+        markup += QLatin1String("</data></array></value>\r\n");
         return markup;
       }
     case QVariant::Map:
       {
-        QString markup = "<value><struct>\r\n";
+        QString markup = QLatin1String("<value><struct>\r\n");
         QMap<QString, QVariant> map = arg.toMap();
         QMap<QString, QVariant>::ConstIterator it = map.constBegin();
         QMap<QString, QVariant>::ConstIterator end = map.constEnd();
         for ( ; it != end; ++it ) {
-          markup += "<member>\r\n";
-          markup += "<name>" + it.key() + "</name>\r\n";
+          markup += QLatin1String("<member>\r\n");
+          markup += QLatin1String("<name>") + it.key() + QLatin1String("</name>\r\n");
           markup += marshal( it.value() );
-          markup += "</member>\r\n";
+          markup += QLatin1String("</member>\r\n");
         }
-        markup += "</struct></value>\r\n";
+        markup += QLatin1String("</struct></value>\r\n");
         return markup;
       }
     default:
@@ -288,42 +288,42 @@ QString Query::Private::marshal( const QVariant &arg ) const
 
 QVariant Query::Private::demarshal( const QDomElement &element ) const
 {
-  Q_ASSERT( element.tagName().toLower() == "value" );
+  Q_ASSERT( element.tagName().toLower() == QLatin1String("value") );
 
   const QDomElement typeElement = element.firstChild().toElement();
   const QString typeName = typeElement.tagName().toLower();
 
-  if ( typeName == "string" ) {
+  if ( typeName == QLatin1String("string") ) {
     return QVariant( typeElement.text() );
-  } else if ( typeName == "i4" || typeName == "int" ) {
+  } else if ( typeName == QLatin1String("i4") || typeName == QLatin1String("int") ) {
     return QVariant( typeElement.text().toInt() );
-  } else if ( typeName == "double" ) {
+  } else if ( typeName == QLatin1String("double") ) {
     return QVariant( typeElement.text().toDouble() );
-  } else if ( typeName == "boolean" ) {
+  } else if ( typeName == QLatin1String("boolean") ) {
 
-    if ( typeElement.text().toLower() == "true" || typeElement.text() == "1" ) {
+    if ( typeElement.text().toLower() == QLatin1String("true") || typeElement.text() == QLatin1String("1") ) {
       return QVariant( true );
     } else {
       return QVariant( false );
     }
-  } else if ( typeName == "base64" ) {
+  } else if ( typeName == QLatin1String("base64") ) {
     return QVariant( QByteArray::fromBase64( typeElement.text().toLatin1() ) );
-  } else if ( typeName == "datetime" || typeName == "datetime.iso8601" ) {
+  } else if ( typeName == QLatin1String("datetime") || typeName == QLatin1String("datetime.iso8601") ) {
     QDateTime date;
     QString dateText = typeElement.text();
     // Test for broken use of Basic ISO8601 date and extended ISO8601 time
     if ( 17 <= dateText.length() && dateText.length() <= 18 &&
-         dateText.at( 4 ) != '-' && dateText.at( 11 ) == ':' ) {
-        if ( dateText.endsWith( 'Z' ) ) {
-          date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ssZ" );
+         dateText.at( 4 ) !=  QLatin1Char('-') && dateText.at( 11 ) ==  QLatin1Char(':') ) {
+        if ( dateText.endsWith( QLatin1Char('Z') ) ) {
+          date = QDateTime::fromString( dateText, QLatin1String("yyyyMMddTHH:mm:ssZ") );
         } else {
-          date = QDateTime::fromString( dateText, "yyyyMMddTHH:mm:ss" );
+          date = QDateTime::fromString( dateText, QLatin1String("yyyyMMddTHH:mm:ss") );
         }
     } else {
       date = QDateTime::fromString( dateText, Qt::ISODate );
     }
     return QVariant( date );
-  } else if ( typeName == "array" ) {
+  } else if ( typeName == QLatin1String("array") ) {
     QList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
     while ( !valueNode.isNull() ) {
@@ -331,15 +331,15 @@ QVariant Query::Private::demarshal( const QDomElement &element ) const
       valueNode = valueNode.nextSibling();
     }
     return QVariant( values );
-  } else if ( typeName == "struct" ) {
+  } else if ( typeName == QLatin1String("struct") ) {
 
     QMap<QString, QVariant> map;
     QDomNode memberNode = typeElement.firstChild();
     while ( !memberNode.isNull() ) {
       const QString key = memberNode.toElement().elementsByTagName(
-                              "name" ).item( 0 ).toElement().text();
+                              QLatin1String("name") ).item( 0 ).toElement().text();
       const QVariant data = demarshal( memberNode.toElement().elementsByTagName(
-                                       "value" ).item( 0 ).toElement() );
+                                       QLatin1String("value") ).item( 0 ).toElement() );
       map[ key ] = data;
       memberNode = memberNode.nextSibling();
     }
@@ -417,8 +417,8 @@ void Query::call( const QString &server,
     return;
   }
 
-  job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
-  job->addMetaData( "ConnectTimeout", "50" );
+  job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: text/xml; charset=utf-8") );
+  job->addMetaData( QLatin1String("ConnectTimeout"), QLatin1String("50") );
 
   for ( mapIter = jobMetaData.begin(); mapIter != jobMetaData.end(); ++mapIter ) {
     job->addMetaData( mapIter.key(), mapIter.value() );

@@ -1,6 +1,3 @@
-# FIXME: Make it build with this flag
-remove_definitions(-DQT_NO_CAST_FROM_ASCII)
-
 set(kxmlrpcclient_SRCS
   client.cpp
   query.cpp

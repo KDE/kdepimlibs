@@ -34,7 +34,7 @@ using namespace KXmlRpc;
 class Client::Private
 {
   public:
-    Private() : mUserAgent( "KDE XMLRPC resources" ), mDigestAuth( false ){}
+    Private() : mUserAgent( QLatin1String("KDE XMLRPC resources") ), mDigestAuth( false ){}
 
     void queryFinished( Query * );
 
@@ -116,13 +116,13 @@ void Client::call( const QString &method, const QList<QVariant> &args,
 
   //Fill metadata, with userAgent and possible digest auth
   if ( d->mUserAgent.isEmpty() ) {
-    metaData["UserAgent"] = "KDE-XMLRPC";
+    metaData[QLatin1String("UserAgent")] = QLatin1String("KDE-XMLRPC");
   } else {
-    metaData["UserAgent"] = d->mUserAgent;
+    metaData[QLatin1String("UserAgent")] = d->mUserAgent;
   }
 
   if ( d->mDigestAuth ) {
-    metaData["WWW-Authenticate:"] = "Digest";
+    metaData[QLatin1String("WWW-Authenticate:")] = QLatin1String("Digest");
   }
 
   Query *query = Query::create( id, this );
