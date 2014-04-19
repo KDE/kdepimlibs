@@ -1,5 +1,3 @@
-remove_definitions(-DQT_NO_CAST_FROM_ASCII)
-
 include(ECMMarkAsTest)
 
 find_package(Qt5Test CONFIG REQUIRED)
