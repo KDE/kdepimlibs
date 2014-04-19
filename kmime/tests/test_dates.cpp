@@ -25,7 +25,8 @@ main()
   QString rfcd = t.formatDate( DateFormatter::Rfc, ntime );
   KDateTime dt;
   QDateTime qdt;
-  const char *str = rfcd.toLatin1();
+  QByteArray ba = rfcd.toLatin1();
+  const char *str = ba.constData();
   if ( HeaderParsing::parseDateTime( str, str + rfcd.length(), dt ) ) {
       qDebug() << " ntime =" << ( ntime ) << " dt =" << ( dt.toTime_t() );
       qdt.setTime_t( dt.toTime_t() );
@@ -33,7 +34,8 @@ main()
       qDebug() << " rfc2822 :" << t.formatDate( DateFormatter::Rfc, dt.toTime_t() );
   }
   QString ddd = "Mon, 05 Aug 2002 01:57:51 -0700";
-  str = ddd.toLatin1();
+  ba = ddd.toLatin1();
+  str = ba.constData();
   if ( HeaderParsing::parseDateTime( str, str + ddd.length(), dt ) ) {
       qDebug() << "dt =" << ( dt.toTime_t() );
       qDebug() << " rfc2822 :" << t.formatDate( DateFormatter::Rfc, dt.toTime_t() );
