@@ -23,9 +23,7 @@ set(kmime_LIB_SRCS
    kmime_contentindex.cpp
    kmime_headers.cpp
    kmime_message.cpp
-# FIXME: Circular dependency between kmime and kpimutils.
-# kpimutils/email.cpp needs kmime and kmime_newsarticle.h needs kpimutils
-#  kmime_newsarticle.cpp
+   kmime_newsarticle.cpp
    kmime_dateformatter.cpp
    boolflags.cpp
    kautodeletehash.cpp)
