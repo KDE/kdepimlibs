@@ -44,3 +44,7 @@ add_subdirectory(src)
 #reactivate it
 #add_subdirectory(docs)
 
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${kioslave_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
+
