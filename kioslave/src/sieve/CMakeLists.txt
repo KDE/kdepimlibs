@@ -1,8 +1,4 @@
-
-include_directories( ${SASL2_INCLUDE_DIR}  )
-
 configure_file (sieve-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-config.h )
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ########### next target ###############
 
 set(kio_sieve_PART_SRCS sieve.cpp )

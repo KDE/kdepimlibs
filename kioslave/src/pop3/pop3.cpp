@@ -26,7 +26,7 @@
  *
  */
 #include "pop3.h"
-#include "common.h"
+#include "../common.h"
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -36,7 +36,7 @@ extern "C" {
 #include <QByteArray>
 #include <QRegExp>
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 #include <kcodecs.h>

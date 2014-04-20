@@ -26,6 +26,7 @@
 
 #include "sieve.h"
 #include "../common.h"
+#include <kdemacros.h>
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -492,7 +493,7 @@ bool kio_sieveProtocol::activate(const QUrl& url)
     QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
     if (filename.isEmpty()) {
-        error(ERR_DOES_NOT_EXIST, url.prettyUrl());
+        error(ERR_DOES_NOT_EXIST, url.toDisplayString());
         return false;
     }
 
@@ -560,7 +561,7 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
     QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
     if (filename.isEmpty()) {
-        error(ERR_MALFORMED_URL, url.prettyUrl());
+        error(ERR_MALFORMED_URL, url.toDisplayString());
         return;
     }
 
@@ -718,7 +719,7 @@ void kio_sieveProtocol::get(const QUrl& url)
     QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
     if (filename.isEmpty()) {
-        error(ERR_MALFORMED_URL, url.prettyUrl());
+        error(ERR_MALFORMED_URL, url.toDisplayString());
         return;
     }
 
@@ -798,7 +799,7 @@ void kio_sieveProtocol::del(const QUrl &url, bool isfile)
     QString filename = url.fileName( KUrl::ObeyTrailingSlash );
 
     if (filename.isEmpty()) {
-        error(ERR_MALFORMED_URL, url.prettyUrl());
+        error(ERR_MALFORMED_URL, url.toDisplayString());
         return;
     }
 
@@ -1138,7 +1139,7 @@ bool kio_sieveProtocol::authenticate()
 /* --------------------------------------------------------------------------- */
 void kio_sieveProtocol::mimetype(const QUrl & url)
 {
-    ksDebug << "Requesting mimetype for " << url.prettyUrl() << endl;
+    ksDebug << "Requesting mimetype for " << url.toDisplayString() << endl;
 
     if (url.fileName( KUrl::ObeyTrailingSlash ).isEmpty()) {
         mimeType( "inode/directory" );
