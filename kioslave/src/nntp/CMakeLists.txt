@@ -7,7 +7,7 @@
 set(kio_nntp_PART_SRCS nntp.cpp )
 
 
-kde4_add_plugin(kio_nntp ${kio_nntp_PART_SRCS})
+add_library(kio_nntp MODULE ${kio_nntp_PART_SRCS})
 
 
 target_link_libraries(kio_nntp  KF5::KIOCore KF5::KDELibs4Support)

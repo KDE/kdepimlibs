@@ -8,7 +8,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(kio_sieve_PART_SRCS sieve.cpp )
 
 
-kde4_add_plugin(kio_sieve ${kio_sieve_PART_SRCS})
+add_library(kio_sieve MODULE ${kio_sieve_PART_SRCS})
 
 
 

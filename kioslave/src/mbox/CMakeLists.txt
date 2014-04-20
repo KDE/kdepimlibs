@@ -12,8 +12,7 @@ set(kio_mbox_PART_SRCS
    urlinfo.cpp )
 
 
-kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
-
+add_library(kio_mbox MODULE ${kio_mbox_PART_SRCS})
 
 
 target_link_libraries(kio_mbox  KF5::KIOCore KF5::KDELibs4Support)
