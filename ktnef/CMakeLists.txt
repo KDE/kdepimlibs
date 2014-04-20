@@ -31,6 +31,8 @@ find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5KTnef")
+
 # FIXME: remove this if/endif when KCalCore is split.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KF5CalendarCore ${KF5_VERSION} CONFIG REQUIRED)
@@ -38,6 +40,21 @@ if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
   find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 endif()
+
+
+ecm_configure_package_config_file(
+  "${KTnef_SOURCE_DIR}/KF5KTnefConfig.cmake.in"
+  "${KTnef_BINARY_DIR}/KF5KTnefConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${KTnef_BINARY_DIR}/KF5KTnefConfig.cmake"
+  "${KTnef_BINARY_DIR}/KF5KTnefConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 
