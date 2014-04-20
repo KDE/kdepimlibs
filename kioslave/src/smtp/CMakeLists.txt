@@ -7,10 +7,11 @@ add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 set(smtp_optional_includes)
 set(smtp_optional_libs)
 
-if (SASL2_FOUND)
-   set(smtp_optional_includes ${smtp_optional_includes} ${SASL2_INCLUDE_DIR})
-   set(smtp_optional_libs     ${smtp_optional_libs}     ${SASL2_LIBRARIES})
+if (Sasl2_FOUND)
+   set(smtp_optional_includes ${smtp_optional_includes} ${Sasl2_INCLUDE_DIR})
+   set(smtp_optional_libs     ${smtp_optional_libs}     ${Sasl2_LIBRARIES})
 endif()
+
 
 include_directories(  ${smtp_optional_includes}  )
 
