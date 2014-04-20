@@ -25,7 +25,7 @@
  */
 
 #include "sieve.h"
-#include "common.h"
+#include "../common.h"
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -278,7 +278,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
  * Checks if connection parameters have changed.
  * If it it, close the current connection
  */
-void kio_sieveProtocol::changeCheck( const KUrl &url )
+void kio_sieveProtocol::changeCheck( const QUrl &url )
 {
     QString auth;
 
@@ -453,7 +453,7 @@ void kio_sieveProtocol::special(const QByteArray &data)
 {
     int tmp;
     QDataStream stream( data );
-    KUrl url;
+    QUrl url;
 
     stream >> tmp;
 
@@ -480,7 +480,7 @@ void kio_sieveProtocol::special(const QByteArray &data)
 }
 
 /* ---------------------------------------------------------------------------------- */
-bool kio_sieveProtocol::activate(const KUrl& url)
+bool kio_sieveProtocol::activate(const QUrl& url)
 {
     changeCheck( url );
     if (!connect()) {
@@ -548,7 +548,7 @@ static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
   out.resize( d - out.begin() );
 }
 
-void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, KIO::JobFlags)
+void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
 {
     changeCheck( url );
     if (!connect()) {
@@ -706,7 +706,7 @@ static void inplace_crlf2lf( QByteArray & in ) {
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveProtocol::get(const KUrl& url)
+void kio_sieveProtocol::get(const QUrl& url)
 {
     changeCheck( url );
     if (!connect()) {
@@ -781,7 +781,7 @@ void kio_sieveProtocol::get(const KUrl& url)
     finished();
 }
 
-void kio_sieveProtocol::del(const KUrl &url, bool isfile)
+void kio_sieveProtocol::del(const QUrl &url, bool isfile)
 {
     if (!isfile) {
         error(ERR_INTERNAL, i18n("Folders are not supported."));
@@ -818,7 +818,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
     finished();
 }
 
-void kio_sieveProtocol::chmod(const KUrl& url, int permissions)
+void kio_sieveProtocol::chmod(const QUrl& url, int permissions)
 {
   switch ( permissions ) {
   case 0700: // activate
@@ -835,7 +835,7 @@ void kio_sieveProtocol::chmod(const KUrl& url, int permissions)
   finished();
 }
 
-void kio_sieveProtocol::urlStat(const KUrl& url)
+void kio_sieveProtocol::urlStat(const QUrl& url)
 {
     changeCheck( url );
     if (!connect()) {
@@ -895,7 +895,7 @@ void kio_sieveProtocol::urlStat(const KUrl& url)
     finished();
 }
 
-void kio_sieveProtocol::listDir(const KUrl& url)
+void kio_sieveProtocol::listDir(const QUrl& url)
 {
     changeCheck( url );
     if (!connect()) {
@@ -1136,7 +1136,7 @@ bool kio_sieveProtocol::authenticate()
 }
 
 /* --------------------------------------------------------------------------- */
-void kio_sieveProtocol::mimetype(const KUrl & url)
+void kio_sieveProtocol::mimetype(const QUrl & url)
 {
     ksDebug << "Requesting mimetype for " << url.prettyUrl() << endl;
 

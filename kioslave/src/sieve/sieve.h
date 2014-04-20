@@ -25,7 +25,6 @@
 #include <QByteArray>
 #include <QStringList>
 
-class KUrl;
 
 
 class kio_sieveResponse
@@ -69,14 +68,14 @@ public:
     kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
     virtual ~kio_sieveProtocol();
 
-    virtual void mimetype(const KUrl& url);
-    virtual void get(const KUrl& url);
-    virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
-    virtual void del(const KUrl &url, bool isfile);
+    virtual void mimetype(const QUrl& url);
+    virtual void get(const QUrl& url);
+    virtual void put(const QUrl& url, int permissions, KIO::JobFlags flags);
+    virtual void del(const QUrl &url, bool isfile);
 
-    virtual void listDir(const KUrl& url);
-    virtual void chmod(const KUrl& url, int permissions);
-    virtual void urlStat(const KUrl& url);
+    virtual void listDir(const QUrl& url);
+    virtual void chmod(const QUrl& url, int permissions);
+    virtual void urlStat(const QUrl& url);
 
     virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &pass);
     virtual void openConnection();
@@ -90,14 +89,14 @@ public:
      * 3 - request capabilities, returned as metadata
      */
     virtual void special(const QByteArray &data);
-    bool activate(const KUrl& url);
+    bool activate(const QUrl& url);
     bool deactivate();
 
 protected:
     bool connect(bool useTLSIfAvailable = true);
     bool authenticate();
     void disconnect(bool forcibly = false);
-    void changeCheck( const KUrl &url );
+    void changeCheck( const QUrl &url );
 
     bool sendData(const QByteArray &data);
     bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray() );

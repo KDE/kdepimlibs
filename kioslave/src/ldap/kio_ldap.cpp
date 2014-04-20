@@ -21,12 +21,13 @@
 */
 
 #include "kio_ldap.h"
+#include "kdemacros.h"
 
 #include <kldap/ldif.h>
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kcomponentdata.h>
 #include <klocalizedstring.h>
 
@@ -373,7 +374,7 @@ void LDAPProtocol::closeConnection()
 /**
  * Get the information contained in the URL.
  */
-void LDAPProtocol::get( const KUrl &_url )
+void LDAPProtocol::get( const QUrl &_url )
 {
   kDebug(7125) << "get(" << _url << ")";
 
@@ -460,7 +461,7 @@ void LDAPProtocol::get( const KUrl &_url )
 /**
  * Test if the url contains a directory or a file.
  */
-void LDAPProtocol::stat( const KUrl &_url )
+void LDAPProtocol::stat( const QUrl &_url )
 {
   kDebug(7125) << "stat(" << _url << ")";
 
@@ -491,7 +492,7 @@ void LDAPProtocol::stat( const KUrl &_url )
       return;
     }
     if ( ret == LdapOperation::RES_SEARCH_RESULT ) {
-      error( ERR_DOES_NOT_EXIST, _url.prettyUrl() );
+      error( ERR_DOES_NOT_EXIST, _url.toDisplayString() );
       return;
     }
   } while ( ret != LdapOperation::RES_SEARCH_ENTRY );
@@ -512,7 +513,7 @@ void LDAPProtocol::stat( const KUrl &_url )
 /**
  * Deletes one entry;
  */
-void LDAPProtocol::del( const KUrl &_url, bool )
+void LDAPProtocol::del( const QUrl &_url, bool )
 {
   kDebug(7125) << "del(" << _url << ")";
 
@@ -545,7 +546,7 @@ void LDAPProtocol::del( const KUrl &_url, bool )
   finished();
 }
 
-void LDAPProtocol::put( const KUrl &_url, int, KIO::JobFlags flags )
+void LDAPProtocol::put( const QUrl &_url, int, KIO::JobFlags flags )
 {
   kDebug(7125) << "put(" << _url << ")";
 
@@ -693,7 +694,7 @@ void LDAPProtocol::put( const KUrl &_url, int, KIO::JobFlags flags )
 /**
  * List the contents of a directory.
  */
-void LDAPProtocol::listDir( const KUrl &_url )
+void LDAPProtocol::listDir( const QUrl &_url )
 {
   int ret, ret2, id, id2;
   unsigned long total=0;
@@ -702,7 +703,8 @@ void LDAPProtocol::listDir( const KUrl &_url )
   bool critical = true;
   bool isSub = ( usrc.extension( "x-dir", critical ) == "sub" );
 
-  kDebug(7125) << "listDir(" << _url << ")";
+//Reactivate it
+  //kDebug(7125) << "listDir(" << _url << ")";
 
   changeCheck( usrc );
   if ( !mConnected ) {
