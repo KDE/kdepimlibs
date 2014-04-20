@@ -19,7 +19,7 @@
 #include <QRegExp>
 
 #include <kcomponentdata.h>
-#include <qdebug.h>
+#include <kdebug.h>
 #include <klocalizedstring.h>
 
 #include <kio/ioslave_defaults.h>

@@ -23,6 +23,12 @@ set(KF5_VERSION "4.98.0")
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL "${kioslave_SOURCE_DIR}")
+  find_package(KF5KLdap ${KF5_VERSION} CONFIG REQUIRED)
+  find_package(KF5Mbox ${KF5_VERSION} CONFIG REQUIRED)
+endif()
+
+
 
 add_subdirectory(src)
 #reactivate it
