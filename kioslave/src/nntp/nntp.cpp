@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <KUrl>
 
 #include <QDir>
 #include <QHash>
@@ -93,9 +94,9 @@ void NNTPProtocol::setHost ( const QString & host, quint16 port, const QString &
   mPass = pass;
 }
 
-void NNTPProtocol::get( const KUrl& url )
+void NNTPProtocol::get( const QUrl& url )
 {
-  DBG << url.prettyUrl();
+  DBG << url.toDisplayString();
   QString path = QDir::cleanPath(url.path());
 
   // path should be like: /group/<msg_id> or /group/<serial number>
@@ -175,7 +176,7 @@ void NNTPProtocol::get( const KUrl& url )
   finished();
 }
 
-void NNTPProtocol::put( const KUrl &/*url*/, int /*permissions*/, KIO::JobFlags /*flags*/ )
+void NNTPProtocol::put( const QUrl &/*url*/, int /*permissions*/, KIO::JobFlags /*flags*/ )
 {
   if ( !nntp_open() )
     return;
@@ -265,8 +266,8 @@ bool NNTPProtocol::post_article() {
 }
 
 
-void NNTPProtocol::stat( const KUrl& url ) {
-  DBG << url.prettyUrl();
+void NNTPProtocol::stat( const QUrl& url ) {
+  DBG << url.toDisplayString();
   UDSEntry entry;
   QString path = QDir::cleanPath(url.path());
   QRegExp regGroup = QRegExp("^\\/?[a-z0-9\\.\\-_]+\\/?$",Qt::CaseInsensitive);
@@ -311,8 +312,8 @@ void NNTPProtocol::stat( const KUrl& url ) {
   finished();
 }
 
-void NNTPProtocol::listDir( const KUrl& url ) {
-  DBG << url.prettyUrl();
+void NNTPProtocol::listDir( const QUrl& url ) {
+  DBG << url.toDisplayString();
   if ( !nntp_open() )
     return;
 
@@ -328,7 +329,8 @@ void NNTPProtocol::listDir( const KUrl& url ) {
     return;
   }
   else if ( path == "/" ) {
-    fetchGroups( url.queryItem( "since" ), url.queryItem( "desc" ) == "true" );
+    KUrl newUrl(url);
+    fetchGroups( newUrl.queryItem( "since" ), newUrl.queryItem( "desc" ) == "true" );
     finished();
   } else {
     // if path = /group
@@ -340,8 +342,9 @@ void NNTPProtocol::listDir( const KUrl& url ) {
       group = path.left(pos);
     else
       group = path;
-    QString first = url.queryItem( "first" );
-    QString max = url.queryItem( "max" );
+    KUrl newUrl(url);
+    QString first = newUrl.queryItem( "first" );
+    QString max = newUrl.queryItem( "max" );
     if ( fetchGroup( group, first.toULong(), max.toULong() ) )
       finished();
   }

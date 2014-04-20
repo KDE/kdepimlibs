@@ -11,7 +11,6 @@
 #ifndef _NNTP_H
 #define _NNTP_H
 
-#include <kurl.h>
 #include <kio/tcpslavebase.h>
 
 #define MAX_PACKET_LEN 8192
@@ -40,10 +39,10 @@ class NNTPProtocol:public KIO::TCPSlaveBase
   NNTPProtocol ( const QByteArray & pool, const QByteArray & app, bool isSSL );
   virtual ~NNTPProtocol();
 
-  virtual void get(const KUrl& url );
-  virtual void put( const KUrl& url, int permissions, KIO::JobFlags flags );
-  virtual void stat(const KUrl& url );
-  virtual void listDir(const KUrl& url );
+  virtual void get(const QUrl& url );
+  virtual void put( const QUrl& url, int permissions, KIO::JobFlags flags );
+  virtual void stat(const QUrl& url );
+  virtual void listDir(const QUrl& url );
   virtual void setHost(const QString& host, quint16 port,
         const QString& user, const QString& pass);
 
