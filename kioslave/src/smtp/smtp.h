@@ -57,8 +57,8 @@ public:
                        const QString & user, const QString & pass);
 
   virtual void special(const QByteArray & aData);
-  virtual void put(const KUrl & url, int permissions, KIO::JobFlags flags);
-  virtual void stat(const KUrl & url);
+  virtual void put(const QUrl & url, int permissions, KIO::JobFlags flags);
+  virtual void stat(const QUrl & url);
   virtual void openConnection();
   virtual void closeConnection();
 
