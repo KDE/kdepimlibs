@@ -18,7 +18,7 @@ add_definitions(
 
 if(MAILTRANSPORT_INPROCESS_SMTP)
   add_definitions("-DMAILTRANSPORT_INPROCESS_SMTP")
-  include_directories(${SASL2_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/kioslave)
+  include_directories(${Sasl2_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/kioslave)
   set(mailtransport_lib_srcs
     ../kioslave/smtp/command.cpp
     ../kioslave/smtp/capabilities.cpp
@@ -112,7 +112,7 @@ set_target_properties(KF5MailTransport PROPERTIES
 
 
 if(MAILTRANSPORT_INPROCESS_SMTP)
-  target_link_libraries(mailtransport ${SASL2_LIBRARIES} KF5::PimUtils)
+  target_link_libraries(mailtransport ${Sasl2_LIBRARIES} KF5::PimUtils)
 endif()
 
 
