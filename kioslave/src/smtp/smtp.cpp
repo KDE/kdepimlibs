@@ -34,7 +34,7 @@ extern "C" {
 #include <sasl/sasl.h>
 }
 
-#include "common.h"
+#include "../common.h"
 #include "request.h"
 #include "response.h"
 #include "transactionstate.h"
@@ -55,7 +55,7 @@ using KioSMTP::SMTPSessionInterface;
 
 #include <kemailsettings.h>
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>

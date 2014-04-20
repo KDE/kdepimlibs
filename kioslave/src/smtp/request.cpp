@@ -33,7 +33,7 @@
 
 #include <kurl.h>
 #include <QtCore/QUrl>
-#include <qdebug.h>
+#include <kdebug.h>
 
 #include <assert.h>
 
