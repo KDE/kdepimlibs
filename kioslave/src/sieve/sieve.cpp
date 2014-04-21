@@ -309,20 +309,15 @@ void kio_sieveProtocol::changeCheck( const QUrl &url )
             disconnect();
         }
     }
-//QT5 port
-#if 0
     // For TLS, only disconnect if we are unencrypted and are
     // no longer allowed (otherwise, it's still fine):
-    const bool allowUnencryptedNow = url.queryItem("x-allow-unencrypted") == "true" ;
+    const bool allowUnencryptedNow = QUrlQuery(url).queryItemValue("x-allow-unencrypted") == "true" ;
     if ( m_allowUnencrypted && !allowUnencryptedNow ) {
         if ( isConnected() ) {
             disconnect();
         }
     }
     m_allowUnencrypted = allowUnencryptedNow;
-#else
-    m_allowUnencrypted = true;
-#endif
 }
 
 /* ---------------------------------------------------------------------------------- */
