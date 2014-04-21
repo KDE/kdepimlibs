@@ -200,7 +200,8 @@ static sasl_callback_t callbacks[] = {
     mOut = 0; mOutlen = 0;
     mOneStep = false;
 
-    result = sasl_client_new( "smtp", aFQDN.toLatin1(),
+    const QByteArray ba = aFQDN.toLatin1();
+    result = sasl_client_new( "smtp", ba.constData(),
       0, 0, callbacks, 0, &conn );
     if ( result != SASL_OK ) {
       SASLERROR
@@ -257,15 +258,19 @@ static sasl_callback_t callbacks[] = {
     while( interact->id != SASL_CB_LIST_END ) {
       switch( interact->id ) {
         case SASL_CB_USER:
-        case SASL_CB_AUTHNAME:
+        case SASL_CB_AUTHNAME: {
           kDebug(7112) << "SASL_CB_[USER|AUTHNAME]: " << mAi->username;
-          interact->result = strdup( mAi->username.toUtf8() );
+          const QByteArray baUserName = mAi->username.toUtf8();
+          interact->result = strdup( baUserName.constData() );
           interact->len = strlen( (const char *) interact->result );
+        }
           break;
-        case SASL_CB_PASS:
+        case SASL_CB_PASS: {
           kDebug(7112) << "SASL_CB_PASS: [HIDDEN]";
-          interact->result = strdup( mAi->password.toUtf8() );
+          const QByteArray baPassword = mAi->password.toUtf8();
+          interact->result = strdup( baPassword.constData() );
           interact->len = strlen( (const char *) interact->result );
+        }
           break;
         default:
           interact->result = NULL; interact->len = 0;

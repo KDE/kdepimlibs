@@ -576,7 +576,8 @@ bool SMTPProtocol::authenticate()
   else
     strList = m_sessionIface->capabilities().saslMethodsQSL();
 
-  AuthCommand authCmd( m_sessionIface, strList.join( QLatin1String(" ") ).toLatin1(), m_sServer, authInfo );
+  const QByteArray ba = strList.join( QLatin1String(" ") ).toLatin1();
+  AuthCommand authCmd( m_sessionIface, ba.constData(), m_sServer, authInfo );
   bool ret = execute( &authCmd );
   m_sUser = authInfo.username;
   m_sPass = authInfo.password;
