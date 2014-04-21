@@ -8,7 +8,7 @@ add_library(kio_sieve MODULE ${kio_sieve_PART_SRCS})
 
 
 
-target_link_libraries(kio_sieve KF5::KIOCore KF5::KDELibs4Support ${SASL2_LIBRARIES})
+target_link_libraries(kio_sieve KF5::KIOCore KF5::KDELibs4Support ${Sasl2_LIBRARIES})
 
 install(TARGETS kio_sieve  DESTINATION ${PLUGIN_INSTALL_DIR})
 

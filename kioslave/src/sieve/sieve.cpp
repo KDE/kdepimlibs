@@ -309,7 +309,8 @@ void kio_sieveProtocol::changeCheck( const QUrl &url )
             disconnect();
         }
     }
-
+//QT5 port
+#if 0
     // For TLS, only disconnect if we are unencrypted and are
     // no longer allowed (otherwise, it's still fine):
     const bool allowUnencryptedNow = url.queryItem("x-allow-unencrypted") == "true" ;
@@ -319,6 +320,9 @@ void kio_sieveProtocol::changeCheck( const QUrl &url )
         }
     }
     m_allowUnencrypted = allowUnencryptedNow;
+#else
+    m_allowUnencrypted = true;
+#endif
 }
 
 /* ---------------------------------------------------------------------------------- */
@@ -490,7 +494,7 @@ bool kio_sieveProtocol::activate(const QUrl& url)
 
     infoMessage(i18n("Activating script..."));
 
-    QString filename = url.fileName( KUrl::ObeyTrailingSlash );
+    QString filename = url.fileName();
 
     if (filename.isEmpty()) {
         error(ERR_DOES_NOT_EXIST, url.toDisplayString());
@@ -558,7 +562,7 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
 
     infoMessage(i18n("Sending data..."));
 
-    QString filename = url.fileName( KUrl::ObeyTrailingSlash );
+    QString filename = url.fileName();
 
     if (filename.isEmpty()) {
         error(ERR_MALFORMED_URL, url.toDisplayString());
@@ -716,7 +720,7 @@ void kio_sieveProtocol::get(const QUrl& url)
 
     infoMessage(i18n("Retrieving data..."));
 
-    QString filename = url.fileName( KUrl::ObeyTrailingSlash );
+    QString filename = url.fileName();
 
     if (filename.isEmpty()) {
         error(ERR_MALFORMED_URL, url.toDisplayString());
@@ -796,7 +800,7 @@ void kio_sieveProtocol::del(const QUrl &url, bool isfile)
 
     infoMessage(i18n("Deleting file..."));
 
-    QString filename = url.fileName( KUrl::ObeyTrailingSlash );
+    QString filename = url.fileName();
 
     if (filename.isEmpty()) {
         error(ERR_MALFORMED_URL, url.toDisplayString());
@@ -845,7 +849,7 @@ void kio_sieveProtocol::urlStat(const QUrl& url)
 
     UDSEntry entry;
 
-    QString filename = url.fileName( KUrl::ObeyTrailingSlash );
+    QString filename = url.fileName();
 
     if (filename.isEmpty()) {
         entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromLatin1("/"));
@@ -1141,7 +1145,7 @@ void kio_sieveProtocol::mimetype(const QUrl & url)
 {
     ksDebug << "Requesting mimetype for " << url.toDisplayString() << endl;
 
-    if (url.fileName( KUrl::ObeyTrailingSlash ).isEmpty()) {
+    if (url.fileName().isEmpty()) {
         mimeType( "inode/directory" );
     } else {
         mimeType( "application/sieve" );
