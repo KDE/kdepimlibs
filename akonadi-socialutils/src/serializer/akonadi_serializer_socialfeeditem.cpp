@@ -21,15 +21,15 @@
 #include "akonadi_serializer_socialfeeditem.h"
 #include "../socialfeeditem.h"
 
-#include "akonadi/config-akonadi.h"
+//#include "akonadi/config-akonadi.h"
 #include <item.h>
 
 #include <QtCore/qplugin.h>
-
+#if 0
 #include <qjson/qobjecthelper.h>
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
-
+#endif
 using namespace Akonadi;
 
 bool SocialFeedItemSerializerPlugin::deserialize( Item &item,

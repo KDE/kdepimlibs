@@ -9,7 +9,7 @@ if(WIN32)
   )
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_BINARY_DIR}/akonadi/socialutils
@@ -21,15 +21,9 @@ set(akonadi_serializer_socialfeeditem_SRCS
   akonadi_serializer_socialfeeditem.cpp
 )
 
-kde4_add_plugin(akonadi_serializer_socialfeeditem ${akonadi_serializer_socialfeeditem_SRCS})
-
+add_library(akonadi_serializer_socialfeeditem MODULE ${akonadi_serializer_socialfeeditem_SRCS})
 target_link_libraries(akonadi_serializer_socialfeeditem
-  akonadi-socialutils
-  akonadi-kde
-  ${QT_QTCORE_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${qjson_LIBRARIES}    # for Debian
-  ${QJSON_LIBRARIES})
+  KF5::AkonadiSocialUtils)
 
 install(TARGETS akonadi_serializer_socialfeeditem DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -41,4 +35,5 @@ install(FILES
 
 install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 
-update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+#REactivate it
+#update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})

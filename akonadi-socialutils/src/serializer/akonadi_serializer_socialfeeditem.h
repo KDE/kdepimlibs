@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 
-#include "akonadi/itemserializerplugin.h"
+#include "itemserializerplugin.h"
 
 namespace Akonadi {
 
