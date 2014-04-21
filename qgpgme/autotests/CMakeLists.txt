@@ -1,3 +1,10 @@
+kde_enable_exceptions()
+
+include(ECMMarkAsTest)
+
+find_package(Qt5Test CONFIG REQUIRED)
+
+
 if ( WIN32 AND GPGME_VANILLA_FOUND )
    set( _qgpgme_libgpgme gpgmepp )
 endif()
@@ -10,7 +17,6 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${GPGME_INCLUDES} )
 include_directories( ${Boost_INCLUDE_DIR} )
 link_directories( ${_gpgme_library_dirs} )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 ########### next target ###############
 
