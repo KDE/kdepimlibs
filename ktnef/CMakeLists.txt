@@ -55,6 +55,12 @@ install(FILES
   COMPONENT Devel
 )
 
+install(EXPORT KF5KTnefTargets
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        FILE KF5KTnefTargets.cmake
+        NAMESPACE KF5::
+)
+
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 
