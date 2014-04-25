@@ -21,7 +21,7 @@ generate_export_header(KF5AkonadiSocialUtils BASE_NAME akonadi-socialutils)
 add_library(KF5::AkonadiSocialUtils ALIAS KF5AkonadiSocialUtils)
 
 
-target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiSocialUtils;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/AkonadiSocialUtils;${INCLUDE_INSTALL_DIR}/akonadi/socialutils${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiSocialUtils PUBLIC "$<BUILD_INTERFACE:${Akonadi-SocialUtils_SOURCE_DIR}/src;${Akonadi-SocialUtils_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiSocialUtils
