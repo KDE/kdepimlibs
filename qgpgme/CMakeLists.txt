@@ -37,7 +37,7 @@ set_package_properties(Gpgme PROPERTIES
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-KMime_SOURCE_DIR})
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${QGpgme_SOURCE_DIR}")
   find_package(KF5Gpgmepp CONFIG REQUIRED)
 endif()
 
@@ -60,8 +60,7 @@ install(FILES
   COMPONENT Devel
 )
 
-#reactivate ti
-#install(EXPORT KF5QGpgmeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5QGpgmeTargets.cmake NAMESPACE KF5::)
+install(EXPORT KF5QGpgmeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5QGpgmeTargets.cmake NAMESPACE KF5::)
 
 install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/qgpgme_version.h
