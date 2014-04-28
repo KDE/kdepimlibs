@@ -22,7 +22,7 @@
 #ifndef KBLOG_LIVEJOURNAL_H
 #define KBLOG_LIVEJOURNAL_H
 
-#include <kblog/blog.h>
+#include <blog.h>
 
 #include <QColor>
 

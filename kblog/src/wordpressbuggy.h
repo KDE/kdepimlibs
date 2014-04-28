@@ -22,7 +22,7 @@
 #ifndef KBLOG_WORDPRESSBUGGY_H
 #define KBLOG_WORDPRESSBUGGY_H
 
-#include <kblog/movabletype.h>
+#include <movabletype.h>
 
 class KUrl;
 

@@ -23,7 +23,7 @@
 #ifndef KBLOG_MOVABLETYPE_H
 #define KBLOG_MOVABLETYPE_H
 
-#include <kblog/metaweblog.h>
+#include <metaweblog.h>
 
 class KUrl;
 

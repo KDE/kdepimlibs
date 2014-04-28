@@ -22,7 +22,7 @@
 #ifndef KBLOG_GDATA_H
 #define KBLOG_GDATA_H
 
-#include <kblog/blog.h>
+#include <blog.h>
 #include <kdatetime.h>
 
 #include <QtCore/QStringList>

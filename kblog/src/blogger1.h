@@ -24,7 +24,7 @@
 #ifndef KBLOG_BLOGGER1_H
 #define KBLOG_BLOGGER1_H
 
-#include <kblog/blog.h>
+#include <blog.h>
 
 class KUrl;
 

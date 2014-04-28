@@ -24,7 +24,7 @@
 #ifndef KBLOG_METAWEBLOG_H
 #define KBLOG_METAWEBLOG_H
 
-#include <kblog/blogger1.h>
+#include <blogger1.h>
 
 class KUrl;
 
