@@ -17,7 +17,7 @@ generate_export_header(KF5PimUtils BASE_NAME kpimutils)
 
 add_library(KF5::PimUtils ALIAS KF5PimUtils)
 
-target_include_directories(KF5PimUtils INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kpimutils>")
+target_include_directories(KF5PimUtils INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils>")
 target_include_directories(KF5PimUtils PUBLIC "$<BUILD_INTERFACE:${KPimUtils_SOURCE_DIR}/src;${KPimUtils_BINARY_DIR}/src>")
 
 target_link_libraries(KF5PimUtils
@@ -47,19 +47,13 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
 )
 
 install(FILES
-    ${KPimUtils_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KPIMUtils
-    COMPONENT Devel
-)
-
-# FIXME: The other headers don't have CamelCase headers in KDE4, is that expected?
-install(FILES
   ${KPimUtils_BINARY_DIR}/src/kpimutils_export.h
   ${KPimUtils_HEADERS}
   emailvalidator.h
   processes.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kpimutils
-  COMPONENT Devel
+    ${KPimUtils_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils
+    COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME PimUtils LIB_NAME KF5PimUtils DEPS "Emoticons ItemViews KMime" FILENAME_VAR PRI_FILENAME)

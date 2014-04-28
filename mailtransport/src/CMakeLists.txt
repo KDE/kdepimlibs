@@ -89,7 +89,7 @@ generate_export_header(KF5MailTransport BASE_NAME mailtransport)
 add_library(KF5::MailTransport ALIAS KF5MailTransport)
 
 
-target_include_directories(KF5MailTransport INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/mailtransport>")
+target_include_directories(KF5MailTransport INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/MailTransport>")
 target_include_directories(KF5MailTransport PUBLIC "$<BUILD_INTERFACE:${MailTransport_SOURCE_DIR}/src;${MailTransport_BINARY_DIR}/src>")
 
 
@@ -150,13 +150,7 @@ ecm_generate_headers(MailTransport_CamelCase_HEADERS
 )
 
 install(FILES
-    ${MailTransport_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/MailTransport
-    COMPONENT Devel
-)
-
-
-install(FILES
+  ${MailTransport_CamelCase_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_export.h
   ${MailTransport_HEADERS}
   transportjob.h
@@ -184,6 +178,6 @@ install(FILES
   sentbehaviourattribute.h
   transportattribute.h
 
-  DESTINATION ${INCLUDE_INSTALL_DIR}/mailtransport COMPONENT Devel
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MailTransport COMPONENT Devel
 )
 

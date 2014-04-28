@@ -80,7 +80,7 @@ generate_export_header(KF5AkonadiKMime BASE_NAME akonadi-kmime)
 
 add_library(KF5::AkonadiKMime ALIAS KF5AkonadiKMime)
 
-target_include_directories(KF5AkonadiKMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/Akonadi/KMime;${INCLUDE_INSTALL_DIR}/akonadi/kmime;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiKMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiKMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 
@@ -129,7 +129,7 @@ ecm_generate_headers(AkonadiKMime_CamelCase_HEADERS
 
 install(FILES
     ${AkonadiKMime_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
     COMPONENT Devel
 )
 
@@ -137,7 +137,7 @@ install(FILES
   ${AkonadiKMime_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
   standardmailactionmanager.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
 )
 
 

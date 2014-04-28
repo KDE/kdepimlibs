@@ -34,7 +34,7 @@ generate_export_header(KF5KMime BASE_NAME KMime)
 
 add_library(KF5::KMime ALIAS KF5KMime)
 
-target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kmime>")
+target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KMime>")
 target_include_directories(KF5KMime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
 
 target_link_libraries(KF5KMime
@@ -65,7 +65,7 @@ install(FILES
          kmime_newsarticle.h
          kmime_dateformatter.h
          kmime_util.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/kmime COMPONENT Devel
+         DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMime COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5KMime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME)

@@ -9,7 +9,7 @@ generate_export_header(KF5XmlRpcClient BASE_NAME kxmlrpcclient)
 
 add_library(KF5::XmlRpcClient ALIAS KF5XmlRpcClient)
 
-target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kxmlrpcclient>")
+target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/kxmlrpcclient>")
 
 target_link_libraries(KF5XmlRpcClient PUBLIC KF5::KIOCore KF5::I18n PRIVATE Qt5::Xml)
 
@@ -38,14 +38,9 @@ install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 
 
 install(FILES
-  ${KXmlRpcClient_CamelCase_HEADERS}
-  DESTINATION ${INCLUDE_INSTALL_DIR}/KXmlRpcClient
-  COMPONENT Devel
-)
-
-install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/kxmlrpcclient_export.h
   ${KXmlRpcClient_HEADERS}
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kxmlrpcclient
+  ${KXmlRpcClient_CamelCase_HEADERS}
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KXmlRpcClient
   COMPONENT Devel
 )

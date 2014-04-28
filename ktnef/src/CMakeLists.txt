@@ -18,7 +18,7 @@ generate_export_header(KF5KTnef BASE_NAME ktnef)
 
 add_library(KF5::KTnef ALIAS KF5KTnef)
 
-target_include_directories(KF5KTnef INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/ktnef;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5KTnef INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KTNEF;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5KTnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR}/src;${KTnef_BINARY_DIR}/src>")
 
 target_link_libraries(KF5KTnef
@@ -55,14 +55,10 @@ ecm_generate_headers(KTnef_CamelCase_HEADERS
 
 install(FILES
     ${KTnef_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KTNEF
-    COMPONENT Devel
-)
-
-install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/ktnef_export.h
     ${KTnef_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef COMPONENT Devel
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KTNEF
+    COMPONENT Devel
 )
 
 #ecm_generate_pri_file(BASE_NAME KTNef LIB_NAME KF5TNef DEPS "CoreAddons KMime" FILENAME_VAR PRI_FILENAME)

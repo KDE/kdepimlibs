@@ -19,7 +19,7 @@ generate_export_header(KF5Blog BASE_NAME kblog)
 
 add_library(KF5::Blog ALIAS KF5Blog)
 
-target_include_directories(KF5Blog INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/kblog>")
+target_include_directories(KF5Blog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KBlog>")
 target_include_directories(KF5Blog PUBLIC "$<BUILD_INTERFACE:${KBlog_SOURCE_DIR}/src;${KBlog_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Blog
@@ -57,16 +57,11 @@ ecm_generate_headers(KBlog_CamelCase_HEADERS
 )
 
 install(FILES
+    ${KBlog_BINARY_DIR}/src/kblog_export.h
+    ${KBlog_HEADERS}
     ${KBlog_CamelCase_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KBlog
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KBlog
     COMPONENT Devel
-)
-
-install(FILES
-  ${KBlog_BINARY_DIR}/src/kblog_export.h
-  ${KBlog_HEADERS}
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kblog
-  COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME KBlog LIB_NAME KF5Blog DEPS "CoreAddons KDELibs4Support KIOCore Syndication" FILENAME_VAR PRI_FILENAME)
