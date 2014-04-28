@@ -8,6 +8,8 @@ find_dependency(KF5AkonadiMime "@KF5_VERSION@")
 find_dependency(KF5Mime "@KF5_VERSION@")
 
 find_dependency(Sasl2)
+
+include(FeatureSummary)
 set_package_properties(Sasl2 PROPERTIES
                              DESCRIPTION "The Cyrus-sasl library"
                              URL "http://www.cyrussasl.org"
