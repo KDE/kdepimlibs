@@ -19,10 +19,9 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "4.98.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 
-# FIXME: KF5KMime ? KF5Mime ?
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMIME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kmime_version.h"
-                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KMimeConfigVersion.cmake"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MimeConfigVersion.cmake"
                         SOVERSION 5
 )
 
@@ -38,24 +37,24 @@ add_subdirectory(autotests)
 add_subdirectory(tests)
 
 ########### CMake Config Files ###########
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5KMime")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Mime")
 
 ecm_configure_package_config_file(
-  "${KMime_SOURCE_DIR}/KF5KMimeConfig.cmake.in"
-  "${KMime_BINARY_DIR}/KF5KMimeConfig.cmake"
+  "${KMime_SOURCE_DIR}/KF5MimeConfig.cmake.in"
+  "${KMime_BINARY_DIR}/KF5MimeConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${KMime_BINARY_DIR}/KF5KMimeConfig.cmake"
-  "${KMime_BINARY_DIR}/KF5KMimeConfigVersion.cmake"
+  "${KMime_BINARY_DIR}/KF5MimeConfig.cmake"
+  "${KMime_BINARY_DIR}/KF5MimeConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
 
-install(EXPORT KF5KMimeTargets
+install(EXPORT KF5MimeTargets
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        FILE KF5KMimeTargets.cmake
+        FILE KF5MimeTargets.cmake
         NAMESPACE KF5::
 )
 

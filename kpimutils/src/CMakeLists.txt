@@ -23,7 +23,7 @@ target_include_directories(KF5PimUtils PUBLIC "$<BUILD_INTERFACE:${KPimUtils_SOU
 target_link_libraries(KF5PimUtils
     KF5::ItemViews
     KF5::Emoticons
-    KF5::KMime
+    KF5::Mime
 )
 
 set_target_properties(KF5PimUtils PROPERTIES

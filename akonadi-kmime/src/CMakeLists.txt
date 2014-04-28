@@ -74,41 +74,41 @@ install(FILES
     DESTINATION ${KCFG_INSTALL_DIR}
 )
 
-add_library(KF5AkonadiKMime ${akonadikmime_SRCS})
+add_library(KF5AkonadiMime ${akonadikmime_SRCS})
 
-generate_export_header(KF5AkonadiKMime BASE_NAME akonadi-kmime)
+generate_export_header(KF5AkonadiMime BASE_NAME akonadi-kmime)
 
-add_library(KF5::AkonadiKMime ALIAS KF5AkonadiKMime)
+add_library( KF5::AkonadiMime ALIAS KF5AkonadiMime)
 
-target_include_directories(KF5AkonadiKMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime;${Boost_INCLUDE_DIR}>")
-target_include_directories(KF5AkonadiKMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 
-target_link_libraries(KF5AkonadiKMime
-    KF5::KMime
+target_link_libraries(KF5AkonadiMime
+    KF5::Mime
     KF5::AkonadiCore
     KF5::AkonadiWidgets
     KF5::KIOCore
 )
 
-set_target_properties(KF5AkonadiKMime PROPERTIES
+set_target_properties(KF5AkonadiMime PROPERTIES
     VERSION ${AKONADIKMIME_VERSION_STRING}
     SOVERSION ${AKONADIKMIME_SOVERSION}
-    EXPORT_NAME AkonadiKMime
+    EXPORT_NAME AkonadiMime
 )
 
-ecm_generate_pri_file(BASE_NAME AkonadiKMime
-    LIB_NAME KF5AkonadiKMime
+ecm_generate_pri_file(BASE_NAME AkonadiMime
+    LIB_NAME KF5AkonadiMime
     DEPS "KMime AkonadiCore AkonadiWidgets KIO" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
-    KF5AkonadiKMime
-    EXPORT KF5AkonadiKMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+    KF5AkonadiMime
+    EXPORT KF5AkonadiMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 
-ecm_generate_headers(AkonadiKMime_CamelCase_HEADERS
+ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   HEADER_NAMES
 
   AddressAttribute
@@ -123,18 +123,18 @@ ecm_generate_headers(AkonadiKMime_CamelCase_HEADERS
   SpecialMailCollections
   SpecialMailCollectionsDiscoveryJob
   SpecialMailCollectionsRequestJob
-  REQUIRED_HEADERS AkonadiKMime_HEADERS
+  REQUIRED_HEADERS AkonadiMime_HEADERS
   PREFIX Akonadi/KMime
 )
 
 install(FILES
-    ${AkonadiKMime_CamelCase_HEADERS}
+    ${AkonadiMime_CamelCase_HEADERS}
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
     COMPONENT Devel
 )
 
 install(FILES
-  ${AkonadiKMime_HEADERS}
+  ${AkonadiMime_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
   standardmailactionmanager.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel

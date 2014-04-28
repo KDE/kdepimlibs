@@ -11,7 +11,7 @@ macro(ADD_KMIME_TEST)
     add_executable(${_testName} ${_testName}.cpp)
     add_test(kmime-${_testName} ${_testName})
     target_link_libraries(${_testName}
-      KF5KMime
+      KF5Mime
       Qt5::Test
     )
     set_target_properties(${_testName} PROPERTIES COMPILE_FLAGS -DTEST_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )

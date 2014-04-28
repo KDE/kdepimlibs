@@ -99,8 +99,8 @@ target_link_libraries(KF5MailTransport
                       KF5::KDELibs4Support
                       KF5::AkonadiCore
                       KF5::AkonadiWidgets
-                      KF5::AkonadiKMime
-                      KF5::KMime
+                      KF5::AkonadiMime
+                      KF5::Mime
                       KF5::Wallet
 )
 

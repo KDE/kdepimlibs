@@ -15,7 +15,7 @@ target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KF5_
 target_include_directories(KF5AkonadiNotes PUBLIC "$<BUILD_INTERFACE:${Akonadi-Notes_SOURCE_DIR}/src;${Akonadi-Notes_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiNotes
-    KF5::KMime
+    KF5::Mime
     KF5::AkonadiCore
     KF5::KIOCore
 )

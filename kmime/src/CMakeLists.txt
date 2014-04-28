@@ -28,28 +28,28 @@ set(kmime_LIB_SRCS
    boolflags.cpp
    kautodeletehash.cpp)
 
-add_library(KF5KMime ${kmime_LIB_SRCS})
+add_library(KF5Mime ${kmime_LIB_SRCS})
 
-generate_export_header(KF5KMime BASE_NAME KMime)
+generate_export_header(KF5Mime BASE_NAME KMime)
 
-add_library(KF5::KMime ALIAS KF5KMime)
+add_library(KF5::Mime ALIAS KF5Mime)
 
-target_include_directories(KF5KMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KMime>")
-target_include_directories(KF5KMime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
+target_include_directories(KF5Mime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KMime>")
+target_include_directories(KF5Mime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
 
-target_link_libraries(KF5KMime
+target_link_libraries(KF5Mime
     KF5::ItemViews
     KF5::Codecs
     KF5::KDELibs4Support
 )
 
-set_target_properties(KF5KMime PROPERTIES
+set_target_properties(KF5Mime PROPERTIES
     VERSION ${KMIME_VERSION_STRING}
     SOVERSION ${KMIME_SOVERSION}
-    EXPORT_NAME KMime
+    EXPORT_NAME Mime
 )
 
-install(TARGETS KF5KMime EXPORT KF5KMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Mime EXPORT KF5MimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
          boolflags.h
@@ -68,5 +68,5 @@ install(FILES
          DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMime COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5KMime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5Mime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

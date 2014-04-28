@@ -37,9 +37,9 @@ find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
 
 # FIXME: remove this if/endif when KMime is split.
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+  find_package(KF5Mime ${KF5_VERSION} CONFIG REQUIRED)
   find_package(KF5Akonadi CONFIG REQUIRED)
-  find_package(KF5AkonadiKMime CONFIG REQUIRED)
+  find_package(KF5AkonadiMime CONFIG REQUIRED)
 endif()
 
 

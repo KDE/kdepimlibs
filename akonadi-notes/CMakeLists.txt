@@ -30,7 +30,7 @@ find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
-  find_package(KF5KMime CONFIG REQUIRED)
+  find_package(KF5Mime CONFIG REQUIRED)
 endif()
 
 ########### Targets ###########
