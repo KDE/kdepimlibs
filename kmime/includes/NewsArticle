@@ -1,1 +1,1 @@
-#include "../../kmime/kmime_newsarticle.h"
+#include "kmime_newsarticle.h"
