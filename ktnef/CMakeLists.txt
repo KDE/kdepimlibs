@@ -22,7 +22,7 @@ set(KF5_VERSION "4.98.0")
 
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KTNEF
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/ktnef_version.h"
-                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KTnefConfigVersion.cmake"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5TnefConfigVersion.cmake"
                         SOVERSION 5
 )
 
@@ -31,7 +31,7 @@ find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5KTnef")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Tnef")
 
 # FIXME: remove this if/endif when KCalCore is split.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -43,21 +43,21 @@ endif()
 
 
 ecm_configure_package_config_file(
-  "${KTnef_SOURCE_DIR}/KF5KTnefConfig.cmake.in"
-  "${KTnef_BINARY_DIR}/KF5KTnefConfig.cmake"
+  "${KTnef_SOURCE_DIR}/KF5TnefConfig.cmake.in"
+  "${KTnef_BINARY_DIR}/KF5TnefConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${KTnef_BINARY_DIR}/KF5KTnefConfig.cmake"
-  "${KTnef_BINARY_DIR}/KF5KTnefConfigVersion.cmake"
+  "${KTnef_BINARY_DIR}/KF5TnefConfig.cmake"
+  "${KTnef_BINARY_DIR}/KF5TnefConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
 
-install(EXPORT KF5KTnefTargets
+install(EXPORT KF5TnefTargets
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        FILE KF5KTnefTargets.cmake
+        FILE KF5TnefTargets.cmake
         NAMESPACE KF5::
 )
 

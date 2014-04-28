@@ -20,7 +20,7 @@ macro(add_ktnef_test _source)
   add_test(${_name} ${_name})
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
-    KF5KTnef
+    KF5Tnef
     Qt5::Test
   )
 endmacro()

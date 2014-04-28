@@ -12,16 +12,16 @@ set(ktnef_SRCS
   formatter.cpp
 )
 
-add_library(KF5KTnef ${ktnef_SRCS})
+add_library(KF5Tnef ${ktnef_SRCS})
 
-generate_export_header(KF5KTnef BASE_NAME ktnef)
+generate_export_header(KF5Tnef BASE_NAME ktnef)
 
-add_library(KF5::KTnef ALIAS KF5KTnef)
+add_library(KF5::Tnef ALIAS KF5Tnef)
 
-target_include_directories(KF5KTnef INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KTNEF;${Boost_INCLUDE_DIR}>")
-target_include_directories(KF5KTnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR}/src;${KTnef_BINARY_DIR}/src>")
+target_include_directories(KF5Tnef INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KTNEF;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5Tnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR}/src;${KTnef_BINARY_DIR}/src>")
 
-target_link_libraries(KF5KTnef
+target_link_libraries(KF5Tnef
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::Abc
@@ -30,13 +30,13 @@ target_link_libraries(KF5KTnef
   KF5::PimUtils
 )
 
-set_target_properties(KF5KTnef PROPERTIES
+set_target_properties(KF5Tnef PROPERTIES
     VERSION ${KTNEF_VERSION_STRING}
     SOVERSION ${KTNEF_SOVERSION}
     EXPORT_NAME KTnef
 )
 
-install(TARGETS KF5KTnef EXPORT KF5KTnefTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Tnef EXPORT KF5TnefTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ecm_generate_headers(KTnef_CamelCase_HEADERS
   HEADER_NAMES
