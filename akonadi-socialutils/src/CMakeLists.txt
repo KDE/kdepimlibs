@@ -21,7 +21,7 @@ generate_export_header(KF5AkonadiSocialUtils BASE_NAME akonadi-socialutils)
 add_library(KF5::AkonadiSocialUtils ALIAS KF5AkonadiSocialUtils)
 
 
-target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiSocialUtils;${KF5_INCLUDE_INSTALL_DIR}/akonadi/socialutils${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/socialutils${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiSocialUtils PUBLIC "$<BUILD_INTERFACE:${Akonadi-SocialUtils_SOURCE_DIR}/src;${Akonadi-SocialUtils_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiSocialUtils
@@ -56,14 +56,8 @@ ecm_generate_headers(AkonadiSocialUtils_CamelCase_HEADERS
   PREFIX Akonadi/SocialUtils
 )
 
-install(FILES
-    ${AkonadiSocialUtils_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/SocialUtils
-    COMPONENT Devel
-)
-
-
 set(akonadi_social_utils_HDRS
+    ${AkonadiSocialUtils_CamelCase_HEADERS}
   ${AkonadiSocialUtils_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_export.h
   socialnetworkattributes.h
@@ -72,5 +66,6 @@ set(akonadi_social_utils_HDRS
 )
 
 
-install(FILES ${akonadi_social_utils_HDRS} DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/socialutils)
+
+install(FILES ${akonadi_social_utils_HDRS} DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/socialutils)
 

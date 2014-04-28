@@ -11,7 +11,7 @@ generate_export_header(KF5AkonadiNotes BASE_NAME akonadi-notes)
 
 add_library(KF5::KF5AkonadiNotes ALIAS KF5AkonadiNotes)
 
-target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/AkonadiNotes;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/notes;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiNotes PUBLIC "$<BUILD_INTERFACE:${Akonadi-Notes_SOURCE_DIR}/src;${Akonadi-Notes_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiNotes
@@ -40,16 +40,12 @@ ecm_generate_headers(AkonadiNotes_CamelCase_HEADERS
 )
 
 install(FILES
-    ${AkonadiNotes_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/Notes
-    COMPONENT Devel
-)
-
-install( FILES
   noteutils.h
   ${AkonadiNotes_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
-  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/notes COMPONENT Devel
+    ${AkonadiNotes_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/notes
+    COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiNotes LIB_NAME KF5AkonadiNotes DEPS "KMime AkonadiCore KIOCore" FILENAME_VAR PRI_FILENAME)
