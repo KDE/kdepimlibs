@@ -39,7 +39,7 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 public:
     ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
-        , mMerge(false)
+        , mMergeIdentifier(ItemCreateJob::NoMerge)
     {
     }
 
@@ -51,7 +51,7 @@ public:
     Item::Id mUid;
     QDateTime mDatetime;
     QByteArray mPendingData;
-    bool mMerge;
+    ItemCreateJob::MergeIdentifiers mMergeIdentifier;
 };
 
 QByteArray ItemCreateJobPrivate::nextPartHeader()
@@ -106,7 +106,6 @@ void ItemCreateJob::doStart()
     QList<QByteArray> flags;
     flags.append("\\MimeType[" + d->mItem.mimeType().toLatin1() + ']');
     const QString gid = GidExtractor::getGid(d->mItem);
-    const bool merge = d->mMerge && !d->mItem.gid().isNull();
     if (!gid.isNull()) {
         flags.append(ImapParser::quote("\\Gid[" + gid.toUtf8() + ']'));
     }
@@ -119,10 +118,15 @@ void ItemCreateJob::doStart()
     flags += d->mItem.flags().toList();
 
     QByteArray command = d->newTag();
-    if (merge) {
-      command += " MERGE (GID";
-      if (!d->mItem.remoteId().isEmpty()) {
-        command += " REMOTEID";
+    const bool mergeByGid = (d->mMergeIdentifier & GID) && !d->mItem.gid().isEmpty();
+    const bool mergeByRid = (d->mMergeIdentifier & RID) && !d->mItem.remoteId().isEmpty();
+    if (mergeByGid || mergeByRid) {
+      command += " MERGE (";
+      if (mergeByGid) {
+        command += "GID ";
+      }
+      if (mergeByRid) {
+        command += "REMOTEID";
       }
       command += ") ";
     } else {
@@ -189,11 +193,11 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
     }
 }
 
-void ItemCreateJob::setMergeIfExists(bool merge)
+void ItemCreateJob::setMergeByIdentifier(ItemCreateJob::MergeIdentifiers mergeIdentifier)
 {
   Q_D(ItemCreateJob);
 
-  d->mMerge = merge;
+  d->mMergeIdentifier = mergeIdentifier;
 }
 
 Item ItemCreateJob::item() const

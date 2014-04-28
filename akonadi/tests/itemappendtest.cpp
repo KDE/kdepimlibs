@@ -306,7 +306,7 @@ void ItemAppendTest::testItemMerge()
   AKVERIFYEXEC( create );
 
   ItemCreateJob *merge = new ItemCreateJob( item2, col, this );
-  merge->setMergeIfExists( true );
+  merge->setMergeByIdentifier( ItemCreateJob::GID | ItemCreateJob::RID );
   AKVERIFYEXEC( merge );
 
   QCOMPARE( mergedItem.gid(), merge->item().gid() );
