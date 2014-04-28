@@ -50,7 +50,6 @@ ecm_generate_headers(KTnef_CamelCase_HEADERS
   KTNEFWriter
 
   REQUIRED_HEADERS KTnef_HEADERS
-  PREFIX ktnef
 )
 
 install(FILES

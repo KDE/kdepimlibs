@@ -30,7 +30,6 @@ ecm_generate_headers(MicroBlog_CamelCase_HEADERS
   StatusItem
 
   REQUIRED_HEADERS MicroBlog_HEADERS
-  PREFIX MicroBlog
 )
 
 ########### install files ###############

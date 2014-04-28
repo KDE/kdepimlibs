@@ -53,7 +53,6 @@ ecm_generate_headers(AkonadiSocialUtils_CamelCase_HEADERS
   SocialFeedItem
   SocialNetworkAttributes
   REQUIRED_HEADERS AkonadiSocialUtils_HEADERS
-  PREFIX Akonadi/SocialUtils
 )
 
 set(akonadi_social_utils_HDRS

@@ -53,7 +53,6 @@ ecm_generate_headers(KBlog_CamelCase_HEADERS
   WordpressBuggy
 
   REQUIRED_HEADERS KBlog_HEADERS
-  PREFIX KBlog
 )
 
 install(FILES

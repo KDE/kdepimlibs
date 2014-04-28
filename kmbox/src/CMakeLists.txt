@@ -33,7 +33,6 @@ ecm_generate_headers(KMbox_CamelCase_HEADERS
   MBoxEntry
 
   REQUIRED_HEADERS KMbox_HEADERS
-  PREFIX KMbox
 )
 
 install(FILES

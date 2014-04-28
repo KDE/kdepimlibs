@@ -43,7 +43,6 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   ProgressIndicatorLabel
   ProgressIndicatorWidget
   REQUIRED_HEADERS KPimUtils_HEADERS
-  PREFIX KPIMUtils
 )
 
 install(FILES

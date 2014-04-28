@@ -23,7 +23,6 @@ ecm_generate_headers(KXmlRpcClient_CamelCase_HEADERS
   HEADER_NAMES
   Client
   REQUIRED_HEADERS KXmlRpcClient_HEADERS
-  PREFIX KXmlRpcClient
 )
 
 install(TARGETS KF5XmlRpcClient EXPORT KF5XmlRpcClientTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

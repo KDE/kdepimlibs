@@ -146,7 +146,6 @@ ecm_generate_headers(MailTransport_CamelCase_HEADERS
   TransportManager
   TransportType
   REQUIRED_HEADERS MailTransport_HEADERS
-  PREFIX MailTransport
 )
 
 install(FILES
