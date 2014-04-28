@@ -33,7 +33,7 @@ target_link_libraries(KF5Tnef
 set_target_properties(KF5Tnef PROPERTIES
     VERSION ${KTNEF_VERSION_STRING}
     SOVERSION ${KTNEF_SOVERSION}
-    EXPORT_NAME KTnef
+    EXPORT_NAME Tnef
 )
 
 install(TARGETS KF5Tnef EXPORT KF5TnefTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
