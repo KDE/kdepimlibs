@@ -99,7 +99,7 @@ set_target_properties(KF5AkonadiMime PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiMime
     LIB_NAME KF5AkonadiMime
-    DEPS "KMime AkonadiCore AkonadiWidgets KIO" FILENAME_VAR PRI_FILENAME
+    DEPS "Mime AkonadiCore AkonadiWidgets KIO" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

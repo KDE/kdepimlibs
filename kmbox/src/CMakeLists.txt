@@ -45,5 +45,5 @@ install(FILES
 )
 
 
-ecm_generate_pri_file(BASE_NAME Mbox LIB_NAME KF5Mbox DEPS "CoreAddons KMime" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME Mbox LIB_NAME KF5Mbox DEPS "CoreAddons Mime" FILENAME_VAR PRI_FILENAME)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
