@@ -61,6 +61,12 @@ install(EXPORT KF5TnefTargets
         NAMESPACE KF5::
 )
 
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/ktnef_version.h
+   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
+)
+
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 

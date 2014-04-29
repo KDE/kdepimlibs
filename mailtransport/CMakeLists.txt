@@ -64,6 +64,13 @@ install(FILES
   COMPONENT Devel
 )
 
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_version.h
+   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}
+   COMPONENT Devel
+)
+
+
 install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailTransportTargets.cmake NAMESPACE KF5::)
 
 ########### Targets ###########
