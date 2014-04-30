@@ -23,6 +23,7 @@
 #include "collection.h"
 #include "imapparser_p.h"
 #include "item.h"
+#include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
@@ -115,22 +116,36 @@ void ItemCreateJob::doStart()
     if (!d->mItem.remoteRevision().isEmpty()) {
         flags.append(ImapParser::quote("\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']'));
     }
-    flags += d->mItem.flags().toList();
-
-    QByteArray command = d->newTag();
     const bool mergeByGid = (d->mMergeIdentifier & GID) && !d->mItem.gid().isEmpty();
     const bool mergeByRid = (d->mMergeIdentifier & RID) && !d->mItem.remoteId().isEmpty();
-    if (mergeByGid || mergeByRid) {
-      command += " MERGE (";
-      if (mergeByGid) {
-        command += "GID ";
-      }
-      if (mergeByRid) {
-        command += "REMOTEID";
-      }
-      command += ") ";
+    const bool merge = mergeByGid || mergeByRid;
+    if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
+        flags += d->mItem.flags().toList();
     } else {
-      command += " X-AKAPPEND ";
+        if (!d->mItem.d_func()->mAddedFlags.isEmpty()) {
+            Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mAddedFlags.toList()) {
+                flags += "+" + flag;
+            }
+        }
+        if (!d->mItem.d_func()->mDeletedFlags.isEmpty()) {
+            Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mDeletedFlags.toList()) {
+                flags += "-" + flag;
+            }
+        }
+    }
+
+    QByteArray command = d->newTag();
+    if (merge) {
+        command += " MERGE (";
+        if (mergeByGid) {
+            command += "GID ";
+        }
+        if (mergeByRid) {
+            command += "REMOTEID";
+        }
+        command += ") ";
+    } else {
+        command += " X-AKAPPEND ";
     }
 
     command += QByteArray::number(d->mCollection.id())
@@ -195,9 +210,9 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
 
 void ItemCreateJob::setMergeByIdentifier(ItemCreateJob::MergeIdentifiers mergeIdentifier)
 {
-  Q_D(ItemCreateJob);
+    Q_D(ItemCreateJob);
 
-  d->mMergeIdentifier = mergeIdentifier;
+    d->mMergeIdentifier = mergeIdentifier;
 }
 
 Item ItemCreateJob::item() const
