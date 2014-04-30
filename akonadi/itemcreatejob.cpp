@@ -41,6 +41,7 @@ public:
     ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
         , mMergeIdentifier(ItemCreateJob::NoMerge)
+        , mItemReceived(false)
     {
     }
 
@@ -53,6 +54,7 @@ public:
     QDateTime mDatetime;
     QByteArray mPendingData;
     ItemCreateJob::MergeIdentifiers mMergeIdentifier;
+    bool mItemReceived;
 };
 
 QByteArray ItemCreateJobPrivate::nextPartHeader()
@@ -122,15 +124,23 @@ void ItemCreateJob::doStart()
     if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
         flags += d->mItem.flags().toList();
     } else {
-        if (!d->mItem.d_func()->mAddedFlags.isEmpty()) {
-            Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mAddedFlags.toList()) {
-                flags += "+" + flag;
-            }
+        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mAddedFlags.toList()) {
+            flags += "+" + flag;
         }
-        if (!d->mItem.d_func()->mDeletedFlags.isEmpty()) {
-            Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mDeletedFlags.toList()) {
-                flags += "-" + flag;
-            }
+        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mDeletedFlags.toList()) {
+            flags += "-" + flag;
+        }
+    }
+    if (d->mItem.d_func()->mTagsOverwritten || !merge) {
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
+            flags += "TAG " + tag.remoteId();
+        }
+    } else {
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
+            flags += "+TAG " + tag.remoteId();
+        }
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mDeletedTags) {
+            flags += "-TAG " + tag.remoteId();
         }
     }
 
@@ -183,6 +193,7 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
             // Error, maybe?
             return;
           }
+          d->mItemReceived = true;
           d->mItem = item;
         }
         return;
@@ -218,6 +229,10 @@ void ItemCreateJob::setMergeByIdentifier(ItemCreateJob::MergeIdentifiers mergeId
 Item ItemCreateJob::item() const
 {
     Q_D(const ItemCreateJob);
+
+    if (d->mItemReceived) {
+        return d->mItem;
+    }
 
     if (d->mUid == 0) {
         return Item();
