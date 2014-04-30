@@ -8,7 +8,7 @@ generate_export_header(KF5MicroBlog BASE_NAME microblog)
 
 add_library(KF5::MicroBlog ALIAS KF5MicroBlog)
 
-target_include_directories(KF5MicroBlog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/microblog>")
+target_include_directories(KF5MicroBlog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/MicroBlog>")
 target_include_directories(KF5MicroBlog PUBLIC "$<BUILD_INTERFACE:${MicroBlog_SOURCE_DIR}/src;${MicroBlog_BINARY_DIR}/src>")
 
 target_link_libraries(KF5MicroBlog
