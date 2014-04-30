@@ -24,7 +24,7 @@ set_target_properties(KF5Mbox PROPERTIES
     EXPORT_NAME Mbox
 )
 
-install(TARGETS KF5Mbox EXPORT KF5MboxTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Mbox EXPORT KF5MboxTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### Generate Headers ###############
 ecm_generate_headers(KMbox_CamelCase_HEADERS

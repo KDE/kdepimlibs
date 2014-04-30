@@ -44,7 +44,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiSocialUtils
 
 install(TARGETS
     KF5AkonadiSocialUtils
-    EXPORT KF5AkonadiSocialUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5AkonadiSocialUtilsTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 ecm_generate_headers(AkonadiSocialUtils_CamelCase_HEADERS

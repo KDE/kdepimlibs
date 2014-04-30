@@ -22,7 +22,7 @@ set_target_properties(KF5MicroBlog PROPERTIES
     EXPORT_NAME MicroBlog
 )
 
-install(TARGETS KF5MicroBlog EXPORT KF5MicroBlogTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5MicroBlog EXPORT KF5MicroBlogTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### Generate Headers ###############
 ecm_generate_headers(MicroBlog_CamelCase_HEADERS

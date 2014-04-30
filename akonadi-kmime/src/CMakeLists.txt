@@ -104,7 +104,7 @@ ecm_generate_pri_file(BASE_NAME AkonadiMime
 
 install(TARGETS
     KF5AkonadiMime
-    EXPORT KF5AkonadiMimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5AkonadiMimeTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 

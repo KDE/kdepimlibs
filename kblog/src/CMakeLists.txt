@@ -37,7 +37,7 @@ set_target_properties(KF5Blog PROPERTIES
     EXPORT_NAME Blog
 )
 
-install(TARGETS KF5Blog EXPORT KF5BlogTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Blog EXPORT KF5BlogTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### Generate Headers ###############
 ecm_generate_headers(KBlog_CamelCase_HEADERS

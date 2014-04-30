@@ -49,7 +49,7 @@ set_target_properties(KF5Mime PROPERTIES
     EXPORT_NAME Mime
 )
 
-install(TARGETS KF5Mime EXPORT KF5MimeTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Mime EXPORT KF5MimeTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
          boolflags.h

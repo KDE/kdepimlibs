@@ -28,7 +28,7 @@ set_target_properties(KF5AkonadiNotes PROPERTIES
 
 install(TARGETS
     KF5AkonadiNotes
-    EXPORT KF5AkonadiNotesTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5AkonadiNotesTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 ecm_generate_headers(AkonadiNotes_CamelCase_HEADERS

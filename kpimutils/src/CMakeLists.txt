@@ -32,7 +32,7 @@ set_target_properties(KF5PimUtils PROPERTIES
     EXPORT_NAME PimUtils
 )
 
-install(TARGETS KF5PimUtils EXPORT KF5PimUtilsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5PimUtils EXPORT KF5PimUtilsTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### Generate Headers ###############
 ecm_generate_headers(KPimUtils_CamelCase_HEADERS

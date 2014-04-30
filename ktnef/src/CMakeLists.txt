@@ -36,7 +36,7 @@ set_target_properties(KF5Tnef PROPERTIES
     EXPORT_NAME Tnef
 )
 
-install(TARGETS KF5Tnef EXPORT KF5TnefTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5Tnef EXPORT KF5TnefTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ecm_generate_headers(KTnef_CamelCase_HEADERS
   HEADER_NAMES

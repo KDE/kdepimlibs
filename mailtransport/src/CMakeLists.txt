@@ -116,7 +116,7 @@ if(MAILTRANSPORT_INPROCESS_SMTP)
 endif()
 
 
-install(TARGETS KF5MailTransport EXPORT KF5MailTransportTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5MailTransport EXPORT KF5MailTransportTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
