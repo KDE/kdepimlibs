@@ -34,7 +34,7 @@
 #define KTNEF_FORMATTER_H
 
 #include <QtCore/QString>
-#include <kcalcore/memorycalendar.h>
+#include <memorycalendar.h>
 
 #include "ktnef_export.h"
 
