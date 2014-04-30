@@ -28,8 +28,13 @@ ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
-find_package(QJSON)
-set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
+find_package(QJSON CONFIG)
+set_package_properties(QJSON PROPERTIES 
+  DESCRIPTION "QJSON"
+  URL "http://qjson.sourceforge.net/"
+  TYPE REQUIRED
+  PURPOSE "Qt library for handling JSON data"
+)
 
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-SocialUtils_SOURCE_DIR})
