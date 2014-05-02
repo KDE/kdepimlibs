@@ -40,7 +40,8 @@
 
 namespace KPIMUtils {
 
-class KPIMUTILS_EXPORT SpellingFilter
+/** @deprecated unused, scheduled for removal in KF5. */
+class KPIMUTILS_DEPRECATED_EXPORT SpellingFilter
 {
   public:
     enum UrlFiltering {

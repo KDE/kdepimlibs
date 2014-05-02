@@ -266,6 +266,7 @@ void TagTest::testAttributes()
 void TagTest::testTagItem()
 {
     Akonadi::Monitor monitor;
+    monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
     const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
     Tag tag;
@@ -285,7 +286,7 @@ void TagTest::testTagItem()
 
     item1.setTag(tag);
 
-    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List, QSet<Akonadi::Tag>, QSet<Akonadi::Tag>)));
+    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
     QVERIFY(tagsSpy.isValid());
 
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);

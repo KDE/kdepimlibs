@@ -29,6 +29,7 @@ namespace Akonadi {
 
 class Collection;
 class ItemFetchScope;
+class ItemSyncPrivate;
 
 /**
  * @short Syncs between items known to a client (usually a resource) and the Akonadi storage.
@@ -82,8 +83,13 @@ public:
 
     /**
      * Set the amount of items which you are going to return in total
-     * by using the setFullSyncItems() method.
+     * by using the setFullSyncItems()/setIncrementalSyncItems() methods.
      *
+     * @warning By default the item sync will automatically end once
+     * sufficient items have been provided.
+     * To disable this use setDisableAutomaticDeliveryDone
+     *
+     * @see setDisableAutomaticDeliveryDone
      * @param amount The amount of items in total.
      */
     void setTotalItems(int amount);
@@ -169,6 +175,57 @@ public:
      */
     void setTransactionMode(TransactionMode mode);
 
+    /**
+     * Minimum number of items required to start processing in streaming mode.
+     * When MultipleTransactions is used, one transaction per batch will be created.
+     *
+     * @see setBatchSize()
+     * @since 4.14
+     */
+    int batchSize() const;
+
+    /**
+     * Set the batch size.
+     *
+     * The default is 10.
+     *
+     * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @see batchSize()
+     * @since 4.14
+     */
+    void setBatchSize(int);
+
+    /**
+     * Disables the automatic completion of the item sync,
+     * based on the number of delivered items.
+     *
+     * This ensures that the item sync only finishes once deliveryDone()
+     * is called, while still making it possible to use the progress
+     * reporting of the ItemSync.
+     *
+     * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @see setTotalItems
+     * @since 4.14
+     */
+    void setDisableAutomaticDeliveryDone(bool disable);
+
+Q_SIGNALS:
+    /**
+     * Signals the resource that new items can be delivered.
+     * @param remainingBatchSize the number of items required to complete the batch (typically the same as batchSize())
+     *
+     * @since 4.14
+     */
+    void readyForNextBatch(int remainingBatchSize);
+
+    /**
+     * @internal
+     * Emitted whenever a transaction is committed. This is for testing only.
+     *
+     * @since 4.14
+     */
+    void transactionCommitted();
+
 protected:
     void doStart();
     void slotResult(KJob *job);
@@ -184,13 +241,15 @@ protected:
 
 private:
     //@cond PRIVATE
-    class Private;
-    Private *const d;
+    Q_DECLARE_PRIVATE(ItemSync)
+    ItemSyncPrivate *dummy; // for BC. KF5 TODO: REMOVE.
 
-    Q_PRIVATE_SLOT(d, void slotLocalListDone(KJob *))
-    Q_PRIVATE_SLOT(d, void slotLocalDeleteDone(KJob *))
-    Q_PRIVATE_SLOT(d, void slotLocalChangeDone(KJob *))
-    Q_PRIVATE_SLOT(d, void slotTransactionResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalListDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalDeleteDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalChangeDone(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotTransactionResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotItemsReceived(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d_func(), void slotLocalFetchDone(KJob *))
     //@endcond
 };
 

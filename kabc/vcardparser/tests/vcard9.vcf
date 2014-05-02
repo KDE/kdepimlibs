@@ -1,20 +1,14 @@
 BEGIN:VCARD
-
-
-N:Gump;Forrest;;;
-FN:Forrest Gump
-ORG:Bubba Gump Shrimp Co.
-TITLE:Shrimp Man
-PHOTO;MEDIATYPE=image/gif:http://www.example.com/dir_photos/my_photo.gif
-TEL;TYPE=work,voice;VALUE=uri:tel:+1-111-555-1212
-tel;TYPE=home,voice;VALUE=uri:tel:+1-404-555-1212
-ADR;TYPE=work;LABEL="100 Waters Edge\nBaytown, LA 30314\nUnited States of America"
-  :;;100 Waters Edge;Baytown;LA;30314;United States of America
-VERSION:4.0
-adr;TYPE=home;LABEL="42 Plantation St.\nBaytown, LA 30314\nUnited States of America"
-  :;;42 Plantation St.;Baytown;LA;30314;United States of America
-email:forrestgump@example.com
-REV:20080424T195243Z
-
-
+FN:βγδεαβγδ1βγδεαβγδ1βγδεαβγδ1βγδεαβγδ1βγ
+ δεαβγδ1βγδεαβγδ1βγδεαβγδ1βγδεαβγδ1βγδεα
+ βγδ1βγδεαβγδ1βγδεαβγδ1
+N:123ㄓㄕㄖbcdeαβγδαβγδαβγδαβγδαβγδαβγδαβㄤ
+ ㄓㄕㄖ;;;;
+NOTE:Длинный комментарий на русском языке\,
+  чтобы в результате получилась строка бо�
+ �ее 70 символов.
+PRODID:-//ownCloud//NONSGML Contacts 0.3//EN
+UID:20140316T155019.877e370c11@martin
+VERSION:3.0
 END:VCARD
+
