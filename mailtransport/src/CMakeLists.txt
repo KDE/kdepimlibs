@@ -120,8 +120,7 @@ install(TARGETS KF5MailTransport EXPORT KF5MailTransportTargets ${KF5_INSTALL_TA
 
 install(FILES mailtransport.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
-#Reactivate it
-#add_subdirectory(kcm)
+add_subdirectory(kcm)
 
 
 ecm_generate_headers(MailTransport_CamelCase_HEADERS

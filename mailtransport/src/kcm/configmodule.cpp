@@ -28,11 +28,11 @@
 
 using namespace MailTransport;
 
-K_PLUGIN_FACTORY( MailTransportConfigFactory, registerPlugin<ConfigModule>(); )
+//QT5 K_PLUGIN_FACTORY( MailTransportConfigFactory, registerPlugin<ConfigModule>(); )
 K_EXPORT_PLUGIN( MailTransportConfigFactory( "mailtransport", "libmailtransport" ) )
 
 ConfigModule::ConfigModule( QWidget * parent, const QVariantList & args ) :
-    KCModule( MailTransportConfigFactory::componentData(), parent, args )
+    KCModule( /*MailTransportConfigFactory::componentData(),*/ parent, args )
 {
   setButtons( 0 );
   QVBoxLayout *l = new QVBoxLayout( this );
