@@ -14,6 +14,7 @@ target_include_directories(KF5Mbox INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_
 target_include_directories(KF5Mbox PUBLIC "$<BUILD_INTERFACE:${KMbox_SOURCE_DIR}/src;${KMbox_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Mbox
+   PUBLIC
     KF5::CoreAddons
     KF5::Mime
 )
