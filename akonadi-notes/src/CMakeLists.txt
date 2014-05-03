@@ -48,6 +48,6 @@ install(FILES
     COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME AkonadiNotes LIB_NAME KF5AkonadiNotes DEPS "Mime AkonadiCore KIOCore" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME AkonadiNotes LIB_NAME KF5AkonadiNotes DEPS "Mime AkonadiCore KIOCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/notes)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 
