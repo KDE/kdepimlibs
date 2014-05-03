@@ -55,5 +55,5 @@ install(FILES
     COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME PimUtils LIB_NAME KF5PimUtils DEPS "Emoticons ItemViews Mime" FILENAME_VAR PRI_FILENAME)
+ecm_generate_pri_file(BASE_NAME PimUtils LIB_NAME KF5PimUtils DEPS "Emoticons ItemViews Mime" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
