@@ -21,9 +21,9 @@
 
 #include "config-ktnef-tests.h"
 
-#include <ktnef/ktnefparser.h>
-#include <ktnef/ktnefmessage.h>
-#include <ktnef/ktnefattach.h>
+#include <ktnefparser.h>
+#include <ktnefmessage.h>
+#include <ktnefattach.h>
 
 #include <QtTest>
 
