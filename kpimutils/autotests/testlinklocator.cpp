@@ -28,7 +28,7 @@
 // GUI test, since the smileys use GUI stuff
 QTEST_KDEMAIN( LinkLocatorTest, GUI )
 
-#include "kpimutils/linklocator.h"
+#include "linklocator.h"
 using namespace KPIMUtils;
 
 void LinkLocatorTest::testGetEmailAddress()
