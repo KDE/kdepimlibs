@@ -23,8 +23,8 @@
 #include "kio_ldap.h"
 #include "kdemacros.h"
 
-#include <kldap/ldif.h>
-#include <kldap/ldapcontrol.h>
+#include <KLDAP/ldif.h>
+#include <KLDAP/ldapcontrol.h>
 #include <ldapdefs.h>
 
 #include <kdebug.h>
