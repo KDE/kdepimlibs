@@ -21,9 +21,9 @@
 
 #include "data.h"
 
-#include "kblog/gdata.h"
-#include "kblog/blogpost.h"
-#include "kblog/blogcomment.h"
+#include "gdata.h"
+#include "blogpost.h"
+#include "blogcomment.h"
 
 #include <qtest_kde.h>
 

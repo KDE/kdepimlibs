@@ -26,7 +26,7 @@
 #include "movabletype.h"
 #include "metaweblog_p.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 class KJob;
 class QByteArray;
 

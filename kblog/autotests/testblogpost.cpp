@@ -23,7 +23,7 @@
 #include <QtCore>
 
 #include <qtest_kde.h>
-#include "kblog/blogpost.h"
+#include "blogpost.h"
 #include "kurl.h"
 #include "kdatetime.h"
 

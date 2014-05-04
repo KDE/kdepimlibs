@@ -26,7 +26,7 @@
 #include "livejournal.h"
 #include "blog_p.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 
 namespace KBlog {
 

@@ -26,7 +26,7 @@
 #include "metaweblog.h"
 #include "blogger1_p.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 
 namespace KBlog {
 

@@ -25,7 +25,7 @@
 #include "blogger1_p.h"
 #include "blogpost.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 
 #include <QDebug>
 #include <KDateTime>

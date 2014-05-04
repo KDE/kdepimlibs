@@ -26,7 +26,7 @@
 #include "wordpressbuggy.h"
 #include "movabletype_p.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 
 class KJob;
 class QByteArray;

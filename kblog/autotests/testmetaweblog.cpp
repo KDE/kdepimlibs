@@ -21,9 +21,9 @@
 
 #include "data.h"
 
-#include "kblog/metaweblog.h"
-#include "kblog/blogpost.h"
-#include "kblog/blogmedia.h"
+#include "metaweblog.h"
+#include "blogpost.h"
+#include "blogmedia.h"
 
 #include <qtest_kde.h>
 

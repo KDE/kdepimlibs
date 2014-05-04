@@ -26,7 +26,7 @@
 #include "blogger1.h"
 #include "blog_p.h"
 
-#include <kxmlrpcclient/client.h>
+#include <client.h>
 
 #include <QList>
 
