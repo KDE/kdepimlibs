@@ -25,7 +25,7 @@
 #include <QHash>
 #include <QStringList>
 
-#include <linklocator.h>
+#include <kpimutils/linklocator.h>
 
 using namespace Microblog;
 
