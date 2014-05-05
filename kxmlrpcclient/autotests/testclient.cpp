@@ -25,7 +25,7 @@
 
 QTEST_GUILESS_MAIN( TestClient )
 
-#include <client.h>
+#include <kxmlrpcclient/client.h>
 using namespace KXmlRpc;
 
 void TestClient::testValidity()
