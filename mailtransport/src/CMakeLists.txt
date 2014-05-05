@@ -94,14 +94,15 @@ target_include_directories(KF5MailTransport PUBLIC "$<BUILD_INTERFACE:${MailTran
 
 
 target_link_libraries(KF5MailTransport
-                      KF5::KIOCore
-                      KF5::ItemViews
+PUBLIC
+                      KF5::Wallet
                       KF5::KDELibs4Support
                       KF5::AkonadiCore
-                      KF5::AkonadiWidgets
-                      KF5::AkonadiMime
                       KF5::Mime
-                      KF5::Wallet
+                      KF5::AkonadiMime
+PRIVATE
+                      KF5::KIOCore
+                      KF5::AkonadiWidgets
 )
 
 set_target_properties(KF5MailTransport PROPERTIES

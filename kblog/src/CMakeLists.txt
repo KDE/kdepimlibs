@@ -23,12 +23,14 @@ target_include_directories(KF5Blog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_
 target_include_directories(KF5Blog PUBLIC "$<BUILD_INTERFACE:${KBlog_SOURCE_DIR}/src;${KBlog_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Blog
-  KF5::CalendarCore
-  KF5::CoreAddons
-  KF5::KDELibs4Support
-  KF5::KIOCore
+PUBLIC
   KF5::Syndication
   KF5::XmlRpcClient
+  KF5::KDELibs4Support
+  KF5::CalendarCore
+PRIVATE
+  KF5::CoreAddons
+  KF5::KIOCore
 )
 
 set_target_properties(KF5Blog PROPERTIES
@@ -69,5 +71,5 @@ install(FILES
 )
 
 
-ecm_generate_pri_file(BASE_NAME KBlog LIB_NAME KF5Blog DEPS "CoreAddons KDELibs4Support KIOCore Syndication" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KBlog)
+ecm_generate_pri_file(BASE_NAME KBlog LIB_NAME KF5Blog DEPS "KDELibs4Support Syndication XmlRpcClient CalendarCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KBlog)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})

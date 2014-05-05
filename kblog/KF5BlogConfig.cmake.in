@@ -1,8 +1,6 @@
 @PACKAGE_INIT@
 
 find_dependency(KF5CalendarCore "@KF5_VERSION@")
-find_dependency(KF5CoreAddons "@KF5_VERSION@")
-find_dependency(KF5KIO "@KF5_VERSION@")
 find_dependency(KF5Syndication "@KF5_VERSION@")
 find_dependency(KF5XmlRpcClient "@KF5_VERSION@")
 find_dependency(KF5KDELibs4Support "@KF5_VERSION@")

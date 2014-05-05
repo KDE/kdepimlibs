@@ -22,11 +22,13 @@ target_include_directories(KF5Tnef INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_
 target_include_directories(KF5Tnef PUBLIC "$<BUILD_INTERFACE:${KTnef_SOURCE_DIR}/src;${KTnef_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Tnef
+PUBLIC
   KF5::CalendarCore
+  KF5::KDELibs4Support
+PRIVATE
+  KF5::KIOCore
   KF5::CalendarUtils
   KF5::Abc
-  KF5::KDELibs4Support
-  KF5::KIOCore
   KF5::PimUtils
 )
 
@@ -61,5 +63,5 @@ install(FILES
     COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME KTNef LIB_NAME KF5TNef DEPS "CalendarCore CalendarUtils Abc KDELibs4Support KIOCore PimUtils" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KTNEF)
+ecm_generate_pri_file(BASE_NAME KTNef LIB_NAME KF5TNef DEPS "CalendarCore KDELibs4Support" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KTNEF)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
