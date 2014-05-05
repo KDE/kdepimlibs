@@ -26,7 +26,7 @@
 #include <kblog_export.h>
 
 #include <kurl.h>
-#include <journal.h>
+#include <kcalcore/journal.h>
 #include <QtCore/QtAlgorithms>
 
 class QStringList;
