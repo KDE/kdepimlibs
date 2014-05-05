@@ -42,6 +42,7 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
   LinkLocator
   ProgressIndicatorLabel
   ProgressIndicatorWidget
+  PREFIX kpimutils
   REQUIRED_HEADERS KPimUtils_HEADERS
 )
 
@@ -51,7 +52,7 @@ install(FILES
   emailvalidator.h
   processes.h
     ${KPimUtils_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils/kpimutils
     COMPONENT Devel
 )
 

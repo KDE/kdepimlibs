@@ -48,7 +48,7 @@ ecm_generate_headers(KTnef_CamelCase_HEADERS
   KTNEFProperty
   KTNEFPropertySet
   KTNEFWriter
-
+  PREFIX KTNEF
   REQUIRED_HEADERS KTnef_HEADERS
 )
 
@@ -56,7 +56,7 @@ install(FILES
     ${KTnef_CamelCase_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/ktnef_export.h
     ${KTnef_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KTNEF
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KTNEF/ktnef
     COMPONENT Devel
 )
 

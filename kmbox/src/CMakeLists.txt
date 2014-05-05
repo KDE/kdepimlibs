@@ -32,7 +32,7 @@ ecm_generate_headers(KMbox_CamelCase_HEADERS
   HEADER_NAMES
   MBox
   MBoxEntry
-
+  PREFIX KMbox
   REQUIRED_HEADERS KMbox_HEADERS
 )
 
@@ -40,7 +40,7 @@ install(FILES
   ${KMbox_BINARY_DIR}/src/kmbox_export.h
   ${KMbox_HEADERS}
     ${KMbox_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMbox
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMbox/kmbox
     COMPONENT Devel
 )
 

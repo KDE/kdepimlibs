@@ -144,6 +144,7 @@ ecm_generate_headers(MailTransport_CamelCase_HEADERS
   TransportManagementWidget
   TransportManager
   TransportType
+  PREFIX MailTransport
   REQUIRED_HEADERS MailTransport_HEADERS
 )
 
@@ -176,6 +177,6 @@ install(FILES
   sentbehaviourattribute.h
   transportattribute.h
 
-  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MailTransport COMPONENT Devel
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MailTransport/mailtransport COMPONENT Devel
 )
 

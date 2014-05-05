@@ -65,7 +65,7 @@ install(FILES
          kmime_newsarticle.h
          kmime_dateformatter.h
          kmime_util.h
-         DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMime COMPONENT Devel
+         DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMime/kmime COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5Mime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KMime)

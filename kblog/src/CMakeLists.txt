@@ -51,7 +51,7 @@ ecm_generate_headers(KBlog_CamelCase_HEADERS
   MetaWeblog
   MovableType
   WordpressBuggy
-
+  PREFIX KBlog
   REQUIRED_HEADERS KBlog_HEADERS
 )
 
@@ -59,7 +59,7 @@ install(FILES
     ${KBlog_BINARY_DIR}/src/kblog_export.h
     ${KBlog_HEADERS}
     ${KBlog_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KBlog
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KBlog/kblog
     COMPONENT Devel
 )
 
