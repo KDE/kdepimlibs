@@ -21,8 +21,8 @@
 
 #include "data.h"
 
-#include "blogger1.h"
-#include "blogpost.h"
+#include "kblog/blogger1.h"
+#include "kblog/blogpost.h"
 
 #include <qtest_kde.h>
 

@@ -25,7 +25,7 @@
 #include "movabletype_p.h"
 #include "blogpost.h"
 
-#include <client.h>
+#include <kxmlrpcclient/client.h>
 #include <kio/job.h>
 
 #include <QDebug>

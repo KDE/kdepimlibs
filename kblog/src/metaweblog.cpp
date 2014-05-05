@@ -26,7 +26,7 @@
 #include "blogpost.h"
 #include "blogmedia.h"
 
-#include <client.h>
+#include <kxmlrpcclient/client.h>
 #include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>

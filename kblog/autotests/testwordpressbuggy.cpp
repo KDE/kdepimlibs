@@ -21,9 +21,9 @@
 
 #include "data.h"
 
-#include "wordpressbuggy.h"
-#include "blogpost.h"
-#include "blogmedia.h"
+#include "kblog/wordpressbuggy.h"
+#include "kblog/blogpost.h"
+#include "kblog/blogmedia.h"
 
 #include <qtest_kde.h>
 

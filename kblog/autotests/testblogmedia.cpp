@@ -23,7 +23,7 @@
 #include <QtCore>
 
 #include <qtest_kde.h>
-#include "blogmedia.h"
+#include "kblog/blogmedia.h"
 #include "kurl.h"
 
 Q_DECLARE_METATYPE( KBlog::BlogMedia::Status )

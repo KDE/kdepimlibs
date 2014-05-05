@@ -27,7 +27,7 @@
 
 #include <KTimeZone>
 #include <KUrl>
-#include <client.h>
+#include <kxmlrpcclient/client.h>
 
 namespace KBlog {
 
