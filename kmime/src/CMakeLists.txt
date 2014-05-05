@@ -59,6 +59,7 @@ ecm_generate_headers(KMime_CamelCase_HEADERS
   KMime_Codecs
   KMime_Util
   KMime_Dateformatter
+  KMime_Header_Parsing
   PREFIX KMime
 
   REQUIRED_HEADERS KMime_HEADERS
