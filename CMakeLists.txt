@@ -2,6 +2,53 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(kdepimlibs)
 
+option(KDEPIMLIBS_SUPERBUILD "Build standalone lib" FALSE)
+
+if (KDEPIMLIBS_SUPERBUILD)
+
+# Remove it when splitted
+
+# This CMakeLists.txt is a "superbuild" for the frameworks.
+# This means it can be used to build them all standalone one-by-one.
+# This is useful to compile all them with one command.
+
+# use mkdir build && cd build && cmake -DKDEPIMLIBS_SUPERBUILD=TRUE ../ && make -j8 sb_all
+
+include(SuperBuild.cmake)
+
+sb_add_project(kmime)
+sb_add_project(kabc)
+sb_add_project(kcalcore)
+sb_add_project(syndication)
+sb_add_project(kxmlrpcclient)
+sb_add_project(kholidays)
+###############################
+sb_add_project(kimap)
+sb_add_project(kpimtextedit)
+sb_add_project(kpimutils)
+sb_add_project(akonadi)
+sb_add_project(akonadi-kmime)
+sb_add_project(akonadi-calendar)
+sb_add_project(akonadi-contact)
+sb_add_project(akonadi-notes)
+sb_add_project(akonadi-socialutils)
+sb_add_project(kpimidentities)
+sb_add_project(kcalutils)
+sb_add_project(kmbox)
+sb_add_project(kblog)
+sb_add_project(microblog)
+sb_add_project(kalarmcal)
+sb_add_project(gpgme++)
+sb_add_project(qgpgme)
+sb_add_project(kioslave)
+sb_add_project(kldap)
+sb_add_project(ktnef)
+sb_add_project(mailtransport)
+sb_add_project(kontactinterface)
+
+sb_end()
+else(KDEPIMLIBS_SUPERBUILD)
+
 # Uncomment when one of these subdir is building
 
 # These subdirectories don't depend on anything from kdepimlibs.
@@ -40,6 +87,8 @@ feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
 )
+
+endif()
 
 # TODO Delete the following block when everything is done
 if(FALSE)
