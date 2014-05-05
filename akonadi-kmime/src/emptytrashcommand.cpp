@@ -31,7 +31,7 @@
 #include <itemfetchjob.h>
 #include <itemdeletejob.h>
 #include <agentmanager.h>
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel *model, QObject *parent)
     : CommandBase(parent)

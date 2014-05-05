@@ -21,7 +21,7 @@
 
 #include <klocalizedstring.h>
 #include <kdatetime.h>
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <qdebug.h>
 
 #include <qstring.h>

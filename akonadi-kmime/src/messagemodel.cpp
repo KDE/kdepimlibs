@@ -24,7 +24,7 @@
 #include <monitor.h>
 #include <session.h>
 
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <boost/shared_ptr.hpp>
 typedef boost::shared_ptr<KMime::Message> MessagePtr;

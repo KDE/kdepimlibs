@@ -24,7 +24,7 @@
 #include <QDebug>
 
 #include <KDateTime>
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 using namespace Akonadi::NoteUtils;
 class NotesTest : public QObject

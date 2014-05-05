@@ -41,7 +41,7 @@
 #include <subscriptiondialog.h>
 
 #include <messagestatus.h>
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

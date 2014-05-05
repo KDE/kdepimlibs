@@ -26,7 +26,7 @@
 #include <itemdeletejob.h>
 #include <itemfetchscope.h>
 
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <KLocalizedString>
 
