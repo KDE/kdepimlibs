@@ -37,13 +37,13 @@
 #include "ktnefmessage.h"
 #include "ktnefdefs.h"
 
-#include <email.h>
-#include <phonenumber.h>
-#include <vcardconverter.h>
+#include <kpimutils/email.h>
+#include <kabc/phonenumber.h>
+#include <kabc/vcardconverter.h>
 
-#include <calendar.h>
-#include <icalformat.h>
-#include <incidenceformatter.h>
+#include <kcalcore/calendar.h>
+#include <kcalcore/icalformat.h>
+#include <kcalutils/incidenceformatter.h>
 
 #include <klocalizedstring.h>
 #include <kdatetime.h>

@@ -36,7 +36,7 @@
 #include <collection.h>
 #include <addressattribute.h>
 
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
 namespace MailTransport {

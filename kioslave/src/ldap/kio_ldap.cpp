@@ -25,7 +25,6 @@
 
 #include <kldap/ldif.h>
 #include <kldap/ldapcontrol.h>
-#include <ldapdefs.h>
 
 #include <kdebug.h>
 #include <kcomponentdata.h>

@@ -25,7 +25,7 @@
 #include <kio/slavebase.h>
 #include <kio/authinfo.h>
 
-#include <ldapdefs.h>
+#include <kldap/ldapdefs.h>
 #include <kldap/ldapurl.h>
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapconnection.h>

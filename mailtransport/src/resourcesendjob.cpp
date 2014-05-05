@@ -25,7 +25,7 @@
 #include <QDBusConnectionInterface>
 
 
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <collection.h>
 #include <itemcreatejob.h>

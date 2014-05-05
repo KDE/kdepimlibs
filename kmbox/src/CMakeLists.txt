@@ -16,7 +16,7 @@ target_include_directories(KF5Mbox PUBLIC "$<BUILD_INTERFACE:${KMbox_SOURCE_DIR}
 target_link_libraries(KF5Mbox
    PUBLIC
     KF5::CoreAddons
-    KF5::Mime
+    KF5::Mime 
 )
 
 set_target_properties(KF5Mbox PROPERTIES

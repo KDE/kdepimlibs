@@ -51,6 +51,20 @@ set_target_properties(KF5Mime PROPERTIES
 
 install(TARGETS KF5Mime EXPORT KF5MimeTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
+# Don't install them but needed to compile kdepimlibs
+ecm_generate_headers(KMime_CamelCase_HEADERS
+  HEADER_NAMES
+  KMime_Content
+  KMime_Message
+  KMime_Codecs
+  KMime_Util
+  KMime_Dateformatter
+  PREFIX KMime
+
+  REQUIRED_HEADERS KMime_HEADERS
+)
+
+
 install(FILES
          boolflags.h
          ${KMime_BINARY_DIR}/src/kmime_export.h
