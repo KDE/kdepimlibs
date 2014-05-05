@@ -26,11 +26,11 @@
 #include <kio/authinfo.h>
 
 #include <ldapdefs.h>
-#include <KLDAP/ldapurl.h>
-#include <KLDAP/ldapcontrol.h>
-#include <KLDAP/ldapconnection.h>
-#include <KLDAP/ldapdn.h>
-#include <KLDAP/ldapoperation.h>
+#include <kldap/ldapurl.h>
+#include <kldap/ldapcontrol.h>
+#include <kldap/ldapconnection.h>
+#include <kldap/ldapdn.h>
+#include <kldap/ldapoperation.h>
 
 class LDAPProtocol : public KIO::SlaveBase
 {
