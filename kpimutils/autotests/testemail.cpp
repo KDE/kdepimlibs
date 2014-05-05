@@ -21,7 +21,7 @@
 
 #include "testemail.h"
 
-#include "email.h"
+#include "kpimutils/email.h"
 
 #include <qdebug.h>
 
