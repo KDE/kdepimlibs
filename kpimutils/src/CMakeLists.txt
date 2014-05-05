@@ -48,11 +48,17 @@ ecm_generate_headers(KPimUtils_CamelCase_HEADERS
 )
 
 install(FILES
+    ${KPimUtils_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils/KPIMUtils/
+    COMPONENT Devel
+)
+
+
+install(FILES
   ${KPimUtils_BINARY_DIR}/src/kpimutils_export.h
   ${KPimUtils_HEADERS}
   emailvalidator.h
   processes.h
-    ${KPimUtils_CamelCase_HEADERS}
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils/kpimutils
     COMPONENT Devel
 )

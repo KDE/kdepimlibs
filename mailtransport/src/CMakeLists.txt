@@ -150,6 +150,9 @@ ecm_generate_headers(MailTransport_CamelCase_HEADERS
 
 install(FILES
   ${MailTransport_CamelCase_HEADERS}
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MailTransport/MailTransport/ COMPONENT Devel ) 
+
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_export.h
   ${MailTransport_HEADERS}
   transportjob.h

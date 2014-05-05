@@ -37,9 +37,15 @@ ecm_generate_headers(KMbox_CamelCase_HEADERS
 )
 
 install(FILES
+    ${KMbox_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMbox/KMbox/
+    COMPONENT Devel
+)
+
+
+install(FILES
   ${KMbox_BINARY_DIR}/src/kmbox_export.h
   ${KMbox_HEADERS}
-    ${KMbox_CamelCase_HEADERS}
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMbox/kmbox
     COMPONENT Devel
 )

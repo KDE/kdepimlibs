@@ -8,7 +8,7 @@ generate_export_header(KF5MicroBlog BASE_NAME microblog)
 
 add_library(KF5::MicroBlog ALIAS KF5MicroBlog)
 
-target_include_directories(KF5MicroBlog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/MicroBlog>")
+target_include_directories(KF5MicroBlog INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/MicroBlog;INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/MicroBlog/microblog>")
 target_include_directories(KF5MicroBlog PUBLIC "$<BUILD_INTERFACE:${MicroBlog_SOURCE_DIR}/src;${MicroBlog_BINARY_DIR}/src>")
 
 target_link_libraries(KF5MicroBlog
@@ -34,11 +34,12 @@ ecm_generate_headers(MicroBlog_CamelCase_HEADERS
 
 ########### install files ###############
 
+install(FILES ${MicroBlog_CamelCase_HEADERS} DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MicroBlog/MicroBlog/)
+
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/microblog_export.h
     ${MicroBlog_HEADERS}
-    ${MicroBlog_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MicroBlog
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MicroBlog/microblog/
     COMPONENT Devel
 )
 
