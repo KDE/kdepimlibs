@@ -96,9 +96,10 @@ public:
     Item item() const;
 
     enum MergeIdentifier {
-      NoMerge,
-      RID,
-      GID
+      NoMerge = 0,
+      RID     = 1,
+      GID     = 2,
+      Silent  = 4
     };
     Q_DECLARE_FLAGS(MergeIdentifiers, MergeIdentifier)
 

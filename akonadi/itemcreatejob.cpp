@@ -120,6 +120,7 @@ void ItemCreateJob::doStart()
     }
     const bool mergeByGid = (d->mMergeIdentifier & GID) && !d->mItem.gid().isEmpty();
     const bool mergeByRid = (d->mMergeIdentifier & RID) && !d->mItem.remoteId().isEmpty();
+    const bool mergeSilent = (d->mMergeIdentifier & Silent);
     const bool merge = mergeByGid || mergeByRid;
     if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
         flags += d->mItem.flags().toList();
@@ -146,14 +147,17 @@ void ItemCreateJob::doStart()
 
     QByteArray command = d->newTag();
     if (merge) {
-        command += " MERGE (";
+        QList<QByteArray> mergeArgs;
         if (mergeByGid) {
-            command += "GID ";
+            mergeArgs << "GID";
         }
         if (mergeByRid) {
-            command += "REMOTEID";
+            mergeArgs << "REMOTEID";
         }
-        command += ") ";
+        if (mergeSilent) {
+            mergeArgs << "SILENT";
+        }
+        command += " MERGE (" + ImapParser::join(mergeArgs, " ") + ") ";
     } else {
         command += " X-AKAPPEND ";
     }
@@ -175,7 +179,6 @@ void ItemCreateJob::doStart()
 void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &data)
 {
     Q_D(ItemCreateJob);
-
     if (tag == "+") {   // ready for literal data
         d->writeData(d->mPendingData);
         d->writeData(d->nextPartHeader());

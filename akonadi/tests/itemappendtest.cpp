@@ -122,7 +122,9 @@ void ItemAppendTest::testContent()
 
   Item item;
   item.setMimeType( "application/octet-stream" );
-  item.setPayload( data );
+  if ( !data.isNull() ) {
+    item.setPayload( data );
+  }
 
   ItemCreateJob* job = new ItemCreateJob( item, testFolder1, this );
   AKVERIFYEXEC( job );
@@ -135,7 +137,7 @@ void ItemAppendTest::testContent()
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
   //akonadi does not distinguish empty and no payload
-  QCOMPARE( item2.hasPayload(), !data.isEmpty() );
+  QCOMPARE( item2.hasPayload(), !data.isNull() );
   if( item2.hasPayload() ) {
     QCOMPARE( item2.payload<QByteArray>(), data );
   }
@@ -270,6 +272,7 @@ void ItemAppendTest::testItemMerge_data()
   QTest::addColumn<Akonadi::Item>( "item1" );
   QTest::addColumn<Akonadi::Item>( "item2" );
   QTest::addColumn<Akonadi::Item>( "mergedItem" );
+  QTest::addColumn<bool>( "silent" );
 
   {
     Item i1( "application/octet-stream" );
@@ -291,7 +294,8 @@ void ItemAppendTest::testItemMerge_data()
     Item mergedItem( i2 );
     mergedItem.setFlag( "TestFlag1" );
 
-    QTest::newRow( "merge" ) << i1 << i2 << mergedItem;
+    QTest::newRow( "merge" ) << i1 << i2 << mergedItem << false;
+    QTest::newRow( "merge (silent)" ) << i1 << i2 << mergedItem << true;
   }
   {
     Item i1( "application/octet-stream" );
@@ -312,7 +316,8 @@ void ItemAppendTest::testItemMerge_data()
     mergedItem.setFlags( i2.flags() );
     mergedItem.setRemoteRevision( i2.remoteRevision() );
 
-    QTest::newRow( "overwrite flags, and don't remove existing payload" ) << i1 << i2 << mergedItem;
+    QTest::newRow( "overwrite flags, and don't remove existing payload" ) << i1 << i2 << mergedItem << false;
+    QTest::newRow( "overwrite flags, and don't remove existing payload (silent)" ) << i1 << i2 << mergedItem << true;
   }
 }
 
@@ -321,22 +326,38 @@ void ItemAppendTest::testItemMerge()
   QFETCH( Akonadi::Item, item1 );
   QFETCH( Akonadi::Item, item2 );
   QFETCH( Akonadi::Item, mergedItem );
+  QFETCH( bool, silent );
 
   const Collection col( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( col.isValid() );
 
   ItemCreateJob *create = new ItemCreateJob( item1, col, this );
   AKVERIFYEXEC( create );
+  const Item createdItem = create->item();
 
   ItemCreateJob *merge = new ItemCreateJob( item2, col, this );
-  merge->setMergeByIdentifier( ItemCreateJob::GID | ItemCreateJob::RID );
+  ItemCreateJob::MergeIdentifiers identifiers = ItemCreateJob::GID | ItemCreateJob::RID;
+  if ( silent ) {
+    identifiers |= ItemCreateJob::Silent;
+  }
+  merge->setMergeByIdentifier( identifiers );
   AKVERIFYEXEC( merge );
 
-  QCOMPARE( merge->item().gid(), mergedItem.gid() );
-  QCOMPARE( merge->item().remoteId(), mergedItem.remoteId() );
-  QCOMPARE( merge->item().remoteRevision(), mergedItem.remoteRevision() );
-  QCOMPARE( merge->item().payloadData(), mergedItem.payloadData() );
-  QCOMPARE( merge->item().size(), mergedItem.size() );
-  QCOMPARE( merge->item().flags(), mergedItem.flags() );
+  QCOMPARE( merge->item().id(), createdItem.id() );
+  if ( !silent ) {
+    QCOMPARE( merge->item().gid(), mergedItem.gid() );
+    QCOMPARE( merge->item().remoteId(), mergedItem.remoteId() );
+    QCOMPARE( merge->item().remoteRevision(), mergedItem.remoteRevision() );
+    QCOMPARE( merge->item().payloadData(), mergedItem.payloadData() );
+    QCOMPARE( merge->item().size(), mergedItem.size() );
+    QCOMPARE( merge->item().flags(), mergedItem.flags() );
+  }
+
+  if ( merge->item().id() != createdItem.id() ) {
+    ItemDeleteJob *del = new ItemDeleteJob( merge->item(), this );
+    AKVERIFYEXEC( del );
+  }
+  ItemDeleteJob *del = new ItemDeleteJob( createdItem, this );
+  AKVERIFYEXEC( del );
 }
 
