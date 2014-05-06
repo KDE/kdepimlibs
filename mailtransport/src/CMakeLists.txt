@@ -156,30 +156,8 @@ install(FILES
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/mailtransport_export.h
   ${MailTransport_HEADERS}
-  transportjob.h
-  sendmailjob.h
-  smtpjob.h
-  precommandjob.h
-  socket.h
-
   ${CMAKE_CURRENT_BINARY_DIR}/transportbase.h
-  transport.h
-  transportmanager.h
-  transporttype.h
-  servertest.h
-
-  transportcombobox.h
-  transportconfigdialog.h
-  transportmanagementwidget.h
-
-  dispatcherinterface.h
-  messagequeuejob.h
-
-  dispatchmodeattribute.h
-  errorattribute.h
   sentactionattribute.h
-  sentbehaviourattribute.h
-  transportattribute.h
 
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/MailTransport/mailtransport COMPONENT Devel
 )

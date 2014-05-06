@@ -40,7 +40,6 @@ ecm_generate_headers(AkonadiNotes_CamelCase_HEADERS
 )
 
 install(FILES
-  noteutils.h
   ${AkonadiNotes_HEADERS}
   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
     ${AkonadiNotes_CamelCase_HEADERS}
