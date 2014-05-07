@@ -1,34 +1,10 @@
 # Turn exceptions on
 kde_enable_exceptions()
 
-option(MAILTRANSPORT_INPROCESS_SMTP "false" "Use in-process SMTP instead of KIO slaves (note that this changes the mailtransport license from LGPL to GPL!)")
-
 add_subdirectory(kconf_update)
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
-add_definitions(-DUSES_DEPRECATED_MAILTRANSPORT_API) # for transportmanager
-add_definitions(
-  -DMAILTRANSPORT_DEPRECATED=
-)
-# This one won't be needed when CMake 2.8.13 is depended on.
-add_definitions(
-  -DMAILTRANSPORT_DEPRECATED_EXPORT=MAILTRANSPORT_EXPORT
-)
 
-
-if(MAILTRANSPORT_INPROCESS_SMTP)
-  add_definitions("-DMAILTRANSPORT_INPROCESS_SMTP")
-  include_directories(${Sasl2_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/kioslave)
-  set(mailtransport_lib_srcs
-    ../kioslave/smtp/command.cpp
-    ../kioslave/smtp/capabilities.cpp
-    ../kioslave/smtp/request.cpp
-    ../kioslave/smtp/response.cpp
-    ../kioslave/smtp/transactionstate.cpp
-    ../kioslave/smtp/smtpsessioninterface.cpp
-    smtp/smtpsession.cpp
-  )
-endif()
 
 set(mailtransport_lib_srcs
   ${mailtransport_lib_srcs}
