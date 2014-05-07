@@ -1,26 +1,4 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(kdepimlibs)
-
-# where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-
-############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
-set(KDEPIMLIBS_VERSION_MAJOR 4)
-set(KDEPIMLIBS_VERSION_MINOR 13)
-set(KDEPIMLIBS_VERSION_PATCH 46)
-set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
-
-
-############### search packages used by KDE ###############
-
-set (QT_MIN_VERSION "4.8.0")
-# kdepim depends on the latest released version of kdelibs, ie. 4.x kdepim depends on 4.x-1 kdelibs
-find_package(KDE4 4.12.0 REQUIRED)
-include(KDE4Defaults)
-include(MacroLibrary)
-include(KDEPlatformProfile)
-include(FeatureSummary)
 
 project(kdepimlibs)
 
