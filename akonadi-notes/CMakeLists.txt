@@ -35,6 +35,8 @@ endif()
 
 ########### Targets ###########
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadinotes\")
+
 add_subdirectory(src)
 add_subdirectory(autotests)
 

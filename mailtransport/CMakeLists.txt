@@ -16,7 +16,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
-
+add_definitions(-DTRANSLATION_DOMAIN=\"libmailtransport\")
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5324)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?

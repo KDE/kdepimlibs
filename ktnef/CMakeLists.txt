@@ -17,6 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 
+
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "4.98.0")
 
@@ -69,7 +70,7 @@ install(FILES
 
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
-
+add_definitions(-DTRANSLATION_DOMAIN=\"libktnef\")
 add_subdirectory(src)
 add_subdirectory(autotests)
 

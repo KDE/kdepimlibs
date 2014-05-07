@@ -44,6 +44,8 @@ set_package_properties(LibXslt PROPERTIES
 
 ########### Targets ###########
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi-kmime\")
+
 add_subdirectory(src)
 # TODO: Port autotests
 #add_subdirectory(autotests)
