@@ -58,12 +58,13 @@ set(akonadikmime_SRCS
 add_resource_iface(imapresource.kcfg
     org.kde.Akonadi.Imap.Settings ImapSettings)
 
-if (KDE4_BUILD_TESTS)
-    set(akonadikmime_SRCS
-        ${akonadikmime_SRCS}
-        specialmailcollectionstesting.cpp
-    )
-endif()
+#REACTIVATE
+#if (KDE4_BUILD_TESTS)
+#    set(akonadikmime_SRCS
+#        ${akonadikmime_SRCS}
+#        specialmailcollectionstesting.cpp
+#    )
+#endif()
 
 KCONFIG_ADD_KCFG_FILES(akonadikmime_SRCS
     specialmailcollectionssettings.kcfgc
