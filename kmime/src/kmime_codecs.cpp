@@ -40,7 +40,7 @@
 #include "kautodeletehash.h"
 
 #include <kascii.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMutex>
@@ -97,7 +97,7 @@ Codec *Codec::codecForName( const QByteArray &name )
   dictLock->unlock();
 
   if ( !codec ) {
-    kDebug() << "Unknown codec \"" << name << "\" requested!";
+    qDebug() << "Unknown codec \"" << name << "\" requested!";
   }
 
   return codec;
@@ -146,7 +146,7 @@ QByteArray Codec::encode( const QByteArray &src, bool withCRLF ) const
 
   // encode
   if ( !encode( iit, iend, oit, oend, withCRLF ) ) {
-    kFatal() << name() << "codec lies about it's mEncodedSizeFor()";
+    qCritical() << name() << "codec lies about it's mEncodedSizeFor()";
   }
 
   // shrink result to actual size:
@@ -169,7 +169,7 @@ QByteArray Codec::decode( const QByteArray &src, bool withCRLF ) const
 
   // decode
   if ( !decode( iit, iend, oit, oend, withCRLF ) ) {
-    kFatal() << name() << "codec lies about it's maxDecodedSizeFor()";
+    qCritical() << name() << "codec lies about it's maxDecodedSizeFor()";
   }
 
   // shrink result to actual size:
