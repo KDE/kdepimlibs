@@ -37,8 +37,6 @@
 
 #include <kglobal.h>
 
-static const KCatalogLoader loader( QLatin1String("libkpimutils") );
-
 using namespace KPIMUtils;
 
 //-----------------------------------------------------------------------------
