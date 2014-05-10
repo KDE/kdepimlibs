@@ -42,6 +42,7 @@
 #include <kglobal.h>
 #include <klocalizedstring.h>
 #include <kcalendarsystem.h>
+#include <KLocale>
 
 using namespace KMime;
 
@@ -219,7 +220,7 @@ time_t DateFormatter::qdateToTimeT( const QDateTime &dt ) const
 
 QString DateFormatter::fancy( time_t t ) const
 {
-  KLocale *locale = KGlobal::locale();
+  KLocale *locale = KLocale::global();
 
   if ( t <= 0 ) {
     return i18nc( "invalid time specified", "unknown" );
@@ -263,7 +264,7 @@ QString DateFormatter::localized( time_t t, bool shortFormat, bool includeSecs,
 {
   QDateTime tmp;
   QString ret;
-  KLocale *locale = KGlobal::locale();
+  KLocale *locale = KLocale::global();
 
   tmp.setTime_t( t );
 

@@ -47,6 +47,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <KLocale>
 
 using namespace KMime;
 
@@ -278,7 +279,7 @@ QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
   QByteArray usedCS;
   if ( !ok ) {
     //no codec available => try local8Bit and hope the best ;-)
-    usedCS = KGlobal::locale()->encoding();
+    usedCS = KLocale::global()->encoding();
     codec = KCharsets::charsets()->codecForName( QString::fromLatin1( usedCS ), ok );
   } else {
     Q_ASSERT( codec );

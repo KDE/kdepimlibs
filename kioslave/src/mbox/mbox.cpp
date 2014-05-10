@@ -32,6 +32,7 @@
 #include <kio/global.h>
 
 #include <stdlib.h>
+#include <KLocale>
 
 #include "kdemacros.h"
 
@@ -40,7 +41,7 @@ extern "C" { KDE_EXPORT int kdemain(int argc, char* argv[]); }
 int kdemain( int argc, char * argv[] )
 {
     KComponentData instance("kio_mbox", "kdelibs4");
-    (void) KGlobal::locale();
+    (void) KLocale::global();
 
     if (argc != 4) {
         fprintf(stderr, "Usage: kio_mbox protocol "

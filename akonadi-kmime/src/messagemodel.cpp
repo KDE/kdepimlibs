@@ -35,6 +35,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 #include <klocalizedstring.h>
 
 #include <QtCore/QDebug>
+#include <KLocale>
 
 using namespace Akonadi;
 
@@ -121,12 +122,12 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         case Receiver:
             return msg->to()->asUnicodeString();
         case Date:
-            return KGlobal::locale()->formatDateTime(msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate);
+            return KLocale::global()->formatDateTime(msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate);
         case Size:
             if (item.size() == 0) {
                 return i18nc("@label No size available", "-");
             } else {
-                return KGlobal::locale()->formatByteSize(item.size());
+                return KLocale::global()->formatByteSize(item.size());
             }
         default:
             return QVariant();

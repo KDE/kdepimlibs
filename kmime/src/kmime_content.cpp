@@ -53,6 +53,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
+#include <KLocale>
 
 using namespace KMime;
 
@@ -434,8 +435,8 @@ QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
   QTextCodec *codec =
     KCharsets::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
   if ( !ok  || codec == NULL ) { // no suitable codec found => try local settings and hope the best ;-)
-    codec = KGlobal::locale()->codecForEncoding();
-    QByteArray chset = KGlobal::locale()->encoding();
+    codec = KLocale::global()->codecForEncoding();
+    QByteArray chset = KLocale::global()->encoding();
     contentType()->setCharset( chset );
   }
 
@@ -472,8 +473,8 @@ void Content::fromUnicodeString( const QString &s )
     KCharsets::charsets()->codecForName( QLatin1String( contentType()->charset() ), ok );
 
   if ( !ok ) { // no suitable codec found => try local settings and hope the best ;-)
-    codec = KGlobal::locale()->codecForEncoding();
-    QByteArray chset = KGlobal::locale()->encoding();
+    codec = KLocale::global()->codecForEncoding();
+    QByteArray chset = KLocale::global()->encoding();
     contentType()->setCharset( chset );
   }
 
