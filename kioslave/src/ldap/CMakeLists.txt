@@ -1,5 +1,5 @@
 
-set(kio_ldap_PART_SRCS kio_ldap.cpp)
+set(kio_ldap_PART_SRCS kio_ldap.cpp kldap_debug.cpp)
 
 
 add_library(kio_ldap MODULE ${kio_ldap_PART_SRCS})
