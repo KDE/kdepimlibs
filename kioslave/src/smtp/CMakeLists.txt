@@ -26,6 +26,7 @@ set(kio_smtp_PART_SRCS
    transactionstate.cpp
    smtpsessioninterface.cpp
    kioslavesession.cpp
+   smtp_debug.cpp
 )
 
 

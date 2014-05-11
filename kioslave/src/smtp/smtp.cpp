@@ -29,6 +29,7 @@
  */
 
 #include "smtp.h"
+#include "smtp_debug.h"
 
 extern "C" {
 #include <sasl/sasl.h>
@@ -56,6 +57,7 @@ using KioSMTP::SMTPSessionInterface;
 #include <kemailsettings.h>
 
 #include <kdebug.h>
+#include <QDebug>
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>
@@ -102,11 +104,11 @@ SMTPProtocol::SMTPProtocol(const QByteArray & pool, const QByteArray & app,
    m_opened(false),
    m_sessionIface( new KioSMTP::KioSlaveSession( this ) )
 {
-  //kDebug(7112) << "SMTPProtocol::SMTPProtocol";
+  //qCDebug(SMTP_LOG) << "SMTPProtocol::SMTPProtocol";
 }
 
 SMTPProtocol::~SMTPProtocol() {
-  //kDebug(7112) << "SMTPProtocol::~SMTPProtocol";
+  //qCDebug(SMTP_LOG) << "SMTPProtocol::~SMTPProtocol";
   smtp_close();
   delete m_sessionIface;
 }
@@ -166,7 +168,7 @@ void SMTPProtocol::put(const QUrl & url, int /*permissions */ ,
   KEMailSettings mset;
   QUrl open_url = url;
   if ( !request.hasProfile() ) {
-    //kDebug(7112) << "kio_smtp: Profile is null";
+    //qCDebug(SMTP_LOG) << "kio_smtp: Profile is null";
     bool hasProfile = mset.profiles().contains( open_url.host() );
     if ( hasProfile ) {
       mset.setProfile(open_url.host());
@@ -255,12 +257,12 @@ bool SMTPProtocol::sendCommandLine( const QByteArray & cmdline ) {
   //kDebug( cmdline.length() < 4096, 7112) << "C: " << cmdline.data();
   //kDebug( cmdline.length() >= 4096, 7112) << "C: <" << cmdline.length() << " bytes>";
   if ( cmdline.length() < 4096 )
-    kDebug(7112) << "C: >>" << cmdline.trimmed().data() << "<<";
+    qCDebug(SMTP_LOG) << "C: >>" << cmdline.trimmed().data() << "<<";
   else
-    kDebug(7112) << "C: <" << cmdline.length() << " bytes>";
+    qCDebug(SMTP_LOG) << "C: <" << cmdline.length() << " bytes>";
   ssize_t numWritten, cmdline_len = cmdline.length();
   if ( (numWritten = write( cmdline.data(), cmdline_len ) )!= cmdline_len ) {
-    kDebug(7112) << "Tried to write " << cmdline_len << " bytes, but only "
+    qCDebug(SMTP_LOG) << "Tried to write " << cmdline_len << " bytes, but only "
                  << numWritten << " were written!" << endl;
     error( KIO::ERR_SLAVE_DEFINED, i18n ("Writing to socket failed.") );
     return false;
@@ -291,7 +293,7 @@ Response SMTPProtocol::getResponse( bool * ok ) {
       return response;
     }
 
-    kDebug(7112) << "S: >>" << QByteArray( buf, recv_len ).trimmed().data() << "<<";
+    qCDebug(SMTP_LOG) << "S: >>" << QByteArray( buf, recv_len ).trimmed().data() << "<<";
     // ...and parse lines...
     response.parseLine( buf, recv_len );
 
@@ -590,7 +592,7 @@ void SMTPProtocol::smtp_close( bool nice ) {
 
   if ( nice )
     execute( Command::QUIT );
-  kDebug( 7112 ) << "closing connection";
+  qCDebug(SMTP_LOG) << "closing connection";
   disconnectFromHost();
   m_sOldServer.clear();
   m_sOldUser.clear();

@@ -30,6 +30,7 @@
 */
 
 #include "command.h"
+#include "smtp_debug.h"
 
 #include "smtpsessioninterface.h"
 #include "response.h"
@@ -37,6 +38,7 @@
 
 #include <klocalizedstring.h>
 #include <kdebug.h>
+#include <QDebug>
 #include <kio/slavebase.h> // for test_commands, where SMTPProtocol is not derived from TCPSlaveBase
 
 #include <QtCore/QUrl>
@@ -166,7 +168,7 @@ static sasl_callback_t callbacks[] = {
     if (startSsl()) {
       return true;
     } else {
-      //kDebug(7112) << "TLS negotiation failed!";
+      //qCDebug(SMTP_LOG) << "TLS negotiation failed!";
       mSMTP->informationMessageBox(
                          i18n("Your SMTP server claims to "
                              "support TLS, but negotiation "
@@ -221,13 +223,13 @@ static sasl_callback_t callbacks[] = {
       return;
     }
     if ( result == SASL_OK ) mOneStep = true;
-    kDebug(7112) << "Mechanism: " << mMechusing << " one step: " << mOneStep;
+    qCDebug(SMTP_LOG) << "Mechanism: " << mMechusing << " one step: " << mOneStep;
   }
 
   AuthCommand::~AuthCommand()
   {
     if ( conn ) {
-      kDebug(7112) << "dispose sasl connection";
+      qCDebug(SMTP_LOG) << "dispose sasl connection";
       sasl_dispose( &conn );
       conn = 0;
     }
@@ -235,7 +237,7 @@ static sasl_callback_t callbacks[] = {
 
   bool AuthCommand::saslInteract( void *in )
   {
-    kDebug(7112) << "saslInteract: ";
+    qCDebug(SMTP_LOG) << "saslInteract: ";
     sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
     //some mechanisms do not require username && pass, so don't need a popup
@@ -259,14 +261,14 @@ static sasl_callback_t callbacks[] = {
       switch( interact->id ) {
         case SASL_CB_USER:
         case SASL_CB_AUTHNAME: {
-          kDebug(7112) << "SASL_CB_[USER|AUTHNAME]: " << mAi->username;
+          qCDebug(SMTP_LOG) << "SASL_CB_[USER|AUTHNAME]: " << mAi->username;
           const QByteArray baUserName = mAi->username.toUtf8();
           interact->result = strdup( baUserName.constData() );
           interact->len = strlen( (const char *) interact->result );
         }
           break;
         case SASL_CB_PASS: {
-          kDebug(7112) << "SASL_CB_PASS: [HIDDEN]";
+          qCDebug(SMTP_LOG) << "SASL_CB_PASS: [HIDDEN]";
           const QByteArray baPassword = mAi->password.toUtf8();
           interact->result = strdup( baPassword.constData() );
           interact->len = strlen( (const char *) interact->result );
@@ -311,7 +313,7 @@ static sasl_callback_t callbacks[] = {
 
       if ( mOneStep ) mComplete = true;
     } else {
-//      kDebug(7112) << "SS: '" << mLastChallenge << "'";
+//      qCDebug(SMTP_LOG) << "SS: '" << mLastChallenge << "'";
       challenge = QByteArray::fromBase64( mLastChallenge );
       int result;
       do {
@@ -325,13 +327,13 @@ static sasl_callback_t callbacks[] = {
           };
       } while ( result == SASL_INTERACT );
       if ( result != SASL_CONTINUE && result != SASL_OK ) {
-        kDebug(7112) << "sasl_client_step failed with: " << result;
+        qCDebug(SMTP_LOG) << "sasl_client_step failed with: " << result;
         SASLERROR
         return "";
       }
       cmd = QByteArray::fromRawData( mOut, mOutlen ).toBase64();
 
-//      kDebug(7112) << "CC: '" << cmd << "'";
+//      qCDebug(SMTP_LOG) << "CC: '" << cmd << "'";
       mComplete = ( result == SASL_OK );
     }
     cmd += "\r\n";
@@ -483,11 +485,11 @@ static sasl_callback_t callbacks[] = {
 
     // normal processing:
 
-    kDebug(7112) << "requesting data";
+    qCDebug(SMTP_LOG) << "requesting data";
     mSMTP->dataReq();
     QByteArray ba;
     int result = mSMTP->readData( ba );
-    kDebug(7112) << "got " << result << " bytes";
+    qCDebug(SMTP_LOG) << "got " << result << " bytes";
     if ( result > 0 )
       return prepare( ba );
     else if ( result < 0 ) {
@@ -539,7 +541,7 @@ static sasl_callback_t callbacks[] = {
     if ( ba.isEmpty() )
       return 0;
     if ( mSMTP->lf2crlfAndDotStuffingRequested() ) {
-      kDebug(7112) << "performing dotstuffing and LF->CRLF transformation";
+      qCDebug(SMTP_LOG) << "performing dotstuffing and LF->CRLF transformation";
       return dotstuff_lf2crlf( ba, mLastChar );
     } else {
       mLastChar = ba[ ba.size() - 1 ];

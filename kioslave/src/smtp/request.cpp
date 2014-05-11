@@ -30,10 +30,12 @@
 */
 
 #include "request.h"
+#include "smtp_debug.h"
 
 #include <kurl.h>
 #include <QtCore/QUrl>
 #include <kdebug.h>
+#include <QDebug>
 
 #include <assert.h>
 
@@ -44,7 +46,7 @@ namespace KioSMTP {
 
     const QStringList query = url.query().mid(1).split( QLatin1Char('&') );
 #ifndef NDEBUG
-    kDebug(7112) << "Parsing request from query:\n" << query.join( QLatin1String("\n") );
+    qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join( QLatin1String("\n") );
 #endif
     for ( QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it ) {
       int equalsPos = (*it).indexOf( QLatin1Char('=') );
@@ -77,7 +79,7 @@ namespace KioSMTP {
       else if ( key == QLatin1String("size") )
         request.setSize( value.toUInt() );
       else
-        kWarning(7112) << "while parsing query: unknown query item \""
+        qCWarning(SMTP_LOG) << "while parsing query: unknown query item \""
                        << key << "\" with value \"" << value << "\"" << endl;
     }
 
