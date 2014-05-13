@@ -2,7 +2,6 @@
 
 find_dependency(KF5AkonadiCore "@KF5_VERSION@")
 find_dependency(KF5KDELibs4Support "@KF5_VERSION@")
-find_dependency(KF5KIO "@KF5_VERSION@")
 find_dependency(KF5Mime "@KF5_VERSION@"
 
 

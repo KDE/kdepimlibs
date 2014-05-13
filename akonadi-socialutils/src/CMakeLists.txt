@@ -25,8 +25,8 @@ target_include_directories(KF5AkonadiSocialUtils INTERFACE "$<INSTALL_INTERFACE:
 target_include_directories(KF5AkonadiSocialUtils PUBLIC "$<BUILD_INTERFACE:${Akonadi-SocialUtils_SOURCE_DIR}/src;${Akonadi-SocialUtils_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiSocialUtils
+PUBLIC
     KF5::AkonadiCore
-    KF5::AkonadiWidgets
     KF5::KIOCore
     KF5::CoreAddons
 )
