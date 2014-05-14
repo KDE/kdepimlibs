@@ -100,7 +100,7 @@ POP3Protocol::POP3Protocol(const QByteArray & pool, const QByteArray & app,
 :  TCPSlaveBase((isSSL ? "pop3s" : "pop3"), pool, app, isSSL)
 {
   kDebug(7105);
-  m_cmd = CMD_NONE;
+  //m_cmd = CMD_NONE;
   m_iOldPort = 0;
   m_tTimeout.tv_sec = 10;
   m_tTimeout.tv_usec = 0;
@@ -775,14 +775,14 @@ void POP3Protocol::get(const KUrl & url)
   if (path.isEmpty()) {
     kDebug(7105) << "We should be a dir!!";
     error(ERR_IS_DIRECTORY, url.url());
-    m_cmd = CMD_NONE;
+    //m_cmd = CMD_NONE;
     return;
   }
 
   if (((path.indexOf('/') == -1) && (path != "index") && (path != "uidl")
        && (path != "commit"))) {
     error(ERR_MALFORMED_URL, url.url());
-    m_cmd = CMD_NONE;
+    //m_cmd = CMD_NONE;
     return;
   }
 
@@ -846,7 +846,7 @@ void POP3Protocol::get(const KUrl & url)
       activeCommands--;
     }
     finished();
-    m_cmd = CMD_NONE;
+    //m_cmd = CMD_NONE;
   } else if (cmd == "download" || cmd == "headers") {
     const QStringList waitingCommands = path.split(',', QString::SkipEmptyParts);
     bool noProgress = (metaData("progress") == "off"
@@ -1020,7 +1020,7 @@ void POP3Protocol::get(const KUrl & url)
     kDebug(7105) << "Issued QUIT";
     closeConnection();
     finished();
-    m_cmd = CMD_NONE;
+    //m_cmd = CMD_NONE;
     return;
   }
 }

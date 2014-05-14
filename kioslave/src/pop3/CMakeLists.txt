@@ -3,9 +3,9 @@
 set(pop3_optional_includes)
 set(pop3_optional_libs)
 
-if(SASL2_FOUND)
-   set(pop3_optional_includes ${pop3_optional_includes} ${SASL2_INCLUDE_DIR})
-   set(pop3_optional_libs     ${pop3_optional_libs}     ${SASL2_LIBRARIES})
+if(Sasl2_FOUND)
+   set(pop3_optional_includes ${pop3_optional_includes} ${Sasl2_INCLUDE_DIR})
+   set(pop3_optional_libs     ${pop3_optional_libs}     ${Sasl2_LIBRARIES})
    set(HAVE_LIBSASL2 1)
 else()
    set(HAVE_LIBSASL2 0)
@@ -23,10 +23,10 @@ include_directories(  ${pop3_optional_includes}  )
 set(kio_pop3_PART_SRCS pop3.cpp )
 
 
-kde4_add_plugin(kio_pop3 ${kio_pop3_PART_SRCS})
+add_library(kio_pop3 MODULE ${kio_pop3_PART_SRCS})
 
 
-target_link_libraries(kio_pop3  ${KDE4_KIO_LIBS} ${pop3_optional_libs} ${KDE4_KDE4SUPPORT_LIBS})
+target_link_libraries(kio_pop3  KF5::KIOCore ${pop3_optional_libs} KF5::KDELibs4Support )
 
 install(TARGETS kio_pop3  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

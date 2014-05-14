@@ -6,6 +6,5 @@ add_subdirectory(nntp)
 add_subdirectory(sieve)
 add_subdirectory(smtp)
 
-# FIXME if kio_pop3 isn't needed anymore, just delete it.
-#add_subdirectory( pop3 ) #KIO::CMD_COMMAND is not public anymore
+add_subdirectory( pop3 ) 
 

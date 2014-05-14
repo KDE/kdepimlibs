@@ -118,7 +118,7 @@ protected:
    */
   bool loginPASS( KIO::AuthInfo &ai );
 
-  int m_cmd;
+  //int m_cmd;
   unsigned short int m_iOldPort;
   unsigned short int m_iPort;
   struct timeval m_tTimeout;
