@@ -26,7 +26,6 @@
 #include "kmime_export.h"
 #include "kmime_content.h"
 #include "kmime_headers.h"
-#include "boolflags.h"
 
 #include <QtCore/QMetaType>
 

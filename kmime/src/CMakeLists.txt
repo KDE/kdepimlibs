@@ -25,7 +25,6 @@ set(kmime_LIB_SRCS
    kmime_message.cpp
    kmime_newsarticle.cpp
    kmime_dateformatter.cpp
-   boolflags.cpp
    kautodeletehash.cpp)
 
 add_library(KF5Mime ${kmime_LIB_SRCS})
@@ -67,7 +66,6 @@ ecm_generate_headers(KMime_CamelCase_HEADERS
 
 
 install(FILES
-         boolflags.h
          ${KMime_BINARY_DIR}/src/kmime_export.h
          kmime_charfreq.h
          kmime_codecs.h
