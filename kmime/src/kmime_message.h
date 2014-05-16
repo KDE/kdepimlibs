@@ -100,24 +100,6 @@ class KMIME_EXPORT Message : public Content
     */
     ~Message();
 
-    /* reimpl */
-    virtual void parse();
-
-    /* reimpl */
-    virtual void clear();
-
-    /* reimpl */
-    virtual KMIME_DEPRECATED KMime::Headers::Base *getHeaderByType( const char *type );
-
-    /* reimpl */
-    virtual KMime::Headers::Base *headerByType( const char *type );
-
-    /* reimpl */
-    virtual void setHeader( KMime::Headers::Base *h );
-
-    /* reimpl */
-    virtual bool removeHeader( const char *type );
-
     // KDE5: Why are these virtual?
     /**
       Returns the Message-ID header.

@@ -45,12 +45,6 @@ Message::~Message()
 {
 }
 
-void Message::parse()
-{
-  // KDE5: remove this virtual reimplementation.
-  Content::parse();
-}
-
 QByteArray Message::assembleHeaders()
 {
   // Create the mandatory fields (RFC5322) if they do not exist already.
@@ -63,36 +57,6 @@ QByteArray Message::assembleHeaders()
 
   // Assemble all header fields.
   return Content::assembleHeaders();
-}
-
-void Message::clear()
-{
-  // KDE5: remove this virtual reimplementation.
-  Content::clear();
-}
-
-Headers::Base *Message::getHeaderByType( const char *type )
-{
-  // KDE5: remove this virtual reimplementation.
-  return headerByType( type );
-}
-
-Headers::Base *Message::headerByType( const char *type )
-{
-  // KDE5: remove this virtual reimplementation.
-  return Content::headerByType( type );
-}
-
-void Message::setHeader( Headers::Base *h )
-{
-  // KDE5: remove this virtual reimplementation.
-  Content::setHeader( h );
-}
-
-bool Message::removeHeader( const char *type )
-{
-  // KDE5: remove this virtual reimplementation.
-  return Content::removeHeader( type );
 }
 
 bool Message::isTopLevel() const
