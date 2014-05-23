@@ -79,7 +79,7 @@ endif()
 
 if (NOT KDEPIM_ONLY_KLEO)
   #FindAkonadi.cmake is only there for compatibility reasons, but we don't want to use that.
-  set(Akonadi_MIN_VERSION "1.12.44")
+  set(Akonadi_MIN_VERSION "1.12.45")
   find_package(Akonadi ${Akonadi_MIN_VERSION} QUIET NO_MODULE)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Access to PIM storage and services")
 
