@@ -75,7 +75,7 @@ void TransportConfigWidget::apply()
   Q_D( TransportConfigWidget );
   d->manager->updateSettings();
   d->transport->forceUniqueName();
-  d->transport->writeConfig();
+  d->transport->save();
   qDebug() << "Config written.";
 }
 

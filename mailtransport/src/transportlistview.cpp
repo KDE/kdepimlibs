@@ -94,7 +94,7 @@ void TransportListView::commitData( QWidget *editor )
   qDebug() << "Renaming transport" << id << "to" << edit->text();
   t->setName( edit->text() );
   t->forceUniqueName();
-  t->writeConfig();
+  t->save();
 }
 
 void TransportListView::fillTransportList()

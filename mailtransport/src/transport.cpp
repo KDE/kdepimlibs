@@ -48,7 +48,7 @@ Transport::Transport( const QString &cfgGroup ) :
   d->storePasswordInFile = false;
   d->needsWalletMigration = false;
   d->passwordNeedsUpdateFromWallet = false;
-  readConfig();
+  load();
 }
 
 Transport::~Transport()
@@ -152,7 +152,7 @@ QString Transport::authenticationTypeString( int type )
 
 void Transport::usrReadConfig()
 {
-  TransportBase::usrReadConfig();
+  TransportBase::usrRead();
 
   setHost( host().trimmed() );
 
@@ -257,7 +257,7 @@ bool Transport::usrWriteConfig()
     d->passwordDirty = false;
   }
 
-  if (!TransportBase::usrWriteConfig()) {
+  if (!TransportBase::usrSave()) {
     return false;
   }
   TransportManager::self()->emitChangesCommitted();
@@ -294,7 +294,7 @@ void Transport::readPassword()
       wallet->setFolder( KMAIL_WALLET_FOLDER );
       if ( wallet->readPassword( QString::fromLatin1( "transport-%1" ).arg( id() ), pwd ) == 0 ) {
         setPassword( pwd );
-        writeConfig();
+        save();
       } else {
         d->password.clear();
         d->passwordLoaded = false;
@@ -333,7 +333,7 @@ void Transport::migrateToWallet()
   group.deleteEntry( "password-knode" );
   d->passwordDirty = true;
   d->storePasswordInFile = false;
-  writeConfig();
+  save();
 }
 
 Transport *Transport::clone() const

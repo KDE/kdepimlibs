@@ -123,9 +123,6 @@ static void destroyStaticTransportManager() {
 TransportManager::TransportManager()
   : QObject(), d( new TransportManagerPrivate( this ) )
 {
-#warning port to the new way of insertCatalog
-//   KLocalizedString::insertCatalog( QLatin1String( "libmailtransport" ) );
-//   KLocalizedString::insertCatalog( QLatin1String( "libakonadi-kmime" ) );
   qAddPostRoutine( destroyStaticTransportManager );
   d->myOwnChange = false;
   d->appliedChange = false;
@@ -249,7 +246,7 @@ void TransportManager::createDefaultTransport()
   t->setName( i18n( "Default Transport" ) );
   t->setHost( kes.getSetting( KEMailSettings::OutServer ) );
   if ( t->isValid() ) {
-    t->writeConfig();
+    t->save();
     addTransport( t );
   } else {
     qWarning() << "KEMailSettings does not contain a valid transport.";
@@ -289,7 +286,7 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
       qWarning() << "Invalid resource instance" << transport->host();
     }
     instance.configure( parent ); // Async...
-    transport->writeConfig();
+    transport->save();
     return true; // No way to know here if the user cancelled or not.
   }
 
@@ -433,7 +430,7 @@ void TransportManagerPrivate::readConfig()
         qDebug() << "reloading existing transport:" << s;
         t = old;
         t->d->passwordNeedsUpdateFromWallet = true;
-        t->readConfig();
+        t->load();
         oldTransports.removeAll( old );
         break;
       }
@@ -444,7 +441,7 @@ void TransportManagerPrivate::readConfig()
     }
     if ( t->id() <= 0 ) {
       t->setId( createId() );
-      t->writeConfig();
+      t->save();
     }
     transports.append( t );
   }
