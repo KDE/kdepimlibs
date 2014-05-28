@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007        Robert Zwerus <arzie@dds.nl>
+    Copyright (c) 2014        Daniel Vrátil <dvratil@redhat.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -23,12 +24,14 @@
 #include "collection.h"
 #include "imapparser_p.h"
 #include "item.h"
+#include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "gid/gidextractor_p.h"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QFile>
 
 #include <kdebug.h>
 
@@ -39,7 +42,8 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 public:
     ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
-        , mMerge(false)
+        , mMergeOptions(ItemCreateJob::NoMerge)
+        , mItemReceived(false)
     {
     }
 
@@ -51,7 +55,8 @@ public:
     Item::Id mUid;
     QDateTime mDatetime;
     QByteArray mPendingData;
-    bool mMerge;
+    ItemCreateJob::MergeOptions mMergeOptions;
+    bool mItemReceived;
 };
 
 QByteArray ItemCreateJobPrivate::nextPartHeader()
@@ -106,7 +111,6 @@ void ItemCreateJob::doStart()
     QList<QByteArray> flags;
     flags.append("\\MimeType[" + d->mItem.mimeType().toLatin1() + ']');
     const QString gid = GidExtractor::getGid(d->mItem);
-    const bool merge = d->mMerge && !d->mItem.gid().isNull();
     if (!gid.isNull()) {
         flags.append(ImapParser::quote("\\Gid[" + gid.toUtf8() + ']'));
     }
@@ -116,17 +120,60 @@ void ItemCreateJob::doStart()
     if (!d->mItem.remoteRevision().isEmpty()) {
         flags.append(ImapParser::quote("\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']'));
     }
-    flags += d->mItem.flags().toList();
+    const bool mergeByGid = (d->mMergeOptions & GID) && !d->mItem.gid().isEmpty();
+    const bool mergeByRid = (d->mMergeOptions & RID) && !d->mItem.remoteId().isEmpty();
+    const bool mergeSilent = (d->mMergeOptions & Silent);
+    const bool merge = mergeByGid || mergeByRid;
+    if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
+        flags += d->mItem.flags().toList();
+    } else {
+        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mAddedFlags.toList()) {
+            flags += "+" + flag;
+        }
+        Q_FOREACH(const QByteArray &flag, d->mItem.d_func()->mDeletedFlags.toList()) {
+            flags += "-" + flag;
+        }
+    }
+    if (d->mItem.d_func()->mTagsOverwritten || !merge) {
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "\\Tag[" + tag.gid() + ']';
+            }
+        }
+    } else {
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mAddedTags) {
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "+\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "+\\Tag[" + tag.gid() + ']';
+            }
+        }
+        Q_FOREACH(const Akonadi::Tag &tag, d->mItem.d_func()->mDeletedTags) {
+            if (tag.gid().isEmpty() && !tag.remoteId().isEmpty()) {
+                flags += "-\\RTag[" + tag.remoteId() + ']';
+            } else if (!tag.gid().isEmpty()) {
+                flags += "-\\Tag[" + tag.gid() + ']';
+            }
+        }
+    }
 
     QByteArray command = d->newTag();
     if (merge) {
-      command += " MERGE (GID";
-      if (!d->mItem.remoteId().isEmpty()) {
-        command += " REMOTEID";
-      }
-      command += ") ";
+        QList<QByteArray> mergeArgs;
+        if (mergeByGid) {
+            mergeArgs << "GID";
+        }
+        if (mergeByRid) {
+            mergeArgs << "REMOTEID";
+        }
+        if (mergeSilent) {
+            mergeArgs << "SILENT";
+        }
+        command += " MERGE (" + ImapParser::join(mergeArgs, " ") + ") ";
     } else {
-      command += " X-AKAPPEND ";
+        command += " X-AKAPPEND ";
     }
 
     command += QByteArray::number(d->mCollection.id())
@@ -148,7 +195,15 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
     Q_D(ItemCreateJob);
 
     if (tag == "+") {   // ready for literal data
-        d->writeData(d->mPendingData);
+        if (data.startsWith("STREAM")) {
+            QByteArray error;
+            if (!ProtocolHelper::streamPayloadToFile(data, d->mPendingData, error)) {
+                d->writeData("* NO " + error);
+                return;
+            }
+        } else {
+            d->writeData(d->mPendingData);
+        }
         d->writeData(d->nextPartHeader());
         return;
     }
@@ -164,6 +219,7 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
             // Error, maybe?
             return;
           }
+          d->mItemReceived = true;
           d->mItem = item;
         }
         return;
@@ -189,16 +245,20 @@ void ItemCreateJob::doHandleResponse(const QByteArray &tag, const QByteArray &da
     }
 }
 
-void ItemCreateJob::setMergeIfExists(bool merge)
+void ItemCreateJob::setMerge(ItemCreateJob::MergeOptions options)
 {
-  Q_D(ItemCreateJob);
+    Q_D(ItemCreateJob);
 
-  d->mMerge = merge;
+    d->mMergeOptions = options;
 }
 
 Item ItemCreateJob::item() const
 {
     Q_D(const ItemCreateJob);
+
+    if (d->mItemReceived) {
+        return d->mItem;
+    }
 
     if (d->mUid == 0) {
         return Item();
