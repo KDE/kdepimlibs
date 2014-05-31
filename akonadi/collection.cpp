@@ -270,4 +270,61 @@ void Akonadi::Collection::setVirtual(bool isVirtual)
     d->isVirtual = isVirtual;
 }
 
+void Collection::setEnabled(bool enabled)
+{
+    Q_D(Collection);
+
+    d->enabledChanged = true;
+    d->enabled = enabled;
+}
+
+bool Collection::enabled() const
+{
+    Q_D(const Collection);
+
+    return d->enabled;
+}
+
+void Collection::setLocalListPreference(Collection::ListPurpose purpose, Collection::Tristate preference)
+{
+    Q_D(Collection);
+
+    switch(purpose) {
+    case Display:
+        d->displayPreference = preference;
+        break;
+    case Sync:
+        d->syncPreference = preference;
+        break;
+    case Index:
+        d->indexPreference = preference;
+        break;
+    }
+    d->listPreferenceChanged = true;
+}
+
+Collection::Tristate Collection::localListPreference(Collection::ListPurpose purpose) const
+{
+    Q_D(const Collection);
+
+    switch(purpose) {
+    case Display:
+        return d->displayPreference;
+    case Sync:
+        return d->syncPreference;
+    case Index:
+        return d->indexPreference;
+    }
+    return Undefined;
+}
+
+bool Collection::shouldList(Collection::ListPurpose purpose) const
+{
+    if (localListPreference(purpose) == Undefined) {
+        return enabled();
+    }
+    return (localListPreference(purpose) == True);
+}
+
+
 AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

@@ -32,6 +32,7 @@ public:
         : ancestorDepth(CollectionFetchScope::None)
         , unsubscribed(false)
         , statistics(false)
+        , listFilter(CollectionFetchScope::NoFilter)
     {
     }
 
@@ -51,6 +52,7 @@ public:
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
     bool unsubscribed;
     bool statistics;
+    CollectionFetchScope::ListFilter listFilter;
 };
 
 CollectionFetchScope::CollectionFetchScope()
@@ -135,5 +137,16 @@ void CollectionFetchScope::setAncestorRetrieval(AncestorRetrieval ancestorDepth)
 {
     d->ancestorDepth = ancestorDepth;
 }
+
+CollectionFetchScope::ListFilter CollectionFetchScope::listFilter() const
+{
+    return d->listFilter;
+}
+
+void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFilter)
+{
+    d->listFilter = listFilter;
+}
+
 
 }

@@ -122,6 +122,29 @@ public:
      */
     void setIncludeUnsubscribed(bool include);
 
+    enum ListFilter {
+        NoFilter,
+        Display,
+        Sync,
+        Index,
+        Enabled
+    };
+    /**
+     * Sets a filter for the collections to be listed.
+     *
+     * Note that collections that are required to complete the tree, but are not part of the collection are still included in the listing.
+     * @since 4.14
+     */
+    void setListFilter(ListFilter);
+
+    /**
+     * Returns the list filter.
+     *
+     * @see setListFilter()
+     * @since 4.14
+     */
+    ListFilter listFilter() const;
+
     /**
      * Returns whether collection statistics should be included in the retrieved results.
      *

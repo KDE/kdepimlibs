@@ -81,6 +81,10 @@ void CollectionCreateJob::doStart()
     command += " REMOTEID " + ImapParser::quote(d->mCollection.remoteId().toUtf8());
     command += " REMOTEREVISION " + ImapParser::quote(d->mCollection.remoteRevision().toUtf8());
     command += " VIRTUAL " + QByteArray::number(d->mCollection.isVirtual());
+    command += ' ' + ProtocolHelper::enabled(d->mCollection.enabled());
+    command += ' ' + ProtocolHelper::listPreference(Collection::Display, d->mCollection.localListPreference(Collection::Display));
+    command += ' ' + ProtocolHelper::listPreference(Collection::Sync, d->mCollection.localListPreference(Collection::Sync));
+    command += ' ' + ProtocolHelper::listPreference(Collection::Index, d->mCollection.localListPreference(Collection::Index));
     foreach (Attribute *attr, d->mCollection.attributes()) {
         command += ' ' + attr->type() + ' ' + ImapParser::quote(attr->serialized());
     }

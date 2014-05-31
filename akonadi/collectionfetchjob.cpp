@@ -266,6 +266,26 @@ void CollectionFetchJob::doStart()
         filter.append('(' + ImapParser::join(mts, " ") + ')');
     }
 
+    switch (d->mScope.listFilter()) {
+    case CollectionFetchScope::Display:
+        filter.append("DISPLAY TRUE");
+        break;
+    case CollectionFetchScope::Sync:
+        filter.append("SYNC TRUE");
+        break;
+    case CollectionFetchScope::Index:
+        filter.append("INDEX TRUE");
+        break;
+    case CollectionFetchScope::Enabled:
+        filter.append("ENABLED TRUE");
+        break;
+    case CollectionFetchScope::NoFilter:
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+
+
     QList<QByteArray> options;
     if (d->mScope.includeStatistics()) {
         options.append("STATISTICS");

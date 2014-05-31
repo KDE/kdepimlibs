@@ -288,6 +288,29 @@ public:
      */
     void setVirtual(bool isVirtual);
 
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
+    enum Tristate {
+      True,
+      False,
+      Undefined
+    };
+
+    enum ListPurpose {
+      Sync,
+      Display,
+      Index
+    };
+   
+    void setLocalListPreference(ListPurpose purpose, Tristate preference);
+    Tristate localListPreference(ListPurpose purpose) const;
+
+    /**
+     * Takes enabled state and local preference into account
+     */
+    bool shouldList(ListPurpose) const;
+
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionFetchJob;
