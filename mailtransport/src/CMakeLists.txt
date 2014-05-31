@@ -45,15 +45,15 @@ set(mailtransport_lib_srcs
   addtransportdialog.cpp
 )
 
-qt5_wrap_ui(mailtransport_lib_srcs
+ki18n_wrap_ui(mailtransport_lib_srcs
   ui/sendmailsettings.ui
   ui/addtransportdialog.ui
   ui/transportmanagementwidget.ui
 )
 if(KDEPIM_MOBILE_UI)
-  qt5_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_mobile.ui)
+  ki18n_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_mobile.ui)
 else()
-  qt5_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_desktop.ui)
+  ki18n_wrap_ui(mailtransport_lib_srcs ui/smtpsettings_desktop.ui)
 endif()
 
 kconfig_add_kcfg_files(mailtransport_lib_srcs transportbase.kcfgc)
