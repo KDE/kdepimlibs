@@ -124,6 +124,7 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   SpecialMailCollections
   SpecialMailCollectionsDiscoveryJob
   SpecialMailCollectionsRequestJob
+  StandardMailActionManager
   REQUIRED_HEADERS AkonadiMime_HEADERS
   PREFIX Akonadi/KMime
 )
@@ -137,7 +138,6 @@ install(FILES
 install(FILES
     ${AkonadiMime_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
-    standardmailactionmanager.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime
     COMPONENT Devel
 )
