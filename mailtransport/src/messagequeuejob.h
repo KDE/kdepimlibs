@@ -34,7 +34,7 @@
 #include <KDE/KCompositeJob>
 
 #include <collection.h>
-#include <Akonadi/KMime/addressattribute.h>
+#include <Akonadi/KMime/AddressAttribute>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
