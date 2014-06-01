@@ -125,6 +125,7 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   SpecialMailCollectionsDiscoveryJob
   SpecialMailCollectionsRequestJob
   REQUIRED_HEADERS AkonadiMime_HEADERS
+  PREFIX Akonadi/KMime
 )
 
 install(FILES
