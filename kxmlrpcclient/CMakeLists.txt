@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "4.98.0")
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libkxmlrpcclient\")
+add_definitions(-DTRANSLATION_DOMAIN=\"libkxmlrpcclient5\")
 
 # FIXME: KXmlRpcClient ? KXMLRPCClient ?
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KXMLRPCCLIENT

@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cpp *.h -o $podir/libkblog.pot
+$XGETTEXT *.cpp *.h -o $podir/libkblog5.pot

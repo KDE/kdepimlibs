@@ -42,7 +42,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${QGpgme_SOURCE_DIR}")
 endif()
 
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libqgpgme\")
+add_definitions(-DTRANSLATION_DOMAIN=\"libqgpgme5\")
 
 
 ########### CMake Config Files ###########

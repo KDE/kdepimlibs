@@ -34,7 +34,7 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
   find_package(KF5Mime ${KF5_VERSION} CONFIG REQUIRED)
 endif()
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libkpimutils\")
+add_definitions(-DTRANSLATION_DOMAIN=\"libkpimutils5\")
 
 ########### Targets ###########
 add_subdirectory(src)

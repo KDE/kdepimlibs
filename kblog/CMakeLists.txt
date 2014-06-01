@@ -36,7 +36,7 @@ if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KF5XmlRpcClient ${KF5_VERSION} CONFIG REQUIRED)
 endif()
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libkblog\")
+add_definitions(-DTRANSLATION_DOMAIN=\"libkblog5\")
 
 ########### Targets ###########
 add_subdirectory(src)
