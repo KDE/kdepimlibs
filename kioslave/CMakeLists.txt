@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(kioslave)
 
 # ECM setup
-find_package(ECM 0.0.13 CONFIG REQUIRED)
+find_package(ECM 0.0.14 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 set(CMAKE_MODULE_PATH ${kioslave_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
