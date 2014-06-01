@@ -41,10 +41,16 @@ ecm_generate_headers(AkonadiNotes_CamelCase_HEADERS
 )
 
 install(FILES
-  ${AkonadiNotes_HEADERS}
-  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
     ${AkonadiNotes_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/notes
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/Notes
+    COMPONENT Devel
+)
+
+install(FILES
+    ${AkonadiNotes_HEADERS}
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
+    ${AkonadiNotes_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/notes
     COMPONENT Devel
 )
 

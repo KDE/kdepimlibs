@@ -130,11 +130,15 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
 
 install(FILES
     ${AkonadiMime_CamelCase_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    COMPONENT Devel
+)
+
+install(FILES
     ${AkonadiMime_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
     standardmailactionmanager.h
-
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime
     COMPONENT Devel
 )
 

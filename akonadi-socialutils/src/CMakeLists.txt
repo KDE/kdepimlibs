@@ -55,13 +55,14 @@ ecm_generate_headers(AkonadiSocialUtils_CamelCase_HEADERS
   REQUIRED_HEADERS AkonadiSocialUtils_HEADERS
 )
 
-set(akonadi_social_utils_HDRS
-    ${AkonadiSocialUtils_CamelCase_HEADERS}
-  ${AkonadiSocialUtils_HEADERS}
-  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_export.h
-)
+install(FILES
+   ${AkonadiSocialUtils_CamelCase_HEADERS}
+   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/SocialUtils
+   COMPONENT Devel)
 
-
-
-install(FILES ${akonadi_social_utils_HDRS} DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/socialutils)
+install(FILES
+   ${AkonadiSocialUtils_HEADERS}
+   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_export.h
+   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/socialutils
+   COMPONENT Devel)
 
