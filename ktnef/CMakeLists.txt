@@ -69,7 +69,6 @@ install(FILES
 )
 
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5975)
 add_definitions(-DTRANSLATION_DOMAIN=\"libktnef5\")
 add_subdirectory(src)
 add_subdirectory(autotests)
