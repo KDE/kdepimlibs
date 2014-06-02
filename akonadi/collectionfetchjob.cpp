@@ -220,7 +220,7 @@ void CollectionFetchJob::doStart()
             command += " " AKONADI_CMD_RID;
         }
     }
-    if (d->mScope.includeUnsubscribed()) {
+    if (d->mScope.includeUnsubscribed() || (d->mScope.listFilter() != CollectionFetchScope::NoFilter)) {
         command += " LIST ";
     } else {
         command += " LSUB ";

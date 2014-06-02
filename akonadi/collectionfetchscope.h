@@ -112,15 +112,17 @@ public:
      *
      * @see setIncludeUnsubscribed()
      * @since 4.5
+     * @deprecated use listFilter() instead
      */
-    bool includeUnsubscribed() const;
+    AKONADI_DEPRECATED bool includeUnsubscribed() const;
 
     /**
      * Sets whether unsubscribed collections should be included in the collection listing.
      *
      * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
+     * @deprecated use setListFilter() instead
      */
-    void setIncludeUnsubscribed(bool include);
+    AKONADI_DEPRECATED void setIncludeUnsubscribed(bool include);
 
     enum ListFilter {
         NoFilter,
@@ -133,6 +135,8 @@ public:
      * Sets a filter for the collections to be listed.
      *
      * Note that collections that are required to complete the tree, but are not part of the collection are still included in the listing.
+     *
+     * This setting will override setIncludeUnsubscribed().
      * @since 4.14
      */
     void setListFilter(ListFilter);
