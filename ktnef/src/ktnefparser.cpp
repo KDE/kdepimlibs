@@ -35,7 +35,8 @@
 #include "ktnefdefs.h"
 
 #include <qdebug.h>
-#include <kmimetype.h>
+#include <QMimeType>
+#include <QMimeDatabase>
 #include <qsavefile.h>
 
 #include <QtCore/QDateTime>
@@ -84,7 +85,7 @@ class KTnef::KTNEFParser::ParserPrivate
   public:
     ParserPrivate()
     {
-      defaultdir_ = "/tmp/";
+      defaultdir_ = QLatin1String("/tmp/");
       current_ = 0;
       deleteDevice_ = false;
       device_ = 0;
@@ -193,7 +194,7 @@ bool KTNEFParser::ParserPrivate::decodeMessage()
       readMAPIProperties( message_->properties(), 0 );
       device_->seek( i2 );
       qDebug() << "Properties:" << message_->properties().count();
-      value = QString( "< %1 properties >" ).
+      value = QString::fromLatin1( "< %1 properties >" ).
               arg( message_->properties().count() - nProps );
     }
     break;
@@ -542,23 +543,24 @@ void KTNEFParser::ParserPrivate::checkCurrent( int key )
           // No mime type defined in the TNEF structure,
           // try to find it from the attachment filename
           // and/or content (using at most 32 bytes)
-          KMimeType::Ptr mimetype;
+          QMimeType mimetype;
+          QMimeDatabase db;
           if ( !current_->fileName().isEmpty() ) {
-            mimetype = KMimeType::findByPath( current_->fileName(), 0, true );
+            mimetype = db.mimeTypeForFile( current_->fileName(), QMimeDatabase::MatchExtension);
           }
-          if ( !mimetype ) {
+          if ( !mimetype.isValid() ) {
             return; // FIXME
           }
-          if ( mimetype->name() == "application/octet-stream" &&
+          if ( mimetype.name() == "application/octet-stream" &&
                current_->size() > 0 ) {
             int oldOffset = device_->pos();
             QByteArray buffer( qMin( 32, current_->size() ), '\0' );
             device_->seek( current_->offset() );
             device_->read( buffer.data(), buffer.size() );
-            mimetype = KMimeType::findByContent( buffer );
+            mimetype = db.mimeTypeForData( buffer );
             device_->seek( oldOffset );
           }
-          current_->setMimeTag( mimetype->name() );
+          current_->setMimeTag( mimetype.name() );
         }
         message_->addAttachment( current_ );
         current_ = 0;
