@@ -300,7 +300,11 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 
     job->setProperty(FetchCollectionId(), QVariant(collection.id()));
 
-    job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+    if (!m_includeUnsubscribed) {
+        job->fetchScope().setListFilter(CollectionFetchScope::Display);
+    } else {
+        job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+    }
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
 
     if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
@@ -648,7 +652,11 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
         CollectionFetchJob *job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
-        job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+        if (!m_includeUnsubscribed) {
+            job->fetchScope().setListFilter(CollectionFetchScope::Display);
+        } else {
+            job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+        }
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
@@ -741,6 +749,11 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
         !m_mimeChecker.isWantedCollection(collection)) {
         return false;
     }
+
+    if (!m_includeUnsubscribed && !collection.shouldList(Collection::Display)) {
+        return false;
+    }
+
     return true;
 }
 
@@ -1538,7 +1551,12 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
 
             Q_ASSERT(collection.isValid());
             CollectionFetchJob *job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
-            job->fetchScope().setIncludeUnsubscribed(m_includeUnsubscribed);
+            if (!m_includeUnsubscribed) {
+                job->fetchScope().setListFilter(CollectionFetchScope::Display);
+            } else {
+                job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+            }
+
             job->fetchScope().setIncludeStatistics(m_includeStatistics);
             job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
             q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
