@@ -32,7 +32,7 @@ public:
         : ancestorDepth(CollectionFetchScope::None)
         , unsubscribed(false)
         , statistics(false)
-        , listFilter(CollectionFetchScope::NoFilter)
+        , listFilter(CollectionFetchScope::Enabled)
     {
     }
 
@@ -146,6 +146,10 @@ CollectionFetchScope::ListFilter CollectionFetchScope::listFilter() const
 void CollectionFetchScope::setListFilter(CollectionFetchScope::ListFilter listFilter)
 {
     d->listFilter = listFilter;
+    //Since unsubscribed are excluded by default
+    if (listFilter == Akonadi::CollectionFetchScope::NoFilter) {
+        d->unsubscribed = true;
+    }
 }
 
 
