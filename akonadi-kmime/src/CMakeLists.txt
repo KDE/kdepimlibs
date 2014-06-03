@@ -86,8 +86,10 @@ target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KM
 
 
 target_link_libraries(KF5AkonadiMime
+PUBLIC
     KF5::Mime
     KF5::AkonadiCore
+PRIVATE
     KF5::AkonadiWidgets
     KF5::KIOCore
 )
@@ -100,7 +102,7 @@ set_target_properties(KF5AkonadiMime PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiMime
     LIB_NAME KF5AkonadiMime
-    DEPS "Mime AkonadiCore AkonadiWidgets KIO" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    DEPS "Mime AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
 )
 
 install(TARGETS
