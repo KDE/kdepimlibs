@@ -1,6 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12)
-
 project(kdepimlibs)
+cmake_minimum_required(VERSION 2.8.12)
 
 option(KDEPIMLIBS_SUPERBUILD "Build standalone lib" FALSE)
 
