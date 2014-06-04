@@ -220,11 +220,7 @@ void CollectionFetchJob::doStart()
             command += " " AKONADI_CMD_RID;
         }
     }
-    if (d->mScope.includeUnsubscribed() || (d->mScope.listFilter() != CollectionFetchScope::NoFilter)) {
-        command += " LIST ";
-    } else {
-        command += " LSUB ";
-    }
+    command += " LIST ";
 
     if (d->mBase.isValid()) {
         command += QByteArray::number(d->mBase.id());
