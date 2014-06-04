@@ -281,7 +281,6 @@ void CollectionFetchJob::doStart()
         Q_ASSERT(false);
     }
 
-
     QList<QByteArray> options;
     if (d->mScope.includeStatistics()) {
         options.append("STATISTICS");

@@ -776,7 +776,6 @@ void CollectionJobTest::testListPreference()
     AKVERIFYEXEC(create);
     baseCol = create->collection();
   }
-//   Akonadi::Collection enabled;
   {
     Akonadi::Collection col;
     col.setParentCollection(baseCol);

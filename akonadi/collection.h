@@ -288,7 +288,25 @@ public:
      */
     void setVirtual(bool isVirtual);
 
+    /**
+     * Sets the collection's enabled state.
+     *
+     * Use this mechanism to set if a collection should be available
+     * to the user or not.
+     *
+     * This can be used in conjunction with the local list preference for finer grained control
+     * to define if a collection should be included depending on the purpose.
+     *
+     * @since 4.14
+     * @see setLocalListPreference
+     */
     void setEnabled(bool enabled);
+
+    /**
+     * Returns the collection's enabled state.
+     * @since 4.14
+     * @see localListPreference
+     */
     bool enabled() const;
 
     enum Tristate {
@@ -302,14 +320,30 @@ public:
       Display,
       Index
     };
-   
+
+    /**
+     * Sets the local list preference for the specified purpose.
+     *
+     * The local list preference overrides the enabled state unless set to Undefined.
+     * The default value is Undefined.
+     *
+     * @since 4.14
+     */
     void setLocalListPreference(ListPurpose purpose, Tristate preference);
+
+    /**
+     * Returns the local list preference for the specified purpose.
+     * @since 4.14
+     */
     Tristate localListPreference(ListPurpose purpose) const;
 
     /**
-     * Takes enabled state and local preference into account
+     * Returns wether the collection should be listed or not for the specified purpose
+     * Takes enabled state and local preference into account.
+     * @since 4.14
+     * @see setLocalListPreference, setEnabled
      */
-    bool shouldList(ListPurpose) const;
+    bool shouldList(ListPurpose purpose) const;
 
 private:
     AKONADI_DECLARE_PRIVATE(Collection)
