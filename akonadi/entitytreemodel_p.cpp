@@ -300,10 +300,10 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
 
     job->setProperty(FetchCollectionId(), QVariant(collection.id()));
 
-    if (!m_includeUnsubscribed) {
-        job->fetchScope().setListFilter(CollectionFetchScope::Display);
-    } else {
+    if (m_includeUnsubscribed) {
         job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+    } else {
+        job->fetchScope().setListFilter(CollectionFetchScope::Display);
     }
     job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
 
@@ -652,10 +652,10 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
         CollectionFetchJob *job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
-        if (!m_includeUnsubscribed) {
-            job->fetchScope().setListFilter(CollectionFetchScope::Display);
-        } else {
+        if (m_includeUnsubscribed) {
             job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+        } else {
+            job->fetchScope().setListFilter(CollectionFetchScope::Display);
         }
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
@@ -1551,10 +1551,10 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
 
             Q_ASSERT(collection.isValid());
             CollectionFetchJob *job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
-            if (!m_includeUnsubscribed) {
-                job->fetchScope().setListFilter(CollectionFetchScope::Display);
-            } else {
+            if (m_includeUnsubscribed) {
                 job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
+            } else {
+                job->fetchScope().setListFilter(CollectionFetchScope::Display);
             }
 
             job->fetchScope().setIncludeStatistics(m_includeStatistics);
