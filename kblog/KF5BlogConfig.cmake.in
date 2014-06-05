@@ -2,7 +2,6 @@
 
 find_dependency(KF5CalendarCore "@KF5_VERSION@")
 find_dependency(KF5Syndication "@KF5_VERSION@")
-find_dependency(KF5XmlRpcClient "@KF5_VERSION@")
 find_dependency(KF5KDELibs4Support "@KF5_VERSION@")
 
 include("${CMAKE_CURRENT_LIST_DIR}/KF5BlogTargets.cmake")
