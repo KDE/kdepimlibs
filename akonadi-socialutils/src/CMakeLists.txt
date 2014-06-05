@@ -27,8 +27,9 @@ target_include_directories(KF5AkonadiSocialUtils PUBLIC "$<BUILD_INTERFACE:${Ako
 target_link_libraries(KF5AkonadiSocialUtils
 PUBLIC
     KF5::AkonadiCore
-    KF5::KIOCore
     KF5::CoreAddons
+PRIVATE
+    KF5::KIOCore
 )
 
 set_target_properties(KF5AkonadiSocialUtils PROPERTIES
@@ -39,7 +40,7 @@ set_target_properties(KF5AkonadiSocialUtils PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiSocialUtils
     LIB_NAME KF5AkonadiSocialUtils
-    DEPS "AkonadiCore AkonadiWidgets KIO" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
