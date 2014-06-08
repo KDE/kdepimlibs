@@ -26,7 +26,7 @@
 #include "blog.h"
 
 #include <KTimeZone>
-#include <KUrl>
+#include <QUrl>
 #include <kxmlrpcclient/client.h>
 
 namespace KBlog {
@@ -41,7 +41,7 @@ class BlogPrivate
     QString mUsername;
     QString mPassword;
     QString mUserAgent;
-    KUrl mUrl;
+    QUrl mUrl;
     KTimeZone mTimeZone;
     Q_DECLARE_PUBLIC( Blog )
 };

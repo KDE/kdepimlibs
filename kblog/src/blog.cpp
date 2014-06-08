@@ -31,7 +31,7 @@
 
 using namespace KBlog;
 
-Blog::Blog( const KUrl &server, QObject *parent, const QString &applicationName,
+Blog::Blog( const QUrl &server, QObject *parent, const QString &applicationName,
             const QString &applicationVersion ) :
     QObject( parent ), d_ptr( new BlogPrivate )
 {
@@ -40,7 +40,7 @@ Blog::Blog( const KUrl &server, QObject *parent, const QString &applicationName,
   setUserAgent( applicationName, applicationVersion );
 }
 
-Blog::Blog( const KUrl &server, BlogPrivate &dd, QObject *parent,
+Blog::Blog( const QUrl &server, BlogPrivate &dd, QObject *parent,
             const QString &applicationName, const QString &applicationVersion )
   : QObject( parent ), d_ptr( &dd )
 {
@@ -112,13 +112,13 @@ QString Blog::blogId() const
   return d->mBlogId;
 }
 
-void Blog::setUrl( const KUrl &url )
+void Blog::setUrl( const QUrl &url )
 {
   Q_D( Blog );
   d->mUrl = url;
 }
 
-KUrl Blog::url() const
+QUrl Blog::url() const
 {
   Q_D( const Blog );
   return d->mUrl;

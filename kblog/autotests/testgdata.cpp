@@ -381,14 +381,14 @@ void TestGData::testValidity()
   eventLoop = new QEventLoop( this );
 
   // we do not test the setUrl() function additionally here
-  b = new GData( KUrl( "http://blogger2test.blogspot.com" ) );
+  b = new GData( QUrl("http://blogger2test.blogspot.com") );
   b->setUsername( "christian_weilbach@web.de" );
   b->setFullName( "Santa Claus" );
   b->setProfileId( "11235141638164909615" );
   b->setPassword( "Wo ist Hans?" );
   b->setBlogId( "4662848212819772532" );
   b->setTimeZone( KTimeZone( "UTC" ) );
-  QVERIFY( b->url() == KUrl( "http://blogger2test.blogspot.com" ) );
+  QVERIFY( b->url() == QUrl("http://blogger2test.blogspot.com") );
   QVERIFY( b->blogId() == "4662848212819772532" );
   QVERIFY( b->fullName() == "Santa Claus" );
   QVERIFY( b->username() == "christian_weilbach@web.de" );

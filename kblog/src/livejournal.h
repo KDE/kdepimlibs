@@ -26,7 +26,7 @@
 
 #include <QColor>
 
-class KUrl;
+class QUrl;
 
 /**
   @file
@@ -64,7 +64,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit LiveJournal( const KUrl &server, QObject *parent = 0 );
+    explicit LiveJournal( const QUrl &server, QObject *parent = 0 );
 
     /**
       Destroy the object.
@@ -135,7 +135,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
       @param server is the server url.
     */
-    void setUrl( const KUrl &server );
+    void setUrl( const QUrl &server );
 
     QString serverMessage() const;
 
@@ -157,7 +157,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
     void fetchedUserInfo();
 
   protected:
-    LiveJournal( const KUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
+    LiveJournal( const QUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE( LiveJournal )

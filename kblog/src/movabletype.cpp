@@ -36,13 +36,13 @@
 
 using namespace KBlog;
 
-MovableType::MovableType( const KUrl &server, QObject *parent )
+MovableType::MovableType( const QUrl &server, QObject *parent )
   : MetaWeblog( server, *new MovableTypePrivate, parent )
 {
   qDebug();
 }
 
-MovableType::MovableType( const KUrl &server, MovableTypePrivate &dd,
+MovableType::MovableType( const QUrl &server, MovableTypePrivate &dd,
                         QObject *parent )
   : MetaWeblog( server, dd, parent )
 {
@@ -507,8 +507,8 @@ bool MovableTypePrivate::readPostFromMap( BlogPost *post, const QMap<QString, QV
   post->setTrackBackAllowed( (bool)postInfo[QStringLiteral("mt_allow_pings")].toInt() );
   post->setSummary( postInfo[QStringLiteral("mt_excerpt")].toString() );
   post->setTags( postInfo[QStringLiteral("mt_keywords")].toStringList() );
-  post->setLink( postInfo[QStringLiteral("link")].toString() );
-  post->setPermaLink( postInfo[QStringLiteral("permaLink")].toString() );
+  post->setLink( QUrl(postInfo[QStringLiteral("link")].toString()) );
+  post->setPermaLink( QUrl(postInfo[QStringLiteral("permaLink")].toString()) );
   QString postStatus = postInfo[QStringLiteral("post_status")].toString();
   if ( postStatus != QLatin1String("publish") &&
        !postStatus.isEmpty() ) {

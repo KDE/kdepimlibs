@@ -25,14 +25,14 @@
 
 #include <kblog_export.h>
 
-#include <kurl.h>
+#include <QUrl>
 #include <kcalcore/journal.h>
 #include <QtCore/QtAlgorithms>
 
 class QStringList;
 
 class KDateTime;
-class KUrl;
+class QUrl;
 
 
 namespace KBlog {
@@ -208,7 +208,7 @@ public:
 
       @see setLink()
     */
-    KUrl link() const;
+    QUrl link() const;
 
     /**
       Set the link path.
@@ -216,7 +216,7 @@ public:
 
       @see link()
     */
-    void setLink( const KUrl &link ) const;
+    void setLink( const QUrl &link ) const;
 
     /**
       Returns the perma link path.
@@ -224,7 +224,7 @@ public:
 
       @see setPermaLink()
     */
-    KUrl permaLink() const;
+    QUrl permaLink() const;
 
     /**
       Set the perma link path.
@@ -232,7 +232,7 @@ public:
 
       @see permaLink()
     */
-    void setPermaLink( const KUrl &permalink ) const;
+    void setPermaLink( const QUrl &permalink ) const;
 
     /**
       Returns whether comments should be allowed.

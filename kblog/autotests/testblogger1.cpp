@@ -305,8 +305,8 @@ void TestBlogger1::testValidity()
   eventLoop = new QEventLoop( this );
 
   // no need to delete later ;-):
-  b = new Blogger1( KUrl( "http://wrong.url.org/somegateway" ) );
-  QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
+  b = new Blogger1( QUrl("http://wrong.url.org/somegateway") );
+  QVERIFY( b->url() == QUrl("http://wrong.url.org/somegateway") );
   KTimeZone mTimeZone( KTimeZone( "UTC" ) );
   b->setUrl( mUrl );
   b->setUsername( mUsername );

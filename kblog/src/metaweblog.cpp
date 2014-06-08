@@ -38,13 +38,13 @@
 
 using namespace KBlog;
 
-MetaWeblog::MetaWeblog( const KUrl &server, QObject *parent )
+MetaWeblog::MetaWeblog( const QUrl &server, QObject *parent )
   : Blogger1( server, *new MetaWeblogPrivate, parent )
 {
   qDebug();
 }
 
-MetaWeblog::MetaWeblog( const KUrl &server, MetaWeblogPrivate &dd, QObject *parent )
+MetaWeblog::MetaWeblog( const QUrl &server, MetaWeblogPrivate &dd, QObject *parent )
   : Blogger1( server, dd, parent )
 {
   qDebug();
@@ -255,7 +255,7 @@ void MetaWeblogPrivate::slotCreateMedia( const QList<QVariant> &result,
   qDebug() << "MetaWeblog::slotCreateMedia url=" << url;
 
   if ( !url.isEmpty() ) {
-    media->setUrl( KUrl( url ) );
+    media->setUrl( QUrl( url ) );
     media->setStatus( BlogMedia::Created );
     qDebug() << "Emitting createdMedia( url=" << url  << ");";
     emit q->createdMedia( media );

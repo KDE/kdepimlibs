@@ -27,7 +27,7 @@
 
 #include <QtCore/QStringList>
 
-class KUrl;
+class QUrl;
 
 /**
   @file
@@ -76,7 +76,7 @@ class KBLOG_EXPORT GData : public Blog
       @param server The server url for the xmlrpc gateway.
       @param parent The parent object, inherited from QObject.
     */
-    explicit GData( const KUrl &server, QObject *parent = 0 );
+    explicit GData( const QUrl &server, QObject *parent = 0 );
 
     /**
       Destructor.
@@ -295,7 +295,7 @@ class KBLOG_EXPORT GData : public Blog
     /**
       Overloaded for private inheritance handling.
     */
-    GData( const KUrl &server, GDataPrivate &dd, QObject *parent = 0 );
+    GData( const QUrl &server, GDataPrivate &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE( GData )

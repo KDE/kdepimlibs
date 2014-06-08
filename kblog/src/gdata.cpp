@@ -33,6 +33,8 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>
+#include <KUrl>
+
 
 #include <QByteArray>
 #include <QRegExp>
@@ -42,7 +44,7 @@
 
 using namespace KBlog;
 
-GData::GData( const KUrl &server, QObject *parent )
+GData::GData( const QUrl &server, QObject *parent )
   : Blog( server, *new GDataPrivate, parent )
 {
   qDebug();
@@ -91,7 +93,7 @@ void GData::fetchProfileId()
   qDebug();
   QByteArray data;
   KIO::StoredTransferJob *job = KIO::storedGet( url(), KIO::NoReload, KIO::HideProgressInfo );
-  KUrl blogUrl = url();
+  QUrl blogUrl = url();
   connect( job, SIGNAL(result(KJob*)),
            this, SLOT(slotFetchProfileId(KJob*)) );
 }
@@ -701,7 +703,7 @@ void GDataPrivate::slotListRecentPosts( Syndication::Loader *loader,
     qDebug() << "QRegExp rx( 'post-(\\d+)' matches" << rx.cap( 1 );
     post.setTitle( ( *it )->title() );
     post.setContent( ( *it )->content() );
-    post.setLink( ( *it )->link() );
+    post.setLink( QUrl(( *it )->link()) );
     QStringList labels;
     int catCount = ( *it )->categories().count();
     QList< Syndication::CategoryPtr > cats = ( *it )->categories();
@@ -765,7 +767,7 @@ void GDataPrivate::slotFetchPost( Syndication::Loader *loader,
       post->setTitle( ( *it )->title() );
       post->setContent( ( *it )->content() );
       post->setStatus( BlogPost::Fetched );
-      post->setLink( ( *it )->link() );
+      post->setLink( QUrl(( *it )->link()) );
       post->setCreationDateTime(
         KDateTime( QDateTime::fromTime_t( ( *it )->datePublished() ),
                    KDateTime::Spec::UTC() ).toLocalZone() );

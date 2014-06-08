@@ -31,7 +31,7 @@
 template <class T,class S> class QMap;
 
 class KTimeZone;
-class KUrl;
+class QUrl;
 
 /**
   This is the main interface for blogging APIs.
@@ -82,7 +82,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    explicit Blog( const KUrl &server, QObject *parent = 0,
+    explicit Blog( const QUrl &server, QObject *parent = 0,
                    const QString &applicationName = QString(),
                    const QString &applicationVersion = QString() );
 
@@ -178,14 +178,14 @@ class KBLOG_EXPORT Blog : public QObject
       @param url the blog's XML-RPC URL.
       @see url()
     */
-    virtual void setUrl( const KUrl &url );
+    virtual void setUrl( const QUrl &url );
 
     /**
       Get the URL for the blog's XML-RPC interface.
 
-      @see setUrl( const KUrl & )
+      @see setUrl( const QUrl & )
     */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
       Sets the time zone of the blog's server.
@@ -364,7 +364,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    Blog( const KUrl &server, BlogPrivate &dd, QObject *parent = 0,
+    Blog( const QUrl &server, BlogPrivate &dd, QObject *parent = 0,
           const QString &applicationName = QString(),
           const QString &applicationVersion = QString() );
 

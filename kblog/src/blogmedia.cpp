@@ -24,7 +24,7 @@
 
 #include <QByteArray>
 #include <QString>
-#include <kurl.h>
+#include <QUrl>
 
 namespace KBlog {
 
@@ -33,7 +33,7 @@ class BlogMediaPrivate
   public:
     BlogMedia *q_ptr;
     QString mName;
-    KUrl mUrl;
+    QUrl mUrl;
     QString mMimetype;
     QString mError;
     QByteArray mData;
@@ -72,12 +72,12 @@ void BlogMedia::setName( const QString &name )
   d_ptr->mName = name;
 }
 
-KUrl BlogMedia::url() const
+QUrl BlogMedia::url() const
 {
   return d_ptr->mUrl;
 }
 
-void BlogMedia::setUrl( const KUrl &url )
+void BlogMedia::setUrl( const QUrl &url )
 {
   d_ptr->mUrl = url;
 }

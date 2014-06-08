@@ -338,8 +338,8 @@ void TestMovableType::testValidity()
   eventLoop = new QEventLoop( this );
 
   // no need to delete later ;-):
-  b = new MovableType( KUrl( "http://wrong.url.org/somegateway" ) );
-  QVERIFY( b->url() == KUrl( "http://wrong.url.org/somegateway" ) );
+  b = new MovableType( QUrl("http://wrong.url.org/somegateway") );
+  QVERIFY( b->url() == QUrl("http://wrong.url.org/somegateway") );
   KTimeZone mTimeZone( KTimeZone( "UTC" ) );
   b->setUrl( mUrl );
   b->setUsername( mUsername );

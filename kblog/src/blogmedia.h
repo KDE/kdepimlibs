@@ -27,7 +27,7 @@
 
 #include <QtCore/QtAlgorithms>
 
-class KUrl;
+class QUrl;
 
 namespace KBlog {
 
@@ -88,7 +88,7 @@ class KBLOG_EXPORT BlogMedia
       @return The url on the server.
       @see setUrl( const KUrl& )
     */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
       Sets the url of the server side object. Note: You should *not* set this
@@ -97,7 +97,7 @@ class KBLOG_EXPORT BlogMedia
 
       @see url()
     */
-    void setUrl( const KUrl &url );
+    void setUrl( const QUrl &url );
 
     /**
       Returns the mimetype.

@@ -26,7 +26,7 @@
 #include "blog.h"
 
 #include <KDateTime>
-#include <KUrl>
+#include <QUrl>
 
 #include <QStringList>
 
@@ -203,22 +203,22 @@ void BlogPost::setSlug( const QString &slug )
     d_ptr->mWpSlug = slug;
 }
 
-KUrl BlogPost::link() const
+QUrl BlogPost::link() const
 {
   return d_ptr->mLink;
 }
 
-void BlogPost::setLink( const KUrl &link ) const
+void BlogPost::setLink( const QUrl &link ) const
 {
   d_ptr->mLink = link;
 }
 
-KUrl BlogPost::permaLink() const
+QUrl BlogPost::permaLink() const
 {
   return d_ptr->mPermaLink;
 }
 
-void BlogPost::setPermaLink( const KUrl &permalink ) const
+void BlogPost::setPermaLink( const QUrl &permalink ) const
 {
   d_ptr->mPermaLink = permalink;
 }

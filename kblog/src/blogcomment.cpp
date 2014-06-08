@@ -24,7 +24,7 @@
 #include "blogcomment_p.h"
 
 #include <KDateTime>
-#include <KUrl>
+#include <QUrl>
 
 #include <QStringList>
 
@@ -108,12 +108,13 @@ void BlogComment::setName( const QString &name )
 {
   d_ptr->mName = name;
 }
-KUrl BlogComment::url() const
+
+QUrl BlogComment::url() const
 {
   return d_ptr->mUrl;
 }
 
-void BlogComment::setUrl( const KUrl &url )
+void BlogComment::setUrl( const QUrl &url )
 {
   d_ptr->mUrl = url;
 }

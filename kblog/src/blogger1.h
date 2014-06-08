@@ -26,7 +26,7 @@
 
 #include <blog.h>
 
-class KUrl;
+class QUrl;
 
 /**
   @file
@@ -72,7 +72,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
       @param server is the url for the xmlrpc gateway.
       @param parent the parent object.
     */
-    explicit Blogger1( const KUrl &server, QObject *parent = 0 );
+    explicit Blogger1( const QUrl &server, QObject *parent = 0 );
 
     /**
        Destroy the object.
@@ -89,7 +89,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
 
        @param server is the server Url.
     */
-    void setUrl( const KUrl &server );
+    void setUrl( const QUrl &server );
 
     /**
         Get information about the user from the blog. Note: This is not
@@ -185,7 +185,7 @@ class KBLOG_EXPORT Blogger1 : public Blog
     /**
       Constructor needed for private inheritance.
     */
-    Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent = 0 );
+    Blogger1( const QUrl &server, Blogger1Private &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE( Blogger1 )

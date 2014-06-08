@@ -37,14 +37,14 @@
 
 using namespace KBlog;
 
-Blogger1::Blogger1( const KUrl &server, QObject *parent )
+Blogger1::Blogger1( const QUrl &server, QObject *parent )
   : Blog( server, *new Blogger1Private, parent )
 {
   qDebug();
   setUrl( server );
 }
 
-Blogger1::Blogger1( const KUrl &server, Blogger1Private &dd, QObject *parent )
+Blogger1::Blogger1( const QUrl &server, Blogger1Private &dd, QObject *parent )
   : Blog( server, dd, parent )
 {
   qDebug();
@@ -61,7 +61,7 @@ QString Blogger1::interfaceName() const
   return QLatin1String( "Blogger 1.0" );
 }
 
-void Blogger1::setUrl( const KUrl &server )
+void Blogger1::setUrl( const QUrl &server )
 {
   Q_D( Blogger1 );
   Blog::setUrl( server );

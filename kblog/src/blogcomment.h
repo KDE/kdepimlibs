@@ -29,7 +29,7 @@
 #include <QtCore/QtAlgorithms>
 
 class KDateTime;
-class KUrl;
+class QUrl;
 
 namespace KBlog {
 
@@ -151,9 +151,9 @@ class KBLOG_EXPORT BlogComment
     Returns the commentator's homepage URL.
     @return The url of the commentator's homepage
 
-    @see setUrl( const KUrl& )
+    @see setUrl( const QUrl& )
   */
-  KUrl url() const;
+  QUrl url() const;
 
   /**
     Sets the commentator's homepage URL.
@@ -161,7 +161,7 @@ class KBLOG_EXPORT BlogComment
 
     @see url()
   */
-  void setUrl( const KUrl &url );
+  void setUrl( const QUrl &url );
 
   /**
     Returns the modification date-time.

@@ -27,7 +27,7 @@
 
 #include <QtCore/QStringList>
 #include <kdatetime.h>
-#include <kurl.h>
+#include <QUrl>
 
 namespace KBlog{
 
@@ -50,7 +50,7 @@ class BlogPostPrivate
     QString mMusic;
     bool mCommentAllowed;
     bool mTrackBackAllowed;
-    KUrl mLink, mPermaLink;
+    QUrl mLink, mPermaLink;
     BlogPost::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;

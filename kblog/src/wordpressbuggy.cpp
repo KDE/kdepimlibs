@@ -34,13 +34,13 @@
 
 using namespace KBlog;
 
-WordpressBuggy::WordpressBuggy( const KUrl &server, QObject *parent )
+WordpressBuggy::WordpressBuggy( const QUrl &server, QObject *parent )
   : MovableType( server, *new WordpressBuggyPrivate, parent )
 {
   qDebug();
 }
 
-WordpressBuggy::WordpressBuggy( const KUrl &server, WordpressBuggyPrivate &dd,
+WordpressBuggy::WordpressBuggy( const QUrl &server, WordpressBuggyPrivate &dd,
                                 QObject *parent )
   : MovableType( server, dd, parent )
 {

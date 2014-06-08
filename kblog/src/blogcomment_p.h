@@ -26,7 +26,7 @@
 #include "blogcomment.h"
 
 #include <KDateTime>
-#include <KUrl>
+#include <QUrl>
 
 namespace KBlog{
 
@@ -39,7 +39,7 @@ class BlogCommentPrivate
     QString mEmail;
     QString mName;
     QString mCommentId;
-    KUrl mUrl;
+    QUrl mUrl;
     QString mError;
     BlogComment::Status mStatus;
     KDateTime mModificationDateTime;

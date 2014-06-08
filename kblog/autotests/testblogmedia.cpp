@@ -51,7 +51,7 @@ void testBlogMedia::testValidity_data()
 
     QTest::newRow( "SimpleTest" )
       << QString( "FancyMedia" )
-      << KUrl( "http://my.link/in/outer/space/fancyMedia.jpg" )
+      << QUrl("http://my.link/in/outer/space/fancyMedia.jpg")
       << QString( "text/xml" )
       << QByteArray( "Tags 1 2" )
       << BlogMedia::New
@@ -63,7 +63,7 @@ void testBlogMedia::testValidity()
     BlogMedia p;
 
     QFETCH( QString, name );
-    QFETCH( KUrl, url );
+    QFETCH( QUrl, url );
     QFETCH( QString, mimetype );
     QFETCH( QByteArray, data );
     QFETCH( BlogMedia::Status, status );

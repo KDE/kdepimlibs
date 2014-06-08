@@ -48,8 +48,8 @@ void testBlogPost::testValidity_data()
     QTest::addColumn<QString>( "content" );
     QTest::addColumn<bool>( "isPrivate" );
 //     QTest::addColumn<QString>( "abbreviatedContent" );
-    QTest::addColumn<KUrl>( "link" );
-    QTest::addColumn<KUrl>( "permalink" );
+    QTest::addColumn<QUrl>( "link" );
+    QTest::addColumn<QUrl>( "permalink" );
     QTest::addColumn<bool>( "isCommentAllowed" );
     QTest::addColumn<bool>( "isTrackBackAllowed" );
     QTest::addColumn<QString>( "summary" );
@@ -64,14 +64,14 @@ void testBlogPost::testValidity_data()
     QTest::addColumn<QString>( "error" );
 
 //     QList<KUrl> url;
-//     url.append( KUrl( "http://track.back.url/some/path" ) );
+//     url.append( QUrl("http://track.back.url/some/path") );
     QTest::newRow( "SimpleTest" )
       << QString( "123ABC" )
       << QString( "Title" )
       << QString( "Content" )
       << true //<< QString("Abbreviated Content")
-      << KUrl( "http://my.link/in/outer/space" )
-      << KUrl( "http://my.perma/link/space" )
+      << QUrl("http://my.link/in/outer/space")
+      << QUrl("http://my.perma/link/space")
       << true
       << true
       << QString( "Summary" )
@@ -93,8 +93,8 @@ void testBlogPost::testValidity()
     QFETCH( QString, content );
     QFETCH( bool, isPrivate );
 //     QFETCH( QString, abbreviatedContent );
-    QFETCH( KUrl, link );
-    QFETCH( KUrl, permalink );
+    QFETCH( QUrl, link );
+    QFETCH( QUrl, permalink );
     QFETCH( bool, isCommentAllowed );
     QFETCH( bool, isTrackBackAllowed );
     QFETCH( QString, summary );

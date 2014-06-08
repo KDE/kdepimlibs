@@ -32,7 +32,7 @@
 
 using namespace KBlog;
 
-LiveJournal::LiveJournal( const KUrl &server, QObject *parent )
+LiveJournal::LiveJournal( const QUrl &server, QObject *parent )
   : Blog( server, *new LiveJournalPrivate, parent )
 {
   setUrl( server );
@@ -250,7 +250,7 @@ void LiveJournal::removePost( KBlog::BlogPost *post )
                           SLOT(slotError(int,QString,QVariant)) ); // The slot to call on failure.
 }
 
-void LiveJournal::setUrl( const KUrl &server )
+void LiveJournal::setUrl( const QUrl &server )
 {
   Q_D( LiveJournal );
   Blog::setUrl( server );

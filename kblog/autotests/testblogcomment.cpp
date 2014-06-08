@@ -60,7 +60,7 @@ void testBlogComment::testValidity_data()
       << QString( "Content" )
       << QString( "Name" )
       << QString( "E-Mail" )
-      << KUrl( "http://my.link/in/outer/space/fancy/ABC123" )
+      << QUrl("http://my.link/in/outer/space/fancy/ABC123")
       << BlogComment::New
       << QString( "Error" )
       << KDateTime( QDateTime::currentDateTime() )
@@ -76,7 +76,7 @@ void testBlogComment::testValidity()
     QFETCH( QString, content );
     QFETCH( QString, name );
     QFETCH( QString, email );
-    QFETCH( KUrl, url );
+    QFETCH( QUrl, url );
     QFETCH( BlogComment::Status, status );
     QFETCH( QString, error );
     QFETCH( KDateTime, creationDateTime );

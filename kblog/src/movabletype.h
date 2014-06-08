@@ -25,7 +25,7 @@
 
 #include <metaweblog.h>
 
-class KUrl;
+class QUrl;
 
 /**
   @file
@@ -67,7 +67,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit MovableType( const KUrl &server, QObject *parent = 0 );
+    explicit MovableType( const QUrl &server, QObject *parent = 0 );
 
     /**
       Destroy the object.
@@ -122,7 +122,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
     /**
       Constructor needed for private inheritance.
     */
-    MovableType( const KUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
+    MovableType( const QUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
 
   private:
     Q_DECLARE_PRIVATE( MovableType )
