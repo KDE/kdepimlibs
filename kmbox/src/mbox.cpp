@@ -29,7 +29,7 @@
 
 #include <QDebug>
 #include <QStandardPaths>
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
@@ -566,7 +566,7 @@ QByteArray MBox::readMessageHeaders( const MBoxEntry &entry )
 
 bool MBox::save( const QString &fileName )
 {
-  if ( !fileName.isEmpty() && KUrl( fileName ).toLocalFile() != d->mMboxFile.fileName() ) {
+  if ( !fileName.isEmpty() && QUrl( fileName ).toLocalFile() != d->mMboxFile.fileName() ) {
     if ( !d->mMboxFile.copy( fileName ) ) {
       return false;
     }

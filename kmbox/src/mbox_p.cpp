@@ -20,7 +20,7 @@
 #include "mbox_p.h"
 
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 #include <QLocale>
 
 using namespace KMBox;
@@ -65,7 +65,7 @@ void MBoxPrivate::close()
 
 void MBoxPrivate::initLoad( const QString &fileName )
 {
-  mMboxFile.setFileName( KUrl( fileName ).toLocalFile() );
+  mMboxFile.setFileName( QUrl( fileName ).toLocalFile() );
   mAppendedEntries.clear();
   mEntries.clear();
 }
