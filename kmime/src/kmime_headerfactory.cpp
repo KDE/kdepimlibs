@@ -55,7 +55,7 @@ class KMime::HeaderFactoryPrivate
     QHash<QByteArray, HeaderMakerBase*> headerMakers; // Type->obj mapping; with lower-case type.
 };
 
-K_GLOBAL_STATIC( HeaderFactoryPrivate, sInstance )
+Q_GLOBAL_STATIC( HeaderFactoryPrivate, sInstance )
 
 HeaderFactoryPrivate::HeaderFactoryPrivate()
   : instance( new HeaderFactory( this ) )

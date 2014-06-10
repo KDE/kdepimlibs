@@ -33,7 +33,7 @@
 using namespace Akonadi;
 using namespace MailTransport;
 
-K_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
+Q_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
 
 void DispatcherInterfacePrivate::massModifyResult( KJob *job )
 {
