@@ -68,6 +68,10 @@ static const QString serverContent1 =
  * This test verifies that the ETM reacts as expected to signals from the monitor.
  * 
  * The tested ETM is only talking to fake components so the reaction of the ETM to each signal can be tested.
+ *
+ * WARNING: This test does no handle jobs issued by the model. It simply shortcuts (calls emitResult) them, and the connected
+ * slots are never executed (because the eventloop is not run after emitResult is called).
+ * This test therefore only tests the reaction of the model to signals of the monitor and not the overall behaviour.
  */
 class EntityTreeModelTest : public QObject
 {
@@ -222,8 +226,7 @@ void EntityTreeModelTest::testInitialFetch()
   QVERIFY(m_modelSpy->expectedSignals().isEmpty());
 
   // We didn't get signals we didn't expect.
-  // TODO: Currently we get data changed signals about fetch completed etc which are not handled by the test currently.
-//   QVERIFY( m_modelSpy->isEmpty() );
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 void EntityTreeModelTest::testCollectionMove_data()
@@ -304,7 +307,6 @@ void EntityTreeModelTest::testCollectionAdded()
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
   FakeServerData *serverData = testDrivers.first;
-  Akonadi::EntityTreeModel *model = testDrivers.second;
 
   FakeCollectionAddedCommand *addCommand = new FakeCollectionAddedCommand( addedCollection, parentCollection, serverData );
 
