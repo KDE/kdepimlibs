@@ -26,7 +26,7 @@
 #include <agentinstance.h>
 #include <servermanager.h>
 
-#include <KGlobal>
+
 #include <KLocalizedString>
 
 using namespace Akonadi;

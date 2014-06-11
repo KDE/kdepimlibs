@@ -25,7 +25,7 @@
 #include "ui_addtransportdialog.h"
 
 #include <QDebug>
-#include <KGlobal>
+
 
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>

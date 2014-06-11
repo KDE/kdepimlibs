@@ -49,7 +49,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
-#include <KGlobal>
+
 #include <KWallet/Wallet>
 
 #include <agentinstance.h>
