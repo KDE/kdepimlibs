@@ -27,7 +27,7 @@
 #include <qdebug.h>
 #include <klocalizedstring.h>
 #include <kcomponentdata.h>
-#include <kglobal.h>
+
 #include <kurl.h>
 #include <kio/global.h>
 
