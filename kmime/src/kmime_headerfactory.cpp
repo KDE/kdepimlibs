@@ -37,7 +37,6 @@
 #include <QHash>
 
 #include <QDebug>
-#include <KGlobal>
 
 using namespace KMime;
 
