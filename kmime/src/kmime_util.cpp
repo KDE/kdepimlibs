@@ -32,7 +32,7 @@
 
 #include <config-kmime.h>
 // #include <kdefakes.h> // for strcasestr
-#include <kglobal.h>
+
 #include <klocale.h>
 #include <klocalizedstring.h>
 #include <kcharsets.h>

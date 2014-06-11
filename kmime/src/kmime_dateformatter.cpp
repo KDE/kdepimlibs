@@ -39,7 +39,7 @@
 
 #include <QtCore/QTextStream>
 
-#include <kglobal.h>
+
 #include <klocalizedstring.h>
 #include <kcalendarsystem.h>
 #include <KLocale>
