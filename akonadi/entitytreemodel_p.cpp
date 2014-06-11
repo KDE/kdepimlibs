@@ -508,6 +508,11 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 {
     Q_Q(EntityTreeModel);
 
+    if (!m_collections.contains(collectionId)) {
+        kWarning() << "Collection has been removed while fetching items";
+        return;
+    }
+
     Item::List itemsToInsert;
 
     const Collection collection = m_collections.value(collectionId);
