@@ -67,5 +67,7 @@ target_link_libraries( abort ${KDE4_KDEUI_LIBS} mailtransport akonadi-kde)
 # Akonadi testrunner-based tests:
 
 add_akonadi_isolated_test( attributetest.cpp unittestenv )
-add_akonadi_isolated_test( messagequeuejobtest.cpp unittestenv )
 add_akonadi_isolated_test( filteractiontest.cpp unittestenv_akonadi )
+if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
+    add_akonadi_isolated_test( messagequeuejobtest.cpp unittestenv )
+endif ()
