@@ -79,4 +79,6 @@ target_link_libraries( abort KF5MailTransport KF5::AkonadiCore)
 
 #add_akonadi_isolated_test( attributetest.cpp unittestenv )
 #add_akonadi_isolated_test( messagequeuejobtest.cpp unittestenv )
+if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
 #add_akonadi_isolated_test( filteractiontest.cpp unittestenv_akonadi )
+endif()

@@ -38,6 +38,7 @@
 #include <collectionfetchjob.h>
 #include <collectionmodifyjob.h>
 #include <control.h>
+#include <servermanager.h>
 #include <qtest_akonadi.h>
 #include "../../specialcollectionattribute_p.h"
 #include "../../specialcollections_p.h"
@@ -88,7 +89,11 @@ void LocalFoldersTest::initTestCase()
 
 void LocalFoldersTest::testLock()
 {
-    const QString dbusName = QString::fromLatin1("org.kde.pim.SpecialCollections");
+    QString dbusName = QString::fromLatin1("org.kde.pim.SpecialCollections");
+    if (ServerManager::hasInstanceIdentifier()) {
+      dbusName += Akonadi::ServerManager::instanceIdentifier();
+    }
+
 
     // Initially not locked.
     QVERIFY(!DBusConnectionPool::threadConnection().interface()->isServiceRegistered(dbusName));
@@ -490,10 +495,15 @@ void LocalFoldersTest::testResourceScan()
     AKVERIFYEXEC(djob);
     djob = new CollectionDeleteJob(intruder, this);
     AKVERIFYEXEC(djob);
+
+    SpecialMailCollections::self()->destroy();
 }
 
 void LocalFoldersTest::testDefaultResourceJob()
 {
+    SpecialMailCollectionsTesting *scmt = SpecialMailCollectionsTesting::_t_self();
+    scmt->_t_setDefaultResourceId(QLatin1String("akonadi_maildir_resource"));
+
     // Initially the defaut maildir does not exist.
     QVERIFY(!QFile::exists(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '/' + QLatin1String("local-mail")));
 
