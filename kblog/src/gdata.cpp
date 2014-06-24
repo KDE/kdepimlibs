@@ -38,7 +38,6 @@
 
 #include <QByteArray>
 #include <QRegExp>
-#include <QDomDocument>
 
 #define TIMEOUT 600
 

@@ -26,7 +26,6 @@
 #include <KDateTime>
 #include <QUrl>
 
-#include <QStringList>
 
 namespace KBlog {
 

@@ -26,7 +26,6 @@
 
 #include <QDebug>
 #include <KLocalizedString>
-#include <KDateTime>
 
 #include <kio/job.h>
 

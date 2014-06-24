@@ -35,13 +35,10 @@
 #include <QtCore/QTextStream>
 #include <QApplication>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QWidget>
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QTcpSocket>
 
 #include "interactivesmtpserver.h"
 

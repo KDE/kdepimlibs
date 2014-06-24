@@ -27,7 +27,6 @@
 #include "sieve.h"
 #include "../common.h"
 #include <kdemacros.h>
-#include <QDebug>
 #include "sieve_debug.h"
 
 extern "C" {

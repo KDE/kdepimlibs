@@ -35,7 +35,6 @@
 #include <kurl.h>
 #include <QtCore/QUrl>
 #include <kdebug.h>
-#include <QDebug>
 
 #include <assert.h>
 

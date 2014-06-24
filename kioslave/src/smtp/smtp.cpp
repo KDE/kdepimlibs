@@ -57,7 +57,6 @@ using KioSMTP::SMTPSessionInterface;
 #include <kemailsettings.h>
 
 #include <kdebug.h>
-#include <QDebug>
 #include <kcomponentdata.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>
