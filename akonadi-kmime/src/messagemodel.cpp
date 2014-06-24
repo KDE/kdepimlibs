@@ -36,6 +36,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 #include <QtCore/QDebug>
 #include <KLocale>
+#include <KFormat>
 
 using namespace Akonadi;
 
@@ -127,7 +128,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             if (item.size() == 0) {
                 return i18nc("@label No size available", "-");
             } else {
-                return KLocale::global()->formatByteSize(item.size());
+                return KFormat().formatByteSize(item.size());
             }
         default:
             return QVariant();
