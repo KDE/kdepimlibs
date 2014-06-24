@@ -20,7 +20,6 @@
 
 #include "removeduplicatesjob.h"
 
-#include <QAbstractItemModel>
 
 #include <itemfetchjob.h>
 #include <itemdeletejob.h>

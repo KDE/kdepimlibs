@@ -21,7 +21,6 @@
 
 #include <KApplication>
 #include <KCmdLineArgs>
-#include <QDebug>
 #include <KLocale>
 #include <KLocalizedString>
 #include <KJob>

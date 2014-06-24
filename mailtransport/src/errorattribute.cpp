@@ -20,7 +20,6 @@
 #include "errorattribute.h"
 
 
-#include <QDebug>
 
 using namespace Akonadi;
 using namespace MailTransport;

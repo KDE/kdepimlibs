@@ -23,7 +23,6 @@
 
 #include "precommandjob.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QProcess>
