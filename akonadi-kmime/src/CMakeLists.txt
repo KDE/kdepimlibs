@@ -83,7 +83,8 @@ add_library( KF5::AkonadiMime ALIAS KF5AkonadiMime)
 
 target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
-
+# TODO: Remove when kdepimlibs is split (and fix the broken includes in eg. mailtransport)
+target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime>")
 
 target_link_libraries(KF5AkonadiMime
 PUBLIC
