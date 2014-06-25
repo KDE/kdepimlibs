@@ -20,7 +20,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libmailtransport5\")
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5324)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
-set(KF5_VERSION "4.98.0")
+set(KF5_VERSION "4.100.0")
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5MailTransport")
 
 ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX MAILTRANSPORT

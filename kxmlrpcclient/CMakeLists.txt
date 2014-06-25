@@ -16,7 +16,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
-set(KF5_VERSION "4.98.0")
+set(KF5_VERSION "4.100.0")
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libkxmlrpcclient5\")
 
