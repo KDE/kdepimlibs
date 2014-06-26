@@ -9,8 +9,6 @@ if(WIN32)
   )
 endif()
 
-kde_enable_exceptions()
-
 include_directories(
   ${CMAKE_BINARY_DIR}/akonadi/socialutils
 )

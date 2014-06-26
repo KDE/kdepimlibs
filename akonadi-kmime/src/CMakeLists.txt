@@ -1,5 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
 
 # FIXME Delete this block when akonadi-kmime is split
 # If building the monolithic kdepimlibs, kcfg2dbus.xsl is in akonadi/

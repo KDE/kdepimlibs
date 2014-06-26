@@ -1,7 +1,5 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
-kde_enable_exceptions()
-
 include(ECMAddTests)
 set(QT_REQUIRED_VERSION "5.2.0")
 find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)

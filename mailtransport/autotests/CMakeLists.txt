@@ -1,5 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
 
 include(ECMMarkAsTest)
 

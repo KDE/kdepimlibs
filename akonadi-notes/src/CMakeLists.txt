@@ -1,6 +1,3 @@
-# Turn exceptions on
-kde_enable_exceptions()
-
 set(akonadinotes_LIB_SRC
   noteutils.cpp
 )
