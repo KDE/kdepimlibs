@@ -86,7 +86,6 @@ feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
 )
-
 endif()
 
 # TODO Delete the following block when everything is done
