@@ -58,7 +58,6 @@ install(FILES
   ${KPimUtils_BINARY_DIR}/src/kpimutils_export.h
   ${KPimUtils_HEADERS}
   emailvalidator.h
-  processes.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KPIMUtils/kpimutils
     COMPONENT Devel
 )
