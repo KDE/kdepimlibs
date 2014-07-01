@@ -24,7 +24,7 @@ set(KF5_VERSION "5.0.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5MailTransport")
 
-ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX MAILTRANSPORT
+ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX MAILTRANSPORT
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailtransport_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MailTransportConfigVersion.cmake"
                         SOVERSION 5

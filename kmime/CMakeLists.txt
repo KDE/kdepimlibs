@@ -21,7 +21,7 @@ set(KF5_VERSION "5.0.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 set(QT_REQUIRED_VERSION "5.2.0")
 
-ecm_setup_version(${KF5_VERSION} VARIABLE_PREFIX KMIME
+ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX KMIME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kmime_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MimeConfigVersion.cmake"
                         SOVERSION 5
