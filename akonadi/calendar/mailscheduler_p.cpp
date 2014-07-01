@@ -44,12 +44,13 @@ public:
     MailClient *m_mailer;
 };
 
-MailScheduler::MailScheduler(QObject *parent) : Scheduler(parent)
+MailScheduler::MailScheduler(QObject *parent, MessageQueueJobFactory *factory) : Scheduler(parent)
     , d(new Private())
 
 {
     d->m_identityManager = new IdentityManager(/*ro=*/true, this);
-    d->m_mailer = new MailClient();
+    d->m_mailer = new MailClient(parent, factory);
+
     connect(d->m_mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
             SLOT(onMailerFinished(Akonadi::MailClient::Result,QString)));
 }
@@ -61,7 +62,7 @@ MailScheduler::~MailScheduler()
 }
 
 void MailScheduler::publish(const KCalCore::IncidenceBase::Ptr &incidence,
-                            const QString &recipients)
+                            const QString &recipients, MessageQueueJobFactory *factory)
 {
     Q_ASSERT(incidence);
     if (!incidence)
@@ -72,12 +73,13 @@ void MailScheduler::publish(const KCalCore::IncidenceBase::Ptr &incidence,
                         d->m_identityManager->identityForAddress(CalendarUtils::email()),
                         CalendarUtils::email(),
                         CalendarSettings::self()->bcc(), recipients, messageText,
-                        CalendarSettings::self()->mailTransport());
+                        CalendarSettings::self()->mailTransport(), factory);
 }
 
 void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incidence,
                                        KCalCore::iTIPMethod method,
-                                       const QString &recipients)
+                                       const QString &recipients,
+                                       MessageQueueJobFactory *factory)
 {
     Q_ASSERT(incidence);
     if (!incidence)
@@ -89,11 +91,11 @@ void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incid
                         Akonadi::CalendarUtils::email(),
                         CalendarSettings::self()->bcc(),
                         recipients, messageText,
-                        CalendarSettings::self()->mailTransport());
+                        CalendarSettings::self()->mailTransport(), factory);
 }
 
 void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incidence,
-                                       KCalCore::iTIPMethod method)
+                                       KCalCore::iTIPMethod method, MessageQueueJobFactory *factory)
 {
     Q_ASSERT(incidence);
     if (!incidence)
@@ -108,7 +110,7 @@ void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incid
         d->m_mailer->mailAttendees(incidence,
                                    d->m_identityManager->identityForAddress(CalendarUtils::email()),
                                    CalendarSettings::self()->bcc(), messageText,
-                                   CalendarSettings::self()->mailTransport());
+                                   CalendarSettings::self()->mailTransport(), factory);
     } else {
         QString subject;
         KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
@@ -120,9 +122,25 @@ void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incid
                                    d->m_identityManager->identityForAddress(CalendarUtils::email()),
                                    CalendarUtils::email(),
                                    CalendarSettings::self()->bcc(),
-                                   messageText, subject, CalendarSettings::self()->mailTransport());
+                                   messageText, subject, CalendarSettings::self()->mailTransport(), factory);
     }
 }
+
+void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incidence, KCalCore::iTIPMethod method, const QString &recipients)
+{
+    performTransaction(incidence, method, recipients, 0);
+}
+
+void MailScheduler::performTransaction(const KCalCore::IncidenceBase::Ptr &incidence, KCalCore::iTIPMethod method)
+{
+    performTransaction(incidence, method, 0);
+}
+
+void MailScheduler::publish(const KCalCore::IncidenceBase::Ptr &incidence, const QString &recipients)
+{
+    publish(incidence, recipients,0);
+}
+
 
 QString MailScheduler::freeBusyDir() const
 {

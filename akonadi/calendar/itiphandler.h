@@ -35,6 +35,10 @@
 #include <QString>
 #include <QWidget>
 
+namespace MailTransport {
+    class MessageQueueJob;
+}
+
 namespace Akonadi {
 
 /**
@@ -49,6 +53,19 @@ public:
 
     virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) = 0;
     virtual void createCalendar() = 0;
+};
+
+/**
+ * @short Factory to create MailTransport::MessageQueueJob jobs.
+ * @since 4.15
+ */
+class AKONADI_CALENDAR_EXPORT MessageQueueJobFactory : public QObject
+{
+    Q_OBJECT
+public:
+    explicit MessageQueueJobFactory(QObject *parent = 0);
+    virtual ~MessageQueueJobFactory();
+    virtual MailTransport::MessageQueueJob* createMessageQueueJob(QObject *parent,const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity );
 };
 
 /**
@@ -68,7 +85,7 @@ public:
     /**
      * Creates a new ITIPHandler instance.
      */
-    explicit ITIPHandler(QObject *parent = 0);
+    explicit ITIPHandler(QObject *parent = 0, MessageQueueJobFactory *factory = new MessageQueueJobFactory());
 
     /**
      * Destroys this instance.

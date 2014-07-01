@@ -38,6 +38,7 @@
 #include <kcalutils/stringify.h>
 
 #include <kpimidentities/identitymanager.h>
+#include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportmanager.h>
 
 #include <KMessageBox>
@@ -59,8 +60,22 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
 
-ITIPHandler::ITIPHandler(QObject *parent) : QObject(parent)
-    , d(new Private(this))
+MessageQueueJobFactory::MessageQueueJobFactory(QObject *parent)
+  : QObject(parent)
+{
+}
+
+MessageQueueJobFactory::~MessageQueueJobFactory()
+{
+}
+
+MailTransport::MessageQueueJob *MessageQueueJobFactory::createMessageQueueJob(QObject *parent, const KCalCore::IncidenceBase::Ptr &/*incidence*/, const KPIMIdentities::Identity &/*identity*/)
+{
+    return new MailTransport::MessageQueueJob(parent);
+}
+
+ITIPHandler::ITIPHandler(QObject *parent, MessageQueueJobFactory *factory) : QObject(parent)
+    , d(new Private(this, factory))
 {
     qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
 }

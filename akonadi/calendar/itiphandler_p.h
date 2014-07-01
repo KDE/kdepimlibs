@@ -58,7 +58,7 @@ class ITIPHandler::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private(ITIPHandler *q);
+    Private(ITIPHandler *q, MessageQueueJobFactory *factory);
 
     void finishProcessiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
     void finishSendiTIPMessage(Akonadi::MailScheduler::Result, const QString &errorMessage);
