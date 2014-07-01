@@ -67,7 +67,7 @@ class ITIPHandlerHelper : public QObject
 {
     Q_OBJECT
 public:
-    explicit ITIPHandlerHelper(QWidget *parent = 0);   // TODO
+    explicit ITIPHandlerHelper(QWidget *parent = 0, MessageQueueJobFactory *factory = new MessageQueueJobFactory());   // TODO
     ~ITIPHandlerHelper();
 
     enum SendResult {

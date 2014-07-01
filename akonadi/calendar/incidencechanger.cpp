@@ -132,7 +132,7 @@ ConflictPreventer* ConflictPreventer::self()
     return &sConflictPreventerPrivate->instance;
 }
 
-IncidenceChanger::Private::Private(bool enableHistory, IncidenceChanger *qq) : q(qq)
+IncidenceChanger::Private::Private(bool enableHistory, IncidenceChanger *qq, MessageQueueJobFactory *factory) : q(qq)
 {
     mLatestChangeId = 0;
     mShowDialogsOnError = true;
@@ -146,6 +146,7 @@ IncidenceChanger::Private::Private(bool enableHistory, IncidenceChanger *qq) : q
     mAutoAdjustRecurrence = true;
     m_collectionFetchJob = 0;
     m_invitationPolicy = InvitationPolicyAsk;
+    mFactory = factory;
 
     qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
     qRegisterMetaType<Akonadi::Item::Id>("Akonadi::Item::Id");
@@ -423,7 +424,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
 {
     bool result = true;
     if (mGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget);    // TODO make async
+        ITIPHandlerHelper handler(change->parentWidget, mFactory);    // TODO make async
 
         if (m_invitationPolicy == InvitationPolicySend) {
             handler.setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
@@ -510,7 +511,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
 bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &change)
 {
     if (change->useGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget);   // TODO make async
+        ITIPHandlerHelper handler(change->parentWidget, mFactory);   // TODO make async
 
         const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
         const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
@@ -632,13 +633,13 @@ bool IncidenceChanger::Private::myAttendeeStatusChanged(const Incidence::Ptr &ne
     return oldMe && newMe && oldMe->status() != newMe->status();
 }
 
-IncidenceChanger::IncidenceChanger(QObject *parent) : QObject(parent)
-    , d(new Private(/**history=*/true, this))
+IncidenceChanger::IncidenceChanger(QObject *parent, MessageQueueJobFactory *factory) : QObject(parent)
+    , d(new Private(/**history=*/true, this, factory))
 {
 }
 
-IncidenceChanger::IncidenceChanger(bool enableHistory, QObject *parent) : QObject(parent)
-    , d(new Private(enableHistory, this))
+IncidenceChanger::IncidenceChanger(bool enableHistory, QObject *parent, MessageQueueJobFactory *factory) : QObject(parent)
+    , d(new Private(enableHistory, this, factory))
 {
 }
 

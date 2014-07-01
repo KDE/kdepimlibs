@@ -25,8 +25,8 @@
 
 using namespace Akonadi;
 
-ITIPHandler::Private::Private(ITIPHandler *qq) : m_calendarLoadError(false)
-    , m_scheduler(new MailScheduler(qq))
+ITIPHandler::Private::Private(ITIPHandler *qq, MessageQueueJobFactory *factory) : m_calendarLoadError(false)
+    , m_scheduler(new MailScheduler(qq, factory))
     , m_method(KCalCore::iTIPNoMethod)
     , m_helper(new ITIPHandlerHelper())   //TODO parent
     , m_currentOperation(OperationNone)

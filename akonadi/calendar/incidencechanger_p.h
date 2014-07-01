@@ -250,7 +250,7 @@ class IncidenceChanger::Private : public QObject
 {
     Q_OBJECT
 public:
-    explicit Private(bool enableHistory, IncidenceChanger *mIncidenceChanger);
+    explicit Private(bool enableHistory, IncidenceChanger *mIncidenceChanger, MessageQueueJobFactory *factory);
     ~Private();
 
     void loadCollections();  // async-loading of list of writable collections
@@ -352,6 +352,7 @@ public:
 
 private:
     IncidenceChanger *q;
+    MessageQueueJobFactory *mFactory;
 };
 
 }

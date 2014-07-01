@@ -38,6 +38,51 @@ using namespace Akonadi;
 Q_DECLARE_METATYPE(KPIMIdentities::Identity)
 Q_DECLARE_METATYPE(KCalCore::Incidence::Ptr)
 
+class FakeMessageQueueJob: public MailTransport::MessageQueueJob
+ {
+ public:
+     explicit FakeMessageQueueJob( QObject *parent = 0)
+     :MailTransport::MessageQueueJob(parent)
+     {
+
+     }
+
+     virtual void start()
+     {
+         UnitTestResult unitTestResult;
+         unitTestResult.message     = message();
+         unitTestResult.from        = addressAttribute().from();
+         unitTestResult.to          = addressAttribute().to();
+         unitTestResult.cc          = addressAttribute().cc();
+         unitTestResult.bcc         = addressAttribute().bcc();
+         unitTestResult.transportId = transportAttribute().transportId();
+         FakeMessageQueueJob::sUnitTestResults << unitTestResult;
+
+         setError(Akonadi::MailClient::ResultSuccess);
+         setErrorText(QString());
+
+         emit emitResult();
+     }
+
+     static UnitTestResult::List sUnitTestResults;
+ };
+
+
+UnitTestResult::List FakeMessageQueueJob::sUnitTestResults;
+
+class FakeMessageQueueJobFactory: public MessageQueueJobFactory
+{
+public:
+    virtual ~FakeMessageQueueJobFactory()
+    {
+    }
+
+    virtual MailTransport::MessageQueueJob *createMessageQueueJob(QObject *parent, const KCalCore::IncidenceBase::Ptr &/*incidence*/, const KPIMIdentities::Identity &/*identity*/)
+    {
+        return new FakeMessageQueueJob(parent);
+    }
+};
+
 class MailClientTest : public QObject
 {
     Q_OBJECT
@@ -56,7 +101,6 @@ private Q_SLOTS:
 
         mPendingSignals = 0;
         mMailClient = new MailClient(this);
-        mMailClient->sRunningUnitTests = true;
         mLastResult = MailClient::ResultSuccess;
         connect(mMailClient, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
                 SLOT(handleFinished(Akonadi::MailClient::Result,QString)));
@@ -193,10 +237,11 @@ private Q_SLOTS:
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedCcList);
         QFETCH(QStringList, expectedBccList);
-        mMailClient->sUnitTestResults.clear();
+
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
-        mMailClient->mailAttendees(incidence, identity, bccMe, attachment, transport);
+        mMailClient->mailAttendees(incidence, identity, bccMe, attachment, transport, new FakeMessageQueueJobFactory());
         waitForSignals();
 
         if (mLastResult != expectedResult) {
@@ -206,10 +251,10 @@ private Q_SLOTS:
         }
 
         UnitTestResult unitTestResult;
-        if (mMailClient->sUnitTestResults.isEmpty()) {
+        if (FakeMessageQueueJob::sUnitTestResults.isEmpty()) {
             qDebug() << "mail results are empty";
         } else {
-            unitTestResult = mMailClient->sUnitTestResults.first();
+            unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         }
 
         if (expectedTransportId != -1 && unitTestResult.transportId != expectedTransportId) {
@@ -287,14 +332,14 @@ private Q_SLOTS:
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedBccList);
         QFETCH(QString, expectedSubject);
-        mMailClient->sUnitTestResults.clear();
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
-        mMailClient->mailOrganizer(incidence, identity, from, bccMe, attachment, subject, transport);
+        mMailClient->mailOrganizer(incidence, identity, from, bccMe, attachment, subject, transport, new FakeMessageQueueJobFactory());
         waitForSignals();
         QCOMPARE(mLastResult, expectedResult);
 
-        UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
+        UnitTestResult unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         if (expectedTransportId != -1)
             QCOMPARE(unitTestResult.transportId, expectedTransportId);
 
@@ -354,13 +399,13 @@ private Q_SLOTS:
         QFETCH(QString, expectedFrom);
         QFETCH(QStringList, expectedToList);
         QFETCH(QStringList, expectedBccList);
-        mMailClient->sUnitTestResults.clear();
+        FakeMessageQueueJob::sUnitTestResults.clear();
 
         mPendingSignals = 1;
-        mMailClient->mailTo(incidence, identity, from, bccMe, recipients, attachment, transport);
+        mMailClient->mailTo(incidence, identity, from, bccMe, recipients, attachment, transport, new FakeMessageQueueJobFactory());
         waitForSignals();
         QCOMPARE(mLastResult, expectedResult);
-        UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
+        UnitTestResult unitTestResult = FakeMessageQueueJob::sUnitTestResults.first();
         if (expectedTransportId != -1)
             QCOMPARE(unitTestResult.transportId, expectedTransportId);
 

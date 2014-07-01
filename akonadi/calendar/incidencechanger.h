@@ -22,6 +22,8 @@
 
 #include "akonadi-calendar_export.h"
 
+#include "itiphandler.h"
+
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
 #include <kcalcore/incidence.h>
@@ -136,7 +138,7 @@ public:
       * Creates a new IncidenceChanger instance.
       * @param parent parent QObject
       */
-    explicit IncidenceChanger(QObject *parent = 0);
+    explicit IncidenceChanger(QObject *parent = 0, MessageQueueJobFactory *factory=new MessageQueueJobFactory());
 
     /**
       * Destroys this IncidenceChanger instance.
@@ -431,7 +433,7 @@ private:
     friend class History;
     friend class AtomicOperation;
     // used internally by the History class
-    explicit IncidenceChanger(bool enableHistory, QObject *parent = 0);
+    explicit IncidenceChanger(bool enableHistory, QObject *parent = 0, MessageQueueJobFactory *factory = new MessageQueueJobFactory());
     class Private;
     Private *const d;
     //@endcond
