@@ -37,10 +37,10 @@ set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Tnef")
 
 # FIXME: remove this if/endif when KCalCore is split.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
-  find_package(KF5CalendarCore ${KF5_VERSION} CONFIG REQUIRED)
-  find_package(KF5CalendarUtils ${KF5_VERSION} CONFIG REQUIRED)
-  find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
-  find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
+  find_package(KF5CalendarCore ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
+  find_package(KF5CalendarUtils ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
+  find_package(KF5PimUtils ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
+  find_package(KF5Abc ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
 endif()
 
 
