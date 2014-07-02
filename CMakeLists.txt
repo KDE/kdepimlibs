@@ -99,6 +99,9 @@ if (NOT KDEPIM_ONLY_KLEO)
   find_package(QJSON)
   set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
 
+  find_package(LibKGAPI2 2.1.50 QUIET CONFIG)
+  set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build native Blogger API support in KBlog")
+
   if (KDE4_BUILD_TESTS)
     find_package(Xsltproc)
     set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
