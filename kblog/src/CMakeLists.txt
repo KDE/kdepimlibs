@@ -56,7 +56,7 @@ install(TARGETS KF5Blog EXPORT KF5BlogTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS
 
 ########### Generate Headers ###############
 if (KF5GAPI_FOUND)
-   set(kgapi_bloger Blogger)
+   set(kgapi_blogger Blogger)
 endif()
 
 ecm_generate_headers(KBlog_CamelCase_HEADERS
@@ -70,7 +70,7 @@ ecm_generate_headers(KBlog_CamelCase_HEADERS
   MetaWeblog
   MovableType
   WordpressBuggy
-  ${kgapi_bloger}
+  ${kgapi_blogger}
   PREFIX KBlog
   REQUIRED_HEADERS KBlog_HEADERS
 )
