@@ -34,6 +34,7 @@ find_package(KF5GAPI "4.70.0" CONFIG)
 find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
+find_package(Qt5WebKitWidgets ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 
 # FIXME: remove this if/endif when KMime is split.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")

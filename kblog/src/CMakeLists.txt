@@ -13,6 +13,12 @@ set(kblog_SRCS
    wordpressbuggy.cpp
    )
 
+MESSAGE( STATUS "KGAPI_FOUND :${KGAPI_FOUND}")
+if( KF5GAPI_FOUND )
+   set(kblog_LIB_SRCS ${kblog_LIB_SRCS} blogger.cpp)
+endif()
+
+
 add_library(KF5Blog ${kblog_SRCS})
 
 generate_export_header(KF5Blog BASE_NAME kblog)
@@ -33,6 +39,13 @@ PRIVATE
   KF5::KIOCore
 )
 
+if (KF5GAPI_FOUND)
+   target_link_libraries(KF5Blog
+   PRIVATE
+     KF5::GAPIBlogger Qt5::WebKitWidgets)
+endif()
+
+
 set_target_properties(KF5Blog PROPERTIES
     VERSION ${KBLOG_VERSION_STRING}
     SOVERSION ${KBLOG_SOVERSION}
@@ -42,6 +55,10 @@ set_target_properties(KF5Blog PROPERTIES
 install(TARGETS KF5Blog EXPORT KF5BlogTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### Generate Headers ###############
+if (KF5GAPI_FOUND)
+   set(kgapi_bloger Blogger)
+endif()
+
 ecm_generate_headers(KBlog_CamelCase_HEADERS
   HEADER_NAMES
   Blog
@@ -53,6 +70,7 @@ ecm_generate_headers(KBlog_CamelCase_HEADERS
   MetaWeblog
   MovableType
   WordpressBuggy
+  ${kgapi_bloger}
   PREFIX KBlog
   REQUIRED_HEADERS KBlog_HEADERS
 )
