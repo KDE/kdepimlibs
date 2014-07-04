@@ -1,4 +1,4 @@
 REVIEWBOARD_URL = "https://git.reviewboard.kde.org"
-REPOSITORY = "git://anongit.kde.org/kdepimlibs"
+#REPOSITORY = "git://anongit.kde.org/kmime"
 BRANCH = "frameworks"
 TARGET_GROUPS = "kdepimlibs"
