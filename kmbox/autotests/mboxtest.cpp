@@ -56,7 +56,7 @@ void MboxTest::removeTestFile()
 
 void MboxTest::initTestCase()
 {
-  mTempDir = new KTempDir( KStandardDirs::locateLocal( "tmp" , QLatin1String( testDir ) ) );
+  mTempDir = new KTempDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
 
   QDir temp( mTempDir->name() );
   QVERIFY( temp.exists() );
