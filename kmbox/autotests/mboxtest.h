@@ -25,7 +25,7 @@
 
 #include "mbox.h"
 
-class KTempDir;
+class QTemporaryDir;
 
 class MboxTest : public QObject
 {
@@ -51,7 +51,7 @@ class MboxTest : public QObject
     void removeTestFile();
 
   private:
-    KTempDir *mTempDir;
+    QTemporaryDir *mTempDir;
     KMime::Message::Ptr mMail1;
     KMime::Message::Ptr mMail2;
 };

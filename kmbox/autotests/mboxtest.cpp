@@ -25,7 +25,7 @@
 #include <qtest_kde.h>
 #include <QStandardPaths>
 #include <KStandardDirs>
-#include <ktempdir.h>
+#include <QTemporaryDir>
 
 QTEST_KDEMAIN( MboxTest, NoGUI )
 
@@ -39,12 +39,12 @@ static const char * testLockFile = "test-mbox-lock-file";
 
 QString MboxTest::fileName()
 {
-  return mTempDir->name() + QLatin1String( testFile );
+  return mTempDir->path() + QLatin1Char('/') + QLatin1String( testFile );
 }
 
 QString MboxTest::lockFileName()
 {
-  return mTempDir->name() + QLatin1String( testLockFile );
+  return mTempDir->path() + QLatin1Char('/') + QLatin1String( testLockFile );
 }
 
 void MboxTest::removeTestFile()
@@ -56,9 +56,9 @@ void MboxTest::removeTestFile()
 
 void MboxTest::initTestCase()
 {
-  mTempDir = new KTempDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
+  mTempDir = new QTemporaryDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
 
-  QDir temp( mTempDir->name() );
+  QDir temp( mTempDir->path() );
   QVERIFY( temp.exists() );
 
   QFile mboxfile( fileName() );
@@ -458,7 +458,7 @@ void MboxTest::testHeaders()
 
 void MboxTest::cleanupTestCase()
 {
-  mTempDir->unlink();
+  mTempDir->remove();
 }
 
 //---------------------------------------------------------------------

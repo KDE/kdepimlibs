@@ -23,7 +23,7 @@
 
 #include <qtest_kde.h>
 #include <kstandarddirs.h>
-#include <ktempdir.h>
+#include <QTemporaryDir>
 
 QTEST_KDEMAIN( MBoxBenchmark, NoGUI )
 
@@ -36,12 +36,12 @@ static const char * testFile = "test-mbox-file";
 
 QString MBoxBenchmark::fileName()
 {
-  return mTempDir->name() + QLatin1String( testFile );
+  return mTempDir->path() + QLatin1Char('/') + QLatin1String( testFile );
 }
 
 void MBoxBenchmark::initTestCase()
 {
-  mTempDir = new KTempDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
+  mTempDir = new QTemporaryDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
   mMail1 = KMime::Message::Ptr( new KMime::Message );
   mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
   mMail1->parse();
@@ -49,7 +49,7 @@ void MBoxBenchmark::initTestCase()
 
 void MBoxBenchmark::cleanupTestCase()
 {
-  mTempDir->unlink();
+  mTempDir->remove();
 }
 
 void MBoxBenchmark::testNoLockPerformance()

@@ -24,7 +24,7 @@
 
 #include "mbox.h"
 
-class KTempDir;
+class QTemporaryDir;
 
 class MBoxBenchmark : public QObject
 {
@@ -40,7 +40,7 @@ class MBoxBenchmark : public QObject
     QString fileName();
 
   private:
-    KTempDir *mTempDir;
+    QTemporaryDir *mTempDir;
     KMime::Message::Ptr mMail1;
 };
 
