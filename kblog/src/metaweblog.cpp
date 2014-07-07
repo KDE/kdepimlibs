@@ -35,6 +35,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QDataStream>
 #include <QStandardPaths>
+#include <QDir>
+#include <QFileInfo>
 
 using namespace KBlog;
 
@@ -135,8 +137,8 @@ void MetaWeblogPrivate::loadCategories()
   }
 
   QString filename = QStringLiteral("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
-  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename, true ;
-
+  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename;
+  QDir().mkpath(QFileInfo(filename).absolutePath());
   QFile file( filename );
   if ( !file.open( QIODevice::ReadOnly ) ) {
     qDebug() << "Cannot open cached categories file: " << filename;
@@ -157,8 +159,8 @@ void MetaWeblogPrivate::saveCategories()
   }
 
   QString filename = QStringLiteral("kblog/") + mUrl.host() + QLatin1Char('_') + mBlogId + QLatin1Char('_') + mUsername;
-  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename, true ;
-
+  filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + filename;
+  QDir().mkpath(QFileInfo(filename).absolutePath());
   QFile file( filename );
   if ( !file.open( QIODevice::WriteOnly ) ) {
     qDebug() << "Cannot open cached categories file: " << filename;
