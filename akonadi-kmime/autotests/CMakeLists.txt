@@ -7,8 +7,8 @@ remove_definitions( -DQT_NO_CAST_FROM_ASCII )
 remove_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set( requester_srcs foldersrequester.cpp )
-kde4_add_executable( requester TEST "${requester_srcs}" )
-target_link_libraries( requester akonadi-kmime akonadi-kde ${KDE4_KDEUI_LIBS})
+add_executable( requester TEST "${requester_srcs}" )
+target_link_libraries( requester akonadi-kmime akonadi-kde )
 # for racetest
 set(requester_exe_string "QLatin1String( \\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\\" )" )
 add_definitions( -DREQUESTER_EXE="${requester_exe_string}" )
@@ -19,18 +19,14 @@ add_definitions( -DREQUESTER_EXE="${requester_exe_string}" )
 macro(add_akonadi_isolated_test _source)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )
-  kde4_add_kcfg_files( _srcList ../specialmailcollectionssettings.kcfgc )
+  kconfig_add_kcfg_files( _srcList ../specialmailcollectionssettings.kcfgc )
 
-  kde4_add_executable(${_targetName} TEST ${_srcList})
+  add_executable(${_targetName} TEST ${_srcList})
   target_link_libraries(${_targetName}
-    ${QT_QTTEST_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTDBUS_LIBRARY}
+    Qt5::Test
     ${KDE4_AKONADI_LIBS}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_MAILTRANSPORT_LIBS}
-    ${KDE4_KMIME_LIBS}
+    KF5::MailTransport
+    KF5::Mime
     akonadi-kde
     akonadi-kmime
   )
