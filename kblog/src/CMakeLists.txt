@@ -2,7 +2,7 @@ remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 
 set(kblog_SRCS
    blog.cpp
-   blogpost.cpp
+   blogger.cpp
    blogcomment.cpp
    blogmedia.cpp
    blogger1.cpp
@@ -13,9 +13,8 @@ set(kblog_SRCS
    wordpressbuggy.cpp
    )
 
-MESSAGE( STATUS "KGAPI_FOUND :${KGAPI_FOUND}")
 if( KF5GAPI_FOUND )
-   set(kblog_LIB_SRCS ${kblog_LIB_SRCS} blogger.cpp)
+   set(kblog_SRCS ${kblog_LIB_SRCS} blogger.cpp)
 endif()
 
 

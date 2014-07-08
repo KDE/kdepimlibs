@@ -21,7 +21,7 @@
 #define KBLOG_BLOGGER_H
 
 #include <kblog/blog.h>
-
+#include <KUrl>
 #include <QMap>
 
 namespace KGAPI2
