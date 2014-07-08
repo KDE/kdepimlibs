@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(Akonadi-KAbc)
+project(Akonadi-Abc)
 
 # ECM setup
 find_package(ECM 1.0.0 CONFIG REQUIRED)
@@ -19,9 +19,9 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "5.0.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 
-ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIKABC
-                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-kabc_version.h"
-                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiKAbcConfigVersion.cmake"
+ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIABC
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-abc_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiAbcConfigVersion.cmake"
                         SOVERSION 5
 )
 
@@ -30,25 +30,25 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIKABC
 add_subdirectory(src)
 
 ########### CMake Config Files ###########
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiKAbc")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiAbc")
 
 ecm_configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiKAbcConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiKAbcConfig.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiAbcConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiAbcConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiKAbcConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiKAbcConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiAbcConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiAbcConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
 
-install(EXPORT KF5AkonadiKAbcTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5AkonadiKAbcTargets.cmake NAMESPACE KF5::)
+install(EXPORT KF5AkonadiAbcTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5AkonadiAbcTargets.cmake NAMESPACE KF5::)
 
 install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kabc_version.h
+   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-abc_version.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR} COMPONENT Devel
 )
 

@@ -20,7 +20,7 @@
 #ifndef AKONADI_CONTACTPARTS_H
 #define AKONADI_CONTACTPARTS_H
 
-#include "akonadi-kabc_export.h"
+#include "akonadi-abc_export.h"
 
 namespace Akonadi
 {
@@ -37,7 +37,7 @@ namespace ContactPart
  * that contains only name and email addresses.
  * @since 4.2
  */
-AKONADI_KABC_EXPORT extern const char *Lookup;
+AKONADI_ABC_EXPORT extern const char *Lookup;
 
 /**
  * The part identifier for all the contact data except
@@ -47,7 +47,7 @@ AKONADI_KABC_EXPORT extern const char *Lookup;
  *       full contact including images and sounds.
  * @since 4.2
  */
-AKONADI_KABC_EXPORT extern const char *Standard;
+AKONADI_ABC_EXPORT extern const char *Standard;
 }
 }
 
