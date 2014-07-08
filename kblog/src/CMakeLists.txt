@@ -14,7 +14,7 @@ set(kblog_SRCS
    )
 
 if( KF5GAPI_FOUND )
-   set(kblog_SRCS ${kblog_LIB_SRCS} blogger.cpp)
+   set(kblog_SRCS ${kblog_SRCS} blogger.cpp)
 endif()
 
 
