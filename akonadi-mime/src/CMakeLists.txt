@@ -1,10 +1,9 @@
 
-# FIXME Delete this block when akonadi-kmime is split
+# FIXME Delete this block when akonadi-mime is split
 # If building the monolithic kdepimlibs, kcfg2dbus.xsl is in akonadi/
-if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-KMime_SOURCE_DIR}")
+if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-Mime_SOURCE_DIR}")
   set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
 endif()
-
 
 # generates a D-Bus interface description from a KConfigXT file
 macro(kcfg_generate_dbus_interface _kcfg _name)
@@ -22,14 +21,14 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
   string(TOLOWER ${_className} _codeFile)
   set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt5_add_dbus_interface(akonadikmime_SRCS
+  qt5_add_dbus_interface(akonadimime_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
   )
 endmacro()
 
 ########### next target ###############
 
-set(akonadikmime_SRCS
+set(akonadimime_SRCS
     addressattribute.cpp
     attributeregistrar.cpp
     removeduplicatesjob.cpp
@@ -58,13 +57,13 @@ add_resource_iface(imapresource.kcfg
 
 #REACTIVATE
 #if (KDE4_BUILD_TESTS)
-#    set(akonadikmime_SRCS
-#        ${akonadikmime_SRCS}
+#    set(akonadimime_SRCS
+#        ${akonadimime_SRCS}
 #        specialmailcollectionstesting.cpp
 #    )
 #endif()
 
-KCONFIG_ADD_KCFG_FILES(akonadikmime_SRCS
+kconfig_add_kcfg_files(akonadimime_SRCS
     specialmailcollectionssettings.kcfgc
 )
 
@@ -73,14 +72,15 @@ install(FILES
     DESTINATION ${KCFG_INSTALL_DIR}
 )
 
-add_library(KF5AkonadiMime ${akonadikmime_SRCS})
+add_library(KF5AkonadiMime ${akonadimime_SRCS})
 
-generate_export_header(KF5AkonadiMime BASE_NAME akonadi-kmime)
+generate_export_header(KF5AkonadiMime BASE_NAME akonadi-mime)
 
-add_library( KF5::AkonadiMime ALIAS KF5AkonadiMime)
+add_library(KF5::AkonadiMime ALIAS KF5AkonadiMime)
 
+# NOTE: The include directories remain 'akonadi/kmime' to be as SC as possible.
 target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${Boost_INCLUDE_DIR}>")
-target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-KMime_SOURCE_DIR}/src;${Akonadi-KMime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-Mime_SOURCE_DIR}/src;${Akonadi-Mime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 # TODO: Remove when kdepimlibs is split (and fix the broken includes in eg. mailtransport)
 target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime>")
 
@@ -94,14 +94,9 @@ PRIVATE
 )
 
 set_target_properties(KF5AkonadiMime PROPERTIES
-    VERSION ${AKONADIKMIME_VERSION_STRING}
-    SOVERSION ${AKONADIKMIME_SOVERSION}
+    VERSION ${AKONADIMIME_VERSION_STRING}
+    SOVERSION ${AKONADIMIME_SOVERSION}
     EXPORT_NAME AkonadiMime
-)
-
-ecm_generate_pri_file(BASE_NAME AkonadiMime
-    LIB_NAME KF5AkonadiMime
-    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
 )
 
 install(TARGETS
@@ -138,8 +133,12 @@ install(FILES
 
 install(FILES
     ${AkonadiMime_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_export.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime
     COMPONENT Devel
 )
 
+ecm_generate_pri_file(BASE_NAME AkonadiMime
+    LIB_NAME KF5AkonadiMime
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+)

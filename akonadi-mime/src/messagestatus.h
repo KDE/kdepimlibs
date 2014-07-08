@@ -24,7 +24,7 @@
 
 #include <QtCore/QSet>
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 class QString;
 
@@ -48,7 +48,7 @@ namespace Akonadi {
 
   @since 4.6.
 */
-class AKONADI_KMIME_EXPORT MessageStatus
+class AKONADI_MIME_EXPORT MessageStatus
 {
   public:
     /** Constructor - sets status initially to unknown. */

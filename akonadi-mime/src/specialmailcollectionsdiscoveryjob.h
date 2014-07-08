@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
-                  2007 Till Adam <adam@kde.org>
+    Copyright (c) 2013 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,36 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_MESSAGEPARTS_H
-#define AKONADI_MESSAGEPARTS_H
+#ifndef SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
+#define SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
-namespace Akonadi
+#include <specialcollectionsdiscoveryjob.h>
+
+namespace Akonadi {
+
+class AKONADI_MIME_EXPORT SpecialMailCollectionsDiscoveryJob : public SpecialCollectionsDiscoveryJob
 {
-/**
- * @short Contains predefined part identifiers.
- *
- * This namespace contains identifiers of item parts that are used for
- * handling email items.
- */
-namespace MessagePart
-{
-/**
- * The part identifier for envelope parts.
- */
-AKONADI_KMIME_EXPORT extern const char *Envelope;
+    Q_OBJECT
+public:
+    SpecialMailCollectionsDiscoveryJob(QObject *parent = 0);
+};
 
-/**
- * The part identifier for the main body part.
- */
-AKONADI_KMIME_EXPORT extern const char *Body;
-
-/**
- * The part identifier for the header part.
- */
-AKONADI_KMIME_EXPORT extern const char *Header;
-}
 }
 
-#endif
+#endif /* SPECIALMAILCOLLECTIONSDISCOVERYJOB_H */

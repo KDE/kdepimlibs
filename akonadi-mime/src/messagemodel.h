@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGEMODEL_H
 #define AKONADI_MESSAGEMODEL_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 #include <itemmodel.h>
 #include <job.h>
@@ -36,7 +36,7 @@ namespace Akonadi {
  * @deprecated Subclass Akonadi::EntityTreeModel instead. An example can be seen in AkonadiConsole,
  *             have a look at AkonadiBrowserModel there.
  */
-class AKONADI_KMIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
+class AKONADI_MIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
 {
     Q_OBJECT
 

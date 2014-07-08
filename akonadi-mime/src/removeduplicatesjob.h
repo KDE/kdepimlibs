@@ -24,7 +24,7 @@
 #include <job.h>
 #include <collection.h>
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 class QAbstractItemModel;
 
@@ -38,7 +38,7 @@ namespace Akonadi {
  *
  * @since 4.10
  */
-class AKONADI_KMIME_EXPORT RemoveDuplicatesJob : public Akonadi::Job
+class AKONADI_MIME_EXPORT RemoveDuplicatesJob : public Akonadi::Job
 {
     Q_OBJECT
 

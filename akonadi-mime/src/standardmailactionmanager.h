@@ -22,7 +22,7 @@
 #ifndef AKONADI_STANDARDMAILACTIONMANAGER_H
 #define AKONADI_STANDARDMAILACTIONMANAGER_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 #include <standardactionmanager.h>
 
@@ -44,7 +44,7 @@ class Item;
  * @author Andras Mantia <amantia@kde.org>
  * @since 4.6
  */
-class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
+class AKONADI_MIME_EXPORT StandardMailActionManager : public QObject
 {
     Q_OBJECT
 

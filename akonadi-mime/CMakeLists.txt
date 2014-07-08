@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(Akonadi-KMime)
+project(Akonadi-Mime)
 
 # ECM setup
 find_package(ECM 1.0.0 CONFIG REQUIRED)
@@ -19,8 +19,8 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "5.0.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 
-ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIKMIME
-                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_version.h"
+ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiMimeConfigVersion.cmake"
                         SOVERSION 5
 )
@@ -29,7 +29,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIKMIME
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-KMime_SOURCE_DIR})
+if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
   find_package(KF5Mime CONFIG REQUIRED)
   find_package(KF5PimUtils CONFIG REQUIRED)
@@ -70,7 +70,7 @@ install(FILES
 install(EXPORT KF5AkonadiMimeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5AkonadiMimeTargets.cmake NAMESPACE KF5::)
 
 install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kmime_version.h
+   ${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_version.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR} COMPONENT Devel
 )
 

@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGEFOLDERATTRIBUTE_H
 #define AKONADI_MESSAGEFOLDERATTRIBUTE_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 #include <attribute.h>
 
@@ -32,7 +32,7 @@ namespace Akonadi {
   Message folder information. Used eg. by mail clients to decide how to display the content of such collections
   @since 4.4
 */
-class AKONADI_KMIME_EXPORT MessageFolderAttribute : public Attribute
+class AKONADI_MIME_EXPORT MessageFolderAttribute : public Attribute
 {
 public:
     /**

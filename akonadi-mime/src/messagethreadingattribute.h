@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGETHREADINGATTRIBUTE_H
 #define AKONADI_MESSAGETHREADINGATTRIBUTE_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 #include <attribute.h>
 #include <item.h>
@@ -32,7 +32,7 @@ namespace Akonadi {
  * @deprecated This attribute is not used for threading and will not work.
  *             Use the messagelist component in the kdepim module instead.
  */
-class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribute
+class AKONADI_MIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribute
 {
 public:
     /**

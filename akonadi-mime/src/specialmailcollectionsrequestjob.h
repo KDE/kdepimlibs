@@ -20,7 +20,7 @@
 #ifndef AKONADI_SPECIALMAILCOLLECTIONSREQUESTJOB_H
 #define AKONADI_SPECIALMAILCOLLECTIONSREQUESTJOB_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 #include "specialmailcollections.h"
 
 #include <specialcollectionsrequestjob.h>
@@ -69,7 +69,7 @@ class SpecialMailCollectionsRequestJobPrivate;
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
 */
-class AKONADI_KMIME_EXPORT SpecialMailCollectionsRequestJob : public SpecialCollectionsRequestJob
+class AKONADI_MIME_EXPORT SpecialMailCollectionsRequestJob : public SpecialCollectionsRequestJob
 {
     Q_OBJECT
 

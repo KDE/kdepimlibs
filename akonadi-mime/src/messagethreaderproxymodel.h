@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGETHREADERPROXYMODEL_H
 #define AKONADI_MESSAGETHREADERPROXYMODEL_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 #include <QAbstractProxyModel>
 #include <QtCore/QModelIndex>
 
@@ -35,7 +35,7 @@ class Collection;
  * @deprecated This model is not used for threading and will not work.
  *             Use the messagelist component in the kdepim module instead.
  */
-class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
+class AKONADI_MIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
 {
     Q_OBJECT
 

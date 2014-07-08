@@ -20,7 +20,7 @@
 #ifndef AKONADI_SPECIALMAILCOLLECTIONS_H
 #define AKONADI_SPECIALMAILCOLLECTIONS_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-mime_export.h"
 
 #include <specialcollections.h>
 
@@ -64,7 +64,7 @@ class SpecialMailCollectionsPrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
+class AKONADI_MIME_EXPORT SpecialMailCollections : public SpecialCollections
 {
     Q_OBJECT
 
