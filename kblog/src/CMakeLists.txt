@@ -11,6 +11,7 @@ set(kblog_SRCS
    metaweblog.cpp
    movabletype.cpp
    wordpressbuggy.cpp
+   blogpost.cpp
    )
 
 if( KF5GAPI_FOUND )
