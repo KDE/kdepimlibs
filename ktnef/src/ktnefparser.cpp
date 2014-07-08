@@ -483,6 +483,7 @@ bool KTNEFParser::ParserPrivate::extractAttachmentTo( KTNEFAttach *att,
       }
     }
   }
+  outfile.commit();
   delete [] buf;
 
   return ok;
