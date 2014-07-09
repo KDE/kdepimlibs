@@ -23,11 +23,12 @@
 
 #include "kpimutils/email.h"
 
+#include <KUrl>
 #include <qdebug.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( EMailTest, NoGUI )
+QTEST_MAIN( EMailTest )
 
 using namespace KPIMUtils;
 Q_DECLARE_METATYPE( EmailParseResult )

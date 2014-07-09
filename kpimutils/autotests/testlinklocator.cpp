@@ -22,11 +22,11 @@
 #include "testlinklocator.h"
 
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qdebug.h>
 
 // GUI test, since the smileys use GUI stuff
-QTEST_KDEMAIN( LinkLocatorTest, GUI )
+QTEST_MAIN( LinkLocatorTest )
 
 #include "kpimutils/linklocator.h"
 using namespace KPIMUtils;
