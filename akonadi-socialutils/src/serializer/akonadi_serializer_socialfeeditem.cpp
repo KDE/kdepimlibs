@@ -25,11 +25,11 @@
 #include <item.h>
 
 #include <QtCore/qplugin.h>
-#if 0
-#include <qjson/qobjecthelper.h>
-#include <qjson/parser.h>
-#include <qjson/serializer.h>
-#endif
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 using namespace Akonadi;
 
 bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
@@ -45,40 +45,41 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
 
   SocialFeedItem feedItem;
 
-  QJson::Parser parser;
-  QVariantMap map = parser.parse( data.readAll() ).toMap();
+  QJsonDocument json = QJsonDocument::fromJson( data.readAll() );
+  QJsonObject map = json.object();
 
-  feedItem.setNetworkString( map.value( QLatin1String( "networkString" ) ).toString() );
-  feedItem.setPostId( map.value( QLatin1String( "postId" ) ).toString() );
-  feedItem.setPostText( map.value( QLatin1String( "postText" ) ).toString() );
-  feedItem.setPostLinkTitle( map.value( QLatin1String( "postLinkTitle" ) ).toString() );
-  feedItem.setPostLink( map.value( QLatin1String( "postLink" ) ).toUrl() );
-  feedItem.setPostImageUrl( map.value( QLatin1String( "postImageUrl" ) ).toUrl() );
-  feedItem.setPostInfo( map.value( QLatin1String( "postInfo" ) ).toString() );
-  feedItem.setUserName( map.value( QLatin1String( "userName" ) ).toString() );
-  feedItem.setUserDisplayName( map.value( QLatin1String( "userDisplayName" ) ).toString() );
-  feedItem.setUserId( map.value( QLatin1String( "userId" ) ).toString() );
-  feedItem.setAvatarUrl( map.value( QLatin1String( "avatarUrl" ) ).toUrl() );
-  feedItem.setPostTime( map.value( QLatin1String( "postTimeString" ) ).toString(),
-                        map.value( QLatin1String( "postTimeFormat" ) ).toString() );
-  feedItem.setShared( map.value( QLatin1String( "shared" ) ).toBool() );
-  feedItem.setSharedFrom( map.value( QLatin1String( "sharedFrom" ) ).toString() );
-  feedItem.setSharedFromId( map.value( QLatin1String( "sharedFromId" ) ).toString() );
-  feedItem.setLiked( map.value( QLatin1String( "liked" ) ).toBool() );
-  feedItem.setItemSourceMap( map.value( QLatin1String( "itemSourceMap" ) ).toMap() );
+  feedItem.setNetworkString( map.value( QStringLiteral( "networkString" ) ).toString() );
+  feedItem.setPostId( map.value( QStringLiteral( "postId" ) ).toString() );
+  feedItem.setPostText( map.value( QStringLiteral( "postText" ) ).toString() );
+  feedItem.setPostLinkTitle( map.value( QStringLiteral( "postLinkTitle" ) ).toString() );
+  feedItem.setPostLink( QUrl::fromUserInput( map.value( QStringLiteral( "postLink" ) ).toString() ) );
+  feedItem.setPostImageUrl( QUrl::fromUserInput( map.value( QStringLiteral( "postImageUrl" ) ).toString() ) );
+  feedItem.setPostInfo( map.value( QStringLiteral( "postInfo" ) ).toString() );
+  feedItem.setUserName( map.value( QStringLiteral( "userName" ) ).toString() );
+  feedItem.setUserDisplayName( map.value( QStringLiteral( "userDisplayName" ) ).toString() );
+  feedItem.setUserId( map.value( QStringLiteral( "userId" ) ).toString() );
+  feedItem.setAvatarUrl( QUrl::fromUserInput( map.value( QStringLiteral( "avatarUrl" ) ).toString() ) );
+  feedItem.setPostTime( map.value( QStringLiteral( "postTimeString" ) ).toString(),
+                        map.value( QStringLiteral( "postTimeFormat" ) ).toString() );
+  feedItem.setShared( map.value( QStringLiteral( "shared" ) ).toBool() );
+  feedItem.setSharedFrom( map.value( QStringLiteral( "sharedFrom" ) ).toString() );
+  feedItem.setSharedFromId( map.value( QStringLiteral( "sharedFromId" ) ).toString() );
+  feedItem.setLiked( map.value( QStringLiteral( "liked" ) ).toBool() );
+  feedItem.setItemSourceMap( map.value( QStringLiteral( "itemSourceMap" ) ).toVariant().toMap() );
 
-  if ( map.keys().contains( QLatin1String( "postReplies" ) ) ) {
+  if ( map.keys().contains( QStringLiteral( "postReplies" ) ) ) {
     QList<SocialFeedItem> replies;
-    Q_FOREACH ( const QVariant &replyData, map.value( QLatin1String( "postReplies" ) ).toList() ) {
-      QVariantMap reply = replyData.toMap();
+    QJsonArray repliesArray = map.value( QStringLiteral( "postReplies" ) ).toArray();
+    Q_FOREACH ( const QJsonValue &replyData, repliesArray ) {
+      QJsonObject reply = replyData.toObject();
       SocialFeedItem postReply;
-      postReply.setUserId( reply.value( QLatin1String( "userId" ) ).toString() );
-      postReply.setUserName( reply.value( QLatin1String( "userName" ) ).toString() );
-      postReply.setAvatarUrl( reply.value( QLatin1String( "userAvatarUrl" ) ).toString() );
-      postReply.setPostText( reply.value( QLatin1String( "replyText" ) ).toString() );
-//       postReply.setPostTime( reply.value( QLatin1String( "replyTime" ) ).toString();
-      postReply.setPostId( reply.value( QLatin1String( "replyId" ) ).toString() );
-//       postReply.postId        = reply.value( QLatin1String( "postId" ) ).toString();
+      postReply.setUserId( reply.value( QStringLiteral( "userId" ) ).toString() );
+      postReply.setUserName( reply.value( QStringLiteral( "userName" ) ).toString() );
+      postReply.setAvatarUrl( QUrl::fromUserInput( reply.value( QStringLiteral( "userAvatarUrl" ) ).toString() ) );
+      postReply.setPostText( reply.value( QStringLiteral( "replyText" ) ).toString() );
+//       postReply.setPostTime( reply.value( QStringLiteral( "replyTime" ) ).toString();
+      postReply.setPostId( reply.value( QStringLiteral( "replyId" ) ).toString() );
+//       postReply.postId        = reply.value( QStringLiteral( "postId" ) ).toString();
 
       replies.append( postReply );
     }
@@ -86,7 +87,7 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
     feedItem.setPostReplies( replies );
   }
 
-  item.setMimeType( QLatin1String( "text/x-vnd.akonadi.socialfeeditem" ) );
+  item.setMimeType( QStringLiteral( "text/x-vnd.akonadi.socialfeeditem" ) );
   item.setPayload<SocialFeedItem>( feedItem );
 
   return true;
@@ -106,50 +107,46 @@ void SocialFeedItemSerializerPlugin::serialize( const Item &item,
 
   SocialFeedItem feedItem = item.payload<SocialFeedItem>();
 
-  QVariantMap map;
+  QJsonObject map;
 
-  map.insert( QLatin1String( "networkString" ), feedItem.networkString() );
-  map.insert( QLatin1String( "postId" ), feedItem.postId() );
-  map.insert( QLatin1String( "postText" ), feedItem.postText() );
-  map.insert( QLatin1String( "postLinkTitle" ), feedItem.postLinkTitle() );
-  map.insert( QLatin1String( "postLink" ), feedItem.postLink() );
-  map.insert( QLatin1String( "postImageUrl" ), feedItem.postImageUrl() );
-  map.insert( QLatin1String( "postInfo" ), feedItem.postInfo() );
-  map.insert( QLatin1String( "userName" ), feedItem.userName() );
-  map.insert( QLatin1String( "userDisplayName" ), feedItem.userDisplayName() );
-  map.insert( QLatin1String( "userId" ), feedItem.userId() );
-  map.insert( QLatin1String( "avatarUrl" ), feedItem.avatarUrl() );
-  map.insert( QLatin1String( "postTimeString" ), feedItem.postTimeString() );
-  map.insert( QLatin1String( "postTimeFormat" ), feedItem.postTimeFormat() );
-  map.insert( QLatin1String( "shared" ), feedItem.isShared() );
-  map.insert( QLatin1String( "sharedFrom" ), feedItem.sharedFrom() );
-  map.insert( QLatin1String( "sharedFromId" ), feedItem.sharedFromId() );
-  map.insert( QLatin1String( "liked" ), feedItem.isLiked() );
-  map.insert( QLatin1String( "itemSourceMap" ), feedItem.itemSourceMap() );
+  map.insert( QStringLiteral( "networkString" ), feedItem.networkString() );
+  map.insert( QStringLiteral( "postId" ), feedItem.postId() );
+  map.insert( QStringLiteral( "postText" ), feedItem.postText() );
+  map.insert( QStringLiteral( "postLinkTitle" ), feedItem.postLinkTitle() );
+  map.insert( QStringLiteral( "postLink" ), feedItem.postLink().toString() );
+  map.insert( QStringLiteral( "postImageUrl" ), feedItem.postImageUrl().toString() );
+  map.insert( QStringLiteral( "postInfo" ), feedItem.postInfo() );
+  map.insert( QStringLiteral( "userName" ), feedItem.userName() );
+  map.insert( QStringLiteral( "userDisplayName" ), feedItem.userDisplayName() );
+  map.insert( QStringLiteral( "userId" ), feedItem.userId() );
+  map.insert( QStringLiteral( "avatarUrl" ), feedItem.avatarUrl().toString() );
+  map.insert( QStringLiteral( "postTimeString" ), feedItem.postTimeString() );
+  map.insert( QStringLiteral( "postTimeFormat" ), feedItem.postTimeFormat() );
+  map.insert( QStringLiteral( "shared" ), feedItem.isShared() );
+  map.insert( QStringLiteral( "sharedFrom" ), feedItem.sharedFrom() );
+  map.insert( QStringLiteral( "sharedFromId" ), feedItem.sharedFromId() );
+  map.insert( QStringLiteral( "liked" ), feedItem.isLiked() );
+  map.insert( QStringLiteral( "itemSourceMap" ), QJsonObject::fromVariantMap( feedItem.itemSourceMap() ) );
 
   if (!feedItem.postReplies().isEmpty() ) {
-    QVariantList replies;
+    QJsonArray replies;
     Q_FOREACH ( const SocialFeedItem &reply, feedItem.postReplies() ) {
-      QVariantMap replyData;
-      replyData.insert( QLatin1String( "userId" ), reply.userId() );
-      replyData.insert( QLatin1String( "userName" ), reply.userName() );
-      replyData.insert( QLatin1String( "userAvatarUrl" ), reply.avatarUrl() );
-      replyData.insert( QLatin1String( "replyText" ), reply.postText() );
-//       replyData.insert( QLatin1String( "replyTime" ), reply.postTimeString() );
-      replyData.insert( QLatin1String( "replyId" ), reply.postId() );
-//       replyData.insert( QLatin1String( "postId" ), reply.postId );
+      QJsonObject replyData;
+      replyData.insert( QStringLiteral( "userId" ), reply.userId() );
+      replyData.insert( QStringLiteral( "userName" ), reply.userName() );
+      replyData.insert( QStringLiteral( "userAvatarUrl" ), reply.avatarUrl().toString() );
+      replyData.insert( QStringLiteral( "replyText" ), reply.postText() );
+//       replyData.insert( QStringLiteral( "replyTime" ), reply.postTimeString() );
+      replyData.insert( QStringLiteral( "replyId" ), reply.postId() );
+//       replyData.insert( QStringLiteral( "postId" ), reply.postId );
       replies.append( replyData );
     }
 
-    map.insert( QLatin1String( "postReplies" ), replies );
+    map.insert( QStringLiteral( "postReplies" ), replies );
   }
+  // TODO: rather use compact json format?
+  data.write( QJsonDocument( map ).toJson( QJsonDocument::Indented ) );
 
-  QJson::Serializer serializer;
-#if !defined( USE_QJSON_0_8 )
-  data.write( serializer.serialize( map ) );
-#else
-  data.write( serializer.serialize( map, 0 ) );
-#endif
 }
 
 QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const
@@ -158,6 +155,3 @@ QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const
   // i.e. when using the "label" parameter of the other two methods
   return ItemSerializerPlugin::parts( item );
 }
-
-Q_EXPORT_PLUGIN2( akonadi_serializer_socialfeeditem, Akonadi::SocialFeedItemSerializerPlugin )
-

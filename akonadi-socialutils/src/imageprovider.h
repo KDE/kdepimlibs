@@ -24,7 +24,7 @@
 
 #include "akonadi-socialutils_export.h"
 
-#include <KDE/KUrl>
+#include <QUrl>
 #include <KImageCache>
 class KJob;
 class QImage;
@@ -54,7 +54,7 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
      * @param polishImage set to true if you want the image to have rounded corners,
      *        used for avatars mainly
      */
-    QImage loadImage( const QString &who, const KUrl &url,
+    QImage loadImage( const QString &who, const QUrl &url,
                       bool polishImage = false, KImageCache *cache = 0 );
     /**
      * Aborts all running jobs
@@ -69,7 +69,7 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
      * @param url URL of the image
      * @param image The image itself
      */
-    void imageLoaded( const QString &who, const KUrl &url, const QImage &image );
+    void imageLoaded( const QString &who, const QUrl &url, const QImage &image );
 
   private:
     ImageProviderPrivate * const d_ptr;

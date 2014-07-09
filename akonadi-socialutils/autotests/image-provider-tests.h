@@ -25,14 +25,14 @@
 #include <qtest.h>
 
 #include <QImage>
-#include <KUrl>
+#include <QUrl>
 
 class ImageProviderTests : public QObject
 {
 Q_OBJECT
 
 public Q_SLOTS:
-    void onImageFetched(const QString &who, const KUrl &url, QImage image);
+    void onImageFetched(const QString &who, const QUrl &url, QImage image);
 
 private Q_SLOTS:
     void testImageNoCache();
@@ -46,7 +46,7 @@ private:
 
     QImage m_image;
     QString m_name;
-    KUrl m_url;
+    QUrl m_url;
 };
 
 #endif // IMAGE_PROVIDER_TESTS_H

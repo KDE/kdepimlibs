@@ -36,13 +36,13 @@ void ImageProviderTests::setup()
 
     Akonadi::ImageProvider i;
     QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                KUrl( IMAGE_URL ),
+                                QUrl( IMAGE_URL ),
                                 true,
                                 cache );
 
-    connect(&i, SIGNAL(imageLoaded(QString,KUrl,QImage)),
-            this, SLOT(onImageFetched(QString,KUrl,QImage)));
-    connect(&i, SIGNAL(imageLoaded(QString,KUrl,QImage)),
+    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
+            this, SLOT(onImageFetched(QString,QUrl,QImage)));
+    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
             &e, SLOT(quit()));
 
     //wait for the fetcher to finish
@@ -56,7 +56,7 @@ void ImageProviderTests::testImageNoCache()
 
     Akonadi::ImageProvider i;
     QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                KUrl( IMAGE_URL ),
+                                QUrl( IMAGE_URL ),
                                 true,
                                 cache);
 
@@ -70,7 +70,7 @@ void ImageProviderTests::testImageInCache()
     QVERIFY( !m_image.isNull() );
 }
 
-void ImageProviderTests::onImageFetched( const QString &who, const KUrl &url, QImage image )
+void ImageProviderTests::onImageFetched( const QString &who, const QUrl &url, QImage image )
 {
     m_image = image;
     m_name = who;
@@ -95,7 +95,7 @@ void ImageProviderTests::testImageFetchingUrl()
 {
     setup();
 
-    QCOMPARE( m_url, KUrl( IMAGE_URL ) );
+    QCOMPARE( m_url, QUrl( IMAGE_URL ) );
 }
 
 QTEST_MAIN( ImageProviderTests );

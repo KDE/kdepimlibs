@@ -4,7 +4,7 @@ project(Akonadi-SocialUtils)
 
 # ECM setup
 find_package(ECM 1.0.0 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${Akonadi-SocialUtils_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
@@ -26,9 +26,8 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
 )
 
 ########### Find packages ###########
-find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-SocialUtils_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)

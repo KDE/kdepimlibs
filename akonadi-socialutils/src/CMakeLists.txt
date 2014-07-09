@@ -5,8 +5,7 @@ if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-SocialUtils_SOURCE_DIR}")
   set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
 endif()
 
-#REACTIVATE IT
-#add_subdirectory(serializer)
+add_subdirectory(serializer)
 
 set(akonadi_social_utils_SRCS
   socialnetworkattributes.cpp

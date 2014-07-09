@@ -34,7 +34,7 @@ class Akonadi::ImageProviderPrivate
 
     struct QueuedJobHelper {
       QString who;
-      KUrl url;
+      QUrl url;
       bool polishImage;
     };
 
@@ -124,7 +124,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
     image.loadFromData( jobData.value( job ) );
     KIO::TransferJob* kiojob = dynamic_cast<KIO::TransferJob*>( job );
     const QString cacheKey = who + QLatin1Char( '@' ) +
-                             kiojob->property( "imageUrl" ).value<KUrl>().pathOrUrl();
+                             kiojob->property( "imageUrl" ).value<QUrl>().toDisplayString();
 
     qDebug() << "Downloaded image for" << who << "(key:" << cacheKey << ")";
 
@@ -134,7 +134,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
     bool polishImage = job->property( "polishImage" ).toBool();
 
     Q_EMIT q->imageLoaded( who,
-                           kiojob->property( "imageUrl" ).value<KUrl>(),
+                           kiojob->property( "imageUrl" ).value<QUrl>(),
                            polishImage ? this->polishImage( image ) : image );
   }
 
@@ -157,7 +157,7 @@ Akonadi::ImageProvider::~ImageProvider()
   delete d;
 }
 
-QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
+QImage Akonadi::ImageProvider::loadImage( const QString &who, const QUrl &url,
                                           bool polishImage, KImageCache *cache )
 {
   Q_D( ImageProvider );
@@ -179,7 +179,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
     d->imageCache = cache;
   }
 
-  const QString cacheKey = who + QLatin1Char( '@' ) + url.pathOrUrl();
+  const QString cacheKey = who + QLatin1Char( '@' ) + url.toDisplayString();
 
   // Make sure we only start one job per user
   if ( d->pendingPersons.contains( cacheKey ) ) {

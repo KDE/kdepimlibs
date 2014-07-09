@@ -1,5 +1,3 @@
-project(socialfeeditemserializer)
-
 if(WIN32)
   set(
     LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
