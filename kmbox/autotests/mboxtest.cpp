@@ -22,12 +22,12 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QStandardPaths>
 #include <KStandardDirs>
 #include <QTemporaryDir>
 
-QTEST_KDEMAIN( MboxTest, NoGUI )
+QTEST_MAIN( MboxTest )
 
 #include "test-entries.h"
 

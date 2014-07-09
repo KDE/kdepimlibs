@@ -21,11 +21,11 @@
 
 #include <QtCore/QCryptographicHash>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <kstandarddirs.h>
 #include <QTemporaryDir>
 
-QTEST_KDEMAIN( MBoxBenchmark, NoGUI )
+QTEST_MAIN( MBoxBenchmark )
 
 #include "test-entries.h"
 
