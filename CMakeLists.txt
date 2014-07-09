@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### The kdepimlibs version (used e.g. in KdepimLibsConfig.cmake) ###############
 set(KDEPIMLIBS_VERSION_MAJOR 4)
 set(KDEPIMLIBS_VERSION_MINOR 13)
-set(KDEPIMLIBS_VERSION_PATCH 80)
+set(KDEPIMLIBS_VERSION_PATCH 81)
 set(KDEPIMLIBS_VERSION ${KDEPIMLIBS_VERSION_MAJOR}.${KDEPIMLIBS_VERSION_MINOR}.${KDEPIMLIBS_VERSION_PATCH})
 
 
@@ -98,9 +98,6 @@ if (NOT KDEPIM_ONLY_KLEO)
 
   find_package(QJSON)
   set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
-
-  find_package(LibKGAPI2 2.1.50 QUIET CONFIG)
-  set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build native Blogger API support in KBlog")
 
   if (KDE4_BUILD_TESTS)
     find_package(Xsltproc)
