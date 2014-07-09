@@ -9,7 +9,7 @@ generate_export_header(KF5AkonadiAbc BASE_NAME akonadi-abc)
 add_library(KF5::AkonadiAbc ALIAS KF5AkonadiAbc)
 
 # NOTE: include subdirs are 'akonadi/kabc' to remain as SC as possible.
-target_include_directories(KF5AkonadiAbc INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KAbc;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiAbc INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KAbc>")
 target_include_directories(KF5AkonadiAbc PUBLIC "$<BUILD_INTERFACE:${Akonadi-Abc_SOURCE_DIR}/src;${Akonadi-Abc_BINARY_DIR}/src>")
 
 target_link_libraries(KF5AkonadiAbc
