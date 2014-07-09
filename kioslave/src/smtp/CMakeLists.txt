@@ -1,7 +1,6 @@
 
 
-#REACTIVATE
-#add_subdirectory(tests)
+#REACTIVATE add_subdirectory(tests)
 
 set(smtp_optional_includes)
 set(smtp_optional_libs)

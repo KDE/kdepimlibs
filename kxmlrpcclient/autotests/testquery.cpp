@@ -19,11 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "testquery.h"
 
-QTEST_KDEMAIN( TestQuery, NoGUI )
+QTEST_MAIN( TestQuery )
 
 #include <kxmlrpcclient/query.h>
 using namespace KXmlRpc;

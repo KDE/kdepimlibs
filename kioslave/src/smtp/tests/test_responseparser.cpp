@@ -1,10 +1,10 @@
 #include "test_responseparser.h"
 #include "../response.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <assert.h>
 
-QTEST_KDEMAIN_CORE( ResponseParserTest )
+QTEST_GUILESS_MAIN( ResponseParserTest )
 
 static const QByteArray singleLineResponseCRLF = "250 OK\r\n";
 static const QByteArray singleLineResponse     = "250 OK";

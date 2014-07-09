@@ -7,7 +7,7 @@ set(test_responseparser_SRCS test_responseparser.cpp )
 
 kde4_add_unit_test(test_responseparser TESTNAME smtp-responseparser ${test_responseparser_SRCS})
 
-target_link_libraries(test_responseparser   ${QT_QTTEST_LIBRARY})
+target_link_libraries(test_responseparser   Qt5::Test)
 
 ########### next target ###############
 
