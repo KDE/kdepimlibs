@@ -9,7 +9,7 @@ generate_export_header(KF5XmlRpcClient BASE_NAME kxmlrpcclient)
 
 add_library(KF5::XmlRpcClient ALIAS KF5XmlRpcClient)
 
-target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KXmlRpcClient;${KF5_INCLUDE_INSTALL_DIR}/KXmlRpcClient/kxmlrpcclient>")
+target_include_directories(KF5XmlRpcClient INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KXmlRpcClient/kxmlrpcclient>")
 
 target_link_libraries(KF5XmlRpcClient 
 PUBLIC 
