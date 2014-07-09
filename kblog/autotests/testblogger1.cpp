@@ -24,8 +24,8 @@
 #include "kblog/blogger1.h"
 #include "kblog/blogpost.h"
 
-#include <qtest_kde.h>
-
+#include <qtest.h>
+#include <QTimer>
 #include <unistd.h>
 #include <ktimezone.h>
 #include <kdatetime.h>
@@ -387,4 +387,4 @@ void TestBlogger1::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE( TestBlogger1 )
+QTEST_GUILESS_MAIN( TestBlogger1 )

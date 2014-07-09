@@ -25,11 +25,12 @@
 #include "kblog/blogpost.h"
 #include "kblog/blogcomment.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <unistd.h>
 #include <ktimezone.h>
 #include <kdatetime.h>
+#include <QTimer>
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 140000
@@ -483,4 +484,4 @@ void TestGData::testNetwork()
   delete c;
 }
 
-QTEST_KDEMAIN_CORE( TestGData )
+QTEST_GUILESS_MAIN( TestGData )

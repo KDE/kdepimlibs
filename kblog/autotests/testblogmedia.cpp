@@ -22,7 +22,7 @@
 #include <QtTest>
 #include <QtCore>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "kblog/blogmedia.h"
 #include "kurl.h"
 
@@ -85,4 +85,4 @@ void testBlogMedia::testValidity()
 
 }
 
-QTEST_KDEMAIN_CORE( testBlogMedia )
+QTEST_GUILESS_MAIN( testBlogMedia )

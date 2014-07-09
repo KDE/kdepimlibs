@@ -24,7 +24,7 @@
 #include "kblog/livejournal.h"
 #include "kblog/blogpost.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <unistd.h>
 #include <ktimezone.h>
@@ -368,4 +368,4 @@ void TestLiveJournal::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE( TestLiveJournal )
+QTEST_GUILESS_MAIN( TestLiveJournal )

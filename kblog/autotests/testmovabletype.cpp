@@ -25,11 +25,12 @@
 #include "kblog/blogpost.h"
 #include "kblog/blogmedia.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <unistd.h>
 #include <ktimezone.h>
 #include <kdatetime.h>
+#include <QTimer>
 
 #define TIMEOUT 20000
 #define GLOBALTIMEOUT 140000
@@ -438,4 +439,4 @@ void TestMovableType::testNetwork()
   delete p;
 }
 
-QTEST_KDEMAIN_CORE( TestMovableType )
+QTEST_GUILESS_MAIN( TestMovableType )

@@ -22,7 +22,7 @@
 #include <QtTest>
 #include <QtCore>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "kblog/blogpost.h"
 #include "kurl.h"
 #include "kdatetime.h"
@@ -148,4 +148,4 @@ void testBlogPost::testValidity()
     QCOMPARE( p.error(), error );
 }
 
-QTEST_KDEMAIN_CORE( testBlogPost )
+QTEST_GUILESS_MAIN( testBlogPost )
