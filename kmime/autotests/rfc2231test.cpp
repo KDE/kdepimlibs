@@ -16,7 +16,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "rfc2231test.h"
 
@@ -24,7 +24,7 @@
 #include <QDebug>
 using namespace KMime;
 
-QTEST_KDEMAIN( RFC2231Test, NoGUI )
+QTEST_MAIN( RFC2231Test )
 
 void RFC2231Test::testRFC2231decode()
 {

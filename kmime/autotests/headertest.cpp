@@ -20,7 +20,7 @@
 #include "headertest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime_headers.h>
 
@@ -31,7 +31,7 @@ using namespace KMime::Headers::Generics;
 // the following test cases are taken from KDE mailinglists, bug reports, RFC 2045,
 // RFC 2183 and RFC 2822, Appendix A
 
-QTEST_KDEMAIN( HeaderTest, NoGUI )
+QTEST_MAIN( HeaderTest )
 
 void HeaderTest::testIdentHeader()
 {

@@ -18,12 +18,12 @@
 */
 
 #include "messagetest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qdebug.h>
 
 using namespace KMime;
 
-QTEST_KDEMAIN( MessageTest, NoGUI )
+QTEST_MAIN( MessageTest )
 
 void MessageTest::testMainBodyPart()
 {

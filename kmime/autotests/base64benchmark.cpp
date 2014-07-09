@@ -21,7 +21,7 @@
 #include <QtTest>
 #include <KCodecs>
 #include <QByteArray>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <kmime_codec_base64.h>
 
 class Base64Benchmark : public QObject
@@ -104,6 +104,6 @@ class Base64Benchmark : public QObject
     }
 };
 
-QTEST_KDEMAIN( Base64Benchmark, NoGUI )
+QTEST_MAIN( Base64Benchmark )
 
 #include "base64benchmark.moc"

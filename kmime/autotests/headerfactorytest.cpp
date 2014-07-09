@@ -22,7 +22,7 @@
 //#include <typeinfo>
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime_headerfactory_p.h>
 #include <kmime_headers.h>
@@ -31,7 +31,7 @@ using namespace KMime;
 using namespace KMime::Headers;
 //using namespace KMime::Headers::Generics;
 
-QTEST_KDEMAIN( HeaderFactoryTest, NoGUI )
+QTEST_MAIN( HeaderFactoryTest )
 
 // This cannot be defined in a function, because the template code
 // in HeaderFactory::registerHeader() needs it.

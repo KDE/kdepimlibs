@@ -16,14 +16,14 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "rfc2047test.h"
 
 #include <kmime_util.h>
 using namespace KMime;
 
-QTEST_KDEMAIN( RFC2047Test, NoGUI )
+QTEST_MAIN( RFC2047Test )
 
 void RFC2047Test::testRFC2047decode()
 {

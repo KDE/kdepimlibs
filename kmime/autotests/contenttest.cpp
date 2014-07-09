@@ -20,14 +20,14 @@
 #include "contenttest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime_content.h>
 #include <kmime_headers.h>
 #include <kmime_message.h>
 using namespace KMime;
 
-QTEST_KDEMAIN( ContentTest, NoGUI )
+QTEST_MAIN( ContentTest )
 
 void ContentTest::testGetHeaderInstance( )
 {

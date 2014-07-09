@@ -24,9 +24,9 @@
 
 using namespace KMime;
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( ContentIndexTest, NoGUI )
+QTEST_MAIN( ContentIndexTest )
 
 void ContentIndexTest::testToString()
 {

@@ -20,7 +20,7 @@
 #undef QT_USE_FAST_OPERATOR_PLUS
 
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "utiltest.h"
 
@@ -29,7 +29,7 @@
 
 using namespace KMime;
 
-QTEST_KDEMAIN( UtilTest, NoGUI )
+QTEST_MAIN( UtilTest )
 
 void UtilTest::testUnfoldHeader()
 {

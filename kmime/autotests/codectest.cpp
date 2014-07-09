@@ -18,7 +18,7 @@
 */
 #include "codectest.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime_charfreq.h>
 #include <kmime_codecs.h>
@@ -26,7 +26,7 @@
 #include <QDir>
 using namespace KMime;
 
-QTEST_KDEMAIN( CodecTest, NoGUI )
+QTEST_MAIN( CodecTest )
 
 enum Mode { Decode, Encode };
 Q_DECLARE_METATYPE( Mode )

@@ -21,7 +21,7 @@
 #include "kmime_message_p.h"
 #include "kmime_headers_p.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QObject>
 
 using namespace KMime;
@@ -107,6 +107,6 @@ class SizeTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( SizeTest, GUI )
+QTEST_MAIN( SizeTest )
 
 #include "sizetest.moc"

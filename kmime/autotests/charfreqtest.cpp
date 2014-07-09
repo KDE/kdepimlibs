@@ -18,14 +18,14 @@
 */
 
 #include "charfreqtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <QDebug>
 
 #include <kmime_charfreq.h>
 using namespace KMime;
 
-QTEST_KDEMAIN( CharFreqTest, NoGUI )
+QTEST_MAIN( CharFreqTest )
 
 void CharFreqTest::test8bitData()
 {
