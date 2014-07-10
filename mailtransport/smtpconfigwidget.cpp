@@ -302,6 +302,7 @@ void SMTPConfigWidget::slotFinished( QList<int> results )
   if ( results.isEmpty() ) {
     KMessageBox::error(this, i18n("Failed to check capabilities. Please verify port and authentication mode."), i18n("Check Capabilities Failed"));
     d->serverTestFailed = true;
+    d->serverTest->deleteLater();
     return;
   }
 
@@ -319,6 +320,15 @@ void SMTPConfigWidget::slotFinished( QList<int> results )
   }
   d->sslCapa = d->serverTest->secureProtocols();
   d->updateAuthCapbilities();
+  //Show correct port from capabilities.
+  if (d->ui.ssl->isEnabled()) {
+      const int portValue = d->serverTest->port(Transport::EnumEncryption::SSL);
+      d->ui.kcfg_port->setValue(portValue == -1 ? SMTPS_PORT : portValue);
+  } else if (d->ui.none->isEnabled()) {
+      const int portValue = d->serverTest->port(Transport::EnumEncryption::None);
+      d->ui.kcfg_port->setValue(portValue == -1 ? SMTP_PORT : portValue);
+  }
+  d->serverTest->deleteLater();
 }
 
 void SMTPConfigWidget::hostNameChanged( const QString &text )
