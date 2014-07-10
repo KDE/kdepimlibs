@@ -239,6 +239,12 @@ void SMTPConfigWidget::checkSmtpCapabilities()
   if ( d->ui.kcfg_specifyHostname->isChecked() ) {
     d->serverTest->setFakeHostname( d->ui.kcfg_localHostname->text() );
   }
+  QAbstractButton *encryptionChecked = d->encryptionGroup->checkedButton();
+  if (encryptionChecked == d->ui.none) {
+      d->serverTest->setPort( Transport::EnumEncryption::None, d->ui.kcfg_port->value());
+  } else if (encryptionChecked == d->ui.ssl) {
+      d->serverTest->setPort( Transport::EnumEncryption::SSL, d->ui.kcfg_port->value());
+  }
   d->serverTest->setProgressBar( d->ui.checkCapabilitiesProgress );
   d->ui.checkCapabilitiesStack->setCurrentIndex( 1 );
   BusyCursorHelper *busyCursorHelper = new BusyCursorHelper( d->serverTest );
