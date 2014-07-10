@@ -24,7 +24,7 @@
 
 #include <qtest.h>
 #include "kblog/blogmedia.h"
-#include "kurl.h"
+#include "qurl.h"
 
 Q_DECLARE_METATYPE( KBlog::BlogMedia::Status )
 
@@ -43,7 +43,7 @@ class testBlogMedia: public QObject
 void testBlogMedia::testValidity_data()
 {
     QTest::addColumn<QString>( "name" );
-    QTest::addColumn<KUrl>( "url" );
+    QTest::addColumn<QUrl>( "url" );
     QTest::addColumn<QString>( "mimetype" );
     QTest::addColumn<QByteArray>( "data" );
     QTest::addColumn<BlogMedia::Status>( "status" );

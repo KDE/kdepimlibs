@@ -24,7 +24,7 @@
 
 #include <qtest.h>
 #include "kblog/blogcomment.h"
-#include "kurl.h"
+#include "qurl.h"
 #include "kdatetime.h"
 
 Q_DECLARE_METATYPE( KBlog::BlogComment::Status )
@@ -48,7 +48,7 @@ void testBlogComment::testValidity_data()
     QTest::addColumn<QString>( "content" );
     QTest::addColumn<QString>( "name" );
     QTest::addColumn<QString>( "email" );
-    QTest::addColumn<KUrl>( "url" );
+    QTest::addColumn<QUrl>( "url" );
     QTest::addColumn<BlogComment::Status>( "status" );
     QTest::addColumn<QString>( "error" );
     QTest::addColumn<KDateTime>( "creationDateTime" );
