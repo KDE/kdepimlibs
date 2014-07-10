@@ -65,7 +65,8 @@ void MBoxPrivate::close()
 
 void MBoxPrivate::initLoad( const QString &fileName )
 {
-  mMboxFile.setFileName( QUrl( fileName ).toLocalFile() );
+  QUrl url = QUrl::fromLocalFile(fileName);
+  mMboxFile.setFileName( url.toLocalFile() );
   mAppendedEntries.clear();
   mEntries.clear();
 }
