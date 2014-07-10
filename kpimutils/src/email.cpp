@@ -30,7 +30,7 @@
 
 #include <QDebug>
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>

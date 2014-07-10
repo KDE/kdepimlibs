@@ -21,6 +21,7 @@ target_include_directories(KF5PimUtils INTERFACE "$<INSTALL_INTERFACE:${KF5_INCL
 target_include_directories(KF5PimUtils PUBLIC "$<BUILD_INTERFACE:${KPimUtils_SOURCE_DIR}/src;${KPimUtils_BINARY_DIR}/src>")
 
 target_link_libraries(KF5PimUtils
+PRIVATE
     KF5::ItemViews
     KF5::Emoticons
     KF5::Mime

@@ -23,7 +23,7 @@
 
 #include "kpimutils/email.h"
 
-#include <KUrl>
+#include <QUrl>
 #include <qdebug.h>
 
 #include <qtest.h>
@@ -566,9 +566,9 @@ void EMailTest::testQuoteIfNecessary_data()
 void EMailTest::testMailtoUrls()
 {
   QFETCH( QString, input );
-  const KUrl url = encodeMailtoUrl( input );
+  const QUrl url = encodeMailtoUrl( input );
   qDebug() << url;
-  QCOMPARE( url.protocol().toLatin1().data(), "mailto" );
+  QCOMPARE( url.scheme().toLatin1().data(), "mailto" );
   QCOMPARE( decodeMailtoUrl( url ), input );
   qDebug() << decodeMailtoUrl( url );
 }

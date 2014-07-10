@@ -12,7 +12,10 @@ target_include_directories(KF5MicroBlog INTERFACE "$<INSTALL_INTERFACE:${KF5_INC
 target_include_directories(KF5MicroBlog PUBLIC "$<BUILD_INTERFACE:${MicroBlog_SOURCE_DIR}/src;${MicroBlog_BINARY_DIR}/src>")
 
 target_link_libraries(KF5MicroBlog
-  PRIVATE
+PUBLIC
+  Qt5::Core
+PRIVATE
+  Qt5::Xml
   KF5::PimUtils
 )
 
