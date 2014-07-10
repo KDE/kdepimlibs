@@ -2,7 +2,6 @@ remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 
 set(kblog_SRCS
    blog.cpp
-   blogger.cpp
    blogcomment.cpp
    blogmedia.cpp
    blogger1.cpp
@@ -39,13 +38,6 @@ PRIVATE
   KF5::KIOCore
 )
 
-if (KF5GAPI_FOUND)
-   target_link_libraries(KF5Blog
-   PRIVATE
-     KF5::GAPIBlogger Qt5::WebKitWidgets)
-endif()
-
-
 set_target_properties(KF5Blog PROPERTIES
     VERSION ${KBLOG_VERSION_STRING}
     SOVERSION ${KBLOG_SOVERSION}
@@ -53,11 +45,6 @@ set_target_properties(KF5Blog PROPERTIES
 )
 
 install(TARGETS KF5Blog EXPORT KF5BlogTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### Generate Headers ###############
-if (KF5GAPI_FOUND)
-   set(kgapi_blogger Blogger)
-endif()
 
 ecm_generate_headers(KBlog_CamelCase_HEADERS
   HEADER_NAMES
