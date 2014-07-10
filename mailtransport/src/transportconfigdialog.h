@@ -26,7 +26,7 @@
 
 #include <mailtransport_export.h>
 
-#include <KDialog>
+#include <QDialog>
 
 namespace MailTransport {
 
@@ -37,7 +37,7 @@ class Transport;
  *
  * @deprecated Use TransportManager::configureTransport() instead.
  */
-class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public KDialog
+class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public QDialog
 {
   Q_OBJECT
 
@@ -71,6 +71,7 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public KDialog
 
     Q_PRIVATE_SLOT( d, void okClicked() )
     Q_PRIVATE_SLOT( d, void slotTextChanged(const QString &) )
+    Q_PRIVATE_SLOT( d, void slotEnabledOkButton(bool) )
     //@endcond
 };
 

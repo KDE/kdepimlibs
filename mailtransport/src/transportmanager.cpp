@@ -292,7 +292,7 @@ bool TransportManager::configureTransport( Transport *transport, QWidget *parent
 
   QPointer<TransportConfigDialog> transportConfigDialog =
     new TransportConfigDialog( transport, parent );
-  transportConfigDialog->setCaption( i18n( "Configure account" ) );
+  transportConfigDialog->setWindowTitle( i18n( "Configure account" ) );
   bool okClicked = ( transportConfigDialog->exec() == QDialog::Accepted );
   delete transportConfigDialog;
   return okClicked;

@@ -25,8 +25,10 @@
 #include "ui_addtransportdialog.h"
 
 #include <QDebug>
+#include <QDialogButtonBox>
 
 
+#include <QPushButton>
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>
 
@@ -39,7 +41,7 @@ class AddTransportDialog::Private
 {
   public:
     Private( AddTransportDialog *qq )
-      : q( qq )
+      : q( qq ), okButton( 0 )
     {
     }
 
@@ -58,6 +60,7 @@ class AddTransportDialog::Private
     void readConfig();
 
     AddTransportDialog *const q;
+    QPushButton *okButton;
     ::Ui::AddTransportDialog ui;
 };
 
@@ -96,21 +99,26 @@ void AddTransportDialog::Private::doubleClicked()
 void AddTransportDialog::Private::updateOkButton()
 {
   // Make sure a type is selected before allowing the user to continue.
-  q->enableButtonOk( selectedType().isValid() && !ui.name->text().trimmed().isEmpty() );
+  okButton->setEnabled( selectedType().isValid() && !ui.name->text().trimmed().isEmpty() );
 }
 
 AddTransportDialog::AddTransportDialog( QWidget *parent )
-  : KDialog( parent ), d( new Private( this ) )
+  : QDialog( parent ), d( new Private( this ) )
 {
   // Setup UI.
   {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     QWidget *widget = new QWidget( this );
     d->ui.setupUi( widget );
-    setMainWidget( widget );
-    setCaption( i18n( "Create Outgoing Account" ) );
-    setButtons( Ok|Cancel );
-    enableButtonOk( false );
-    setButtonText( Ok, i18nc( "create and configure a mail transport", "Create and Configure" ) );
+    mainLayout->addWidget(widget);
+    setWindowTitle( i18n( "Create Outgoing Account" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    d->okButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->okButton->setText( i18nc( "create and configure a mail transport", "Create and Configure" ) );
+    d->okButton->setEnabled(false);
+    d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    mainLayout->addWidget( buttonBox );
 
 #ifdef KDEPIM_MOBILE_UI
     d->ui.descLabel->hide();
@@ -177,7 +185,7 @@ void AddTransportDialog::accept()
       TransportManager::self()->setDefaultTransport( transport->id() );
     }
 #endif
-    KDialog::accept();
+    QDialog::accept();
   }
 }
 

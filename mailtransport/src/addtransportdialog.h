@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 #define MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace MailTransport {
 
@@ -36,7 +36,7 @@ namespace MailTransport {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AddTransportDialog : public KDialog
+class AddTransportDialog : public QDialog
 {
   Q_OBJECT
 

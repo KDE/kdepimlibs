@@ -30,8 +30,11 @@
 #include "sendmailconfigwidget.h"
 #include "smtpconfigwidget.h"
 
+#include <QDialogButtonBox>
 #include <QLabel>
 #include <QString>
+#include <QVBoxLayout>
+#include <QPushButton>
 
 #include <QDebug>
 #include <KLocalizedString>
@@ -42,18 +45,25 @@ class MailTransport::TransportConfigDialog::Private
 {
   public:
     Private( TransportConfigDialog *qq )
-      : transport( 0 ), configWidget( 0 ), q( qq )
+      : transport( 0 ), configWidget( 0 ), q( qq ), okButton(0)
     {
     }
 
     Transport *transport;
     QWidget *configWidget;
     TransportConfigDialog *q;
+    QPushButton *okButton;
 
     // slots
     void okClicked();
     void slotTextChanged( const QString &text );
+    void slotEnabledOkButton(bool);
 };
+
+void TransportConfigDialog::Private::slotEnabledOkButton(bool b)
+{
+    okButton->setEnabled( b );
+}
 
 void TransportConfigDialog::Private::okClicked()
 {
@@ -66,15 +76,16 @@ void TransportConfigDialog::Private::okClicked()
 
 void TransportConfigDialog::Private::slotTextChanged( const QString &text )
 {
-  q->enableButtonOk( !text.isEmpty() );
+  okButton->setEnabled( !text.isEmpty() );
 }
 
 TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *parent )
-  : KDialog( parent ), d( new Private( this ) )
+  : QDialog( parent ), d( new Private( this ) )
 {
   Q_ASSERT( transport );
   d->transport = transport;
-  setButtons( Ok|Cancel );
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
   bool pathIsEmpty = false;
   switch ( transport->type() ) {
   case Transport::EnumType::SMTP:
@@ -87,7 +98,7 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
     SendmailConfigWidget *sendMailWidget = new SendmailConfigWidget( transport, this );
     d->configWidget = sendMailWidget;
     connect( sendMailWidget, SIGNAL(enableButtonOk(bool)),
-             this, SLOT(enableButtonOk(bool)) );
+             this, SLOT(slotEnabledOkButton(bool)) );
     pathIsEmpty = sendMailWidget->pathIsEmpty();
     break;
   }
@@ -104,11 +115,19 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
     break;
   }
   }
-  setMainWidget( d->configWidget );
+  mainLayout->addWidget(d->configWidget);
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  d->okButton = buttonBox->button(QDialogButtonBox::Ok);
+  d->okButton->setText( i18nc( "create and configure a mail transport", "Create and Configure" ) );
+  d->okButton->setEnabled(false);
+  d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  mainLayout->addWidget( buttonBox );
 
-  connect( this, SIGNAL(okClicked()), this, SLOT(okClicked()) );
-  enableButtonOk( !pathIsEmpty );
+  connect( d->okButton, SIGNAL(clicked()), this, SLOT(okClicked()) );
+  d->okButton->setEnabled( !pathIsEmpty );
 }
+
+
 
 TransportConfigDialog::~TransportConfigDialog()
 {
