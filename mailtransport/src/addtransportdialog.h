@@ -20,7 +20,7 @@
 #ifndef MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 #define MAILTRANSPORT_ADDTRANSPORTDIALOG_H
 
-#include <KDE/KDialog>
+#include <KDialog>
 
 namespace MailTransport {
 

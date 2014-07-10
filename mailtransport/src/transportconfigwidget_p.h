@@ -22,7 +22,7 @@
 
 #include "transport.h"
 
-#include <KDE/KConfigDialogManager>
+#include <KConfigDialogManager>
 
 namespace MailTransport {
 

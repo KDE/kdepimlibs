@@ -24,7 +24,7 @@
 
 #include <QtCore/QStringList>
 
-#include <KDE/KCompositeJob>
+#include <KCompositeJob>
 
 class QBuffer;
 

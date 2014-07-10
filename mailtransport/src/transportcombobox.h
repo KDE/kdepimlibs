@@ -23,7 +23,7 @@
 #include <mailtransport_export.h>
 #include <transportbase.h>
 
-#include <KDE/KComboBox>
+#include <KComboBox>
 
 class TransportComboBoxPrivate;
 

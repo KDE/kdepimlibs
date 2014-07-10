@@ -31,7 +31,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <KDE/KCompositeJob>
+#include <KCompositeJob>
 
 #include <collection.h>
 #include <Akonadi/KMime/AddressAttribute>

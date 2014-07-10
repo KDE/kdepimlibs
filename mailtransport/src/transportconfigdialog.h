@@ -26,7 +26,7 @@
 
 #include <mailtransport_export.h>
 
-#include <KDE/KDialog>
+#include <KDialog>
 
 namespace MailTransport {
 
