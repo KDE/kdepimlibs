@@ -62,10 +62,9 @@
 
 #include <QtCore/QByteArray>
 
-#include <kdebug.h> // for qFatal()
 
 #include "kmime_export.h"
-
+#include <QDebug>
 namespace KMime {
 
 template <class Key, class T> class KAutoDeleteHash;
@@ -456,8 +455,10 @@ class Encoder
           return true;
         } else {
           // else buffer the output:
-          kFatal( mOutputBufferCursor >= maxBufferedChars )
-            << "KMime::Encoder: internal buffer overflow!";
+          if ( mOutputBufferCursor >= maxBufferedChars ) {
+             qCritical()
+               << "KMime::Encoder: internal buffer overflow!";
+          }
           mOutputBuffer[ mOutputBufferCursor++ ] = ch;
           return false;
         }

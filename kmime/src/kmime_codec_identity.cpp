@@ -51,7 +51,8 @@ class IdentityEnDecoder : public Encoder, public Decoder
     friend class IdentityCodec;
     IdentityEnDecoder( bool withCRLF ): Encoder( false )
     {
-      kWarning( withCRLF ) << "IdentityEnDecoder: withCRLF isn't yet supported!";
+      if (withCRLF )
+         qWarning( ) << "IdentityEnDecoder: withCRLF isn't yet supported!";
     }
 
   public:
@@ -96,13 +97,15 @@ bool IdentityEnDecoder::decode( const char* &scursor, const char *const send,
 
 QByteArray IdentityCodec::encode( const QByteArray &src, bool withCRLF ) const
 {
-  kWarning( withCRLF ) << "IdentityCodec::encode(): withCRLF not yet supported!";
+  if (withCRLF)
+     qWarning() << "IdentityCodec::encode(): withCRLF not yet supported!";
   return src;
 }
 
 QByteArray IdentityCodec::decode( const QByteArray &src, bool withCRLF ) const
 {
-  kWarning( withCRLF ) << "IdentityCodec::decode(): withCRLF not yet supported!";
+  if (withCRLF)
+    qWarning() << "IdentityCodec::decode(): withCRLF not yet supported!";
   return src;
 }
 

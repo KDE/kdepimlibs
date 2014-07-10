@@ -231,9 +231,10 @@ bool UUDecoder::decode( const char* &scursor, const char * const send,
     mStepNo = ( mStepNo + 1 ) % 4;
 
     // check whether we ran over the announced octet count for this line:
-    kWarning( mCurrentOctetCount == mAnnouncedOctetCount + 1 )
-      << "UUDecoder: mismatch between announced ("
-      << mAnnouncedOctetCount << ") and actual line octet count!";
+    if (mCurrentOctetCount == mAnnouncedOctetCount + 1)
+       qWarning( )
+          << "UUDecoder: mismatch between announced ("
+          << mAnnouncedOctetCount << ") and actual line octet count!";
 
   }
 
