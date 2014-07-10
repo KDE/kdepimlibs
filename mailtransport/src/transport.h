@@ -148,8 +148,8 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     Transport( const QString &cfgGroup );
 
-    virtual void usrReadConfig();
-    virtual bool usrWriteConfig();
+    virtual void usrRead();
+    virtual bool usrSave();
 
     /**
       Returns true if the password was not stored in the wallet.

@@ -150,7 +150,7 @@ QString Transport::authenticationTypeString( int type )
   return QString();
 }
 
-void Transport::usrReadConfig()
+void Transport::usrRead()
 {
   TransportBase::usrRead();
 
@@ -229,7 +229,7 @@ void Transport::usrReadConfig()
   }
 }
 
-bool Transport::usrWriteConfig()
+bool Transport::usrSave()
 {
   if ( requiresAuthentication() && storePassword() && d->passwordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
