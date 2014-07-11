@@ -91,7 +91,7 @@ void LDAPProtocol::LDAPErr( int err )
   qDebug() << "error code: " << err << " msg: " << LdapConnection::errorString(err) <<
     extramsg << "'" << endl;
   QString msg;
-  msg = mServer.url().prettyUrl();
+  msg = mServer.url().toDisplayString();
   if ( !extramsg.isEmpty() ) msg += extramsg;
 
   /* FIXME: No need to close on all errors */
@@ -162,7 +162,7 @@ void LDAPProtocol::LDAPErr( int err )
     default:
       error( ERR_SLAVE_DEFINED,
         i18n( "LDAP server returned the error: %1 %2\nThe LDAP URL was: %3" ,
-         LdapConnection::errorString(err), extramsg, mServer.url().prettyUrl() ) );
+         LdapConnection::errorString(err), extramsg, mServer.url().toDisplayString() ) );
   }
 }
 
@@ -223,7 +223,7 @@ void LDAPProtocol::LDAPEntry2UDSEntry( const LdapDN &dn, UDSEntry &entry,
   LdapUrl url=usrc;
   url.setPath('/'+dn.toString());
   url.setScope( dir ? LdapUrl::One : LdapUrl::Base );
-    entry.insert( KIO::UDSEntry::UDS_URL, url.prettyUrl() );
+    entry.insert( KIO::UDSEntry::UDS_URL, url.toDisplayString() );
 }
 
 
@@ -747,7 +747,7 @@ void LDAPProtocol::listDir( const QUrl &_url )
     LDAPEntry2UDSEntry( mOp.object().dn(), uds, usrc );
     listEntry( uds, false );
 //      processedSize( total );
-    qCDebug(KLDAP_LOG) << " total: " << total << " " << usrc.prettyUrl();
+    qCDebug(KLDAP_LOG) << " total: " << total << " " << usrc.toDisplayString();
 
     // publish the sub-directories (if dirmode==sub)
     if ( isSub ) {
