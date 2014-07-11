@@ -119,6 +119,9 @@ AddTransportDialog::AddTransportDialog( QWidget *parent )
     d->okButton->setEnabled(false);
     d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     mainLayout->addWidget( buttonBox );
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
 
 #ifdef KDEPIM_MOBILE_UI
     d->ui.descLabel->hide();

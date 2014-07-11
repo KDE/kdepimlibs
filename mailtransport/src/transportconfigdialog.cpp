@@ -124,6 +124,9 @@ TransportConfigDialog::TransportConfigDialog( Transport *transport, QWidget *par
   mainLayout->addWidget( buttonBox );
 
   connect( d->okButton, SIGNAL(clicked()), this, SLOT(okClicked()) );
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
   d->okButton->setEnabled( !pathIsEmpty );
 }
 
