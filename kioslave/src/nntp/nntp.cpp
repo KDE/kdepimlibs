@@ -19,9 +19,9 @@
 #include <QHash>
 #include <QRegExp>
 
-#include <kcomponentdata.h>
 #include <kdebug.h>
 #include <klocalizedstring.h>
+#include <QCoreApplication>
 
 #include <kio/ioslave_defaults.h>
 
@@ -36,8 +36,9 @@ using namespace KIO;
 extern "C" { int Q_DECL_EXPORT kdemain(int argc, char **argv); }
 
 int kdemain(int argc, char **argv) {
+  QCoreApplication app( argc, argv ); // needed for QSocketNotifier
+  app.setApplicationName(QLatin1String("kio_nntp"));
 
-  KComponentData componentData("kio_nntp");
   if (argc != 4) {
     fprintf(stderr, "Usage: kio_nntp protocol domain-socket1 domain-socket2\n");
     exit(-1);

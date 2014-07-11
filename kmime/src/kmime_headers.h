@@ -1363,12 +1363,12 @@ class KMIME_EXPORT Date : public Generics::Structured
     /**
       Returns the date contained in this header.
     */
-    KDateTime dateTime() const;
+    QDateTime dateTime() const;
 
     /**
       Sets the date.
     */
-    void setDateTime( const KDateTime &dt );
+    void setDateTime( const QDateTime &dt );
 
     /**
       Returns the age of the message.

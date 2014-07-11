@@ -170,8 +170,8 @@ class NoteMessageWrapper::NoteMessageWrapperPrivate
     QString text;
     Qt::TextFormat textFormat;
     QString from;
-    KDateTime creationDate;
-    KDateTime lastModifiedDate;
+    QDateTime creationDate;
+    QDateTime lastModifiedDate;
     QMap< QString, QString > custom;
     QList<Attachment> attachments;
     Classification classification;
@@ -359,12 +359,12 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     text = d->text;
   }
 
-  KDateTime creationDate = KDateTime::currentLocalDateTime();
+  QDateTime creationDate = QDateTime::currentDateTime();
   if ( d->creationDate.isValid() ) {
     creationDate = d->creationDate;
   }
 
-  KDateTime lastModifiedDate = KDateTime::currentLocalDateTime();
+  QDateTime lastModifiedDate = QDateTime::currentDateTime();
   if ( d->lastModifiedDate.isValid() ) {
     lastModifiedDate = d->lastModifiedDate;
   }
@@ -382,7 +382,11 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
   msg->date( true )->setDateTime( creationDate );
   msg->from( true )->fromUnicodeString( d->from, ENCODING );
   msg->mainBodyPart()->fromUnicodeString( text );
-  msg->appendHeader( new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), lastModifiedDate.toString( KDateTime::RFCDateDay ).toLatin1(), ENCODING ) );
+  //QT5 port to QDateTime
+  //TODO use Locale ('C');
+  QString formatDate = lastModifiedDate.toString( QLatin1String("ddd, ") ) + lastModifiedDate.toString(  Qt::RFC2822Date );
+
+  msg->appendHeader( new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate /*lastModifiedDate.toString( QDateTime::RFCDateDay )*/.toLatin1(), ENCODING ) );
   msg->appendHeader( new KMime::Headers::Generic( X_NOTES_UID_HEADER, msg.get(), uid, ENCODING ) );
 
   QString classification = QString::fromLatin1(CLASSIFICATION_PUBLIC);
@@ -435,25 +439,25 @@ NoteMessageWrapper::Classification NoteMessageWrapper::classification() const
   return d->classification;
 }
 
-void NoteMessageWrapper::setLastModifiedDate( const KDateTime& lastModifiedDate )
+void NoteMessageWrapper::setLastModifiedDate( const QDateTime& lastModifiedDate )
 {
   Q_D( NoteMessageWrapper );
   d->lastModifiedDate = lastModifiedDate;
 }
 
-KDateTime NoteMessageWrapper::lastModifiedDate() const
+QDateTime NoteMessageWrapper::lastModifiedDate() const
 {
   const Q_D( NoteMessageWrapper );
   return d->lastModifiedDate;
 }
 
-void NoteMessageWrapper::setCreationDate( const KDateTime &creationDate )
+void NoteMessageWrapper::setCreationDate( const QDateTime &creationDate )
 {
   Q_D( NoteMessageWrapper );
   d->creationDate = creationDate;
 }
 
-KDateTime NoteMessageWrapper::creationDate() const
+QDateTime NoteMessageWrapper::creationDate() const
 {
   const Q_D( NoteMessageWrapper );
   return d->creationDate;

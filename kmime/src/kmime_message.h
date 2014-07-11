@@ -54,7 +54,7 @@ class MessagePrivate;
  * m->from()->fromUnicodeString( "some@mailaddy.com", "utf-8" );
  * m->to()->fromUnicodeString( "someother@mailaddy.com", "utf-8" );
  * m->cc()->fromUnicodeString( "some@mailaddy.com", "utf-8" );
- * m->date()->setDateTime( KDateTime::currentLocalDateTime() );
+ * m->date()->setDateTime( QDateTime::currentLocalDateTime() );
  * m->subject()->fromUnicodeString( "My Subject", "utf-8" );
  *
  * // Set the first multipart, the body message.

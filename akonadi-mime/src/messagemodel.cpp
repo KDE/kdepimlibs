@@ -123,7 +123,8 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         case Receiver:
             return msg->to()->asUnicodeString();
         case Date:
-            return KLocale::global()->formatDateTime(msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate);
+             //QT5 port to QDateTime
+            return KLocale::global()->formatDateTime(msg->date()->dateTime()/*.toLocalZone()*/, KLocale::FancyLongDate);
         case Size:
             if (item.size() == 0) {
                 return i18nc("@label No size available", "-");
@@ -142,7 +143,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         case Receiver:
             return msg->to()->asUnicodeString();
         case Date:
-            return msg->date()->dateTime().dateTime();
+            return msg->date()->dateTime()/*.dateTime()*/;
         case Size:
             return item.size();
         default:

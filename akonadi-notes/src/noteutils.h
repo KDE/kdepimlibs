@@ -24,7 +24,7 @@
 
 #include <QtCore/QUrl>
 
-class KDateTime;
+class QDateTime;
 class QString;
 
 namespace boost {
@@ -210,22 +210,22 @@ public:
   /**
     * Set the creation date of the note (stored in the mime header)
     */
-  void setCreationDate( const KDateTime &creationDate );
+  void setCreationDate( const QDateTime &creationDate );
 
   /**
     * Returns the creation date of the note
     */
-  KDateTime creationDate() const;
+  QDateTime creationDate() const;
 
   /**
     * Set the lastModified-date of the note
     */
-  void setLastModifiedDate( const KDateTime &lastModifiedDate );
+  void setLastModifiedDate( const QDateTime &lastModifiedDate );
 
   /**
     * Returns the lastModified-date of the note
     */
-  KDateTime lastModifiedDate() const;
+  QDateTime lastModifiedDate() const;
 
   /**
     * Set the origin (creator) of the note (stored in the mime header)

@@ -110,7 +110,7 @@ QByteArray MBoxPrivate::mboxMessageSeparator( const QByteArray &msg )
   if ( !date || date->isEmpty() ) {
     dateTime = QDateTime::currentDateTimeUtc();
   } else {
-    dateTime = date->dateTime().toUtc().dateTime();
+    dateTime = date->dateTime().toUTC();
   }
   separator += QLocale::c().toString(dateTime, QStringLiteral("ddd MMM dd HH:mm:ss yyyy")).toUtf8() + '\n';
 

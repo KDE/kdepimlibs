@@ -459,7 +459,7 @@ int main( int argc, char * argv[] ) {
     break;
   case 20:
     { // date-time
-      KDateTime result;
+      QDateTime result;
       bool ok =  parseDateTime( iit, iend, result, withCRLF );
       time_t timet = result.toTime_t();
 

@@ -367,7 +367,7 @@ KMIME_EXPORT bool parseTime( const char* &scursor, const char * const send,
                              bool &timeZoneKnown, bool isCRLF=false );
 
 KMIME_EXPORT bool parseDateTime( const char* &scursor, const char * const send,
-                                 KDateTime &result, bool isCRLF=false );
+                                 QDateTime &result, bool isCRLF=false );
 
 /**
  * Extracts and returns the first header that is contained in the given byte array.

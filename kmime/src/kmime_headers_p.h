@@ -155,7 +155,7 @@ class ControlPrivate : public Generics::StructuredPrivate
 class DatePrivate : public Generics::StructuredPrivate
 {
   public:
-    KDateTime dateTime;
+    QDateTime dateTime;
 };
 
 class NewsgroupsPrivate : public Generics::StructuredPrivate

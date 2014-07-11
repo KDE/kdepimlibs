@@ -23,7 +23,7 @@
 #include <QHash>
 #include <QDebug>
 
-#include <KDateTime>
+#include <QDateTime>
 #include <kmime/kmime_message.h>
 
 using namespace Akonadi::NoteUtils;
@@ -40,8 +40,8 @@ class NotesTest : public QObject
       note.setUid("uid");
       note.setClassification(NoteMessageWrapper::Private);
       note.setFrom("from@kde.org");
-      note.setCreationDate(KDateTime(QDate(2012,3,3), QTime(3,3,3), KDateTime::UTC));
-      note.setLastModifiedDate(KDateTime(QDate(2012,3,3), QTime(4,4,4), KDateTime::UTC));
+      note.setCreationDate(QDateTime(QDate(2012,3,3), QTime(3,3,3), Qt::UTC));
+      note.setLastModifiedDate(QDateTime(QDate(2012,3,3), QTime(4,4,4), Qt::UTC));
       Attachment a("testfile2", "mimetype/mime3");
       a.setLabel("label");
       note.attachments() << Attachment(QUrl("file://url/to/file"), "mimetype/mime") << Attachment("testfile", "mimetype/mime2") << a;

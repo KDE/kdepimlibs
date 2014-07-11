@@ -2043,7 +2043,7 @@ bool parseTime( const char* &scursor, const char * send,
 }
 
 bool parseDateTime( const char* &scursor, const char * const send,
-                    KDateTime &result, bool isCRLF )
+                    QDateTime &result, bool isCRLF )
 {
   // Parsing date-time; strict mode:
   //
@@ -2055,7 +2055,7 @@ bool parseDateTime( const char* &scursor, const char * const send,
   // month-name  := "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
   //                "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
 
-  result = KDateTime();
+  result = QDateTime();
   QDateTime maybeDateTime;
 
   eatCFWS( scursor, send, isCRLF );
@@ -2185,7 +2185,8 @@ bool parseDateTime( const char* &scursor, const char * const send,
     return false;
   }
 
-  result = KDateTime( maybeDateTime, KDateTime::Spec( KDateTime::OffsetFromUTC, secsEastOfGMT ) );
+  result = QDateTime( maybeDateTime.date(), maybeDateTime.time(), Qt::OffsetFromUTC, secsEastOfGMT );
+  //result = QDateTime( maybeDateTime, QDateTime::Spec( QDateTime::OffsetFromUTC, secsEastOfGMT ) );
   if ( !result.isValid() ) {
     return false;
   }

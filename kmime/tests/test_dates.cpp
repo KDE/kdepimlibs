@@ -23,7 +23,7 @@ main()
   t.setFormat( DateFormatter::Rfc );
   qDebug() << "trfc2822 : \t" << t.dateString( ntime );
   QString rfcd = t.formatDate( DateFormatter::Rfc, ntime );
-  KDateTime dt;
+  QDateTime dt;
   QDateTime qdt;
   QByteArray ba = rfcd.toLatin1();
   const char *str = ba.constData();

@@ -1503,14 +1503,18 @@ QByteArray Date::as7BitString( bool withHeaderType ) const
   if ( withHeaderType ) {
     rv += typeIntro();
   }
-  rv += d_func()->dateTime.toString( KDateTime::RFCDateDay ).toLatin1();
+  //QT5 fix port to QDateTime Qt::RFC2822Date is not enough we need to fix it. We need to use QLocale("C") + add "ddd, ";
+  //rv += d_func()->dateTime.toString(  Qt::RFC2822Date ).toLatin1();
+  QString formatDate = d_func()->dateTime.toString( QLatin1String("ddd, ") ) + d_func()->dateTime.toString(  Qt::RFC2822Date );
+  rv += formatDate.toLatin1();
+  
   return rv;
 }
 
 void Date::clear()
 {
   Q_D( Date );
-  d->dateTime = KDateTime();
+  d->dateTime = QDateTime();
 }
 
 bool Date::isEmpty() const
@@ -1518,12 +1522,12 @@ bool Date::isEmpty() const
   return d_func()->dateTime.isNull() || !d_func()->dateTime.isValid();
 }
 
-KDateTime Date::dateTime() const
+QDateTime Date::dateTime() const
 {
   return d_func()->dateTime;
 }
 
-void Date::setDateTime( const KDateTime &dt )
+void Date::setDateTime( const QDateTime &dt )
 {
   Q_D( Date );
   d->dateTime = dt;

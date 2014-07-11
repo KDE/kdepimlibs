@@ -37,8 +37,6 @@ target_include_directories(KF5Mime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_
 target_include_directories(KF5Mime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Mime
-    KF5::ItemViews
-    KF5::Codecs
     KF5::KDELibs4Support
 )
 
@@ -81,5 +79,5 @@ install(FILES
          DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KMime/kmime COMPONENT Devel
 )
 
-ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5Mime DEPS "Codecs ItemViews KDELibs4Support" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KMime)
+ecm_generate_pri_file(BASE_NAME KMime LIB_NAME KF5Mime DEPS "KDELibs4Support" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/KMime)
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
