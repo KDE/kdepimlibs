@@ -32,15 +32,15 @@
 #include "request.h"
 #include "smtp_debug.h"
 
-#include <kurl.h>
+#include <QUrl>
 #include <QtCore/QUrl>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <assert.h>
 
 namespace KioSMTP {
 
-  Request Request::fromURL( const KUrl & url ) {
+  Request Request::fromURL( const QUrl &url ) {
     Request request;
 
     const QStringList query = url.query().mid(1).split( QLatin1Char('&') );

@@ -56,11 +56,10 @@ using KioSMTP::SMTPSessionInterface;
 
 #include <kemailsettings.h>
 
-#include <kdebug.h>
-#include <kcomponentdata.h>
+#include <qdebug.h>
 #include <kio/slaveinterface.h>
 #include <klocalizedstring.h>
-#include <kurl.h>
+#include <QUrl>
 
 #include <QHostInfo>
 
@@ -80,7 +79,8 @@ extern "C" {
 
 int kdemain(int argc, char **argv)
 {
-  KComponentData componentData("kio_smtp");
+  QCoreApplication app(argc, argv);
+  app.setApplicationName(QLatin1String("kio_smtp"));
 
   if (argc != 4) {
     fprintf(stderr,
@@ -314,7 +314,8 @@ Response SMTPProtocol::getResponse( bool * ok ) {
 bool SMTPProtocol::executeQueuedCommands( TransactionState * ts ) {
   assert( ts );
 
-  kDebug( m_sessionIface->canPipelineCommands(), 7112 ) << "using pipelining";
+  if (m_sessionIface->canPipelineCommands())
+     qDebug() << "using pipelining";
 
   while( !mPendingCommandQueue.isEmpty() ) {
     QByteArray cmdline = collectPipelineCommands( ts );
@@ -430,7 +431,8 @@ void SMTPProtocol::queueCommand( int type ) {
 
 bool SMTPProtocol::execute( int type, TransactionState * ts ) {
   auto_ptr<Command> cmd( Command::createSimpleCommand( type, m_sessionIface ) );
-  kFatal( !cmd.get(), 7112 ) << "Command::createSimpleCommand( " << type << " ) returned null!" ;
+  if (!cmd.get())
+    qCritical() << "Command::createSimpleCommand( " << type << " ) returned null!" ;
   return execute( cmd.get(), ts );
 }
 
@@ -438,7 +440,8 @@ bool SMTPProtocol::execute( int type, TransactionState * ts ) {
 // ### when command queues are _not_ empty!)
 bool SMTPProtocol::execute( Command * cmd, TransactionState * ts ) {
 
-  kFatal( !cmd, 7112 ) << "SMTPProtocol::execute() called with no command to run!" ;
+  if( !cmd )
+    qCritical( ) << "SMTPProtocol::execute() called with no command to run!" ;
 
   if ( cmd->doNotExecute( ts ) )
     return true;

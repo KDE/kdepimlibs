@@ -19,12 +19,12 @@
 #include "urlinfo.h"
 
 #include <qdebug.h>
-#include <kurl.h>
+#include <qurl.h>
 
 #include <QFileInfo>
 #include <QString>
 
-UrlInfo::UrlInfo( const KUrl& url, const UrlType type )
+UrlInfo::UrlInfo( const QUrl &url, const UrlType type )
     : m_type( invalid ),
       m_filename( new QString ),
       m_id( new QString )
@@ -67,7 +67,7 @@ QString UrlInfo::url() const
 }
 
 
-void UrlInfo::calculateInfo( const KUrl& url, const UrlType type )
+void UrlInfo::calculateInfo( const QUrl &url, const UrlType type )
 {
     bool found = false;
 
@@ -84,7 +84,7 @@ void UrlInfo::calculateInfo( const KUrl& url, const UrlType type )
     }
 }
 
-bool UrlInfo::isDirectory( const KUrl& url )
+bool UrlInfo::isDirectory( const QUrl &url )
 {
     //Check is url is in the form mbox://{filename}
     QString filename = url.path();
@@ -109,7 +109,7 @@ bool UrlInfo::isDirectory( const KUrl& url )
     return true;
 }
 
-bool UrlInfo::isMessage( const KUrl& url )
+bool UrlInfo::isMessage( const QUrl &url )
 {
     QString path = url.path();
     QFileInfo info;

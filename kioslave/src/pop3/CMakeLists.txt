@@ -26,7 +26,7 @@ set(kio_pop3_PART_SRCS pop3.cpp pop3_debug.cpp )
 add_library(kio_pop3 MODULE ${kio_pop3_PART_SRCS})
 
 
-target_link_libraries(kio_pop3  KF5::KIOCore ${pop3_optional_libs} KF5::KDELibs4Support )
+target_link_libraries(kio_pop3  KF5::KIOCore ${pop3_optional_libs} KF5::I18n )
 
 install(TARGETS kio_pop3  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

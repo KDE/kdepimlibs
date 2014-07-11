@@ -36,7 +36,7 @@
 #include <QStringList>
 #include <QByteArray>
 
-class KUrl;
+class QUrl;
 
 namespace KioSMTP {
 
@@ -46,7 +46,7 @@ namespace KioSMTP {
       : mSubject( QLatin1String("missing subject") ), mEmitHeaders( true ),
         m8Bit( false ), mSize( 0 ) {}
 
-    static Request fromURL( const KUrl & url );
+    static Request fromURL( const QUrl &url );
 
     QString profileName() const { return mProfileName; }
     void setProfileName( const QString & profileName ) { mProfileName = profileName; }

@@ -38,10 +38,8 @@ extern "C" {
 #include "pop3_debug.h"
 
 #include <qdebug.h>
-#include <kcomponentdata.h>
 #include <klocalizedstring.h>
-#include <kcodecs.h>
-#include <kmd5.h>
+#include <QCryptographicHash>
 
 #include <kio/slaveinterface.h>
 
@@ -73,9 +71,8 @@ int kdemain(int argc, char **argv)
     qCDebug(POP3_LOG) << "Usage: kio_pop3 protocol domain-socket1 domain-socket2";
     return -1;
   }
-
   QCoreApplication app( argc, argv ); // needed for QSocketNotifier
-  KComponentData componentData("kio_pop3");
+  app.setApplicationName(QLatin1String("kio_pop3"));
 
   if (!initSASL())
     return -1;
@@ -343,17 +340,17 @@ int POP3Protocol::loginAPOP( char *challenge, KIO::AuthInfo &ai )
 
   memset(buf, 0, sizeof(buf));
 
-  KMD5 ctx;
+  QCryptographicHash ctx(QCryptographicHash::Md5);
 
   qCDebug(POP3_LOG) << "APOP challenge: " << challenge;
 
   // Generate digest
-  ctx.update(challenge, strlen(challenge));
-  ctx.update(m_sPass.toLatin1() );
+  ctx.addData(challenge, strlen(challenge));
+  ctx.addData(m_sPass.toLatin1() );
 
   // Genenerate APOP command
   apop_string.append(" ");
-  apop_string.append(ctx.hexDigest());
+  apop_string.append(ctx.result().toHex());
 
   if (command(apop_string.toLocal8Bit(), buf, sizeof(buf)) == Ok) {
     return 0;
@@ -746,7 +743,7 @@ size_t POP3Protocol::realGetSize(unsigned int msg_num)
   return ret;
 }
 
-void POP3Protocol::get(const KUrl & url)
+void POP3Protocol::get(const QUrl &url)
 {
 // List of supported commands
 //
@@ -1026,7 +1023,7 @@ void POP3Protocol::get(const KUrl & url)
   }
 }
 
-void POP3Protocol::listDir(const KUrl &)
+void POP3Protocol::listDir(const QUrl &)
 {
   bool isINT;
   int num_messages = 0;
@@ -1067,15 +1064,15 @@ void POP3Protocol::listDir(const KUrl &)
     entry.insert(KIO::UDSEntry::UDS_NAME, fname.arg(i + 1));
     entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
 
-    KUrl uds_url;
+    QUrl uds_url;
     if (isAutoSsl()) {
-      uds_url.setProtocol("pop3s");
+      uds_url.setScheme("pop3s");
     } else {
-      uds_url.setProtocol("pop3");
+      uds_url.setScheme("pop3");
     }
 
-    uds_url.setUser(m_sUser);
-    uds_url.setPass(m_sPass);
+    uds_url.setUserName(m_sUser);
+    uds_url.setPassword(m_sPass);
     uds_url.setHost(m_sServer);
     uds_url.setPath(QString::fromLatin1("/download/%1").arg(i + 1));
     entry.insert(KIO::UDSEntry::UDS_URL, uds_url.url());
@@ -1092,7 +1089,7 @@ void POP3Protocol::listDir(const KUrl &)
   finished();
 }
 
-void POP3Protocol::stat(const KUrl & url)
+void POP3Protocol::stat(const QUrl &url)
 {
   QString _path = url.path();
 
@@ -1110,7 +1107,7 @@ void POP3Protocol::stat(const KUrl & url)
   finished();
 }
 
-void POP3Protocol::del(const KUrl & url, bool /*isfile */ )
+void POP3Protocol::del(const QUrl &url, bool /*isfile */ )
 {
   QString invalidURI;
   bool isInt;

@@ -26,7 +26,6 @@
 
 #include "sieve.h"
 #include "../common.h"
-#include <kdemacros.h>
 #include "sieve_debug.h"
 
 extern "C" {
@@ -36,11 +35,10 @@ extern "C" {
 #include <qregexp.h>
 #include <QSslSocket>
 
-#include <kcomponentdata.h>
 #include <klocalizedstring.h>
-#include <kurl.h>
+#include <QUrl>
 #include <kmessagebox.h>
-
+#include <QApplication>
 #include <sys/stat.h>
 #include <cassert>
 
@@ -64,8 +62,9 @@ static const unsigned int SIEVE_DEFAULT_RECIEVE_BUFFER = 512;
 using namespace KIO;
 extern "C"
 {
-    KDE_EXPORT int kdemain(int argc, char **argv) {
-        KComponentData instance("kio_sieve" );
+    Q_DECL_EXPORT int kdemain(int argc, char **argv) {
+        QApplication app(argc, argv);
+        app.setApplicationName(QLatin1String("kio_sieve"));
 
         ksDebug << "*** Starting kio_sieve " << endl;
 

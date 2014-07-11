@@ -32,7 +32,7 @@ set(kio_smtp_PART_SRCS
 add_library(kio_smtp MODULE ${kio_smtp_PART_SRCS})
 
 
-target_link_libraries(kio_smtp  KF5::KIOCore KF5::KDELibs4Support ${smtp_optional_libs})
+target_link_libraries(kio_smtp  KF5::KIOCore KF5::I18n Qt5::Network ${smtp_optional_libs})
 
 install(TARGETS kio_smtp  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

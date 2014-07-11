@@ -18,7 +18,7 @@
  */
 #ifndef URLINFO_H
 #define URLINFO_H
-class KUrl;
+class QUrl;
 
 class QString;
 
@@ -36,7 +36,7 @@ public:
      * @param url The url: this url is used to split the location data off.
      * @param type The possible types of the url
      */
-    explicit UrlInfo( const KUrl &url, const UrlType type = (UrlType)( message | directory ) );
+    explicit UrlInfo( const QUrl &url, const UrlType type = (UrlType)( message | directory ) );
 
     /**
      * Destructor
@@ -69,10 +69,10 @@ public:
     QString url() const;
 
 private:
-    void calculateInfo( const KUrl& url, const UrlType type );
+    void calculateInfo( const QUrl& url, const UrlType type );
 
-    bool isDirectory( const KUrl& url );
-    bool isMessage( const KUrl& url );
+    bool isDirectory( const QUrl& url );
+    bool isMessage( const QUrl& url );
 
 private:
     UrlType m_type;

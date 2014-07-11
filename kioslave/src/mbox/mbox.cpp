@@ -26,22 +26,19 @@
 
 #include <qdebug.h>
 #include <klocalizedstring.h>
-#include <kcomponentdata.h>
+#include <QCoreApplication>
 
-#include <kurl.h>
 #include <kio/global.h>
+#include <QUrl>
 
 #include <stdlib.h>
-#include <KLocale>
 
-#include "kdemacros.h"
-
-extern "C" { KDE_EXPORT int kdemain(int argc, char* argv[]); }
+extern "C" { Q_DECL_EXPORT int kdemain(int argc, char* argv[]); }
 
 int kdemain( int argc, char * argv[] )
 {
-    KComponentData instance("kio_mbox", "kdelibs4");
-    (void) KLocale::global();
+    QCoreApplication app(argc, argv);
+    app.setApplicationName(QLatin1String("kio_mbox"));
 
     if (argc != 4) {
         fprintf(stderr, "Usage: kio_mbox protocol "
