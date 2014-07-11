@@ -28,8 +28,8 @@
 #include <kldap/ldapcontrol.h>
 
 #include <qdebug.h>
-#include <kcomponentdata.h>
 #include <klocalizedstring.h>
+#include <QCoreApplication>
 
 #include <netdb.h>
 #include <netinet/in.h>
@@ -45,7 +45,8 @@ extern "C" { int KDE_EXPORT kdemain(int argc, char **argv); }
  */
 int kdemain( int argc, char **argv )
 {
-  KComponentData componentData( "kio_ldap" );
+  QCoreApplication app( argc, argv ); // needed for QSocketNotifier
+  app.setApplicationName(QLatin1String("kio_ldap"));
 
   qCDebug(KLDAP_LOG) << "Starting kio_ldap instance";
 

@@ -4,7 +4,7 @@ set(kio_ldap_PART_SRCS kio_ldap.cpp kldap_debug.cpp)
 
 add_library(kio_ldap MODULE ${kio_ldap_PART_SRCS})
 
-target_link_libraries(kio_ldap KF5::KIOCore KF5::KDELibs4Support KF5::Ldap KF5::Mbox)
+target_link_libraries(kio_ldap KF5::KIOCore KF5::I18n KF5::Ldap KF5::Mbox)
 
 install(TARGETS kio_ldap  DESTINATION ${PLUGIN_INSTALL_DIR})
 
