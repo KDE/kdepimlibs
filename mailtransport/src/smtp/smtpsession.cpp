@@ -507,7 +507,7 @@ class MailTransport::SmtpSessionPrivate : public KioSMTP::SMTPSessionInterface
     QString saslMethod;
     bool useTLS;
 
-    KUrl destination;
+    QUrl destination;
     KTcpSocket *socket;
     QIODevice *data;
     KioSMTP::Response currentResponse;
@@ -576,7 +576,7 @@ void SmtpSession::setUseTLS( bool useTLS )
   d->useTLS = useTLS;
 }
 
-void SmtpSession::connectToHost( const KUrl &url )
+void SmtpSession::connectToHost( const QUrl &url )
 {
   qDebug() << url;
   d->socket->connectToHost( url.host(), url.port() );
@@ -599,7 +599,7 @@ void SmtpSession::disconnectFromHost( bool nice )
   }
 }
 
-void SmtpSession::sendMessage( const KUrl &destination, QIODevice *data )
+void SmtpSession::sendMessage( const QUrl &destination, QIODevice *data )
 {
   d->destination = destination;
   if ( d->socket->state() != KTcpSocket::ConnectedState &&

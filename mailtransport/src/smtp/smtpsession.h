@@ -23,7 +23,7 @@
 #include <ktcpsocket.h>
 
 class QIODevice;
-class KUrl;
+class QUrl;
 
 namespace MailTransport {
 
@@ -38,7 +38,7 @@ class SmtpSession : public QObject
     ~SmtpSession();
 
     /** Open connection to host. */
-    void connectToHost( const KUrl &url );
+    void connectToHost( const QUrl &url );
 
     /** Close the connection to the SMTP server. */
     void disconnectFromHost( bool nice = true );
@@ -50,7 +50,7 @@ class SmtpSession : public QObject
     void setUseTLS( bool useTLS );
 
     /** Send a message. */
-    void sendMessage( const KUrl &destination, QIODevice *data );
+    void sendMessage( const QUrl &destination, QIODevice *data );
 
     /** Returns the error nmeesage, if any.  */
     QString errorMessage() const;

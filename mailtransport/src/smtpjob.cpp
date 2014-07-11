@@ -31,7 +31,7 @@
 #include <QPointer>
 
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 #include <KIO/Job>
 #include <KIO/Scheduler>
@@ -146,8 +146,8 @@ void SmtpJob::startSmtpJob()
     return;
   }
 
-  KUrl destination;
-  destination.setProtocol( ( transport()->encryption() == Transport::EnumEncryption::SSL ) ?
+  QUrl destination;
+  destination.setScheme( ( transport()->encryption() == Transport::EnumEncryption::SSL ) ?
                            SMTPS_PROTOCOL : SMTP_PROTOCOL );
   destination.setHost( transport()->host().trimmed() );
   destination.setPort( transport()->port() );
@@ -203,8 +203,8 @@ void SmtpJob::startSmtpJob()
         return;
       }
     }
-    destination.setUser( transport()->userName() );
-    destination.setPass( transport()->password() );
+    destination.setUserName( transport()->userName() );
+    destination.setPassword( transport()->password() );
   }
 
   // dotstuffing is now done by the slave (see setting of metadata)
