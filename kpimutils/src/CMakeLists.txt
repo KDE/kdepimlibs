@@ -25,6 +25,8 @@ PRIVATE
     KF5::ItemViews
     KF5::Emoticons
     KF5::Mime
+    KF5::I18n
+    KF5::KDELibs4Support
 )
 
 set_target_properties(KF5PimUtils PROPERTIES

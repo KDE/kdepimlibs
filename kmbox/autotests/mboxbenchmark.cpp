@@ -22,7 +22,6 @@
 #include <QtCore/QCryptographicHash>
 
 #include <qtest.h>
-#include <kstandarddirs.h>
 #include <QTemporaryDir>
 
 QTEST_MAIN( MBoxBenchmark )

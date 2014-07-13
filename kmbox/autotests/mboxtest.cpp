@@ -24,7 +24,6 @@
 
 #include <qtest.h>
 #include <QStandardPaths>
-#include <KStandardDirs>
 #include <QTemporaryDir>
 
 QTEST_MAIN( MboxTest )
