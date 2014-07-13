@@ -21,7 +21,6 @@
 */
 
 #include "kio_ldap.h"
-#include "kdemacros.h"
 #include "kldap_debug.h"
 
 #include <kldap/ldif.h>
@@ -38,7 +37,7 @@
 using namespace KIO;
 using namespace KLDAP;
 
-extern "C" { int KDE_EXPORT kdemain(int argc, char **argv); }
+extern "C" { int Q_DECL_EXPORT kdemain(int argc, char **argv); }
 
 /**
  * The main program.
