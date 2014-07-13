@@ -83,5 +83,6 @@ add_subdirectory(kldap)
 add_subdirectory(ktnef)
 add_subdirectory(mailtransport)
 add_subdirectory(kontactinterface)
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 endif()
