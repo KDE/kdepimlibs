@@ -29,6 +29,8 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX KMIME
 
 ########### Find packages ###########
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 add_definitions(-DTRANSLATION_DOMAIN=\"libkmime5\")
 
 ########### Targets ###########

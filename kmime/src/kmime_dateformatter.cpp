@@ -39,9 +39,8 @@
 
 #include <QtCore/QTextStream>
 
-
+#include <KCalendarSystem>
 #include <klocalizedstring.h>
-#include <kcalendarsystem.h>
 #include <KLocale>
 
 using namespace KMime;

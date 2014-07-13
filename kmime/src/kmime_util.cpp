@@ -32,11 +32,10 @@
 
 #include <config-kmime.h>
 // #include <kdefakes.h> // for strcasestr
+#include <KLocale>
 
-#include <klocale.h>
 #include <klocalizedstring.h>
 #include <kcharsets.h>
-#include <kcodecs.h>
 #include <qdebug.h>
 
 #include <QtCore/QList>
@@ -47,7 +46,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <KLocale>
 
 using namespace KMime;
 

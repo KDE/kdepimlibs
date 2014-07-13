@@ -27,7 +27,7 @@
 #include <QtCore/QPair>
 #include <QtCore/QList>
 
-#include <kdatetime.h>
+#include <qdatetime.h>
 
 #include "kmime_export.h"
 

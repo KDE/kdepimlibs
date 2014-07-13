@@ -51,7 +51,7 @@
 #include <QtCore/QList>
 #include <QtCore/QByteArray>
 
-#include <kdatetime.h>
+#include <qdatetime.h>
 
 namespace KMime {
 

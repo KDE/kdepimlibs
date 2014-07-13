@@ -39,7 +39,6 @@
 
 #include "kautodeletehash.h"
 
-#include <kascii.h>
 #include <qdebug.h>
 
 #include <QtCore/QCoreApplication>

@@ -37,6 +37,11 @@ target_include_directories(KF5Mime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_
 target_include_directories(KF5Mime PUBLIC "$<BUILD_INTERFACE:${KMime_SOURCE_DIR}/src;${KMime_BINARY_DIR}/src>")
 
 target_link_libraries(KF5Mime
+PUBLIC
+    Qt5::Core
+PRIVATE
+    KF5::I18n
+    KF5::Codecs
     KF5::KDELibs4Support
 )
 

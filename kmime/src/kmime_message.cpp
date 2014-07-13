@@ -25,7 +25,6 @@
 #include "kmime_message_p.h"
 #include "kmime_util_p.h"
 
-#include <KGlobal>
 
 using namespace KMime;
 
@@ -103,7 +102,7 @@ Content *Message::mainBodyPart( const QByteArray &type )
 
 QString Message::mimeType()
 {
-  static const QString &message_rfc822 = KGlobal::staticQString( QLatin1String( "message/rfc822" ) );
+  static const QString &message_rfc822 = QLatin1String( QLatin1String( "message/rfc822" ) );
   return message_rfc822;
 }
 

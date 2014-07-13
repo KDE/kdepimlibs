@@ -23,6 +23,7 @@
 
 #include <qtest.h>
 #include <QObject>
+#include <QDebug>
 
 using namespace KMime;
 using namespace KMime::Headers;

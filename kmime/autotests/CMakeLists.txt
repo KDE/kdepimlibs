@@ -13,6 +13,7 @@ macro(ADD_KMIME_TEST)
     target_link_libraries(${_testName}
       KF5Mime
       Qt5::Test
+      KF5::Codecs
     )
     set_target_properties(${_testName} PROPERTIES COMPILE_FLAGS -DTEST_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
     ecm_mark_as_test(${_testName})

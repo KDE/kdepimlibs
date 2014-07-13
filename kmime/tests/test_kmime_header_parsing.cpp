@@ -2,7 +2,7 @@
 #include "kmime_headers.h"
 #include "kmime_header_parsing.h"
 
-#include <kcomponentdata.h>
+//#include <kcomponentdata.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
@@ -135,7 +135,7 @@ int main( int argc, char * argv[] ) {
     usage( "unknown token type" );
   }
 
-  KComponentData componentData( "test_kmime_header_parsing" );
+  //QT5 KComponentData componentData( "test_kmime_header_parsing" );
 
   QFile stdIn;
   stdIn.open( stdin, QIODevice::ReadOnly );

@@ -20,6 +20,7 @@
 #include "messagetest.h"
 #include <qtest.h>
 #include <qdebug.h>
+#include <QFile>
 
 using namespace KMime;
 
