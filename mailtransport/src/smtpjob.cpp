@@ -192,7 +192,7 @@ void SmtpJob::startSmtpJob()
         transport()->setUserName( dlg->username() );
         transport()->setPassword( dlg->password() );
         transport()->setStorePassword( dlg->keepPassword() );
-        transport()->writeConfig();
+        transport()->save();
         gotIt = true;
       }
       delete dlg;
