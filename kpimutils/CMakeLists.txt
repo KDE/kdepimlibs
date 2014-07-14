@@ -30,6 +30,7 @@ find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Emoticons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
 
 # FIXME: remove this if/endif when KMime is split.
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")

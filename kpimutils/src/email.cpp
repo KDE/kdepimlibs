@@ -35,7 +35,6 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QByteArray>
 
-#include <kglobal.h>
 
 using namespace KPIMUtils;
 
