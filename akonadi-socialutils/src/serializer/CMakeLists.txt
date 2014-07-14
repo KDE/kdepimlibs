@@ -1,3 +1,6 @@
+set( SHARED_MIME_INFO_MINIMUM_VERSION "0.40" )
+find_package( SharedMimeInfo REQUIRED )
+
 if(WIN32)
   set(
     LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
@@ -31,5 +34,4 @@ install(FILES
 
 install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 
-#REactivate it
-#update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
