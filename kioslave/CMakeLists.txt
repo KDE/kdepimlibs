@@ -30,10 +30,9 @@ set_package_properties(Sasl2 PROPERTIES
                              TYPE OPTIONAL
 )
 
-
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 #find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5DocTools ${KF5_VERSION} CONFIG REQUIRED)
 if(${CMAKE_SOURCE_DIR} STREQUAL "${kioslave_SOURCE_DIR}")
   find_package(KF5Ldap ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
   find_package(KF5Mbox ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
