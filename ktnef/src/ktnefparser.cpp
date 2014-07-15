@@ -321,7 +321,7 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
     current_->setSize( i );
     current_->setOffset( device_->pos() );
     device_->seek( device_->pos() + i );
-    value = QString( "< size=%1 >" ).arg( i );
+    value = QString::fromLatin1( "< size=%1 >" ).arg( i );
     qDebug() << "Attachment Data: size=" << i;
     break;
   case attATTACHMENT:  // try to get attachment info
@@ -342,7 +342,7 @@ bool KTNEFParser::ParserPrivate::decodeAttachment()
     }
     current_->setExtension( current_->property( MAPI_TAG_EXTENSION ).
                                toString() );
-    value = QString( "< %1 properties >" ).
+    value = QString::fromLatin1( "< %1 properties >" ).
             arg( current_->properties().count() );
     break;
   case attATTACHMODDATE:
@@ -399,7 +399,7 @@ bool KTNEFParser::ParserPrivate::parseDevice()
   if ( i == TNEF_SIGNATURE ) {
     stream_ >> u;
     qDebug().nospace() << "Attachment cross reference key: 0x"
-                       << hex << qSetFieldWidth( 4 ) << qSetPadChar( '0' ) << u;
+                       << hex << qSetFieldWidth( 4 ) << qSetPadChar( QLatin1Char('0') ) << u;
     //qDebug() << "stream:" << device_->pos();
     while ( !stream_.atEnd() ) {
       stream_ >> c;
@@ -447,13 +447,13 @@ bool KTNEFParser::extractFile( const QString &filename ) const
 bool KTNEFParser::ParserPrivate::extractAttachmentTo( KTNEFAttach *att,
                                                       const QString &dirname )
 {
-  QString filename = dirname + '/';
+  QString filename = dirname + QLatin1Char('/');
   if ( !att->fileName().isEmpty()) {
     filename += att->fileName();
   } else {
     filename += att->name();
   }
-  if ( filename.endsWith( '/') ) {
+  if ( filename.endsWith( QLatin1Char('/')) ) {
     return false;
   }
 
@@ -538,7 +538,7 @@ void KTNEFParser::ParserPrivate::checkCurrent( int key )
     if ( current_->attributes().contains( key ) ) {
       if ( current_->offset() >= 0 ) {
         if ( current_->name().isEmpty() ) {
-          current_->setName( "Unnamed" );
+          current_->setName( QLatin1String("Unnamed") );
         }
         if ( current_->mimeTag().isEmpty() ) {
           // No mime type defined in the TNEF structure,
@@ -552,7 +552,7 @@ void KTNEFParser::ParserPrivate::checkCurrent( int key )
           if ( !mimetype.isValid() ) {
             return; // FIXME
           }
-          if ( mimetype.name() == "application/octet-stream" &&
+          if ( mimetype.name() == QLatin1String("application/octet-stream") &&
                current_->size() > 0 ) {
             int oldOffset = device_->pos();
             QByteArray buffer( qMin( 32, current_->size() ), '\0' );
@@ -607,7 +607,7 @@ QDateTime formatTime( quint32 lowB, quint32 highB )
     dt.setTime_t( ( unsigned int )u64 );
   } else {
     qWarning().nospace() << "Invalid date: low byte="
-                         << showbase << qSetFieldWidth( 8 ) << qSetPadChar( '0' )
+                         << showbase << qSetFieldWidth( 8 ) << qSetPadChar( QLatin1Char('0') )
                          << lowB << ", high byte=" << highB;
     dt.setTime_t( 0xffffffffU );
   }
@@ -627,16 +627,16 @@ QString formatRecipient( const QMap<int,KTnef::KTNEFProperty*> &props )
   if ( ( it = props.find( 0x0C15 ) ) != props.end() ) {
     switch ( ( *it )->value().toInt() ) {
     case 0:
-      t = "From:";
+      t = QLatin1String("From:");
       break;
     case 1:
-      t = "To:";
+      t = QLatin1String("To:");
       break;
     case 2:
-      t = "Cc:";
+      t = QLatin1String("Cc:");
       break;
     case 3:
-      t = "Bcc:";
+      t =QLatin1String( "Bcc:");
       break;
     }
   }
@@ -644,10 +644,10 @@ QString formatRecipient( const QMap<int,KTnef::KTNEFProperty*> &props )
     s.append( t );
   }
   if ( !dn.isEmpty() ) {
-    s.append( ' ' + dn );
+    s.append( QLatin1Char(' ') + dn );
   }
   if ( !addr.isEmpty() && addr != dn ) {
-    s.append( " <" + addr + '>' );
+    s.append( QLatin1String(" <") + addr + QLatin1Char('>') );
   }
 
   return s.trimmed();
@@ -667,9 +667,9 @@ QString readTNEFAddress( QDataStream &stream )
   QString s;
   stream >> totalLen >> totalLen >> strLen >> addrLen;
   s.append( readMAPIString( stream, false, false, strLen ) );
-  s.append( " <" );
+  s.append( QLatin1String(" <") );
   s.append( readMAPIString( stream, false, false, addrLen ) );
-  s.append( ">" );
+  s.append( QLatin1String(">") );
   quint8 c;
   for ( int i=8+strLen+addrLen; i<totalLen; i++ ) {
     stream >> c;
@@ -889,8 +889,8 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
           attach->unsetDataParser();
           attach->setOffset( device_->pos()+12 );
           attach->setSize( data.size()-16 );
-          attach->setMimeTag( "application/vnd.ms-tnef" );
-          attach->setDisplayName( "Embedded Message" );
+          attach->setMimeTag( QLatin1String("application/vnd.ms-tnef") );
+          attach->setDisplayName( QLatin1String("Embedded Message") );
           qDebug() << "MAPI Embedded Message: size=" << data.size();
         }
         device_->seek( device_->pos() + ( len-4 ) );
@@ -901,19 +901,19 @@ bool KTNEFParser::ParserPrivate::readMAPIProperties( QMap<int,KTNEFProperty*> & 
         ALIGN( len, 4 );
         attach->setSize( len );
         attach->setOffset( device_->pos() - len );
-        attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
+        attach->addAttribute( attATTACHDATA, atpBYTE, QString::fromLatin1( "< size=%1 >" ).arg( len ), false );
       }
     }
     qDebug() << "MAPI data: size=" << mapi.value.toByteArray().size();
     break;
     default:
     {
-      QString mapiname = "";
+      QString mapiname = QLatin1String("");
       if ( mapi.tag >= 0x8000 && mapi.tag <= 0xFFFE ) {
         if ( mapi.name.type == 0 ) {
           mapiname = QString().sprintf( " [name = 0x%04x]", mapi.name.value.toUInt() );
         } else {
-          mapiname = QString( " [name = %1]" ).arg( mapi.name.value.toString() );
+          mapiname = QString::fromLatin1( " [name = %1]" ).arg( mapi.name.value.toString() );
         }
       }
       switch ( mapi.type & 0x0FFF ) {

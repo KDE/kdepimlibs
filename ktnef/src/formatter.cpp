@@ -175,7 +175,7 @@ static KDateTime pureISOToLocalQDateTime( const QString &dtStr,
 
     if ( !bDateOnly ) {
       // correct for GMT ( == Zulu time == UTC )
-      if ( dtStr.at( dtStr.length() - 1 ) == 'Z' ) {
+      if ( dtStr.at( dtStr.length() - 1 ) == QLatin1Char('Z') ) {
         //dT = dT.addSecs( 60 * KRFCDate::localUTCOffset() );
         //localUTCOffset( dT ) );
         dT = utc2Local( dT );
@@ -234,16 +234,16 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           bCompatMethodDeclined = true;
         }
       }
-      bool bCompatClassNote = ( msgClass == "IPM.MICROSOFT MAIL.NOTE" );
+      bool bCompatClassNote = ( msgClass == QLatin1String("IPM.MICROSOFT MAIL.NOTE") );
 
-      if ( bCompatClassAppointment || "IPM.APPOINTMENT" == msgClass ) {
+      if ( bCompatClassAppointment || QLatin1String("IPM.APPOINTMENT") == msgClass ) {
         // Compose a vCal
         bool bIsReply = false;
-        QString prodID = "-//Microsoft Corporation//Outlook ";
-        prodID += tnefMsg->findNamedProp( "0x8554", "9.0" );
-        prodID += "MIMEDIR/EN\n";
-        prodID += "VERSION:2.0\n";
-        calFormat.setApplication( "Outlook", prodID );
+        QString prodID = QLatin1String("-//Microsoft Corporation//Outlook ");
+        prodID += tnefMsg->findNamedProp( QLatin1String("0x8554"), QLatin1String("9.0") );
+        prodID += QLatin1String("MIMEDIR/EN\n");
+        prodID += QLatin1String("VERSION:2.0\n");
+        calFormat.setApplication( QLatin1String("Outlook"), prodID );
 
         iTIPMethod method;
         if ( bCompatMethodRequest ) {
@@ -263,33 +263,33 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           //
           //
 
-          if ( tnefMsg->findProp(0x0c17) == "1" ) {
+          if ( tnefMsg->findProp(0x0c17) == QLatin1String("1") ) {
             bIsReply = true;
           }
           method = iTIPRequest;
         }
 
         /// ###  FIXME Need to get this attribute written
-        ScheduleMessage schedMsg( event, method, ScheduleMessage::Unknown );
+        //ScheduleMessage schedMsg( event, method, ScheduleMessage::Unknown );
 
         QString sSenderSearchKeyEmail( tnefMsg->findProp( 0x0C1D ) );
 
         if ( !sSenderSearchKeyEmail.isEmpty() ) {
-          int colon = sSenderSearchKeyEmail.indexOf( ':' );
+          int colon = sSenderSearchKeyEmail.indexOf( QLatin1Char(':') );
           // May be e.g. "SMTP:KHZ@KDE.ORG"
-          if ( sSenderSearchKeyEmail.indexOf( ':' ) == -1 ) {
+          if ( sSenderSearchKeyEmail.indexOf( QLatin1Char(':') ) == -1 ) {
             sSenderSearchKeyEmail.remove( 0, colon+1 );
           }
         }
 
         QString s( tnefMsg->findProp( 0x8189 ) );
-        const QStringList attendees = s.split( ';' );
+        const QStringList attendees = s.split( QLatin1Char(';') );
         if ( attendees.count() ) {
           for ( QStringList::const_iterator it = attendees.begin();
                it != attendees.end(); ++it ) {
             // Skip all entries that have no '@' since these are
             // no mail addresses
-            if ( (*it).indexOf( '@' ) == -1 ) {
+            if ( (*it).indexOf( QLatin1Char('@') ) == -1 ) {
               s = (*it).trimmed();
 
               Attendee::Ptr attendee( new Attendee( s, s, true ) );
@@ -342,10 +342,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           event->setOrganizer( s );
         }
 
-        s = tnefMsg->findProp( 0x819b ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
+        s = tnefMsg->findProp( 0x819b ).remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) );
         event->setDtStart( KDateTime::fromString( s ) ); // ## Format??
 
-        s = tnefMsg->findProp( 0x819c ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
+        s = tnefMsg->findProp( 0x819c ).remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) );
         event->setDtEnd( KDateTime::fromString( s ) );
 
         s = tnefMsg->findProp( 0x810d );
@@ -361,11 +361,11 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         // PENDING(khz): is this value in local timezone? Must it be
         // adjusted? Most likely this is a bug in the server or in
         // Outlook - we ignore it for now.
-        s = tnefMsg->findProp( 0x8202 ).remove( QChar( '-' ) ).remove( QChar( ':' ) );
+        s = tnefMsg->findProp( 0x8202 ).remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) );
         // ### kcal always uses currentDateTime()
         // event->setDtStamp( QDateTime::fromString( s ) );
 
-        s = tnefMsg->findNamedProp( "Keywords" );
+        s = tnefMsg->findNamedProp( QLatin1String("Keywords") );
         event->setCategories( s );
 
         s = tnefMsg->findProp( 0x1000 );
@@ -381,10 +381,10 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           Alarm::Ptr alarm( new Alarm( event.data() ) ); // TODO: fix when KCalCore::Alarm is fixed
           KDateTime highNoonTime =
             pureISOToLocalQDateTime( tnefMsg->findProp( 0x8502 ).
-                                     remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
+                                     remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) ) );
           KDateTime wakeMeUpTime =
-            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, "" ).
-                                     remove( QChar( '-' ) ).remove( QChar( ':' ) ) );
+            pureISOToLocalQDateTime( tnefMsg->findProp( 0x8560, QString() ).
+                                     remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) ) );
           alarm->setTime( wakeMeUpTime );
 
           if ( highNoonTime.isValid() && wakeMeUpTime.isValid() ) {
@@ -406,34 +406,34 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         cal->addEvent( event );
         bOk = true;
         // we finished composing a vCal
-      } else if ( bCompatClassNote || "IPM.CONTACT" == msgClass ) {
+      } else if ( bCompatClassNote || QLatin1String("IPM.CONTACT") == msgClass ) {
         addressee.setUid( stringProp( tnefMsg, attMSGID ) );
         addressee.setFormattedName( stringProp( tnefMsg, MAPI_TAG_PR_DISPLAY_NAME ) );
-        addressee.insertEmail( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_EMAIL1EMAILADDRESS ), true );
-        addressee.insertEmail( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_EMAIL2EMAILADDRESS ), false );
-        addressee.insertEmail( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_EMAIL3EMAILADDRESS ), false );
-        addressee.insertCustom( "KADDRESSBOOK", "X-IMAddress",
-                                sNamedProp( tnefMsg, MAPI_TAG_CONTACT_IMADDRESS ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-SpousesName",
+        addressee.insertEmail( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_EMAIL1EMAILADDRESS) ), true );
+        addressee.insertEmail( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_EMAIL2EMAILADDRESS) ), false );
+        addressee.insertEmail( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_EMAIL3EMAILADDRESS) ), false );
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-IMAddress"),
+                                sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_IMADDRESS) ) );
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_SPOUSE_NAME ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-ManagersName",
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-ManagersName"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_MANAGER_NAME ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName",
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-AssistantsName"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_ASSISTANT ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-Department",
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Department"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_DEPARTMENT_NAME ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-Office",
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Office"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_OFFICE_LOCATION ) );
-        addressee.insertCustom( "KADDRESSBOOK", "X-Profession",
+        addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Profession"),
                                 stringProp( tnefMsg, MAPI_TAG_PR_PROFESSION ) );
 
         QString s = tnefMsg->findProp( MAPI_TAG_PR_WEDDING_ANNIVERSARY ).
-                    remove( QChar( '-' ) ).remove( QChar( ':' ) );
+                    remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) );
         if ( !s.isEmpty() ) {
-          addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", s );
+          addressee.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"), s );
         }
 
-        addressee.setUrl( QUrl( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_WEBPAGE ) ) );
+        addressee.setUrl( QUrl( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_WEBPAGE) ) ) );
 
         // collect parts of Name entry
         addressee.setFamilyName( stringProp( tnefMsg, MAPI_TAG_PR_SURNAME ) );
@@ -460,12 +460,12 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
         adr.setType( KABC::Address::Home );
         addressee.insertAddress( adr );
 
-        adr.setPostOfficeBox( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSPOBOX ) );
-        adr.setStreet( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSSTREET ) );
-        adr.setLocality( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSCITY ) );
-        adr.setRegion( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSSTATE ) );
-        adr.setPostalCode( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSPOSTALCODE ) );
-        adr.setCountry( sNamedProp( tnefMsg, MAPI_TAG_CONTACT_BUSINESSADDRESSCOUNTRY ) );
+        adr.setPostOfficeBox( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSPOBOX) ) );
+        adr.setStreet( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSSTREET) ) );
+        adr.setLocality( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSCITY) ) );
+        adr.setRegion( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSSTATE) ) );
+        adr.setPostalCode( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSPOSTALCODE) ) );
+        adr.setCountry( sNamedProp( tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSCOUNTRY) ) );
         adr.setType( KABC::Address::Work );
         addressee.insertAddress( adr );
 
@@ -502,13 +502,13 @@ QString KTnef::msTNEFToVPart( const QByteArray &tnef )
           KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work ) );
 
         s = tnefMsg->findProp( MAPI_TAG_PR_BIRTHDAY ).
-            remove( QChar( '-' ) ).remove( QChar( ':' ) );
+            remove( QLatin1Char( '-' ) ).remove( QLatin1Char( ':' ) );
         if ( !s.isEmpty() ) {
           addressee.setBirthday( QDateTime::fromString( s ) );
         }
 
         bOk = ( !addressee.isEmpty() );
-      } else if ( "IPM.NOTE" == msgClass ) {
+      } else if ( QLatin1String("IPM.NOTE") == msgClass ) {
 
       } // else if ... and so on ...
     }

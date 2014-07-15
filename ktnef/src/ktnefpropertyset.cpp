@@ -103,12 +103,12 @@ QString KTNEFPropertySet::findNamedProp( const QString &name,
         QVariant value = ( *it )->value();
         if ( value.type() == QVariant::List ) {
           QList<QVariant> l = value.toList();
-          s = "";
+          s = QLatin1String("");
           for ( QList<QVariant>::ConstIterator lit = l.constBegin();
                 lit != l.constEnd();
                 ++lit ) {
             if ( !s.isEmpty() ) {
-              s += ',';
+              s += QLatin1Char(',');
             }
             s += KTNEFProperty::formatValue( *lit, false );
           }

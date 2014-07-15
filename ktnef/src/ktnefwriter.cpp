@@ -391,28 +391,28 @@ void KTNEFWriter::setMessageType( MessageType m )
   QVariant v;
   switch( m ) {
   case Appointment:
-    v = QVariant( QString( "IPM.Appointment" ) );
+    v = QVariant( QLatin1String( "IPM.Appointment" ) );
     break;
 
   case MeetingCancelled:
-    v = QVariant( QString( "IPM.Schedule.Meeting.Cancelled" ) );
+    v = QVariant( QLatin1String( "IPM.Schedule.Meeting.Cancelled" ) );
     break;
 
   case MeetingRequest:
-    v = QVariant( QString( "IPM.Schedule.Meeting.Request" ) );
+    v = QVariant( QLatin1String( "IPM.Schedule.Meeting.Request" ) );
     break;
 
   case MeetingNo:
-    v = QVariant( QString( "IPM.Schedule.Meeting.Resp.Neg" ) );
+    v = QVariant( QLatin1String( "IPM.Schedule.Meeting.Resp.Neg" ) );
     break;
 
   case MeetingYes:
-    v = QVariant( QString( "IPM.Schedule.Meeting.Resp.Pos" ) );
+    v = QVariant( QLatin1String( "IPM.Schedule.Meeting.Resp.Pos" ) );
     break;
 
   case MeetingTent:
     // Tent?
-    v = QVariant( QString( "IPM.Schedule.Meeting.Resp.Tent" ) );
+    v = QVariant( QLatin1String( "IPM.Schedule.Meeting.Resp.Tent" ) );
     break;
 
   default:
@@ -447,7 +447,7 @@ void KTNEFWriter::addAttendee( const QString &cn, Role r,
 // U also assume that this is like "Name <address>"
 void KTNEFWriter::setOrganizer( const QString &organizer )
 {
-  int i = organizer.indexOf( '<' );
+  int i = organizer.indexOf( QLatin1Char('<') );
 
   if ( i == -1 ) {
     return;

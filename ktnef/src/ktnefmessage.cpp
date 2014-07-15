@@ -115,6 +115,6 @@ QString KTNEFMessage::rtfString() const
          output.open( QIODevice::WriteOnly ) ) {
       KTnef::lzfu_decompress( &input, &output );
     }
-    return QString( rtf );
+    return QString::fromLatin1( rtf );
   }
 }
