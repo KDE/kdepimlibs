@@ -88,15 +88,15 @@ bool ReadMBox::nextLine()
     }
 
     //New message
-    if( m_current_line.left( 5 ) == "From " ) {
+    if( m_current_line.left( 5 ) == QLatin1String("From ") ) {
         m_current_id = m_current_line;
         m_prev_status = m_status;
         m_status = true;
         m_header = true;
         return true;
     } else if( m_only_new ) {
-        if( m_header && m_current_line.left( 7 ) == "Status:" &&
-            ! m_current_line.contains( "U" ) && ! m_current_line.contains( "N" ) ) {
+        if( m_header && m_current_line.left( 7 ) == QLatin1String("Status:") &&
+            ! m_current_line.contains( QLatin1String("U") ) && ! m_current_line.contains( QLatin1String("N") ) ) {
                 m_status = false;
         }
     }

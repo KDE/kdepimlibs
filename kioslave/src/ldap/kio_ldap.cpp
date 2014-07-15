@@ -201,12 +201,12 @@ void LDAPProtocol::LDAPEntry2UDSEntry( const LdapDN &dn, UDSEntry &entry,
   int pos;
   entry.clear();
   QString name = dn.toString();
-  if ( (pos = name.indexOf(',')) > 0 )
+  if ( (pos = name.indexOf(QLatin1Char(','))) > 0 )
     name = name.left( pos );
-  if ( (pos = name.indexOf('=')) > 0 )
+  if ( (pos = name.indexOf(QLatin1Char('='))) > 0 )
     name.remove( 0, pos+1 );
-  name.replace(' ', "_");
-  if ( !dir ) name += ".ldif";
+  name.replace(QLatin1Char(' '), QLatin1String("_"));
+  if ( !dir ) name += QLatin1String(".ldif");
     entry.insert( KIO::UDSEntry::UDS_NAME, name );
 
   // the file type
@@ -221,7 +221,7 @@ void LDAPProtocol::LDAPEntry2UDSEntry( const LdapDN &dn, UDSEntry &entry,
 
   // the url
   LdapUrl url=usrc;
-  url.setPath('/'+dn.toString());
+  url.setPath(QLatin1Char('/')+dn.toString());
   url.setScope( dir ? LdapUrl::One : LdapUrl::Base );
     entry.insert( KIO::UDSEntry::UDS_URL, url.toDisplayString() );
 }
@@ -299,12 +299,12 @@ void LDAPProtocol::openConnection()
   mConnected = true;
 
   AuthInfo info;
-  info.url.setScheme( mProtocol );
+  info.url.setScheme( QLatin1String(mProtocol) );
   info.url.setHost( mServer.host() );
   info.url.setPort( mServer.port() );
   info.url.setUserName( mServer.user() );
   info.caption = i18n("LDAP Login");
-  info.comment = QString::fromLatin1( mProtocol ) + "://" + mServer.host() + ':' +
+  info.comment = QString::fromLatin1( mProtocol ) + QLatin1String("://") + mServer.host() + QLatin1Char(':') +
     QString::number( mServer.port() );
   info.commentLabel = i18n("site:");
   info.username = mServer.auth() == LdapServer::SASL ? mServer.user() : mServer.bindDn();
@@ -405,9 +405,9 @@ void LDAPProtocol::get( const QUrl &_url )
   }
 
   // tell the mimetype
-  mimeType("text/plain");
+  mimeType(QLatin1String("text/plain"));
   // collect the result
-  QByteArray result;
+  //QByteArray result;
   filesize_t processed_size = 0;
 
   while( true ) {
@@ -477,7 +477,7 @@ void LDAPProtocol::stat( const QUrl &_url )
 
   // look how many entries match
   saveatt = usrc.attributes();
-  att.append( "dn" );
+  att.append( QLatin1String("dn") );
 
   if ( (id = mOp.search( usrc.dn(), usrc.scope(), usrc.filter(), att )) == -1 ) {
     LDAPErr();
@@ -503,7 +503,7 @@ void LDAPProtocol::stat( const QUrl &_url )
 
   UDSEntry uds;
   bool critical;
-  LDAPEntry2UDSEntry( usrc.dn(), uds, usrc, usrc.extension("x-dir", critical) != "base" );
+  LDAPEntry2UDSEntry( usrc.dn(), uds, usrc, usrc.extension(QLatin1String("x-dir"), critical) != QLatin1String("base") );
 
   statEntry( uds );
   // we are done
@@ -701,7 +701,7 @@ void LDAPProtocol::listDir( const QUrl &_url )
   QStringList att,saveatt;
   LdapUrl usrc(_url),usrc2;
   bool critical = true;
-  bool isSub = ( usrc.extension( "x-dir", critical ) == "sub" );
+  bool isSub = ( usrc.extension( QLatin1String("x-dir"), critical ) == QLatin1String("sub") );
 
 //Reactivate it
   //qCDebug(KLDAP_LOG) << "listDir(" << _url << ")";
@@ -716,7 +716,7 @@ void LDAPProtocol::listDir( const QUrl &_url )
   saveatt = usrc.attributes();
   // look up the entries
   if ( isSub ) {
-    att.append("dn");
+    att.append(QLatin1String("dn"));
     usrc.setAttributes(att);
   }
   if ( _url.query().isEmpty() ) usrc.setScope( LdapUrl::One );
@@ -726,8 +726,8 @@ void LDAPProtocol::listDir( const QUrl &_url )
     return;
   }
 
-  usrc.setAttributes( QStringList() << "" );
-  usrc.setExtension( "x-dir", "base" );
+  usrc.setAttributes( QStringList() << QLatin1String("") );
+  usrc.setExtension( QLatin1String("x-dir"), QLatin1String("base") );
   // publish the results
   UDSEntry uds;
 

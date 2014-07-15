@@ -79,7 +79,7 @@ void MBoxProtocol::get( const QUrl& url )
 
     while( !mbox.atEnd() && !m_errorState) {
         line = mbox.currentLine();
-        line += '\n';
+        line += QLatin1Char('\n');
         ba_line = QByteArray( line.toUtf8() );
         ba_line.truncate( ba_line.size() - 1 ); //Removing training '\0'
         data( ba_line );
@@ -98,7 +98,7 @@ void MBoxProtocol::listDir( const QUrl& url )
 
     KIO::UDSEntry entry;
     UrlInfo info( url, UrlInfo::directory );
-    ReadMBox mbox( &info, this, hasMetaData( "onlynew" ), hasMetaData( "savetime" ) );
+    ReadMBox mbox( &info, this, hasMetaData( QLatin1String("onlynew") ), hasMetaData( QLatin1String("savetime") ) );
 
     if( m_errorState ) {
         return;

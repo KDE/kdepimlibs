@@ -18,8 +18,7 @@
 #include <QDir>
 #include <QHash>
 #include <QRegExp>
-
-//#include <kdebug.h>
+#include <QUrlQuery>
 #include <klocalizedstring.h>
 #include <QCoreApplication>
 
@@ -84,7 +83,7 @@ NNTPProtocol::~NNTPProtocol() {
 void NNTPProtocol::setHost ( const QString & host, quint16 port, const QString & user,
                              const QString & pass )
 {
-  DBG << ( ! user.isEmpty() ? (user+'@') : QString(""))
+  DBG << ( ! user.isEmpty() ? (user+QLatin1Char('@')) : QString::fromLatin1(""))
       << host << ":" << ( ( port == 0 ) ? m_defaultPort : port  );
 
   if ( isConnected() && (mHost != host || m_port != port ||
@@ -103,9 +102,9 @@ void NNTPProtocol::get( const QUrl& url )
   QString path = QDir::cleanPath(url.path());
 
   // path should be like: /group/<msg_id> or /group/<serial number>
-  if ( path.startsWith( '/' ) )
+  if ( path.startsWith( QLatin1Char('/') ) )
     path.remove( 0, 1 );
-  int pos = path.indexOf( '/' );
+  int pos = path.indexOf( QLatin1Char('/') );
   QString group;
   QString msg_id;
   if ( pos > 0 ) {
@@ -127,13 +126,13 @@ void NNTPProtocol::get( const QUrl& url )
   // select group if necessary
   if ( mCurrentGroup != group && !group.isEmpty() ) {
     infoMessage( i18n("Selecting group %1...", group ) );
-    res_code = sendCommand( "GROUP " + group );
+    res_code = sendCommand( QLatin1String("GROUP ") + group );
     if ( res_code == 411 ){
       error( ERR_DOES_NOT_EXIST, path );
       mCurrentGroup.clear();
       return;
     } else if ( res_code != 211 ) {
-      unexpected_response( res_code, "GROUP" );
+      unexpected_response( res_code, QLatin1String("GROUP") );
       mCurrentGroup.clear();
       return;
     }
@@ -142,12 +141,12 @@ void NNTPProtocol::get( const QUrl& url )
 
   // get article
   infoMessage( i18n("Downloading article...") );
-  res_code = sendCommand( "ARTICLE " + msg_id );
+  res_code = sendCommand( QLatin1String("ARTICLE ") + msg_id );
   if ( res_code == 423 || res_code == 430 ) {
     error( ERR_DOES_NOT_EXIST, path );
     return;
   } else if (res_code != 220) {
-    unexpected_response(res_code,"ARTICLE");
+    unexpected_response(res_code,QLatin1String("ARTICLE"));
     return;
   }
 
@@ -208,12 +207,12 @@ bool NNTPProtocol::post_article() {
 
   // send post command
   infoMessage( i18n("Sending article...") );
-  int res_code = sendCommand( "POST" );
+  int res_code = sendCommand( QLatin1String("POST") );
   if (res_code == 440) { // posting not allowed
     error(ERR_WRITE_ACCESS_DENIED, mHost);
     return false;
   } else if (res_code != 340) { // 340: ok, send article
-    unexpected_response(res_code,"POST");
+    unexpected_response(res_code,QLatin1String("POST"));
     return false;
   }
 
@@ -261,7 +260,7 @@ bool NNTPProtocol::post_article() {
     error(ERR_COULD_NOT_WRITE, mHost);
     return false;
   } else if (res_code != 240) {
-    unexpected_response(res_code,"POST");
+    unexpected_response(res_code,QLatin1String("POST"));
     return false;
   }
 
@@ -273,21 +272,21 @@ void NNTPProtocol::stat( const QUrl& url ) {
   DBG << url.toDisplayString();
   UDSEntry entry;
   QString path = QDir::cleanPath(url.path());
-  QRegExp regGroup = QRegExp("^\\/?[a-z0-9\\.\\-_]+\\/?$",Qt::CaseInsensitive);
-  QRegExp regMsgId = QRegExp("^\\/?[a-z0-9\\.\\-_]+\\/<\\S+>$", Qt::CaseInsensitive);
+  QRegExp regGroup = QRegExp(QLatin1String("^\\/?[a-z0-9\\.\\-_]+\\/?$"),Qt::CaseInsensitive);
+  QRegExp regMsgId = QRegExp(QLatin1String("^\\/?[a-z0-9\\.\\-_]+\\/<\\S+>$"), Qt::CaseInsensitive);
   int pos;
   QString group;
   QString msg_id;
 
   // / = group list
-  if (path.isEmpty() || path == "/") {
+  if (path.isEmpty() || path == QLatin1String("/")) {
     DBG << "root";
     fillUDSEntry( entry, QString(), 0, false, ( S_IWUSR | S_IWGRP | S_IWOTH ) );
 
   // /group = message list
   } else if (regGroup.indexIn(path) == 0) {
-    if ( path.startsWith( '/' ) ) path.remove(0,1);
-    if ((pos = path.indexOf('/')) > 0) group = path.left(pos);
+    if ( path.startsWith( QLatin1Char('/') ) ) path.remove(0,1);
+    if ((pos = path.indexOf(QLatin1Char('/'))) > 0) group = path.left(pos);
     else group = path;
     DBG << "group:" << group;
     // postingAllowed should be ored here with "group not moderated" flag
@@ -296,12 +295,12 @@ void NNTPProtocol::stat( const QUrl& url ) {
 
   // /group/<msg_id> = message
   } else if (regMsgId.indexIn(path) == 0) {
-    pos = path.indexOf('<');
+    pos = path.indexOf(QLatin1Char('<'));
     group = path.left(pos);
     msg_id = QUrl::fromPercentEncoding( path.right(path.length()-pos).toLatin1() );
-    if ( group.startsWith( '/' ) )
+    if ( group.startsWith( QLatin1Char('/') ) )
       group.remove( 0, 1 );
-    if ((pos = group.indexOf('/')) > 0) group = group.left(pos);
+    if ((pos = group.indexOf(QLatin1Char('/'))) > 0) group = group.left(pos);
     DBG << "group:" << group << "msg:" << msg_id;
     fillUDSEntry( entry, msg_id, 0, true );
 
@@ -325,29 +324,29 @@ void NNTPProtocol::listDir( const QUrl& url ) {
   if (path.isEmpty())
   {
     QUrl newURL(url);
-    newURL.setPath("/");
+    newURL.setPath(QLatin1String("/"));
     DBG << "redirecting to" << newURL.toDisplayString();
     redirection(newURL);
     finished();
     return;
   }
-  else if ( path == "/" ) {
+  else if ( path == QLatin1String("/") ) {
     QUrl newUrl(url);
-    fetchGroups( QUrlQuery(newUrl).queryItemValue("since"), QUrlQuery(newUrl).queryItemValue("desc") == "true" );
+    fetchGroups( QUrlQuery(newUrl).queryItemValue(QLatin1String("since")), QUrlQuery(newUrl).queryItemValue(QLatin1String("desc")) == QLatin1String("true") );
     finished();
   } else {
     // if path = /group
     int pos;
     QString group;
-    if ( path.startsWith( '/' ) )
+    if ( path.startsWith( QLatin1Char('/') ) )
       path.remove( 0, 1 );
-    if ((pos = path.indexOf('/')) > 0)
+    if ((pos = path.indexOf(QLatin1Char('/'))) > 0)
       group = path.left(pos);
     else
       group = path;
     QUrl newUrl(url);
-    QString first = QUrlQuery(newUrl).queryItemValue("first");
-    QString max = QUrlQuery(newUrl).queryItemValue("max");
+    QString first = QUrlQuery(newUrl).queryItemValue(QLatin1String("first"));
+    QString max = QUrlQuery(newUrl).queryItemValue(QLatin1String("max"));
     if ( fetchGroup( group, first.toULong(), max.toULong() ) )
       finished();
   }
@@ -360,16 +359,16 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
   if ( since.isEmpty() ) {
     // full listing
     infoMessage( i18n("Downloading group list...") );
-    res = sendCommand( "LIST" );
+    res = sendCommand( QLatin1String("LIST") );
     expected = 215;
   } else {
     // incremental listing
     infoMessage( i18n("Looking for new groups...") );
-    res = sendCommand( "NEWGROUPS " + since );
+    res = sendCommand( QLatin1String("NEWGROUPS ") + since );
     expected = 231;
   }
   if ( res != expected ) {
-    unexpected_response( res, "LIST" );
+    unexpected_response( res, QLatin1String("LIST") );
     return;
   }
 
@@ -397,7 +396,7 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
     // group name
     if ((pos = line.indexOf(' ')) > 0) {
 
-      group = line.left(pos);
+      group = QLatin1String(line.left(pos));
 
       // number of messages
       line.remove(0,pos+1);
@@ -436,12 +435,12 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
   while ( desc ) {
     // request all group descriptions
     if ( since.isEmpty() )
-      res = sendCommand( "LIST NEWSGROUPS" );
+      res = sendCommand( QLatin1String("LIST NEWSGROUPS") );
     else {
       // request only descriptions for new groups
       if ( it == entryMap.end() )
         break;
-      res = sendCommand( "LIST NEWSGROUPS " + it.key() );
+      res = sendCommand( QLatin1String("LIST NEWSGROUPS ") + it.key() );
       ++it;
       if( res == 503 ) {
         // Information not available (RFC 2980 §2.1.6), try next group
@@ -468,8 +467,8 @@ void NNTPProtocol::fetchGroups( const QString &since, bool desc )
       //DBG << "  fetching group description: " << QString( line ).trimmed();
       int pos = line.indexOf( ' ' );
       pos = pos < 0 ? line.indexOf( '\t' ) : qMin( pos, line.indexOf( '\t' ) );
-      group = line.left( pos );
-      QString groupDesc = line.right( line.length() - pos ).trimmed();
+      group = QLatin1String(line.left( pos ));
+      QString groupDesc = QLatin1String(line.right( line.length() - pos ).trimmed());
 
       if ( entryMap.contains( group ) ) {
         entry = entryMap.take( group );
@@ -495,13 +494,13 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
 
   // select group
   infoMessage( i18n("Selecting group %1...", group ) );
-  res_code = sendCommand( "GROUP " + group );
+  res_code = sendCommand( QLatin1String("GROUP ") + group );
   if ( res_code == 411 ) {
     error( ERR_DOES_NOT_EXIST, group );
     mCurrentGroup.clear();
     return false;
   } else if ( res_code != 211 ) {
-    unexpected_response( res_code, "GROUP" );
+    unexpected_response( res_code, QLatin1String("GROUP") );
     mCurrentGroup.clear();
     return false;
   }
@@ -511,7 +510,7 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
   // and the first and last message followed by the group name
   unsigned long firstSerNum, lastSerNum;
   resp_line = QString::fromLatin1( readBuffer );
-  QRegExp re ( "211\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
+  QRegExp re ( QLatin1String("211\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"));
   if ( re.indexIn( resp_line ) != -1 ) {
     firstSerNum = re.cap( 2 ).toLong();
     lastSerNum = re.cap( 3 ).toLong();
@@ -533,8 +532,8 @@ bool NNTPProtocol::fetchGroup( QString &group, unsigned long first, unsigned lon
     first = lastSerNum - max + 1;
 
   DBG << "Starting from serial number: " << first << " of " << firstSerNum << " - " << lastSerNum;
-  setMetaData( "FirstSerialNumber", QString::number( firstSerNum ) );
-  setMetaData( "LastSerialNumber", QString::number( lastSerNum ) );
+  setMetaData( QLatin1String("FirstSerialNumber"), QString::number( firstSerNum ) );
+  setMetaData( QLatin1String("LastSerialNumber"), QString::number( lastSerNum ) );
 
   infoMessage( i18n("Downloading new headers...") );
   totalSize( lastSerNum - first );
@@ -552,17 +551,17 @@ bool NNTPProtocol::fetchGroupRFC977( unsigned long first )
   UDSEntry entry;
 
   // set article pointer to first article and get msg-id of it
-  int res_code = sendCommand( "STAT " + QString::number( first ) );
-  QString resp_line = readBuffer;
+  int res_code = sendCommand( QLatin1String("STAT ") + QString::number( first ) );
+  QString resp_line = QLatin1String(readBuffer);
   if (res_code != 223) {
-    unexpected_response(res_code,"STAT");
+    unexpected_response(res_code,QLatin1String("STAT"));
     return false;
   }
 
   //STAT res_line: 223 nnn <msg_id> ...
   QString msg_id;
   int pos, pos2;
-  if ((pos = resp_line.indexOf('<')) > 0 && (pos2 = resp_line.indexOf('>',pos+1))) {
+  if ((pos = resp_line.indexOf(QLatin1Char('<'))) > 0 && (pos2 = resp_line.indexOf(QLatin1Char('>'),pos+1))) {
     msg_id = resp_line.mid(pos,pos2-pos+1);
     fillUDSEntry( entry, msg_id, 0, true );
     listEntry( entry, false );
@@ -574,20 +573,20 @@ bool NNTPProtocol::fetchGroupRFC977( unsigned long first )
 
   // go through all articles
   while (true) {
-    res_code = sendCommand("NEXT");
+    res_code = sendCommand(QLatin1String("NEXT"));
     if (res_code == 421) {
       // last artice reached
       entry.clear();
       listEntry( entry, true );
       return true;
     } else if (res_code != 223) {
-      unexpected_response(res_code,"NEXT");
+      unexpected_response(res_code,QLatin1String("NEXT"));
       return false;
     }
 
     //res_line: 223 nnn <msg_id> ...
-    resp_line = readBuffer;
-    if ((pos = resp_line.indexOf('<')) > 0 && (pos2 = resp_line.indexOf('>',pos+1))) {
+    resp_line = QLatin1String(readBuffer);
+    if ((pos = resp_line.indexOf(QLatin1Char('<'))) > 0 && (pos2 = resp_line.indexOf(QLatin1Char('>'),pos+1))) {
       msg_id = resp_line.mid(pos,pos2-pos+1);
       entry.clear();
       fillUDSEntry( entry, msg_id, 0, true );
@@ -609,7 +608,7 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
   QString line;
   QStringList headers;
 
-  int res = sendCommand( "LIST OVERVIEW.FMT" );
+  int res = sendCommand( QLatin1String("LIST OVERVIEW.FMT") );
   if ( res == 215 ) {
     while ( true ) {
       if ( ! waitForResponse( readTimeout() ) ) {
@@ -619,24 +618,24 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
       }
       readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
       line = QString::fromLatin1( readBuffer, readBufferLen );
-      if ( line == ".\r\n" )
+      if ( line == QLatin1String(".\r\n") )
         break;
       headers << line.trimmed();
       DBG << "OVERVIEW.FMT:" << line.trimmed();
     }
   } else {
     // fallback to defaults
-    headers << "Subject:" << "From:" << "Date:" << "Message-ID:"
-        << "References:" << "Bytes:" << "Lines:";
+    headers << QLatin1String("Subject:") << QLatin1String("From:") << QLatin1String("Date:") << QLatin1String("Message-ID:")
+        << QLatin1String("References:")<< QLatin1String("Bytes:") << QLatin1String("Lines:");
   }
 
-  res = sendCommand( "XOVER " + QString::number( first ) + '-' );
+  res = sendCommand( QLatin1String("XOVER ") + QString::number( first ) + QLatin1Char('-') );
   if ( res == 420 )
     return true; // no articles selected
   if ( res == 500 )
     notSupported = true; // unknwon command
   if ( res != 224 ) {
-    unexpected_response( res, "XOVER" );
+    unexpected_response( res, QLatin1String("XOVER") );
     return false;
   }
 
@@ -654,13 +653,13 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
     }
     readBufferLen = readLine ( readBuffer, MAX_PACKET_LEN );
     line = QString::fromLatin1( readBuffer, readBufferLen );
-    if ( line == ".\r\n" ) {
+    if ( line == QLatin1String(".\r\n") ) {
       entry.clear();
       listEntry( entry, true );
       return true;
     }
 
-    fields = line.split( '\t', QString::KeepEmptyParts);
+    fields = line.split( QLatin1Char('\t'), QString::KeepEmptyParts);
     msgSize = 0;
     entry.clear();
     udsType = KIO::UDSEntry::UDS_EXTRA;
@@ -670,18 +669,18 @@ bool NNTPProtocol::fetchGroupXOVER( unsigned long first, bool &notSupported )
     name = (*it2);
     ++it2;
     for ( ; it != headers.constEnd() && it2 != fields.constEnd(); ++it, ++it2 ) {
-      if ( (*it) == "Bytes:" ) {
+      if ( (*it) == QLatin1String("Bytes:") ) {
         msgSize = (*it2).toLong();
         continue;
       }
       QString atomStr;
       if ( (*it).endsWith( QLatin1String( "full" ) ) )
         if ( (*it2).trimmed().isEmpty() )
-          atomStr = (*it).left( (*it).indexOf( ':' ) + 1 ); // strip of the 'full' suffix
+          atomStr = (*it).left( (*it).indexOf( QLatin1Char(':') ) + 1 ); // strip of the 'full' suffix
         else
           atomStr = (*it2).trimmed();
       else
-        atomStr = (*it) + ' ' + (*it2).trimmed();
+        atomStr = (*it) + QLatin1Char(' ') + (*it2).trimmed();
       entry.insert( udsType++, atomStr );
       if ( udsType >= KIO::UDSEntry::UDS_EXTRA_END )
         break;
@@ -745,7 +744,7 @@ bool NNTPProtocol::nntp_open()
   DBG << "  nntp_open -- creating a new connection to" << mHost << ":" << m_port;
   // create a new connection (connectToHost() includes error handling)
   infoMessage( i18n("Connecting to server...") );
-  if ( connectToHost( (isAutoSsl() ? "nntps" : "nntp"), mHost, m_port ) )
+  if ( connectToHost( (isAutoSsl() ? QLatin1String("nntps") : QLatin1String("nntp")), mHost, m_port ) )
   {
     DBG << "  nntp_open -- connection is open";
 
@@ -758,17 +757,17 @@ bool NNTPProtocol::nntp_open()
     */
     if ( ! ( res_code == 200 || res_code == 201 ) )
     {
-      unexpected_response(res_code,"CONNECT");
+      unexpected_response(res_code,QLatin1String("CONNECT"));
       return false;
     }
 
     DBG << "  nntp_open -- greating was read res_code :" << res_code;
 
-    res_code = sendCommand("MODE READER");
+    res_code = sendCommand(QLatin1String("MODE READER"));
 
     // TODO: not in RFC 977, so we should not abort here
     if ( !(res_code == 200 || res_code == 201) ) {
-      unexpected_response( res_code, "MODE READER" );
+      unexpected_response( res_code, QLatin1String("MODE READER") );
       return false;
     }
 
@@ -776,8 +775,8 @@ bool NNTPProtocol::nntp_open()
     postingAllowed = (res_code == 200);
 
     // activate TLS if requested
-    if ( metaData("tls") == "on" ) {
-      if ( sendCommand( "STARTTLS" ) != 382 ) {
+    if ( metaData(QLatin1String("tls")) == QLatin1String("on") ) {
+      if ( sendCommand( QLatin1String("STARTTLS") ) != 382 ) {
         error( ERR_COULD_NOT_CONNECT, i18n("This server does not support TLS") );
         return false;
       }
@@ -912,7 +911,7 @@ void NNTPProtocol::unexpected_response( int res_code, const QString &command )
       error( ERR_ACCESS_DENIED, mHost );
       break;
     default:
-      error( ERR_INTERNAL, i18n( "Unexpected server response to %1 command:\n%2", command, readBuffer ) );
+      error( ERR_INTERNAL, i18n( "Unexpected server response to %1 command:\n%2", command, QLatin1String(readBuffer) ) );
   }
 
   nntp_close();

@@ -42,12 +42,12 @@ QString UrlInfo::mimetype() const
 {
     switch( m_type ) {
     case message:
-        return "message/rfc822";
+        return QLatin1String("message/rfc822");
     case directory:
-        return "inode/directory";
+        return QLatin1String("inode/directory");
     case invalid:
     default:
-        return "invalid";
+        return QLatin1String("invalid");
     }
 }
 
@@ -63,7 +63,7 @@ QString UrlInfo::id() const
 
 QString UrlInfo::url() const
 {
-    return *m_filename + '/' + *m_id;
+    return *m_filename + QLatin1Char('/') + *m_id;
 }
 
 
@@ -79,8 +79,8 @@ void UrlInfo::calculateInfo( const QUrl &url, const UrlType type )
     }
     if( !found ) {
         m_type = invalid;
-        *m_filename = "";
-        *m_id = "";
+        *m_filename = QLatin1String("");
+        *m_id = QLatin1String("");
     }
 }
 
@@ -91,7 +91,7 @@ bool UrlInfo::isDirectory( const QUrl &url )
     QFileInfo info;
 
     //Remove ending /
-    while( filename.length() > 1 && filename.right( 1 ) == "/" ) {
+    while( filename.length() > 1 && filename.right( 1 ) == QLatin1String("/") ) {
         filename.remove( filename.length()-2, 1 );
     }
 
@@ -113,7 +113,7 @@ bool UrlInfo::isMessage( const QUrl &url )
 {
     QString path = url.path();
     QFileInfo info;
-    int cutindex = path.lastIndexOf( '/' );
+    int cutindex = path.lastIndexOf( QLatin1Char('/') );
 
     //Does it contain at least one /?
     if( cutindex < 0 ) {
