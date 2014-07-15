@@ -100,7 +100,7 @@ void TestGData::dumpPost( const BlogPost *post )
   qDebug() << "# title: " << post->title();
   qDebug() << "# content: " << post->content();
   qDebug() << "# private: " << post->isPrivate();
-  qDebug() << "# categories: " << post->categories().join( " " );
+  qDebug() << "# categories: " << post->categories().join( QLatin1String(" ") );
   qDebug() << "# error: " << post->error();
   qDebug() << "# journalId: " << post->journalId();
   switch ( post->status() ) {
@@ -269,7 +269,7 @@ void TestGData::modifyPost( KBlog::BlogPost *post )
 
   connect( b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
            this, SLOT(fetchPost(KBlog::BlogPost*)) );
-  p->setContent( "TestGData: created content." );
+  p->setContent( QLatin1String("TestGData: created content.") );
   b->fetchPost( p );
   fetchPostTimer->start( TIMEOUT );
 }
@@ -382,21 +382,21 @@ void TestGData::testValidity()
   eventLoop = new QEventLoop( this );
 
   // we do not test the setUrl() function additionally here
-  b = new GData( QUrl("http://blogger2test.blogspot.com") );
-  b->setUsername( "christian_weilbach@web.de" );
-  b->setFullName( "Santa Claus" );
-  b->setProfileId( "11235141638164909615" );
-  b->setPassword( "Wo ist Hans?" );
-  b->setBlogId( "4662848212819772532" );
-  b->setTimeZone( KTimeZone( "UTC" ) );
-  QVERIFY( b->url() == QUrl("http://blogger2test.blogspot.com") );
-  QVERIFY( b->blogId() == "4662848212819772532" );
-  QVERIFY( b->fullName() == "Santa Claus" );
-  QVERIFY( b->username() == "christian_weilbach@web.de" );
-  QVERIFY( b->profileId() == "11235141638164909615" );
-  QVERIFY( b->password() == "Wo ist Hans?" );
-  QVERIFY( b->interfaceName() == "Google Blogger Data" );
-  QVERIFY( b->timeZone().name() == QString( "UTC" ) );
+  b = new GData( QUrl(QLatin1String("http://blogger2test.blogspot.com") ) );
+  b->setUsername( QLatin1String("christian_weilbach@web.de") );
+  b->setFullName( QLatin1String("Santa Claus") );
+  b->setProfileId( QLatin1String("11235141638164909615") );
+  b->setPassword( QLatin1String("Wo ist Hans?") );
+  b->setBlogId( QLatin1String("4662848212819772532") );
+  b->setTimeZone( KTimeZone( QLatin1String("UTC") ) );
+  QVERIFY( b->url() == QUrl(QLatin1String("http://blogger2test.blogspot.com") ) );
+  QVERIFY( b->blogId() == QLatin1String("4662848212819772532") );
+  QVERIFY( b->fullName() == QLatin1String("Santa Claus") );
+  QVERIFY( b->username() == QLatin1String("christian_weilbach@web.de") );
+  QVERIFY( b->profileId() == QLatin1String("11235141638164909615") );
+  QVERIFY( b->password() == QLatin1String("Wo ist Hans?") );
+  QVERIFY( b->interfaceName() == QLatin1String("Google Blogger Data") );
+  QVERIFY( b->timeZone().name() == QLatin1String( "UTC" ) );
 }
 
 void TestGData::testNetwork()

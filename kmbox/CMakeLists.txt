@@ -33,6 +33,7 @@ find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
   find_package(KF5Mime ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
 endif()
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 ########### Targets ###########
 add_subdirectory(src)

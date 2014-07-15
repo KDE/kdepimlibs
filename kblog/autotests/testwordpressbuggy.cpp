@@ -96,7 +96,7 @@ void TestWordpressBuggy::dumpPost( const BlogPost *post )
   qDebug() << "# title: " << post->title();
   qDebug() << "# content: " << post->content();
   qDebug() << "# private: " << post->isPrivate();
-  qDebug() << "# categories: " << post->categories().join( " " );
+  qDebug() << "# categories: " << post->categories().join( QLatin1String(" ") );
   qDebug() << "# error: " << post->error();
   qDebug() << "# journalId: " << post->journalId();
   qDebug() << "# allowTrackBack: " << post->isTrackBackAllowed();
@@ -138,12 +138,12 @@ void TestWordpressBuggy::fetchUserInfo( const QMap<QString,QString> &userInfo )
 {
   fetchUserInfoTimer->stop();
   qDebug() << "########### fetchUserInfo ###########";
-  qDebug() << "# nickname: " << userInfo["nickname"];
-  qDebug() << "# userid: "  << userInfo["userid"];
-  qDebug() << "# url: " <<  userInfo["url"];
-  qDebug() << "# email: " <<  userInfo["email"];
-  qDebug() << "# lastname: " << userInfo["lastname"];
-  qDebug() << "# firstname: " <<  userInfo["firstname"];
+  qDebug() << "# nickname: " << userInfo[QLatin1String("nickname")];
+  qDebug() << "# userid: "  << userInfo[QLatin1String("userid")];
+  qDebug() << "# url: " <<  userInfo[QLatin1String("url")];
+  qDebug() << "# email: " <<  userInfo[QLatin1String("email")];
+  qDebug() << "# lastname: " << userInfo[QLatin1String("lastname")];
+  qDebug() << "# firstname: " <<  userInfo[QLatin1String("firstname")];
   qDebug() << "##############################\n";
 
   connect( b, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
@@ -195,7 +195,7 @@ void TestWordpressBuggy::listCategories(
   QList<QMap<QString,QString> >::ConstIterator it = categories.begin();
   QList<QMap<QString,QString> >::ConstIterator end = categories.end();
   for ( ; it != end; ++it ) {
-    qDebug() << "# category name: " << ( *it )["name"];
+    qDebug() << "# category name: " << ( *it )[QLatin1String("name")];
   }
   qDebug() << "###############################\n";
 
@@ -230,7 +230,7 @@ void TestWordpressBuggy::modifyPost( KBlog::BlogPost *post )
 
   connect( b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
            this, SLOT(fetchPost(KBlog::BlogPost*)) );
-  p->setContent( "TestWordpressBuggy: created content." );
+  p->setContent( QLatin1String("TestWordpressBuggy: created content.") );
   b->fetchPost( p );
   fetchPostTimer->start( TIMEOUT );
 }
@@ -338,9 +338,9 @@ void TestWordpressBuggy::testValidity()
   eventLoop = new QEventLoop( this );
 
   // no need to delete later ;-):
-  b = new WordpressBuggy( QUrl("http://wrong.url.org/somegateway") );
-  QVERIFY( b->url() == QUrl("http://wrong.url.org/somegateway") );
-  KTimeZone mTimeZone( KTimeZone( "UTC" ) );
+  b = new WordpressBuggy( QUrl(QLatin1String("http://wrong.url.org/somegateway")) );
+  QVERIFY( b->url() == QUrl(QLatin1String("http://wrong.url.org/somegateway")) );
+  KTimeZone mTimeZone( KTimeZone( QLatin1String("UTC") ) );
   b->setUrl( mUrl );
   b->setUsername( mUsername );
   b->setPassword( mPassword );
@@ -350,7 +350,7 @@ void TestWordpressBuggy::testValidity()
   QVERIFY( b->blogId() == mBlogId );
   QVERIFY( b->username() == mUsername );
   QVERIFY( b->password() == mPassword );
-  QVERIFY( b->interfaceName() == "Movable Type" );
+  QVERIFY( b->interfaceName() == QLatin1String("Movable Type") );
   QVERIFY( b->timeZone().name() == mTimeZone.name() );
 }
 
@@ -369,15 +369,15 @@ void TestWordpressBuggy::testNetwork()
   p->setTrackBackAllowed( mTrackBackAllowed );
   p->setSummary( mSummary );
   p->setTags( mTags );
-  p->setCategories( mCategories << "Blogroll" );
+  p->setCategories( mCategories << QLatin1String("Blogroll") );
 
   BlogMedia *m = new BlogMedia();
-  m->setName( "testWordpressBuggy.txt" );
-  m->setMimetype( "text/plain" );
-  m->setData( QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toLatin1() );
-  QVERIFY( m->mimetype() == "text/plain" );
-  QVERIFY( m->data() == QString( "YTM0NZomIzI2OTsmIzM0NTueYQ==" ).toLatin1() );
-  QVERIFY( m->name() == QString( "testWordpressBuggy.txt" ) );
+  m->setName( QLatin1String("testWordpressBuggy.txt") );
+  m->setMimetype( QLatin1String("text/plain") );
+  m->setData( "YTM0NZomIzI2OTsmIzM0NTueYQ==" );
+  QVERIFY( m->mimetype() == QLatin1String("text/plain") );
+  QVERIFY( m->data() == "YTM0NZomIzI2OTsmIzM0NTueYQ==" );
+  QVERIFY( m->name() == QLatin1String( "testWordpressBuggy.txt" ) );
 
   connect( b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
            this, SLOT(error(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)) );

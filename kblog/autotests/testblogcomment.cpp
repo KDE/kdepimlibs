@@ -55,14 +55,14 @@ void testBlogComment::testValidity_data()
     QTest::addColumn<KDateTime>( "modificationDateTime" );
 
     QTest::newRow( "SimpleTest" )
-      << QString( "ABC123" )
-      << QString( "Title" )
-      << QString( "Content" )
-      << QString( "Name" )
-      << QString( "E-Mail" )
-      << QUrl("http://my.link/in/outer/space/fancy/ABC123")
+      << QString::fromLatin1( "ABC123" )
+      << QString::fromLatin1( "Title" )
+      << QString::fromLatin1( "Content" )
+      << QString::fromLatin1( "Name" )
+      << QString::fromLatin1( "E-Mail" )
+      << QUrl(QLatin1String("http://my.link/in/outer/space/fancy/ABC123"))
       << BlogComment::New
-      << QString( "Error" )
+      << QString::fromLatin1( "Error" )
       << KDateTime( QDateTime::currentDateTime() )
       << KDateTime( QDateTime::currentDateTime() );
 }

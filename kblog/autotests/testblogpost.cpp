@@ -66,22 +66,22 @@ void testBlogPost::testValidity_data()
 //     QList<KUrl> url;
 //     url.append( QUrl("http://track.back.url/some/path") );
     QTest::newRow( "SimpleTest" )
-      << QString( "123ABC" )
-      << QString( "Title" )
-      << QString( "Content" )
+      << QString::fromLatin1( "123ABC" )
+      << QString::fromLatin1( "Title" )
+      << QString::fromLatin1( "Content" )
       << true //<< QString("Abbreviated Content")
-      << QUrl("http://my.link/in/outer/space")
-      << QUrl("http://my.perma/link/space")
+      << QUrl(QLatin1String("http://my.link/in/outer/space"))
+      << QUrl(QLatin1String("http://my.perma/link/space"))
       << true
       << true
-      << QString( "Summary" )
-      << QStringList( "Tags" ) //<< url
-      << QString( "Mood" ) << QString( "Music" )
-      << QStringList( "Category" )
+      << QString::fromLatin1( "Summary" )
+      << QStringList( QLatin1String("Tags") ) //<< url
+      << QString::fromLatin1( "Mood" ) << QString::fromLatin1( "Music" )
+      << QStringList( QLatin1String("Category") )
       << KDateTime( QDateTime::currentDateTime() )
       << KDateTime( QDateTime::currentDateTime() )
       << BlogPost::New
-      << QString( "Error" );
+      << QString::fromLatin1( "Error" );
 }
 
 void testBlogPost::testValidity()

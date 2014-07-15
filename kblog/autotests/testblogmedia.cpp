@@ -50,12 +50,12 @@ void testBlogMedia::testValidity_data()
     QTest::addColumn<QString>( "error" );
 
     QTest::newRow( "SimpleTest" )
-      << QString( "FancyMedia" )
-      << QUrl("http://my.link/in/outer/space/fancyMedia.jpg")
-      << QString( "text/xml" )
+      << QString::fromLatin1( "FancyMedia" )
+      << QUrl(QLatin1String("http://my.link/in/outer/space/fancyMedia.jpg"))
+      << QString::fromLatin1( "text/xml" )
       << QByteArray( "Tags 1 2" )
       << BlogMedia::New
-      << QString( "Error" );
+      << QString::fromLatin1( "Error" );
 }
 
 void testBlogMedia::testValidity()
