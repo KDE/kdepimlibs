@@ -37,15 +37,15 @@ namespace NoteUtils {
 #define X_NOTES_CLASSIFICATION_HEADER "X-Akonotes-Classification"
 #define X_NOTES_CUSTOM_HEADER "X-Akonotes-Custom"
 
-#define CLASSIFICATION_PUBLIC "Public"
-#define CLASSIFICATION_PRIVATE "Private"
-#define CLASSIFICATION_CONFIDENTIAL "Confidential"
+#define CLASSIFICATION_PUBLIC QLatin1String("Public")
+#define CLASSIFICATION_PRIVATE QLatin1String("Private")
+#define CLASSIFICATION_CONFIDENTIAL QLatin1String("Confidential")
 
 #define X_NOTES_URL_HEADER "X-Akonotes-Url"
 #define X_NOTES_LABEL_HEADER "X-Akonotes-Label"
 #define X_NOTES_CONTENTTYPE_HEADER "X-Akonotes-Type"
-#define CONTENT_TYPE_CUSTOM "custom"
-#define CONTENT_TYPE_ATTACHMENT "attachment"
+#define CONTENT_TYPE_CUSTOM QLatin1String("custom")
+#define CONTENT_TYPE_ATTACHMENT QLatin1String("attachment")
 
 #define ENCODING "utf-8"
 
@@ -231,8 +231,8 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
 QDomDocument createXMLDocument()
 {
   QDomDocument document;
-  QString p = "version=\"1.0\" encoding=\"UTF-8\"";
-  document.appendChild(document.createProcessingInstruction( "xml", p ) );
+  QString p = QLatin1String("version=\"1.0\" encoding=\"UTF-8\"");
+  document.appendChild(document.createProcessingInstruction( QLatin1String("xml"), p ) );
   return document;
 }
 
@@ -255,8 +255,8 @@ KMime::Content* NoteMessageWrapper::NoteMessageWrapperPrivate::createCustomPart(
   KMime::Content* content = new KMime::Content();
   content->appendHeader( new KMime::Headers::Generic( X_NOTES_CONTENTTYPE_HEADER, content, CONTENT_TYPE_CUSTOM, ENCODING ) );
   QDomDocument document = createXMLDocument();
-  QDomElement element = document.createElement( "custom" );
-  element.setAttribute( "version", "1.0" );
+  QDomElement element = document.createElement( QLatin1String("custom") );
+  element.setAttribute( QLatin1String("version"), QLatin1String("1.0") );
   QMap <QString, QString >::const_iterator end = custom.end();
   for ( QMap <QString, QString >::const_iterator it = custom.begin(); it != end; ++it ) {
     QDomElement e = element.ownerDocument().createElement( it.key() );
@@ -276,7 +276,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseCustomPart( KMime::Cont
     return;
   }
   QDomElement top = document.documentElement();
-  if ( top.tagName() != "custom" ) {
+  if ( top.tagName() != QLatin1String("custom") ) {
     qWarning( "XML error: Top tag was %s instead of the expected custom",
               top.tagName().toLatin1().data() );
     return;
@@ -298,17 +298,17 @@ KMime::Content* NoteMessageWrapper::NoteMessageWrapperPrivate::createAttachmentP
   KMime::Content* content = new KMime::Content();
   content->appendHeader( new KMime::Headers::Generic( X_NOTES_CONTENTTYPE_HEADER, content, CONTENT_TYPE_ATTACHMENT, ENCODING ) );
   if (a.url().isValid()) {
-    content->appendHeader( new KMime::Headers::Generic( X_NOTES_URL_HEADER, content, a.url().toString().toLatin1(), ENCODING ) );
+    content->appendHeader( new KMime::Headers::Generic( X_NOTES_URL_HEADER, content, a.url().toString(), ENCODING ) );
   } else {
     content->setBody( a.data() );
   }
   content->contentType()->setMimeType( a.mimetype().toLatin1() );
   if (!a.label().isEmpty()) {
-    content->appendHeader( new KMime::Headers::Generic( X_NOTES_LABEL_HEADER, content, a.label().toLatin1(), ENCODING ) );
+    content->appendHeader( new KMime::Headers::Generic( X_NOTES_LABEL_HEADER, content, a.label(), ENCODING ) );
   }
   content->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
   content->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
-  content->contentDisposition()->setFilename( "attachment" );
+  content->contentDisposition()->setFilename( QLatin1String("attachment") );
   return content;
 }
 
@@ -319,11 +319,11 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseAttachmentPart( KMime::
     label = labelHeader->asUnicodeString();
   }
   if ( KMime::Headers::Base *header = part->headerByType( X_NOTES_URL_HEADER ) ) {
-    Attachment attachment( QUrl( header->asUnicodeString() ), part->contentType()->mimeType() );
+    Attachment attachment( QUrl( header->asUnicodeString() ), QLatin1String(part->contentType()->mimeType()) );
     attachment.setLabel( label );
     attachments.append(attachment);
   } else {
-    Attachment attachment( part->decodedContent(), part->contentType()->mimeType() );
+    Attachment attachment( part->decodedContent(), QLatin1String(part->contentType()->mimeType()) );
     attachment.setLabel( label );
     attachments.append(attachment);
   }
@@ -386,16 +386,16 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
   //TODO use Locale ('C');
   QString formatDate = lastModifiedDate.toString( QLatin1String("ddd, ") ) + lastModifiedDate.toString(  Qt::RFC2822Date );
 
-  msg->appendHeader( new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate /*lastModifiedDate.toString( QDateTime::RFCDateDay )*/.toLatin1(), ENCODING ) );
+  msg->appendHeader( new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate /*lastModifiedDate.toString( QDateTime::RFCDateDay )*/, ENCODING ) );
   msg->appendHeader( new KMime::Headers::Generic( X_NOTES_UID_HEADER, msg.get(), uid, ENCODING ) );
 
-  QString classification = QString::fromLatin1(CLASSIFICATION_PUBLIC);
+  QString classification = CLASSIFICATION_PUBLIC;
   switch ( d->classification ) {
     case Private:
-      classification = QString::fromLatin1(CLASSIFICATION_PRIVATE);
+      classification = CLASSIFICATION_PRIVATE;
       break;
     case Confidential:
-      classification = QString::fromLatin1(CLASSIFICATION_CONFIDENTIAL);
+      classification = CLASSIFICATION_CONFIDENTIAL;
       break;
     default:
       //do nothing

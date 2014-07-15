@@ -37,6 +37,7 @@ endif()
 ########### Targets ###########
 
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadinotes5\")
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 add_subdirectory(src)
 add_subdirectory(autotests)

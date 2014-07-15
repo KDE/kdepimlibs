@@ -35,19 +35,19 @@ class NotesTest : public QObject
     void testSerializeAndParse()
     {
       NoteMessageWrapper note;
-      note.setTitle("title");
-      note.setText("title");
-      note.setUid("uid");
+      note.setTitle(QLatin1String("title"));
+      note.setText(QLatin1String("title"));
+      note.setUid(QLatin1String("uid"));
       note.setClassification(NoteMessageWrapper::Private);
-      note.setFrom("from@kde.org");
+      note.setFrom(QLatin1String("from@kde.org"));
       note.setCreationDate(QDateTime(QDate(2012,3,3), QTime(3,3,3), Qt::UTC));
       note.setLastModifiedDate(QDateTime(QDate(2012,3,3), QTime(4,4,4), Qt::UTC));
-      Attachment a("testfile2", "mimetype/mime3");
-      a.setLabel("label");
-      note.attachments() << Attachment(QUrl("file://url/to/file"), "mimetype/mime") << Attachment("testfile", "mimetype/mime2") << a;
-      note.custom().insert("key1", "value1");
-      note.custom().insert("key2", "value2");
-      note.custom().insert("key3", "value3");
+      Attachment a("testfile2", QLatin1String("mimetype/mime3"));
+      a.setLabel(QLatin1String("label"));
+      note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << Attachment("testfile", QLatin1String("mimetype/mime2")) << a;
+      note.custom().insert(QLatin1String("key1"), QLatin1String("value1"));
+      note.custom().insert(QLatin1String("key2"), QLatin1String("value2"));
+      note.custom().insert(QLatin1String("key3"), QLatin1String("value3"));
 
       KMime::MessagePtr msg = note.message();
 //       qWarning() << msg->encodedContent();
