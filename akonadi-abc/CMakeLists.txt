@@ -26,6 +26,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIABC
 )
 
 ########### Targets ###########
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 add_subdirectory(src)
 
