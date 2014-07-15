@@ -55,23 +55,23 @@ MessageQueuer::MessageQueuer()
   mComboBox = new TransportComboBox( this );
   mComboBox->setEditable( true );
   mSenderEdit = new QLineEdit( this );
-  mSenderEdit->setPlaceholderText( "Sender" );
+  mSenderEdit->setPlaceholderText( QLatin1String("Sender") );
   mToEdit = new QLineEdit( this );
-  mToEdit->setText( "idanoka@gmail.com" );
-  mToEdit->setPlaceholderText( "To" );
+  mToEdit->setText( QLatin1String("idanoka@gmail.com") );
+  mToEdit->setPlaceholderText( QLatin1String("To") );
   mCcEdit = new QLineEdit( this );
-  mCcEdit->setPlaceholderText( "Cc" );
+  mCcEdit->setPlaceholderText( QLatin1String("Cc") );
   mBccEdit = new QLineEdit( this );
-  mBccEdit->setPlaceholderText( "Bcc" );
+  mBccEdit->setPlaceholderText( QLatin1String("Bcc") );
   mMailEdit = new KTextEdit( this );
-  mMailEdit->setText( "test from queuer!" );
+  mMailEdit->setText( QLatin1String("test from queuer!") );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
-  QPushButton *b = new QPushButton( "&Send Now", this );
+  QPushButton *b = new QPushButton( QLatin1String("&Send Now"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendNowClicked()) );
-  b = new QPushButton( "Send &Queued", this );
+  b = new QPushButton( QLatin1String("Send &Queued"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendQueuedClicked()) );
-  b = new QPushButton( "Send on &Date...", this );
+  b = new QPushButton( QLatin1String("Send on &Date..."), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendOnDateClicked()) );
 }
 
@@ -98,7 +98,7 @@ void MessageQueuer::sendOnDateClicked()
   // HACK:
   QTimeEdit *te = dt->findChild<QTimeEdit*>();
   Q_ASSERT( te );
-  te->setDisplayFormat( "hh:mm:ss" );
+  te->setDisplayFormat( QLatin1String("hh:mm:ss") );
   dialog->setMainWidget( dt );
   dialog->enableButtonCancel( false );
   dialog->exec();
@@ -128,11 +128,11 @@ MessageQueueJob *MessageQueuer::createQueueJob()
   // default sent-mail collection
   job->addressAttribute().setFrom( mSenderEdit->text() );
   job->addressAttribute().setTo( mToEdit->text().isEmpty() ?
-                                 QStringList() : mToEdit->text().split( ',' ) );
+                                 QStringList() : mToEdit->text().split( QLatin1Char(',') ) );
   job->addressAttribute().setCc( mCcEdit->text().isEmpty() ?
-                                 QStringList() : mCcEdit->text().split( ',' ) );
+                                 QStringList() : mCcEdit->text().split( QLatin1Char(',') ) );
   job->addressAttribute().setBcc( mBccEdit->text().isEmpty() ?
-                                  QStringList() : mBccEdit->text().split( ',' ) );
+                                  QStringList() : mBccEdit->text().split( QLatin1Char(',') ) );
 
   connect( job, SIGNAL(result(KJob*)),
            SLOT(jobResult(KJob*)) );

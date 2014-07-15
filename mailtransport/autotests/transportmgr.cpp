@@ -43,24 +43,24 @@ TransportMgr::TransportMgr() :
   new TransportManagementWidget( this );
   mComboBox = new TransportComboBox( this );
   mComboBox->setEditable( true );
-  QPushButton *b = new QPushButton( "&Edit", this );
+  QPushButton *b = new QPushButton( QLatin1String("&Edit"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
-  b = new QPushButton( "&Remove all transports", this );
+  b = new QPushButton( QLatin1String("&Remove all transports"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(removeAllBtnClicked()) );
   mSenderEdit = new QLineEdit( this );
-  mSenderEdit->setPlaceholderText( "Sender" );
+  mSenderEdit->setPlaceholderText( QLatin1String("Sender") );
   mToEdit = new QLineEdit( this );
-  mToEdit->setPlaceholderText( "To" );
+  mToEdit->setPlaceholderText( QLatin1String("To") );
   mCcEdit = new QLineEdit( this );
-  mCcEdit->setPlaceholderText( "Cc" );
+  mCcEdit->setPlaceholderText( QLatin1String("Cc") );
   mBccEdit = new QLineEdit( this );
-  mBccEdit->setPlaceholderText( "Bcc" );
+  mBccEdit->setPlaceholderText( QLatin1String("Bcc") );
   mMailEdit = new KTextEdit( this );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
-  b = new QPushButton( "&Send", this );
+  b = new QPushButton( QLatin1String("&Send"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
-  b = new QPushButton( "&Cancel", this );
+  b = new QPushButton( QLatin1String("&Cancel"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()) );
 }
 
@@ -95,9 +95,9 @@ void TransportMgr::sendBtnClicked()
     return;
   }
   job->setSender( mSenderEdit->text() );
-  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( ',' ) );
-  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( ',' ) );
-  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( ',' ) );
+  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split( QLatin1Char(',') ) );
+  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split( QLatin1Char(',') ) );
+  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split( QLatin1Char(',') ) );
   job->setData( mMailEdit->document()->toPlainText().toLatin1() );
   connect( job, SIGNAL(result(KJob*)),
            SLOT(jobResult(KJob*)) );
