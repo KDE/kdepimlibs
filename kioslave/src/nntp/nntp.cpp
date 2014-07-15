@@ -13,23 +13,25 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDir>
 #include <QHash>
 #include <QRegExp>
 
-#include <kdebug.h>
+//#include <kdebug.h>
 #include <klocalizedstring.h>
 #include <QCoreApplication>
 
 #include <kio/ioslave_defaults.h>
 
 #define DBG_AREA 7114
-#define DBG kDebug(DBG_AREA)
+//#define DBG kDebug(DBG_AREA)
+#define DBG qDebug()
 
 #undef ERR
-#define ERR kError(DBG_AREA)
+//#define ERR kError(DBG_AREA)
+#define ERR qCritical()
 
 using namespace KIO;
 
@@ -296,7 +298,7 @@ void NNTPProtocol::stat( const QUrl& url ) {
   } else if (regMsgId.indexIn(path) == 0) {
     pos = path.indexOf('<');
     group = path.left(pos);
-    msg_id = KUrl::fromPercentEncoding( path.right(path.length()-pos).toLatin1() );
+    msg_id = QUrl::fromPercentEncoding( path.right(path.length()-pos).toLatin1() );
     if ( group.startsWith( '/' ) )
       group.remove( 0, 1 );
     if ((pos = group.indexOf('/')) > 0) group = group.left(pos);
@@ -322,16 +324,16 @@ void NNTPProtocol::listDir( const QUrl& url ) {
 
   if (path.isEmpty())
   {
-    KUrl newURL(url);
+    QUrl newURL(url);
     newURL.setPath("/");
-    DBG << "redirecting to" << newURL.prettyUrl();
+    DBG << "redirecting to" << newURL.toDisplayString();
     redirection(newURL);
     finished();
     return;
   }
   else if ( path == "/" ) {
-    KUrl newUrl(url);
-    fetchGroups( newUrl.queryItem( "since" ), newUrl.queryItem( "desc" ) == "true" );
+    QUrl newUrl(url);
+    fetchGroups( QUrlQuery(newUrl).queryItemValue("since"), QUrlQuery(newUrl).queryItemValue("desc") == "true" );
     finished();
   } else {
     // if path = /group
@@ -343,9 +345,9 @@ void NNTPProtocol::listDir( const QUrl& url ) {
       group = path.left(pos);
     else
       group = path;
-    KUrl newUrl(url);
-    QString first = newUrl.queryItem( "first" );
-    QString max = newUrl.queryItem( "max" );
+    QUrl newUrl(url);
+    QString first = QUrlQuery(newUrl).queryItemValue("first");
+    QString max = QUrlQuery(newUrl).queryItemValue("max");
     if ( fetchGroup( group, first.toULong(), max.toULong() ) )
       finished();
   }
