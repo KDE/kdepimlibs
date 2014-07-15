@@ -20,7 +20,7 @@
 #include "noteutils.h"
 
 #include <klocalizedstring.h>
-#include <kdatetime.h>
+#include <qdatetime.h>
 #include <kmime/kmime_message.h>
 #include <qdebug.h>
 
@@ -518,7 +518,7 @@ QString NoteMessageWrapper::toPlainText() const
   rx.indexIn( d->text );
   QString body = rx.cap( 1 );
 
-  return Qt::escape( body.remove( QRegExp( QStringLiteral("<[^>]*>") ) ).trimmed() );
+  return body.remove( QRegExp( QStringLiteral("<[^>]*>") ) ).trimmed().toHtmlEscaped();
 }
 
 QList<Attachment> &NoteMessageWrapper::attachments()

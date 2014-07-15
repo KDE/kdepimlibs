@@ -15,7 +15,10 @@ target_link_libraries(KF5AkonadiNotes
 PUBLIC
     KF5::Mime
     KF5::AkonadiCore
-    KF5::KDELibs4Support
+PRIVATE
+    Qt5::Xml
+    Qt5::Gui
+    KF5::I18n
 )
 
 set_target_properties(KF5AkonadiNotes PROPERTIES
