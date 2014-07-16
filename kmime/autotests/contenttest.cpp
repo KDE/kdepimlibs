@@ -306,10 +306,10 @@ void ContentTest::testEncodedContent()
       "body\n";
   msg->setContent( data );
   QByteArray content = msg->encodedContent( true /* use CRLF */ );
-  QStringList lines = QString::fromLatin1( content ).split( "\r\n" );
+  QStringList lines = QString::fromLatin1( content ).split( QLatin1String("\r\n") );
   foreach ( const QString &line, lines ) {
     QEXPECT_FAIL( "", "KMime does not fold lines longer than 998 characters", Continue );
-    QVERIFY( line.length() < 998 && !line.isEmpty() && line != "body" );
+    QVERIFY( line.length() < 998 && !line.isEmpty() && line != QLatin1String("body") );
     // The test should be (after the expected failure disappears):
     //QVERIFY( line.length() < 998 );
   }
@@ -349,9 +349,9 @@ void ContentTest::testMultipleHeaderExtraction()
 
   QList<KMime::Headers::Base*> result = msg->headersByType( "Received" );
   QCOMPARE( result.count(), 3 );
-  QCOMPARE( result[0]->asUnicodeString(),  QString( "from ktown.kde.org ([192.168.100.1])" ) );
-  QCOMPARE( result[1]->asUnicodeString(),  QString( "from dev1.kde.org ([192.168.100.2]) by ktown.kde.org ([192.168.100.1])" ) );
-  QCOMPARE( result[2]->asUnicodeString(),  QString( "from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])" ) );
+  QCOMPARE( result[0]->asUnicodeString(),  QString::fromLatin1( "from ktown.kde.org ([192.168.100.1])" ) );
+  QCOMPARE( result[1]->asUnicodeString(),  QString::fromLatin1( "from dev1.kde.org ([192.168.100.2]) by ktown.kde.org ([192.168.100.1])" ) );
+  QCOMPARE( result[2]->asUnicodeString(),  QString::fromLatin1( "from dev2.kde.org ([192.168.100.3]) by ktown.kde.org ([192.168.100.1])" ) );
 }
 
 void ContentTest::testMultipartMixed()
@@ -500,7 +500,7 @@ void ContentTest::testParsingUuencoded()
       "\n"
       "\n";
 
-  const QString imageName = "Name of the encoded file (oxygen 22x22 kde.png)";
+  const QString imageName = QLatin1String("Name of the encoded file (oxygen 22x22 kde.png)");
   const QByteArray imageBase64 =
       "\n"
       "iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\n"

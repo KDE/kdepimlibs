@@ -27,7 +27,7 @@ static const char * typeToString( int type ) {
 
 int main( int argc, char **argv ) {
   for ( int i = 1 /*not program*/ ; i < argc ; i++ ) {
-    QFile in( argv[i] );
+    QFile in( QString::fromLatin1(argv[i]) );
     if ( !in.open( QIODevice::ReadOnly ) ) {
       cerr << argv[i] << ": does not exist!" << endl;
       continue;

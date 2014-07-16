@@ -160,14 +160,14 @@ int main( int argc, char * argv[] ) {
     break;
   case 1:
     { // atom
-      QString result = "with 8bit: ";
+      QString result = QLatin1String("with 8bit: ");
       bool ok = parseAtom( iit, iend, result, true );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
            << "result:\n" << result
            << endl;
 
-      result = "without 8bit: ";
+      result = QLatin1String("without 8bit: ");
 #ifdef COMPILE_FAIL
       ok = parseAtom( indata.begin(), iend, result, false );
 #else
@@ -182,14 +182,14 @@ int main( int argc, char * argv[] ) {
     break;
   case 2:
     { // token
-      QString result = "with 8bit: ";
+      QString result = QLatin1String("with 8bit: ");
       bool ok = parseToken( iit, iend, result, true );
 
       cout << ( ok ? "OK" : "BAD" ) << endl
            << "result:\n" << result
            << endl;
 
-      result = "without 8bit: ";
+      result = QLatin1String("without 8bit: ");
 #ifdef COMPILE_FAIL
       ok = parseToken( indata.begin(), iend, result, false );
 #else

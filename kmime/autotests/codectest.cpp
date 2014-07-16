@@ -39,31 +39,31 @@ void CodecTest::testCodecs_data()
   QTest::addColumn<QString>( "tag" );
   QTest::addColumn<Mode>( "mode" );
 
-  QDir codecBaseDir( TEST_DATA_DIR );
+  QDir codecBaseDir( QLatin1String(TEST_DATA_DIR) );
   foreach ( const QString &dir, codecBaseDir.entryList( QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
                                                         QDir::NoSort ) ) {
-    if ( dir.toLower().startsWith( "codec_" ) ) {
+    if ( dir.toLower().startsWith( QLatin1String("codec_") ) ) {
       const QString codecName = dir.right( dir.size() - 6 );
-      QDir codecDir( TEST_DATA_DIR"/" + dir );
+      QDir codecDir( QLatin1String(TEST_DATA_DIR) + QLatin1String("/") + dir );
       foreach ( const QString &file, codecDir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
-        if ( file.toLower().endsWith( ".expected" ) ) {
+        if ( file.toLower().endsWith( QLatin1String(".expected") ) ) {
           const QString dataFileNameBase = file.left( file.size() - 9 );
-          QFile dataFile( codecDir.path() + '/' + dataFileNameBase );
-          QFile expectedFile( codecDir.path() + '/' + file );
+          QFile dataFile( codecDir.path() + QLatin1Char('/') + dataFileNameBase );
+          QFile expectedFile( codecDir.path() + QLatin1Char('/') + file );
           QVERIFY( dataFile.open( QIODevice::ReadOnly ) );
           QVERIFY( expectedFile.open( QIODevice::ReadOnly ) );
 
           Mode mode = Decode;
-          if ( file.contains( "-decode" ) ) {
+          if ( file.contains( QLatin1String("-decode") ) ) {
             mode = Decode;
-          } else if ( file.contains( "-encode" ) ) {
+          } else if ( file.contains( QLatin1String("-encode") ) ) {
             mode = Encode;
           }
 
           const QByteArray data = dataFile.readAll();
           const QByteArray expected = expectedFile.readAll();
 
-          const QString tag = codecName + '/' + dataFileNameBase;
+          const QString tag = codecName + QLatin1Char('/') + dataFileNameBase;
           QTest::newRow( tag.toLatin1().constData() ) << data << expected << codecName.toAscii() << tag  << mode;
 
           dataFile.close();

@@ -31,7 +31,7 @@ void RFC2047Test::testRFC2047decode()
   // empty
   QCOMPARE( KMime::decodeRFC2047String( QByteArray(), encCharset, "utf-8", false ), QString() );
   // identity
-  QCOMPARE( KMime::decodeRFC2047String( "bla", encCharset, "utf-8", false ), QString( "bla" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "bla", encCharset, "utf-8", false ), QLatin1String( "bla" ) );
   // utf-8
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
@@ -107,7 +107,7 @@ void RFC2047Test::testRFC2047encode()
   // empty
   QCOMPARE( KMime::encodeRFC2047String( QString(), "utf-8" ), QByteArray() );
   // identity
-  QCOMPARE( KMime::encodeRFC2047String( "bla", "utf-8" ), QByteArray( "bla" ) );
+  QCOMPARE( KMime::encodeRFC2047String( QLatin1String("bla"), "utf-8" ), QByteArray( "bla" ) );
   // utf-8
   // expected value is probably wrong, libkmime will chose 'B' instead of 'Q' encoding
   QEXPECT_FAIL( "", "libkmime will chose 'B' instead of 'Q' encoding", Continue );

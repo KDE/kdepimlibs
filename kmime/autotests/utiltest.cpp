@@ -104,24 +104,24 @@ void UtilTest::testBalanceBidiState_data()
   const QString RLE( QChar( 0x202B ) );
   const QString PDF( QChar( 0x202C ) );
 
-  QTest::newRow( "" ) << "Normal" << "Normal";
-  QTest::newRow( "" ) << RLO + "Balanced" + PDF << RLO + "Balanced" + PDF;
-  QTest::newRow( "" ) << RLO + "MissingPDF1" << RLO + "MissingPDF1" + PDF;
-  QTest::newRow( "" ) << "\"" + RLO + "Quote\"" << "\"" + RLO + "Quote" + PDF + "\"";
-  QTest::newRow( "" ) << "MissingPDF2" + RLO << "MissingPDF2" + RLO + PDF;
-  QTest::newRow( "" ) << RLO + "MultipleRLO" + RLO << RLO + "MultipleRLO" + RLO + PDF + PDF;
-  QTest::newRow( "" ) << LRO + "Mixed" + LRE + RLE + RLO + "Bla"
-                      << LRO + "Mixed" + LRE + RLE + RLO + "Bla" + PDF.repeated( 4 );
-  QTest::newRow( "" ) << RLO + "TooManyPDF" + PDF + RLO + PDF + PDF
-                      << RLO + "TooManyPDF" + PDF + RLO + PDF;
-  QTest::newRow( "" ) << PDF + "WrongOrder" + RLO
-                      << "WrongOrder" + RLO + PDF;
-  QTest::newRow( "" ) << "ComplexOrder" + RLO + PDF + PDF + RLO
-                      << "ComplexOrder" + RLO + PDF + RLO + PDF;
-  QTest::newRow( "" ) << "ComplexOrder2" + RLO + PDF + PDF + PDF + RLO + PDF + PDF + PDF
-                      << "ComplexOrder2" + RLO + PDF + RLO + PDF;
-  QTest::newRow( "" ) << PDF + PDF + PDF + "ComplexOrder3" + PDF + PDF + RLO + PDF + PDF + PDF
-                      << "ComplexOrder3" + RLO + PDF;
+  QTest::newRow( "" ) << QString::fromLatin1("Normal") << QString::fromLatin1("Normal");
+  QTest::newRow( "" ) << RLO + QString::fromLatin1("Balanced") + PDF << RLO + QString::fromLatin1("Balanced") + PDF;
+  QTest::newRow( "" ) << RLO + QString::fromLatin1("MissingPDF1") << RLO + QString::fromLatin1("MissingPDF1") + PDF;
+  QTest::newRow( "" ) << QString::fromLatin1("\"") + RLO + QString::fromLatin1("Quote\"") << QString::fromLatin1("\"") + RLO + QString::fromLatin1("Quote") + PDF + QString::fromLatin1("\"");
+  QTest::newRow( "" ) << QString::fromLatin1("MissingPDF2") + RLO << QString::fromLatin1("MissingPDF2") + RLO + PDF;
+  QTest::newRow( "" ) << RLO + QString::fromLatin1("MultipleRLO") + RLO << RLO + QString::fromLatin1("MultipleRLO" )+ RLO + PDF + PDF;
+  QTest::newRow( "" ) << LRO + QString::fromLatin1("Mixed")+ LRE + RLE + RLO + QString::fromLatin1("Bla")
+                      << LRO + QString::fromLatin1("Mixed") + LRE + RLE + RLO + QString::fromLatin1("Bla") + PDF.repeated( 4 );
+  QTest::newRow( "" ) << RLO + QString::fromLatin1("TooManyPDF") + PDF + RLO + PDF + PDF
+                      << RLO + QString::fromLatin1("TooManyPDF") + PDF + RLO + PDF;
+  QTest::newRow( "" ) << PDF + QString::fromLatin1("WrongOrder") + RLO
+                      << QString::fromLatin1("WrongOrder") + RLO + PDF;
+  QTest::newRow( "" ) << QString::fromLatin1("ComplexOrder") + RLO + PDF + PDF + RLO
+                      << QString::fromLatin1("ComplexOrder") + RLO + PDF + RLO + PDF;
+  QTest::newRow( "" ) << QString::fromLatin1("ComplexOrder2") + RLO + PDF + PDF + PDF + RLO + PDF + PDF + PDF
+                      << QString::fromLatin1("ComplexOrder2") + RLO + PDF + RLO + PDF;
+  QTest::newRow( "" ) << PDF + PDF + PDF + QString::fromLatin1("ComplexOrder3") + PDF + PDF + RLO + PDF + PDF + PDF
+                      << QString::fromLatin1("ComplexOrder3") + RLO + PDF;
 }
 
 void UtilTest::testAddQuotes()
