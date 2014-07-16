@@ -64,7 +64,7 @@ endif()
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCustom.cmake)
 
 
-############### Find the stuff we need ###############
+############## Find the stuff we need ###############
 
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS graph)
