@@ -38,7 +38,7 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libkpimutils5\")
-
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 ########### Targets ###########
 add_subdirectory(src)
 add_subdirectory(autotests)
