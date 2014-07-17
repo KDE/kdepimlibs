@@ -24,6 +24,7 @@
 #include <transportmanagementwidget.h>
 #include <transportjob.h>
 #include <transport.h>
+#include <QVBoxLayout>
 
 #include <KApplication>
 #include <KCmdLineArgs>
@@ -40,28 +41,42 @@ using namespace MailTransport;
 TransportMgr::TransportMgr() :
     mCurrentJob( 0 )
 {
-  new TransportManagementWidget( this );
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->setMargin(0);
+  setLayout(vbox);
+
+  vbox->addWidget(new TransportManagementWidget( this ));
   mComboBox = new TransportComboBox( this );
   mComboBox->setEditable( true );
+  vbox->addWidget(mComboBox);
   QPushButton *b = new QPushButton( QLatin1String("&Edit"), this );
+  vbox->addWidget(b);
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
   b = new QPushButton( QLatin1String("&Remove all transports"), this );
+  vbox->addWidget(b);
   connect( b, SIGNAL(clicked(bool)), SLOT(removeAllBtnClicked()) );
   mSenderEdit = new QLineEdit( this );
   mSenderEdit->setPlaceholderText( QLatin1String("Sender") );
+  vbox->addWidget(mSenderEdit);
   mToEdit = new QLineEdit( this );
   mToEdit->setPlaceholderText( QLatin1String("To") );
+  vbox->addWidget(mToEdit);
   mCcEdit = new QLineEdit( this );
   mCcEdit->setPlaceholderText( QLatin1String("Cc") );
+  vbox->addWidget(mCcEdit);
   mBccEdit = new QLineEdit( this );
   mBccEdit->setPlaceholderText( QLatin1String("Bcc") );
+  vbox->addWidget(mBccEdit);
   mMailEdit = new KTextEdit( this );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
+  vbox->addWidget(mMailEdit);
   b = new QPushButton( QLatin1String("&Send"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
+  vbox->addWidget(b);
   b = new QPushButton( QLatin1String("&Cancel"), this );
   connect( b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()) );
+  vbox->addWidget(b);
 }
 
 void TransportMgr::removeAllBtnClicked()

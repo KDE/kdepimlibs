@@ -21,7 +21,7 @@
 #ifndef MESSAGEQUEUER_H
 #define MESSAGEQUEUER_H
 
-#include <KVBox>
+#include <QWidget>
 #include <transportcombobox.h>
 
 class KJob;
@@ -35,7 +35,7 @@ namespace MailTransport {
 /**
   Mostly stolen from transportmgr.{h,cpp}
 */
-class MessageQueuer : public KVBox
+class MessageQueuer : public QWidget
 {
   Q_OBJECT
 

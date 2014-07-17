@@ -33,7 +33,7 @@
 #include <KLocale>
 #include <KLocalizedString>
 #include <KTextEdit>
-
+#include <QVBoxLayout>
 #include <control.h>
 
 #include <QDebug>
@@ -51,27 +51,40 @@ MessageQueuer::MessageQueuer()
   if ( !Akonadi::Control::start() ) {
     qFatal("Could not start Akonadi server.");
   }
+  QVBoxLayout *vbox = new QVBoxLayout;
+  vbox->setMargin(0);
+  setLayout(vbox);
+
 
   mComboBox = new TransportComboBox( this );
   mComboBox->setEditable( true );
+  vbox->addWidget(mComboBox);
   mSenderEdit = new QLineEdit( this );
   mSenderEdit->setPlaceholderText( QLatin1String("Sender") );
+  vbox->addWidget(mSenderEdit);
   mToEdit = new QLineEdit( this );
   mToEdit->setText( QLatin1String("idanoka@gmail.com") );
+  vbox->addWidget(mToEdit);
   mToEdit->setPlaceholderText( QLatin1String("To") );
   mCcEdit = new QLineEdit( this );
+  vbox->addWidget(mCcEdit);
   mCcEdit->setPlaceholderText( QLatin1String("Cc") );
   mBccEdit = new QLineEdit( this );
   mBccEdit->setPlaceholderText( QLatin1String("Bcc") );
+  vbox->addWidget(mBccEdit);
   mMailEdit = new KTextEdit( this );
   mMailEdit->setText( QLatin1String("test from queuer!") );
   mMailEdit->setAcceptRichText( false );
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
+  vbox->addWidget(mMailEdit);
   QPushButton *b = new QPushButton( QLatin1String("&Send Now"), this );
+  vbox->addWidget(b);
   connect( b, SIGNAL(clicked(bool)), SLOT(sendNowClicked()) );
   b = new QPushButton( QLatin1String("Send &Queued"), this );
+  vbox->addWidget(b);
   connect( b, SIGNAL(clicked(bool)), SLOT(sendQueuedClicked()) );
   b = new QPushButton( QLatin1String("Send on &Date..."), this );
+  vbox->addWidget(b);
   connect( b, SIGNAL(clicked(bool)), SLOT(sendOnDateClicked()) );
 }
 

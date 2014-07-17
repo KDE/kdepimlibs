@@ -22,14 +22,14 @@
 
 #define USES_DEPRECATED_MAILTRANSPORT_API
 
-#include <KVBox>
+#include <QWidget>
 #include <transportcombobox.h>
 
 class KJob;
 class QLineEdit;
 class KTextEdit;
 
-class TransportMgr : public KVBox
+class TransportMgr : public QWidget
 {
   Q_OBJECT
 
