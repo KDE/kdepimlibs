@@ -48,7 +48,7 @@ sb_add_project(kontactinterface)
 
 sb_end()
 else(KDEPIMLIBS_SUPERBUILD)
-
+add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 # Uncomment when one of these subdir is building
 
 # These subdirectories don't depend on anything from kdepimlibs.

@@ -44,7 +44,7 @@ endif()
 
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libqgpgme5\")
-
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5QGpgme")
