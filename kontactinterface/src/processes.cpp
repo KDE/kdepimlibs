@@ -30,7 +30,7 @@
 //krazy:excludeall=captruefalse,null
 
 #include "processes.h"
-using namespace KPIMUtils;
+using namespace KontactInterface;
 
 #ifdef Q_WS_WIN
 

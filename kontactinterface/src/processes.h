@@ -29,28 +29,28 @@
   @author Jarosław Staniek \<staniek@kde.org\>
 */
 
-#ifndef KDEPIMUTILS_PROCESSES_H
-#define KDEPIMUTILS_PROCESSES_H
+#ifndef KONTACTINTERFACE_PROCESSES_H
+#define KONTACTINTERFACE_PROCESSES_H
 
-#include "kpimutils_export.h"
+#include "kontactinterface_export.h"
 
 #include <QtCore/QList>
 
 class QString;
 
-namespace KPIMUtils {
+namespace KontactInterface {
 
 #ifdef Q_WS_WIN
   /**
    * Sets @a pids to a list of processes having name @a processName.
    */
-  KPIMUTILS_EXPORT void getProcessesIdForName( const QString &processName, QList<int> &pids );
+  KONTACTINTERFACE_EXPORT void getProcessesIdForName( const QString &processName, QList<int> &pids );
 
   /**
    * @return true if one or more processes (other than the current process) exist
    * for name @a processName; false otherwise.
    */
-  KPIMUTILS_EXPORT bool otherProcessesExist( const QString &processName );
+  KONTACTINTERFACE_EXPORT bool otherProcessesExist( const QString &processName );
 
   /**
    * Terminates or kills all processes with name @a processName.
@@ -58,13 +58,13 @@ namespace KPIMUtils {
    * @return true on successful termination of all processes or false if at least
    *         one process failed to terminate.
    */
-  KPIMUTILS_EXPORT bool killProcesses( const QString &processName );
+  KONTACTINTERFACE_EXPORT bool killProcesses( const QString &processName );
 
   /**
    * Activates window for first found process with executable @a executableName
    * (without path and .exe extension)
    */
-  KPIMUTILS_EXPORT void activateWindowForProcess( const QString &executableName );
+  KONTACTINTERFACE_EXPORT void activateWindowForProcess( const QString &executableName );
 #endif
 
 }
