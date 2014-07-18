@@ -36,7 +36,7 @@
 #include "ktnef_export.h"
 
 namespace KTnef {
-  class KTNEFProperty;
+class KTNEFProperty;
 }
 
 namespace KTnef {
@@ -47,7 +47,7 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFPropertySet
 {
-  public:
+public:
     /**
       Constructor.
     */
@@ -155,7 +155,7 @@ class KTNEF_EXPORT KTNEFPropertySet
     */
     void clear( bool deleteAll=false );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

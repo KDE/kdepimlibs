@@ -37,9 +37,9 @@
 #include "ktnef_export.h"
 
 namespace KTnef {
-  class KTNEFAttach;
-  class KTNEFMessage;
-  class KTNEFProperty;
+class KTNEFAttach;
+class KTNEFMessage;
+class KTNEFProperty;
 }
 
 namespace KTnef {
@@ -50,7 +50,7 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFParser
 {
-  public:
+public:
     /**
       Constructs a @acronym TNEF parser object.
     */
@@ -119,7 +119,7 @@ class KTNEF_EXPORT KTNEFParser
     */
     KTNEFMessage *message() const;
 
-  private:
+private:
     //@cond PRIVATE
     class ParserPrivate;
     ParserPrivate *const d;

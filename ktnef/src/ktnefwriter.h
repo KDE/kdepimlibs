@@ -49,67 +49,67 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFWriter
 {
-  public:
+public:
     /**
      * The different types of messages.
      */
     enum MessageType {
-      Appointment,     /**< Appointment */
-      MeetingCancelled,/**< The meeting is cancelled */
-      MeetingRequest,  /**< Meeting request */
-      MeetingNo,       /**< Negative response to a meeting request */
-      MeetingYes,      /**< Affirmative response to a meeting request */
-      MeetingTent      /**< Tentative affirmative to a meeting request */
+        Appointment,     /**< Appointment */
+        MeetingCancelled,/**< The meeting is cancelled */
+        MeetingRequest,  /**< Meeting request */
+        MeetingNo,       /**< Negative response to a meeting request */
+        MeetingYes,      /**< Affirmative response to a meeting request */
+        MeetingTent      /**< Tentative affirmative to a meeting request */
     };
 
     /**
      * The different types of message statuses.
      */
     enum Method {
-      PublishNew,      /**< Publish new */
-      Obsolete,        /**< Replace the message */
-      RequestNew,      /**< Request a new message */
-      RequestUpdate,   /**< Request an update */
-      Unknown          /**< Unknown */
+        PublishNew,      /**< Publish new */
+        Obsolete,        /**< Replace the message */
+        RequestNew,      /**< Request a new message */
+        RequestUpdate,   /**< Request an update */
+        Unknown          /**< Unknown */
     };
 
     /**
      * The different types of meeting roles.
      */
     enum Role {
-      ReqParticipant,  /**< Required participant */
-      OptParticipant,  /**< Optional participant */
-      NonParticipant,  /**< Non-participant */
-      Chair            /**< Meeting chairperson */
+        ReqParticipant,  /**< Required participant */
+        OptParticipant,  /**< Optional participant */
+        NonParticipant,  /**< Non-participant */
+        Chair            /**< Meeting chairperson */
     };
 
     /**
      * The different types of participant statuses.
      */
     enum PartStat {
-      NeedsAction,     /**< No information about the task/invitation received */
-      Accepted,        /**< Accepted the task/invitation */
-      Declined,        /**< Declined the task/invitation */
-      Tentative,       /**< Tentatively accepted the task/invitation */
-      Delegated,       /**< Delegated the task to another */
-      Completed,       /**< Completed the task */
-      InProcess        /**< Work on the task is in-progress */
+        NeedsAction,     /**< No information about the task/invitation received */
+        Accepted,        /**< Accepted the task/invitation */
+        Declined,        /**< Declined the task/invitation */
+        Tentative,       /**< Tentatively accepted the task/invitation */
+        Delegated,       /**< Delegated the task to another */
+        Completed,       /**< Completed the task */
+        InProcess        /**< Work on the task is in-progress */
     };
 
     /**
      * The different priorities.
      */
     enum Priority {
-      High = 2,        /**< High priority task */
-      Normal = 3,      /**< Normal priority task */
-      Low = 1          /**< Low priority task */
+        High = 2,        /**< High priority task */
+        Normal = 3,      /**< Normal priority task */
+        Low = 1          /**< Low priority task */
     };
 
     /**
      * The different alarm actions.
      */
     enum AlarmAction {
-      Display          /**< Display the alarm */
+        Display          /**< Display the alarm */
     };
 
     /**
@@ -286,7 +286,7 @@ class KTNEF_EXPORT KTNEFWriter
     void setAlarm( const QString &description, AlarmAction action,
                    const QDateTime &wakeBefore );
 
-  private:
+private:
     //@cond PRIVATE
     class PrivateData;
     PrivateData *const d;

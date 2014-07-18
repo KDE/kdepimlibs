@@ -43,21 +43,21 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFProperty
 {
-  public:
+public:
     /**
      * The different @acronym MAPI types.
      */
     enum MAPIType {
-      UInt16  = 0x0002, /**< 16-bit unsigned integer */
-      ULong   = 0x0003, /**< unsigned long integer */
-      Float   = 0x0004, /**< single precision floating point */
-      Double  = 0x0005, /**< double precision floating point */
-      Boolean = 0x000B, /**< a boolean value */
-      Object  = 0x000D, /**< an object */
-      Time    = 0x0040, /**< a time value */
-      String8 = 0x001E, /**< a string of 8 characters */
-      UString = 0x001F, /**< a string of characters */
-      Binary  = 0x0102  /**< a binary value */
+        UInt16  = 0x0002, /**< 16-bit unsigned integer */
+        ULong   = 0x0003, /**< unsigned long integer */
+        Float   = 0x0004, /**< single precision floating point */
+        Double  = 0x0005, /**< double precision floating point */
+        Boolean = 0x000B, /**< a boolean value */
+        Object  = 0x000D, /**< an object */
+        Time    = 0x0040, /**< a time value */
+        String8 = 0x001E, /**< a string of 8 characters */
+        UString = 0x001F, /**< a string of characters */
+        Binary  = 0x0102  /**< a binary value */
     };
 
     /**
@@ -149,7 +149,7 @@ class KTNEF_EXPORT KTNEFProperty
      */
     bool isVector() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

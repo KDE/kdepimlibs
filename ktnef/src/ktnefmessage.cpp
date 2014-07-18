@@ -44,7 +44,7 @@ using namespace KTnef;
 //@cond PRIVATE
 class KTnef::KTNEFMessage::MessagePrivate
 {
-  public:
+public:
     MessagePrivate() {}
     ~MessagePrivate();
 
@@ -55,14 +55,14 @@ class KTnef::KTNEFMessage::MessagePrivate
 
 KTNEFMessage::MessagePrivate::~MessagePrivate()
 {
-  clearAttachments();
+    clearAttachments();
 }
 
 void KTNEFMessage::MessagePrivate::clearAttachments()
 {
-  while ( !attachments_.isEmpty() ) {
-    delete attachments_.takeFirst();
-  }
+    while ( !attachments_.isEmpty() ) {
+        delete attachments_.takeFirst();
+    }
 }
 //@endcond
 
@@ -72,49 +72,49 @@ KTNEFMessage::KTNEFMessage() : d( new KTnef::KTNEFMessage::MessagePrivate )
 
 KTNEFMessage::~KTNEFMessage()
 {
-  delete d;
+    delete d;
 }
 
 const QList<KTNEFAttach *> &KTNEFMessage::attachmentList() const
 {
-  return d->attachments_;
+    return d->attachments_;
 }
 
 KTNEFAttach *KTNEFMessage::attachment( const QString &filename ) const
 {
-  QList<KTNEFAttach *>::const_iterator it = d->attachments_.constBegin();
-  QList<KTNEFAttach *>::const_iterator end = d->attachments_.constEnd();
-  for ( ; it != end; ++it ) {
-    if ( (*it)->name() == filename ) {
-      return *it;
+    QList<KTNEFAttach *>::const_iterator it = d->attachments_.constBegin();
+    QList<KTNEFAttach *>::const_iterator end = d->attachments_.constEnd();
+    for ( ; it != end; ++it ) {
+        if ( (*it)->name() == filename ) {
+            return *it;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 
 void KTNEFMessage::addAttachment( KTNEFAttach *attach )
 {
-  d->attachments_.append( attach );
+    d->attachments_.append( attach );
 }
 
 void KTNEFMessage::clearAttachments()
 {
-  d->clearAttachments();
+    d->clearAttachments();
 }
 
 QString KTNEFMessage::rtfString() const
 {
-  QVariant prop = property( 0x1009 );
-  if ( prop.isNull() || prop.type() != QVariant::ByteArray ) {
-    return QString();
-  } else {
-    QByteArray rtf;
-    QByteArray propArray( prop.toByteArray() );
-    QBuffer input( &propArray ), output( &rtf );
-    if ( input.open( QIODevice::ReadOnly ) &&
-         output.open( QIODevice::WriteOnly ) ) {
-      KTnef::lzfu_decompress( &input, &output );
+    QVariant prop = property( 0x1009 );
+    if ( prop.isNull() || prop.type() != QVariant::ByteArray ) {
+        return QString();
+    } else {
+        QByteArray rtf;
+        QByteArray propArray( prop.toByteArray() );
+        QBuffer input( &propArray ), output( &rtf );
+        if ( input.open( QIODevice::ReadOnly ) &&
+             output.open( QIODevice::WriteOnly ) ) {
+            KTnef::lzfu_decompress( &input, &output );
+        }
+        return QString::fromLatin1( rtf );
     }
-    return QString::fromLatin1( rtf );
-  }
 }

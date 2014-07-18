@@ -39,7 +39,7 @@
 #include "ktnef_export.h"
 
 namespace KTnef {
-  class KTNEFProperty;
+class KTNEFProperty;
 }
 
 namespace KTnef {
@@ -50,15 +50,15 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
 {
-  public:
+public:
     /**
      * The different attachment parsed states.
      */
     enum ParseState {
-      Unparsed = 0x0000,    /**< Unparsed */
-      TitleParsed = 0x0001, /**< The title is parsed */
-      DataParsed = 0x0002,  /**< The data is parsed */
-      InfoParsed = 0x0004   /**< The info is parsed */
+        Unparsed = 0x0000,    /**< Unparsed */
+        TitleParsed = 0x0001, /**< The title is parsed */
+        DataParsed = 0x0002,  /**< The data is parsed */
+        InfoParsed = 0x0004   /**< The info is parsed */
     };
 
     /**
@@ -223,7 +223,7 @@ class KTNEF_EXPORT KTNEFAttach : public KTNEFPropertySet
      */
     QString extension() const;
 
-  private:
+private:
     //@cond PRIVATE
     class AttachPrivate;
     AttachPrivate *const d;

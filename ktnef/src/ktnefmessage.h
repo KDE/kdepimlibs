@@ -37,7 +37,7 @@
 #include "ktnef_export.h"
 
 namespace KTnef {
-  class KTNEFAttach;
+class KTNEFAttach;
 }
 
 namespace KTnef {
@@ -48,7 +48,7 @@ namespace KTnef {
  */
 class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
-  public:
+public:
     /**
      * Creates a KTNEFMessage message object.
      */
@@ -91,7 +91,7 @@ class KTNEF_EXPORT KTNEFMessage : public KTNEFPropertySet
      */
     QString rtfString() const;
 
-  private:
+private:
     //@cond PRIVATE
     class MessagePrivate;
     MessagePrivate *const d;
