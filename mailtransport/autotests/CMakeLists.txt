@@ -12,7 +12,7 @@ macro(add_akonadi_isolated_test _source _path)
     ${QT_QTTEST_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTDBUS_LIBRARY}
-    akonadi-kde
+    
     akonadi-kmime
     mailtransport
     kmime
