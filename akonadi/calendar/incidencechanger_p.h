@@ -45,8 +45,8 @@ namespace Akonadi {
 class TransactionSequence;
 class CollectionFetchJob;
 
-class Change {
-
+class Change: public QObject {
+    Q_OBJECT
 public:
     typedef QSharedPointer<Change> Ptr;
     typedef QList<Ptr> List;
@@ -79,6 +79,21 @@ public:
 
     virtual void emitCompletionSignal() = 0;
 
+    virtual void emitUserDialogClosedAfterChange(ITIPHandlerHelper::SendResult status)
+    {
+        QMetaObject::invokeMethod(this, "dialogClosedAfterChange", Qt::QueuedConnection,
+                                  Q_ARG(int, id),
+                                  Q_ARG(ITIPHandlerHelper::SendResult, status));
+    }
+
+    virtual void emitUserDialogClosedBeforeChange(ITIPHandlerHelper::SendResult status)
+    {
+        QMetaObject::invokeMethod(this, "dialogClosedBeforeChange", Qt::QueuedConnection,
+                              Q_ARG(int, id),
+                              Q_ARG(ITIPHandlerHelper::SendResult, status));
+    }
+
+
     const int id;
     const IncidenceChanger::ChangeType type;
     const bool recordToHistory;
@@ -97,6 +112,21 @@ public:
     bool completed;
     bool queuedModification;
     bool useGroupwareCommunication;
+
+signals:
+    void dialogClosedBeforeChange(int id, ITIPHandlerHelper::SendResult status);
+    void dialogClosedAfterChange(int id, ITIPHandlerHelper::SendResult status);
+
+private slots:
+    virtual void slotDialogClosedAfterChange(ITIPHandlerHelper::SendResult status, KCalCore::iTIPMethod /*method*/, KCalCore::Incidence::Ptr /*incidence*/)
+    {
+        emitUserDialogClosedAfterChange(status);
+    }
+    virtual void slotDialogClosedBeforeChange(ITIPHandlerHelper::SendResult status, KCalCore::iTIPMethod /*method*/, KCalCore::Incidence::Ptr /*incidence*/)
+    {
+        emitUserDialogClosedBeforeChange(status);
+    }
+
 protected:
     IncidenceChanger *const changer;
 };
@@ -285,8 +315,8 @@ public:
     void cleanupTransaction();
     bool allowAtomicOperation(int atomicOperationId, const Change::Ptr &change) const;
 
-    bool handleInvitationsBeforeChange(const Change::Ptr &change);
-    bool handleInvitationsAfterChange(const Change::Ptr &change);
+    void handleInvitationsBeforeChange(const Change::Ptr &change);
+    void handleInvitationsAfterChange(const Change::Ptr &change);
     static bool myAttendeeStatusChanged(const KCalCore::Incidence::Ptr &newIncidence,
                                         const KCalCore::Incidence::Ptr &oldIncidence,
                                         const QStringList &myEmails);
@@ -298,6 +328,12 @@ public Q_SLOTS:
     void handleTransactionJobResult(KJob*);
     void performNextModification(Akonadi::Item::Id id);
     void onCollectionsLoaded(KJob*);
+
+    void handleCreateJobResult2(const int changeId, ITIPHandlerHelper::SendResult);
+    void handleDeleteJobResult2(const int changeId, ITIPHandlerHelper::SendResult);
+    void handleModifyJobResult2(const int changeId, ITIPHandlerHelper::SendResult);
+    void performModification2(const int changeId, ITIPHandlerHelper::SendResult);
+    void deleteIncidences2(const int changeId, ITIPHandlerHelper::SendResult);
 
 public:
     int mLatestChangeId;

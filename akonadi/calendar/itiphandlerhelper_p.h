@@ -78,7 +78,8 @@ public:
         ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
                                 (e.g. when we are the only attendee) */
         ResultError,           /**< An unexpected error occurred */
-        ResultSuccess          /**< The invitation was sent to all attendees. */
+        ResultSuccess,         /**< The invitation was sent to all attendees. */
+        ResultPending          /**< The user has be ask about one detail, waiting for him to anwser it */
     };
 
     enum Action {
@@ -111,7 +112,7 @@ public:
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    ITIPHandlerHelper::SendResult sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
+    void sendIncidenceCreatedMessage(KCalCore::iTIPMethod method,
             const KCalCore::Incidence::Ptr &incidence);
 
     /**
@@ -131,7 +132,7 @@ public:
       @param incidence The modified incidence.
       @param attendeeStatusChanged if @c true and @p method is #iTIPRequest ask the user whether to send a status update as well
      */
-    ITIPHandlerHelper::SendResult sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
+    void sendIncidenceModifiedMessage(KCalCore::iTIPMethod method,
             const KCalCore::Incidence::Ptr &incidence,
             bool attendeeStatusChanged);
 
@@ -139,7 +140,7 @@ public:
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    ITIPHandlerHelper::SendResult sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
+    void sendIncidenceDeletedMessage(KCalCore::iTIPMethod method,
             const KCalCore::Incidence::Ptr &incidence);
 
     /**
@@ -157,18 +158,23 @@ Q_SIGNALS:
     void finished(Akonadi::ITIPHandlerHelper::SendResult result,
                   const QString &errorMessage);
 
+    void sendIncidenceDeletedMessageFinished(ITIPHandlerHelper::SendResult, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+    void sendIncidenceModifiedMessageFinished(ITIPHandlerHelper::SendResult, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+    void sendIncidenceCreatedMessageFinished(ITIPHandlerHelper::SendResult, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+
 private Q_SLOTS:
     void onSchedulerFinished(Akonadi::Scheduler::Result result, const QString &errorMsg);
+
+    void slotIncidenceDeletedDialogClosed(const int, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+    void slotIncidenceModifiedDialogClosed(const int, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+    void slotIncidenceCreatedDialogClosed(const int, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+
+    void slotSchedulerFinishDialog(const int result, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
 
 private:
     ITIPHandlerHelper::SendResult sentInvitation(int messageBoxReturnCode,
             const KCalCore::Incidence::Ptr &incidence,
             KCalCore::iTIPMethod method);
-
-    int askUserIfNeeded(const QString &question,
-                        bool ignoreDefaultAction = true,
-                        const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
-                        const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send"))) const;
 
     /**
       We are the organizer. If there is more than one attendee, or if there is
@@ -188,6 +194,7 @@ private:
     QWidget *mParent;
     MailScheduler *m_scheduler;
     Status m_status;
+    MessageQueueJobFactory *m_factory;
 };
 
 }

@@ -32,11 +32,18 @@
 #include <kcalcore/incidence.h>
 #include <kcalcore/schedulemessage.h>
 
+#include <KGuiItem>
+#include <KLocalizedString>
+
 #include <QString>
 #include <QWidget>
 
 namespace MailTransport {
     class MessageQueueJob;
+}
+
+namespace KPIMIdentities {
+    class Identity;
 }
 
 namespace Akonadi {
@@ -55,6 +62,53 @@ public:
     virtual void createCalendar() = 0;
 };
 
+
+class AKONADI_CALENDAR_EXPORT AskDelegator: public QObject {
+    Q_OBJECT
+public:
+    explicit AskDelegator(QWidget *parent, const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method);
+    int askUserIfNeeded(const QString &question,
+                        bool ignoreDefaultAction,
+                        const KGuiItem &buttonYes,
+                        const KGuiItem &buttonNo) const;
+
+    void setDefaultAction(int defaultAction);
+
+    virtual void openDialogIncidenceCreated(bool attendees,
+                                    const QString &question,
+                                    bool ignoreDefaultAction = true,
+                                    const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send")));
+
+    virtual void openDialogIncidenceModified(bool attendeeStatusChanged,
+                                     bool attendees,
+                                     const QString &question,
+                                     bool ignoreDefaultAction = true,
+                                     const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
+                                     const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send")));
+
+
+    virtual void openDialogIncidenceDeleted(bool attendees,
+                                    const QString &question,
+                                    bool ignoreDefaultAction = true,
+                                    const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send")));
+
+    virtual void openDialogSchedulerFinished(const QString &question,
+                                     bool ignoreDefaultAction = true,
+                                     const KGuiItem &buttonYes = KGuiItem(i18n("Send Email")),
+                                     const KGuiItem &buttonNo = KGuiItem(i18n("Do Not Send")));
+
+signals:
+    void dialogClosed(int answer, KCalCore::iTIPMethod method, const KCalCore::Incidence::Ptr &incidence);
+
+protected:
+    int mDefaultAction;
+    QWidget *mParent;
+    KCalCore::Incidence::Ptr mIncidence;
+    KCalCore::iTIPMethod mMethod;
+};
+
 /**
  * @short Factory to create MailTransport::MessageQueueJob jobs.
  * @since 4.15
@@ -64,6 +118,7 @@ class AKONADI_CALENDAR_EXPORT MessageQueueJobFactory : public QObject {
 public:
     virtual ~MessageQueueJobFactory();
     virtual MailTransport::MessageQueueJob* createMessageQueueJob(QObject *parent,const KCalCore::IncidenceBase::Ptr &incidence, const KPIMIdentities::Identity &identity );
+    virtual AskDelegator* createAskDelegator(QWidget *parent, const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method);
 };
 
 /**
