@@ -21,8 +21,7 @@
 
 #include <QTimer>
 
-#include <KApplication>
-#include <KCmdLineArgs>
+#include <QApplication>
 #include <QDebug>
 #include <KLocale>
 #include <KLocalizedString>
@@ -52,15 +51,14 @@ void Runner::sendAbort()
 
   mda.abortCurrentTask();
   qDebug() << "Told the MDA to abort.";
-  KApplication::exit( 0 );
+  QApplication::exit( 0 );
 }
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "abort", 0,
-                      ki18n( "abort" ), "0",
-                      ki18n( "An app that sends an abort signal to the MDA" ) );
-  KApplication app;
+  QApplication::setApplicationName(QLatin1String("Abort"));
+  QApplication app(argc, argv);
+
   new Runner();
   return app.exec();
 }

@@ -25,8 +25,7 @@
 #include <QPointer>
 #include <QPushButton>
 
-#include <KApplication>
-#include <KCmdLineArgs>
+#include <QApplication>
 #include <KDateTimeWidget>
 #include <KDialog>
 #include <QLineEdit>
@@ -159,10 +158,9 @@ MessageQueueJob *MessageQueuer::createQueueJob()
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "messagequeuer", 0,
-                      ki18n( "messagequeuer" ), "0",
-                      ki18n( "MessageQueuerJob Demo" ) );
-  KApplication app;
+  QApplication app(argc, argv);
+  app.setApplicationName(QLatin1String("messagequeuer"));
+
   MessageQueuer *t = new MessageQueuer();
   t->show();
   app.exec();

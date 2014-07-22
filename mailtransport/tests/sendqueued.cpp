@@ -19,10 +19,8 @@
 
 #include "sendqueued.h"
 
-#include <KApplication>
-#include <KCmdLineArgs>
+#include <QApplication>
 #include <KLocale>
-#include <KLocalizedString>
 #include <KJob>
 
 #include <collection.h>
@@ -52,10 +50,9 @@ void Runner::checkFolders()
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "sendqueued", 0,
-                      ki18n( "sendqueued" ), "0",
-                      ki18n( "An app that sends all queued messages" ) );
-  KApplication app;
+  QApplication app(argc, argv);
+  app.setApplicationName(QLatin1String("sendqueued"));
+
   new Runner();
   return app.exec();
 }

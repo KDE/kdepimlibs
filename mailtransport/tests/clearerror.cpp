@@ -19,11 +19,8 @@
 
 #include "clearerror.h"
 
-#include <KApplication>
-#include <KCmdLineArgs>
+#include <QApplication>
 #include <KJob>
-#include <KLocalizedString>
-#include <KLocale>
 
 #include <collection.h>
 #include <control.h>
@@ -52,10 +49,9 @@ void Runner::checkFolders()
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "clearerror", 0,
-                      ki18n( "clearerror" ), "0",
-                      ki18n( "An app that re-queues failed items from the outbox" ) );
-  KApplication app;
+  QApplication app(argc, argv);
+  app.setApplicationName(QLatin1String("clearerror"));
+
   new Runner();
   return app.exec();
 }

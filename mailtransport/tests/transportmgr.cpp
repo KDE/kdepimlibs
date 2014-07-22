@@ -26,8 +26,7 @@
 #include <transport.h>
 #include <QVBoxLayout>
 
-#include <KApplication>
-#include <KCmdLineArgs>
+#include <QApplication>
 #include <QLineEdit>
 #include <KLocale>
 #include <KLocalizedString>
@@ -137,10 +136,9 @@ void TransportMgr::cancelBtnClicked()
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "transportmgr", 0,
-                      ki18n( "transportmgr" ), "0",
-                      ki18n( "Mail Transport Manager Demo" ) );
-  KApplication app;
+  QApplication app(argc, argv);
+  app.setApplicationName(QLatin1String("transportmgr"));
+
   TransportMgr *t = new TransportMgr();
   t->show();
   app.exec();
