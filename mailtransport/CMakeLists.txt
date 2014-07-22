@@ -79,6 +79,7 @@ install(EXPORT KF5MailTransportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" 
 ########### Targets ###########
 add_subdirectory(cmake)
 add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(autotests)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${MailTransport_BINARY_DIR}")
