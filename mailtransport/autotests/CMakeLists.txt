@@ -7,17 +7,12 @@ macro(add_akonadi_isolated_test _source _path)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )
 
-  kde4_add_executable(${_targetName} TEST ${_srcList})
+  add_executable(${_targetName} TEST ${_srcList})
   target_link_libraries(${_targetName}
-    ${QT_QTTEST_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTDBUS_LIBRARY}
-    
+    Qt5::Test
     akonadi-kmime
     mailtransport
     kmime
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDE4SUPPORT_LIBS}
   )
 
   # based on kde4_add_unit_test
