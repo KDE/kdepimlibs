@@ -28,18 +28,18 @@ class QTemporaryDir;
 
 class MBoxBenchmark : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void testNoLockPerformance();
     void testProcfileLockPerformance();
     void voidTestMD5Performance();
 
-  private:
+private:
     QString fileName();
 
-  private:
+private:
     QTemporaryDir *mTempDir;
     KMime::Message::Ptr mMail1;
 };

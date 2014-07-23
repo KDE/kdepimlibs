@@ -24,18 +24,18 @@
 using namespace KMBox;
 
 MBoxEntry::MBoxEntry()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-MBoxEntry::MBoxEntry( quint64 offset )
-  : d( new Private )
+MBoxEntry::MBoxEntry(quint64 offset)
+    : d(new Private)
 {
-  d->mOffset = offset;
+    d->mOffset = offset;
 }
 
-MBoxEntry::MBoxEntry( const MBoxEntry &other )
-  : d( other.d )
+MBoxEntry::MBoxEntry(const MBoxEntry &other)
+    : d(other.d)
 {
 }
 
@@ -43,41 +43,41 @@ MBoxEntry::~MBoxEntry()
 {
 }
 
-MBoxEntry &MBoxEntry::operator=( const MBoxEntry &other )
+MBoxEntry &MBoxEntry::operator=(const MBoxEntry &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
+    if (this != &other) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool MBoxEntry::operator==( const MBoxEntry &other ) const
+bool MBoxEntry::operator==(const MBoxEntry &other) const
 {
-  return ( d->mOffset == other.d->mOffset );
+    return (d->mOffset == other.d->mOffset);
 }
 
-bool MBoxEntry::operator!=( const MBoxEntry &other ) const
+bool MBoxEntry::operator!=(const MBoxEntry &other) const
 {
-  return !( other == *this );
+    return !(other == *this);
 }
 
 bool MBoxEntry::isValid() const
 {
-  return ( ( d->mOffset != 0 ) && ( d->mMessageSize != 0 ) );
+    return ((d->mOffset != 0) && (d->mMessageSize != 0));
 }
 
 quint64 MBoxEntry::messageOffset() const
 {
-  return d->mOffset;
+    return d->mOffset;
 }
 
 quint64 MBoxEntry::messageSize() const
 {
-  return d->mMessageSize;
+    return d->mMessageSize;
 }
 
 quint64 MBoxEntry::separatorSize() const
 {
-  return d->mSeparatorSize;
+    return d->mSeparatorSize;
 }

@@ -22,22 +22,23 @@
 
 #include <QtCore/QSharedData>
 
-namespace KMBox {
+namespace KMBox
+{
 
 class MBoxEntry::Private : public QSharedData
 {
-  public:
+public:
     Private()
-      : mOffset( 0 ), mMessageSize( 0 ), mSeparatorSize( 0 )
+        : mOffset(0), mMessageSize(0), mSeparatorSize(0)
     {
     }
 
-    Private( const Private &other )
-      : QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      mOffset = other.mOffset;
-      mMessageSize = other.mMessageSize;
-      mSeparatorSize = other.mSeparatorSize;
+        mOffset = other.mOffset;
+        mMessageSize = other.mMessageSize;
+        mSeparatorSize = other.mSeparatorSize;
     }
 
     quint64 mOffset;

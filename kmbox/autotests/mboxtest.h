@@ -29,8 +29,8 @@ class QTemporaryDir;
 
 class MboxTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void testSetLockMethod();
     void testLockBeforeLoad();
@@ -45,12 +45,12 @@ class MboxTest : public QObject
     void testPurge();
     void testHeaders();
 
-  private:
+private:
     QString fileName();
     QString lockFileName();
     void removeTestFile();
 
-  private:
+private:
     QTemporaryDir *mTempDir;
     KMime::Message::Ptr mMail1;
     KMime::Message::Ptr mMail2;
@@ -58,15 +58,15 @@ class MboxTest : public QObject
 
 class ThreadFillsMBox : public QThread
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    ThreadFillsMBox( const QString &fileName );
+public:
+    ThreadFillsMBox(const QString &fileName);
 
-  protected:
+protected:
     virtual void run();
 
-  private:
+private:
     KMBox::MBox *mbox;
 };
 

@@ -26,31 +26,32 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 
-namespace KMBox {
+namespace KMBox
+{
 
 class MBoxPrivate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MBoxPrivate( MBox *mbox );
+public:
+    MBoxPrivate(MBox *mbox);
 
     virtual ~MBoxPrivate();
 
     void close();
 
-    void initLoad( const QString &fileName );
+    void initLoad(const QString &fileName);
 
     bool open();
 
     bool startTimerIfNeeded();
 
-    bool isMBoxSeparator( const QByteArray &line ) const;
+    bool isMBoxSeparator(const QByteArray &line) const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void unlockMBox();
 
-  public:
+public:
     QByteArray      mAppendedEntries;
     MBoxEntry::List mEntries;
     bool            mFileLocked;
@@ -63,18 +64,18 @@ class MBoxPrivate : public QObject
     QTimer          mUnlockTimer;
     QRegExp         mSeparatorMatcher;
 
-  public: /// Static helper methods
-    static QByteArray escapeFrom( const QByteArray &msg );
+public: /// Static helper methods
+    static QByteArray escapeFrom(const QByteArray &msg);
 
     /**
      * Generates a mbox message sperator line for given message.
      */
-    static QByteArray mboxMessageSeparator( const QByteArray &msg );
+    static QByteArray mboxMessageSeparator(const QByteArray &msg);
 
     /**
      * Unescapes the raw message read from the file.
      */
-    static void unescapeFrom( char *msg, size_t size );
+    static void unescapeFrom(char *msg, size_t size);
 };
 
 }

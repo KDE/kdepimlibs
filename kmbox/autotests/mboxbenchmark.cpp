@@ -24,108 +24,110 @@
 #include <qtest.h>
 #include <QTemporaryDir>
 
-QTEST_MAIN( MBoxBenchmark )
+QTEST_MAIN(MBoxBenchmark)
 
 #include "test-entries.h"
 
 using namespace KMBox;
 
-static const char * testDir = "libmbox-unit-test";
-static const char * testFile = "test-mbox-file";
+static const char *testDir = "libmbox-unit-test";
+static const char *testFile = "test-mbox-file";
 
 QString MBoxBenchmark::fileName()
 {
-  return mTempDir->path() + QLatin1Char('/') + QLatin1String( testFile );
+    return mTempDir->path() + QLatin1Char('/') + QLatin1String(testFile);
 }
 
 void MBoxBenchmark::initTestCase()
 {
-  mTempDir = new QTemporaryDir( QDir::tempPath() + QLatin1Char('/') + QLatin1String( testDir ) );
-  mMail1 = KMime::Message::Ptr( new KMime::Message );
-  mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
-  mMail1->parse();
+    mTempDir = new QTemporaryDir(QDir::tempPath() + QLatin1Char('/') + QLatin1String(testDir));
+    mMail1 = KMime::Message::Ptr(new KMime::Message);
+    mMail1->setContent(KMime::CRLFtoLF(sEntry1));
+    mMail1->parse();
 }
 
 void MBoxBenchmark::cleanupTestCase()
 {
-  mTempDir->remove();
+    mTempDir->remove();
 }
 
 void MBoxBenchmark::testNoLockPerformance()
 {
-  MBox mbox;
-  mbox.setLockType( MBox::None );
-  mbox.load( fileName() );
+    MBox mbox;
+    mbox.setLockType(MBox::None);
+    mbox.load(fileName());
 
-  for ( int i = 0; i < 1000; ++i ) {
-    mbox.appendMessage( mMail1 );
-  }
-
-  mbox.save( fileName() );
-
-
-  QBENCHMARK {
-    MBox mbox2;
-    mbox2.setLockType( MBox::None );
-    mbox2.setUnlockTimeout( 5000 );
-    mbox2.load( fileName() );
-    foreach ( const MBoxEntry &entry, mbox2.entries() ) {
-      mbox2.readMessage( entry );
+    for (int i = 0; i < 1000; ++i) {
+        mbox.appendMessage(mMail1);
     }
-  }
+
+    mbox.save(fileName());
+
+    QBENCHMARK {
+        MBox mbox2;
+        mbox2.setLockType(MBox::None);
+        mbox2.setUnlockTimeout(5000);
+        mbox2.load(fileName());
+        foreach (const MBoxEntry &entry, mbox2.entries())
+        {
+            mbox2.readMessage(entry);
+        }
+    }
 }
 
 void MBoxBenchmark::testProcfileLockPerformance()
 {
-  mMail1 = KMime::Message::Ptr( new KMime::Message );
-  mMail1->setContent( KMime::CRLFtoLF( sEntry1 ) );
-  mMail1->parse();
+    mMail1 = KMime::Message::Ptr(new KMime::Message);
+    mMail1->setContent(KMime::CRLFtoLF(sEntry1));
+    mMail1->parse();
 
-  MBox mbox;
-  mbox.setLockType( MBox::ProcmailLockfile );
-  mbox.load( fileName() );
-  for ( int i = 0; i < 1000; ++i ) {
-    mbox.appendMessage( mMail1 );
-  }
-
-  mbox.save( fileName() );
-
-  QBENCHMARK {
-    MBox mbox2;
-    mbox2.setLockType( MBox::ProcmailLockfile );
-    mbox2.load( fileName() );
-    mbox2.setUnlockTimeout( 5000 ); // Keep the mbox locked for five seconds.
-
-    foreach ( const MBoxEntry &entry, mbox2.entries() ) {
-      mbox2.readMessage( entry );
+    MBox mbox;
+    mbox.setLockType(MBox::ProcmailLockfile);
+    mbox.load(fileName());
+    for (int i = 0; i < 1000; ++i) {
+        mbox.appendMessage(mMail1);
     }
-  }
+
+    mbox.save(fileName());
+
+    QBENCHMARK {
+        MBox mbox2;
+        mbox2.setLockType(MBox::ProcmailLockfile);
+        mbox2.load(fileName());
+        mbox2.setUnlockTimeout(5000);   // Keep the mbox locked for five seconds.
+
+        foreach (const MBoxEntry &entry, mbox2.entries())
+        {
+            mbox2.readMessage(entry);
+        }
+    }
 }
 
 void MBoxBenchmark::voidTestMD5Performance()
 {
-  MBox mbox;
-  mbox.setLockType( MBox::None );
-  mbox.load( fileName() );
+    MBox mbox;
+    mbox.setLockType(MBox::None);
+    mbox.load(fileName());
 
-  for ( int i = 0; i < 1000; ++i ) {
-    mbox.appendMessage( mMail1 );
-  }
-
-  mbox.save( fileName() );
-
-  QBENCHMARK {
-    QFile file( fileName() );
-    QVERIFY( file.exists() );
-    QVERIFY( file.open( QIODevice::ReadOnly ) );
-
-    QCryptographicHash hash( QCryptographicHash::Md5 );
-    qint64 blockSize = 512 * 1024; // Read blocks of 512K
-
-    while ( !file.atEnd() ) {
-      hash.addData( file.read( blockSize ) );
+    for (int i = 0; i < 1000; ++i) {
+        mbox.appendMessage(mMail1);
     }
 
-    file.close();
-  }
+    mbox.save(fileName());
+
+    QBENCHMARK {
+        QFile file(fileName());
+        QVERIFY(file.exists());
+        QVERIFY(file.open(QIODevice::ReadOnly));
+
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        qint64 blockSize = 512 * 1024; // Read blocks of 512K
+
+        while (!file.atEnd())
+        {
+            hash.addData(file.read(blockSize));
+        }
+
+        file.close();
+    }
 }

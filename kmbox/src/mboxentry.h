@@ -27,7 +27,8 @@
 #include <QtCore/QPair>
 #include <QtCore/QSharedDataPointer>
 
-namespace KMBox {
+namespace KMBox
+{
 
 /**
  * @short A class that encapsulates an entry of a MBox.
@@ -37,7 +38,7 @@ namespace KMBox {
  */
 class KMBOX_EXPORT MBoxEntry
 {
-  public:
+public:
     /**
      * Describes a list of mbox entry objects.
      */
@@ -58,12 +59,12 @@ class KMBOX_EXPORT MBoxEntry
      *
      * @param offset The offset of the message the object references.
      */
-    explicit MBoxEntry( quint64 offset );
+    explicit MBoxEntry(quint64 offset);
 
     /**
      * Creates an mbox entry object from an @p other object.
      */
-    MBoxEntry( const MBoxEntry &other );
+    MBoxEntry(const MBoxEntry &other);
 
     /**
      * Destroys the mbox entry object.
@@ -73,17 +74,17 @@ class KMBOX_EXPORT MBoxEntry
     /**
      * Replaces this mbox entry object with an @p other object.
      */
-    MBoxEntry &operator=( const MBoxEntry &other );
+    MBoxEntry &operator=(const MBoxEntry &other);
 
     /**
      * Returns whether this mbox entry object is equal to an @p other.
      */
-    bool operator==( const MBoxEntry &other ) const;
+    bool operator==(const MBoxEntry &other) const;
 
     /**
      * Returns whether this mbox entry object is not equal to an @p other.
      */
-    bool operator!=( const MBoxEntry &other ) const;
+    bool operator!=(const MBoxEntry &other) const;
 
     /**
      * Returns whether this is a valid mbox entry object.
@@ -108,7 +109,7 @@ class KMBOX_EXPORT MBoxEntry
      */
     quint64 separatorSize() const;
 
-  private:
+private:
     //@cond PRIVATE
     friend class MBox;
 
@@ -119,6 +120,6 @@ class KMBOX_EXPORT MBoxEntry
 
 }
 
-Q_DECLARE_TYPEINFO( KMBox::MBoxEntry, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(KMBox::MBoxEntry, Q_MOVABLE_TYPE);
 
 #endif // KMBOX_MBOXENTRY_H

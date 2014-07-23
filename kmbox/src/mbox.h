@@ -25,7 +25,8 @@
 
 #include <kmime/kmime_message.h>
 
-namespace KMBox {
+namespace KMBox
+{
 
 class MBoxPrivate;
 
@@ -37,15 +38,15 @@ class MBoxPrivate;
  */
 class KMBOX_EXPORT MBox
 {
-  public:
+public:
     /**
      * Describes the type of locking that will be used.
      */
     enum LockType {
-      ProcmailLockfile,
-      MuttDotlock,
-      MuttDotlockPrivileged,
-      None
+        ProcmailLockfile,
+        MuttDotlock,
+        MuttDotlockPrivileged,
+        None
     };
 
     /**
@@ -70,7 +71,7 @@ class KMBOX_EXPORT MBox
      * @return the corresponding mbox entry for the message in the file or an invalid mbox entry
      *         if the message was not added.
      */
-    MBoxEntry appendMessage( const KMime::Message::Ptr &message );
+    MBoxEntry appendMessage(const KMime::Message::Ptr &message);
 
     /**
      * Retrieve the mbox entry objects for all emails from the file except the
@@ -79,7 +80,7 @@ class KMBOX_EXPORT MBox
      * @param deletedEntries list of mbox entries that have been deleted and need not be retrieved
      * Note: One <em>must</em> call load() before calling this method.
      */
-    MBoxEntry::List entries( const MBoxEntry::List &deletedEntries = MBoxEntry::List() ) const;
+    MBoxEntry::List entries(const MBoxEntry::List &deletedEntries = MBoxEntry::List()) const;
 
     /**
      * Returns the file name that was passed to the last call to load().
@@ -98,7 +99,7 @@ class KMBOX_EXPORT MBox
      *
      * @see save( const QString & )
      */
-    bool load( const QString &fileName );
+    bool load(const QString &fileName);
 
     /**
      * Locks the mbox file using the configured lock method. This can be used
@@ -138,7 +139,7 @@ class KMBOX_EXPORT MBox
      *         loaded, false otherewhise. In the latter the physical file has
      *         not changed.
      */
-    bool purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries = 0 );
+    bool purge(const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries = 0);
 
     /**
      * Reads the entire message from the file for the given mbox @p entry. If the
@@ -152,7 +153,7 @@ class KMBOX_EXPORT MBox
      *
      * @see lock(), unlock()
      */
-    KMime::Message *readMessage( const MBoxEntry &entry );
+    KMime::Message *readMessage(const MBoxEntry &entry);
 
     /**
      * Reads the headers of the message for the given mbox @p entry. If the
@@ -165,7 +166,7 @@ class KMBOX_EXPORT MBox
      *
      * @see lock(), unlock()
      */
-    QByteArray readMessageHeaders( const MBoxEntry &entry );
+    QByteArray readMessageHeaders(const MBoxEntry &entry);
 
     /**
      * Reads the entire message from the file for the given mbox @p entry. If the
@@ -178,7 +179,7 @@ class KMBOX_EXPORT MBox
      *
      * @see lock(), unlock()
      */
-    QByteArray readRawMessage( const MBoxEntry &entry );
+    QByteArray readRawMessage(const MBoxEntry &entry);
 
     /**
      * Writes the mbox to disk. If the fileName is empty only appended messages
@@ -191,7 +192,7 @@ class KMBOX_EXPORT MBox
      *
      * @see load( const QString & )
      */
-    bool save( const QString &fileName = QString() );
+    bool save(const QString &fileName = QString());
 
     /**
      * Sets the locktype that should be used for locking the mbox file. If the
@@ -202,7 +203,7 @@ class KMBOX_EXPORT MBox
      * to make sure that it doesn't leave a locked file for one of the lockfile
      * / mutt_dotlock methods.
      */
-    bool setLockType( LockType ltype );
+    bool setLockType(LockType ltype);
 
     /**
      * Sets the lockfile that should be used by the procmail or the KDE lock
@@ -211,7 +212,7 @@ class KMBOX_EXPORT MBox
      * MBOXFILENAME.lock.
      * @param lockFile the lockfile to set
      */
-    void setLockFile( const QString &lockFile );
+    void setLockFile(const QString &lockFile);
 
     /**
      * By default the unlock method will directly unlock the file. However this
@@ -220,7 +221,7 @@ class KMBOX_EXPORT MBox
      * passed. On each read the timer will be reset.
      * @param msec the time out to set for file lock
      */
-    void setUnlockTimeout( int msec );
+    void setUnlockTimeout(int msec);
 
     /**
      * Unlock the mbox file.
@@ -231,10 +232,10 @@ class KMBOX_EXPORT MBox
      */
     bool unlock();
 
-  private:
+private:
     //@cond PRIVATE
     friend class MBoxPrivate;
-    MBoxPrivate * const d;
+    MBoxPrivate *const d;
     //@endcond
 };
 
