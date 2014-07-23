@@ -19,11 +19,11 @@
 
 #include "foldersrequester.h"
 
-#include <KApplication>
-#include <KCmdLineArgs>
 #include <QDebug>
 #include <KLocalizedString>
-
+#include <KAboutData>
+#include <QApplication>
+#include <QCommandLineParser>
 #include <collection.h>
 #include <control.h>
 #include <specialmailcollections.h>
@@ -45,19 +45,31 @@ void Requester::requestResult(KJob *job)
 {
     if (job->error()) {
         qCritical() << "LocalFoldersRequestJob failed:" << job->errorString();
-        KApplication::exit(1);
+        QApplication::exit(1);
     } else {
         // Success.
-        KApplication::exit(2);
+        QApplication::exit(2);
     }
 }
 
 int main(int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "foldersrequester", 0,
-                       ki18n("foldersrequester"), "0",
-                       ki18n("An app that requests LocalFolders"));
-    KApplication app;
+    QCommandLineParser parser;
+
+    KAboutData about(QStringLiteral("foldersrequester"),
+                     i18n("An app that requests LocalFolders"), QStringLiteral("0.1"));
+
+    about.setupCommandLine(&parser);
+    KAboutData::setApplicationData(about);
+
+    QApplication app(argc, argv);
+    app.setApplicationName(about.componentName());
+    app.setApplicationDisplayName(about.displayName());
+    app.setOrganizationDomain(about.organizationDomain());
+    app.setApplicationVersion(about.version());
+    parser.process(app);
+    about.processCommandLine(&parser);
+
     new Requester();
     return app.exec();
 }
