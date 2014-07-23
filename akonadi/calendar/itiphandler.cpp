@@ -74,6 +74,12 @@ MailTransport::MessageQueueJob *MessageQueueJobFactory::createMessageQueueJob(QO
     return new MailTransport::MessageQueueJob(parent);
 }
 
+AskDelegator *MessageQueueJobFactory::createAskDelegator(QWidget *parent, const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method)
+{
+    return new AskDelegator(parent, incidence, method);
+}
+
+
 ITIPHandler::ITIPHandler(QObject *parent, MessageQueueJobFactory *factory) : QObject(parent)
     , d(new Private(this, factory))
 {

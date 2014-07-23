@@ -37,11 +37,11 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-#ifdef PLEASE_TEST_INVITATIONS
+// #ifdef PLEASE_TEST_INVITATIONS
 # define RUNNING_UNIT_TESTS true
-#else
-# define RUNNING_UNIT_TESTS false
-#endif
+// #else
+// # define nnRUNNING_UNIT_TESTS false
+// #endif
 
 ITIPHandlerHelper::Action actionFromStatus(ITIPHandlerHelper::SendResult result)
 {
@@ -153,6 +153,7 @@ IncidenceChanger::Private::Private(bool enableHistory, IncidenceChanger *qq, Mes
     qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     qRegisterMetaType<Akonadi::IncidenceChanger::ResultCode>(
         "Akonadi::IncidenceChanger::ResultCode");
+    qRegisterMetaType<ITIPHandlerHelper::SendResult>("ITIPHandlerHelper::SendResult");
 }
 
 IncidenceChanger::Private::~Private()
@@ -228,7 +229,6 @@ void IncidenceChanger::Private::performNextModification(Akonadi::Item::Id id)
 
 void IncidenceChanger::Private::handleTransactionJobResult(KJob *job)
 {
-    //kDebug();
     TransactionSequence *transaction = qobject_cast<TransactionSequence*>(job);
     Q_ASSERT(transaction);
     Q_ASSERT(mAtomicOperationByTransaction.contains(transaction));
@@ -259,16 +259,53 @@ void IncidenceChanger::Private::handleTransactionJobResult(KJob *job)
 
 void IncidenceChanger::Private::handleCreateJobResult(KJob *job)
 {
-    //kDebug();
-    QString errorString;
-    ResultCode resultCode = ResultCodeSuccess;
-
     Change::Ptr change = mChangeForJob.take(job);
-    mChangeById.remove(change->id);
 
     const ItemCreateJob *j = qobject_cast<const ItemCreateJob*>(job);
     Q_ASSERT(j);
     Akonadi::Item item = j->item();
+
+
+    if (j->error()) {
+        QString errorString = j->errorString();
+        ResultCode resultCode = ResultCodeJobError;
+        item = change->newItem;
+
+        kError() << errorString;
+        if (mShowDialogsOnError) {
+            KMessageBox::sorry(change->parentWidget,
+                               i18n("Error while trying to create calendar item. Error was: %1",
+                                    errorString));
+        }
+        mChangeById.remove(change->id);
+        change->errorString = errorString;
+        change->resultCode  = resultCode;
+        // puff, change finally goes out of scope, and emits the incidenceCreated signal.
+    } else {
+        Q_ASSERT(item.isValid());
+        Q_ASSERT(item.hasPayload<KCalCore::Incidence::Ptr>());
+        change->newItem = item;
+        connect(change.data(),SIGNAL(dialogClosedAfterChange(int,ITIPHandlerHelper::SendResult)),
+                SLOT(handleCreateJobResult2(const int,ITIPHandlerHelper::SendResult)), Qt::QueuedConnection);
+        handleInvitationsAfterChange(change);
+    }
+}
+
+void IncidenceChanger::Private::handleCreateJobResult2(const int changeId, ITIPHandlerHelper::SendResult status)
+{
+    Change::Ptr change = mChangeById[changeId];
+    Akonadi::Item item = change->newItem;
+
+    mChangeById.remove(changeId);
+
+    if (status == ITIPHandlerHelper::ResultFailAbortUpdate) {
+        kError() << "Sending invitations failed, but did not delete the incidence";
+    }
+
+    const uint atomicOperationId = change->atomicOperationId;
+    if (atomicOperationId != 0) {
+        mInvitationStatusByAtomicOperation.insert(atomicOperationId, status);
+    }
 
     QString description;
     if (change->atomicOperationId != 0) {
@@ -278,40 +315,19 @@ void IncidenceChanger::Private::handleCreateJobResult(KJob *job)
         description = a->m_description;
     }
 
-    if (j->error()) {
-        item = change->newItem;
-        resultCode = ResultCodeJobError;
-        errorString = j->errorString();
-        kError() << errorString;
-        if (mShowDialogsOnError) {
-            KMessageBox::sorry(change->parentWidget,
-                               i18n("Error while trying to create calendar item. Error was: %1",
-                                    errorString));
-        }
-    } else {
-        Q_ASSERT(item.isValid());
-        Q_ASSERT(item.hasPayload<KCalCore::Incidence::Ptr>());
-        change->newItem = item;
-        handleInvitationsAfterChange(change);
-        // for user undo/redo
-        if (change->recordToHistory) {
-            mHistory->recordCreation(item, description, change->atomicOperationId);
-        }
+    // for user undo/redo
+    if (change->recordToHistory) {
+        mHistory->recordCreation(item, description, change->atomicOperationId);
     }
 
-    change->errorString = errorString;
-    change->resultCode  = resultCode;
+    change->errorString = "";
+    change->resultCode  = ResultCodeSuccess;
     // puff, change finally goes out of scope, and emits the incidenceCreated signal.
 }
 
 void IncidenceChanger::Private::handleDeleteJobResult(KJob *job)
 {
-    //kDebug();
-    QString errorString;
-    ResultCode resultCode = ResultCodeSuccess;
-
     Change::Ptr change = mChangeForJob.take(job);
-    mChangeById.remove(change->id);
 
     const ItemDeleteJob *j = qobject_cast<const ItemDeleteJob*>(job);
     const Item::List items = j->deletedItems();
@@ -329,8 +345,7 @@ void IncidenceChanger::Private::handleDeleteJobResult(KJob *job)
         description = a->m_description;
     }
     if (j->error()) {
-        resultCode = ResultCodeJobError;
-        errorString = j->errorString();
+        QString errorString = j->errorString();
         kError() << errorString;
         if (mShowDialogsOnError) {
             KMessageBox::sorry(change->parentWidget,
@@ -342,26 +357,44 @@ void IncidenceChanger::Private::handleDeleteJobResult(KJob *job)
             // Werent deleted due to error
             mDeletedItemIds.remove(mDeletedItemIds.indexOf(item.id()));
         }
+        mChangeById.remove(change->id);
+        change->resultCode = ResultCodeJobError;
+        change->errorString = errorString;
+        change->emitCompletionSignal();
+
     } else { // success
         if (change->recordToHistory) {
             Q_ASSERT(mHistory);
             mHistory->recordDeletions(items, description, change->atomicOperationId);
         }
 
-        handleInvitationsAfterChange(change);
+        connect(change.data(),SIGNAL(dialogClosedAfterChange(int,ITIPHandlerHelper::SendResult)),
+                SLOT(handleDeleteJobResult2(const int,ITIPHandlerHelper::SendResult)), Qt::QueuedConnection);
+        handleInvitationsAfterChange(change); //,ITIPHandlerHelper(change->parentWidget));
+    }
+}
+
+void  IncidenceChanger::Private::handleDeleteJobResult2(const int changeId, ITIPHandlerHelper::SendResult status)
+{
+    Change::Ptr change = mChangeById[changeId];
+    mChangeById.remove(change->id);
+
+    if (status == ITIPHandlerHelper::ResultSuccess) {
+        change->errorString = "";
+        change->resultCode  = ResultCodeSuccess;
+    } else {
+        change->errorString = QString("Something wierd happend");
+        change->resultCode = ResultCodeJobError;
     }
 
-    change->errorString = errorString;
-    change->resultCode  = resultCode;
     // puff, change finally goes out of scope, and emits the incidenceDeleted signal.
 }
 
+
+
 void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
 {
-    QString errorString;
-    ResultCode resultCode = ResultCodeSuccess;
     Change::Ptr change = mChangeForJob.take(job);
-    mChangeById.remove(change->id);
 
     const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>(job);
     const Item item = j->item();
@@ -377,6 +410,8 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
         description = a->m_description;
     }
     if (j->error()) {
+        QString errorString = j->errorString();
+        ResultCode resultCode = ResultCodeJobError;
         if (deleteAlreadyCalled(item.id())) {
             // User deleted the item almost at the same time he changed it. We could just return success
             // but the delete is probably already recorded to History, and that would make undo not work
@@ -385,8 +420,6 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
             errorString = j->errorString();
             kWarning() << "Trying to change item " << item.id() << " while deletion is in progress.";
         } else {
-            resultCode = ResultCodeJobError;
-            errorString = j->errorString();
             kError() << errorString;
         }
         if (mShowDialogsOnError) {
@@ -394,6 +427,16 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
                                i18n("Error while trying to modify calendar item. Error was: %1",
                                     errorString));
         }
+        mChangeById.remove(change->id);
+        change->errorString = errorString;
+        change->resultCode  = resultCode;
+        // puff, change finally goes out of scope, and emits the incidenceModified signal.
+
+
+        QMetaObject::invokeMethod(this, "performNextModification",
+                              Qt::QueuedConnection,
+                              Q_ARG(Akonadi::Item::Id, item.id()));
+
     } else { // success
         ConflictPreventer::self()->mLatestRevisionByItemId[item.id()] = item.revision();
         change->newItem = item;
@@ -403,16 +446,28 @@ void IncidenceChanger::Private::handleModifyJobResult(KJob *job)
                                          description, change->atomicOperationId);
         }
 
-        handleInvitationsAfterChange(change);
-    }
+        connect(change.data(),SIGNAL(dialogClosedAfterChange(int,ITIPHandlerHelper::SendResult)),
+                SLOT(handleModifyJobResult2(int,ITIPHandlerHelper::SendResult)), Qt::QueuedConnection);
 
-    change->errorString = errorString;
-    change->resultCode  = resultCode;
+        handleInvitationsAfterChange(change); //, ITIPHandlerHelper(change->parentWidget));
+    }
+}
+
+void IncidenceChanger::Private::handleModifyJobResult2(const int changeId, ITIPHandlerHelper::SendResult status)
+{
+    Change::Ptr change = mChangeById[changeId];
+
+    mChangeById.remove(changeId);
+    if (change->atomicOperationId != 0) {
+        mInvitationStatusByAtomicOperation.insert(change->atomicOperationId, status);
+    }
+    change->errorString = "";
+    change->resultCode  = ResultCodeSuccess;
     // puff, change finally goes out of scope, and emits the incidenceModified signal.
 
     QMetaObject::invokeMethod(this, "performNextModification",
                               Qt::QueuedConnection,
-                              Q_ARG(Akonadi::Item::Id, item.id()));
+                              Q_ARG(Akonadi::Item::Id, change->newItem.id()));
 }
 
 bool IncidenceChanger::Private::deleteAlreadyCalled(Akonadi::Item::Id id) const
@@ -420,20 +475,10 @@ bool IncidenceChanger::Private::deleteAlreadyCalled(Akonadi::Item::Id id) const
     return mDeletedItemIds.contains(id);
 }
 
-bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr &change)
+void IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr &change) //, const ITIPHandlerHelper &handler)
 {
-    bool result = true;
+    ITIPHandlerHelper::SendResult result = ITIPHandlerHelper::ResultSuccess;
     if (mGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget, mFactory);    // TODO make async
-
-        if (m_invitationPolicy == InvitationPolicySend) {
-            handler.setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
-        } else if (m_invitationPolicy == InvitationPolicyDontSend) {
-            handler.setDefaultAction(ITIPHandlerHelper::ActionDontSendMessage);
-        } else if (mInvitationStatusByAtomicOperation.contains(change->atomicOperationId)) {
-            handler.setDefaultAction(actionFromStatus(mInvitationStatusByAtomicOperation.value(change->atomicOperationId)));
-        }
-
         switch (change->type) {
         case IncidenceChanger::ChangeTypeCreate:
             // nothing needs to be done
@@ -441,7 +486,23 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
         case IncidenceChanger::ChangeTypeDelete:
         {
             ITIPHandlerHelper::SendResult status;
+            bool sendOk = true;
             Q_ASSERT(!change->originalItems.isEmpty());
+
+            ITIPHandlerHelper *handler = new ITIPHandlerHelper(change->parentWidget, mFactory);
+            handler->setParent( this );
+
+            if (m_invitationPolicy == InvitationPolicySend) {
+                handler->setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
+            } else if (m_invitationPolicy == InvitationPolicyDontSend) {
+                handler->setDefaultAction(ITIPHandlerHelper::ActionDontSendMessage);
+            } else if (mInvitationStatusByAtomicOperation.contains(change->atomicOperationId)) {
+                handler->setDefaultAction(actionFromStatus(mInvitationStatusByAtomicOperation.value(change->atomicOperationId)));
+            }
+
+            connect(handler, SIGNAL(finished(Akonadi::ITIPHandlerHelper::SendResult,QString)),
+                    change.data(), SLOT(slotDialogClosedBeforeChange(Akonadi::ITIPHandlerHelper::SendResult)));
+
             foreach(const Akonadi::Item &item, change->originalItems) {
                 Q_ASSERT(item.hasPayload<KCalCore::Incidence::Ptr>());
                 Incidence::Ptr incidence = CalendarUtils::incidence(item);
@@ -451,16 +512,21 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
                 // We only send CANCEL if we're the organizer.
                 // If we're not, then we send REPLY with PartStat=Declined in handleInvitationsAfterChange()
                 if (Akonadi::CalendarUtils::thatIsMe(incidence->organizer()->email())) {
-                    status = handler.sendIncidenceDeletedMessage(KCalCore::iTIPCancel, incidence);
+                    //TODO: not to popup all delete message dialogs at once :(
+                    sendOk = false;
+                    handler->sendIncidenceDeletedMessage(KCalCore::iTIPCancel, incidence);
                     if (change->atomicOperationId) {
                         mInvitationStatusByAtomicOperation.insert(change->atomicOperationId, status);
                     }
-                    result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
                     //TODO: with some status we want to break immediately
                 }
             }
+
+            if (sendOk) {
+                change->emitUserDialogClosedBeforeChange(result);
+            }
         }
-        break;
+        return;
         case IncidenceChanger::ChangeTypeModify:
         {
             if (change->originalItems.isEmpty()) {
@@ -481,15 +547,20 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
                 // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
                 // to emulate a "yes" and a "no" press.
                 if (m_invitationPolicy == InvitationPolicySend) {
-                    return true;
+                    change->emitUserDialogClosedBeforeChange(ITIPHandlerHelper::ResultSuccess);
+                    return;
                 } else if (m_invitationPolicy == InvitationPolicyDontSend) {
-                    return false;
+                    change->emitUserDialogClosedBeforeChange(ITIPHandlerHelper::ResultCanceled);
+                    return;
                 }
             }
 
+            ITIPHandlerHelper handler(change->parentWidget, mFactory);
             const bool modify = handler.handleIncidenceAboutToBeModified(newIncidence);
             if (modify) {
                 break;
+            } else {
+                result = ITIPHandlerHelper::ResultCanceled;
             }
 
             if (newIncidence->type() == oldIncidence->type()) {
@@ -497,30 +568,32 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange(const Change::Ptr 
                 IncidenceBase *i2 = oldIncidence.data();
                 *i1 = *i2;
             }
-            result = false;
         }
         break;
         default:
             Q_ASSERT(false);
-            result = false;
+            result = ITIPHandlerHelper::ResultCanceled;
         }
     }
-    return result;
+    change->emitUserDialogClosedBeforeChange(result);
 }
 
-bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &change)
+void IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &change) //, const ITIPHandlerHelper &handler)
 {
     if (change->useGroupwareCommunication) {
-        ITIPHandlerHelper handler(change->parentWidget, mFactory);   // TODO make async
+        ITIPHandlerHelper *handler = new ITIPHandlerHelper(change->parentWidget, mFactory);
+        connect(handler, SIGNAL(finished(Akonadi::ITIPHandlerHelper::SendResult,QString)),
+                change.data(), SLOT(slotDialogClosedAfterChange(Akonadi::ITIPHandlerHelper::SendResult)));
+        handler->setParent( this );
 
         const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
         const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
         if (alwaysSend) {
-            handler.setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
+            handler->setDefaultAction(ITIPHandlerHelper::ActionSendMessage);
         }
 
         if (neverSend) {
-            handler.setDefaultAction(ITIPHandlerHelper::ActionDontSendMessage);
+            handler->setDefaultAction(ITIPHandlerHelper::ActionDontSendMessage);
         }
 
         switch (change->type) {
@@ -528,22 +601,14 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
         {
             Incidence::Ptr incidence = CalendarUtils::incidence(change->newItem);
             if (incidence->supportsGroupwareCommunication()) {
-                const ITIPHandlerHelper::SendResult status =
-                    handler.sendIncidenceCreatedMessage(KCalCore::iTIPRequest, incidence);
-
-                if (status == ITIPHandlerHelper::ResultFailAbortUpdate) {
-                    kError() << "Sending invitations failed, but did not delete the incidence";
-                }
-
-                const uint atomicOperationId = change->atomicOperationId;
-                if (atomicOperationId != 0) {
-                    mInvitationStatusByAtomicOperation.insert(atomicOperationId, status);
-                }
+                handler->sendIncidenceCreatedMessage(KCalCore::iTIPRequest, incidence);
+                return;
             }
         }
         break;
         case IncidenceChanger::ChangeTypeDelete:
         {
+            handler->deleteLater();
             Q_ASSERT(!change->originalItems.isEmpty());
             foreach(const Akonadi::Item &item, change->originalItems) {
                 Q_ASSERT(item.hasPayload());
@@ -572,7 +637,8 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
                     }
 
                     if (notifyOrganizer) {
-                        MailScheduler scheduler; // TODO make async
+                        //TODO: we need to interact here to modify the email :)
+                        MailScheduler scheduler(change->parentWidget, mFactory); // TODO make async
                         scheduler.performTransaction(incidence, KCalCore::iTIPReply);
                     }
                 }
@@ -596,28 +662,28 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange(const Change::Ptr &
             }
 
             if (!neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains(change->atomicOperationId)) {
-                handler.setDefaultAction(actionFromStatus(mInvitationStatusByAtomicOperation.value(change->atomicOperationId)));
+                handler->setDefaultAction(actionFromStatus(mInvitationStatusByAtomicOperation.value(change->atomicOperationId)));
             }
 
             const bool attendeeStatusChanged = myAttendeeStatusChanged(newIncidence,
                                                oldIncidence,
                                                Akonadi::CalendarUtils::allEmails());
 
-            ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage(KCalCore::iTIPRequest,
-                                                   newIncidence,
-                                                   attendeeStatusChanged);
+            handler->sendIncidenceModifiedMessage(KCalCore::iTIPRequest, newIncidence, attendeeStatusChanged);
+            return;
 
-            if (change->atomicOperationId != 0) {
-                mInvitationStatusByAtomicOperation.insert(change->atomicOperationId, status);
-            }
         }
         break;
         default:
+            handler->deleteLater();
             Q_ASSERT(false);
-            return false;
+            change->emitUserDialogClosedAfterChange(ITIPHandlerHelper::ResultCanceled);
+            return;
         }
+        handler->deleteLater();
     }
-    return true;
+
+    change->emitUserDialogClosedAfterChange(ITIPHandlerHelper::ResultSuccess);
 }
 
 /** static */
@@ -652,7 +718,6 @@ int IncidenceChanger::createIncidence(const Incidence::Ptr &incidence,
                                       const Collection &collection,
                                       QWidget *parent)
 {
-    //kDebug();
     if (!incidence) {
         kWarning() << "An invalid payload is not allowed.";
         d->cancelTransaction();
@@ -696,7 +761,6 @@ int IncidenceChanger::deleteIncidence(const Item &item, QWidget *parent)
 
 int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
 {
-    //kDebug();
     if (items.isEmpty()) {
         kError() << "Delete what?";
         d->cancelTransaction();
@@ -768,31 +832,40 @@ int IncidenceChanger::deleteIncidences(const Item::List &items, QWidget *parent)
         return changeId;
     }
     change->originalItems = itemsToDelete;
-    d->handleInvitationsBeforeChange(change);
 
-    ItemDeleteJob *deleteJob = new ItemDeleteJob(itemsToDelete, d->parentJob(change));
-    d->mChangeForJob.insert(deleteJob, change);
     d->mChangeById.insert(changeId, change);
 
-    if (d->mBatchOperationInProgress) {
-        AtomicOperation *atomic = d->mAtomicOperations[atomicOperationId];
+    connect(change.data(), SIGNAL(dialogClosedBeforeChange(int,ITIPHandlerHelper::SendResult)),
+            d, SLOT(deleteIncidences2(int,ITIPHandlerHelper::SendResult)), Qt::QueuedConnection);
+
+    d->handleInvitationsBeforeChange(change); //,ITIPHandlerHelper(change->parentWidget));
+    return changeId;
+}
+
+void IncidenceChanger::Private::deleteIncidences2(const int changeId, ITIPHandlerHelper::SendResult status)
+{
+    Change::Ptr change = mChangeById[changeId];
+    const uint atomicOperationId = change->atomicOperationId;
+    ItemDeleteJob *deleteJob = new ItemDeleteJob(change->originalItems, parentJob(change));
+    mChangeForJob.insert(deleteJob, change);
+
+    if (mBatchOperationInProgress) {
+        AtomicOperation *atomic = mAtomicOperations[atomicOperationId];
         Q_ASSERT(atomic);
         atomic->addChange(change);
     }
 
-    foreach(const Item &item, itemsToDelete) {
-        d->mDeletedItemIds << item.id();
+    foreach(const Item &item, change->originalItems) {
+        mDeletedItemIds << item.id();
     }
 
     // Do some cleanup
-    if (d->mDeletedItemIds.count() > 100)
-        d->mDeletedItemIds.remove(0, 50);
+    if (mDeletedItemIds.count() > 100)
+        mDeletedItemIds.remove(0, 50);
 
     // QueuedConnection because of possible sync exec calls.
     connect(deleteJob, SIGNAL(result(KJob*)),
-            d, SLOT(handleDeleteJobResult(KJob*)), Qt::QueuedConnection);
-
-    return changeId;
+            SLOT(handleDeleteJobResult(KJob*)), Qt::QueuedConnection);
 }
 
 int IncidenceChanger::modifyIncidence(const Item &changedItem,
@@ -834,6 +907,7 @@ int IncidenceChanger::modifyIncidence(const Item &changedItem,
 
     if (!d->allowAtomicOperation(atomicOperationId, change)) {
         const QString errorString = d->showErrorDialog(ResultCodeDuplicateId, parent);
+
         change->resultCode = ResultCodeDuplicateId;
         change->errorString = errorString;
         d->cancelTransaction();
@@ -882,14 +956,27 @@ void IncidenceChanger::Private::performModification(Change::Ptr change)
         emitModifyFinished(q, changeId, newItem, ResultCodeRolledback, errorMessage);
         return;
     }
+    connect(change.data(), SIGNAL(dialogClosedBeforeChange(int,ITIPHandlerHelper::SendResult)),
+            SLOT(performModification2(int,ITIPHandlerHelper::SendResult)), Qt::QueuedConnection);
+    handleInvitationsBeforeChange(change);
+}
 
-    const bool userCancelled = !handleInvitationsBeforeChange(change);
-    if (userCancelled) {
+void IncidenceChanger::Private::performModification2(int changeId, ITIPHandlerHelper::SendResult status)
+{
+    Change::Ptr change  =  mChangeById[changeId];
+    const Item::Id id = change->newItem.id();
+    Akonadi::Item &newItem = change->newItem;
+    Q_ASSERT(newItem.isValid());
+    Q_ASSERT(newItem.hasPayload<Incidence::Ptr>());
+    if (status == ITIPHandlerHelper::ResultCanceled) { //TODO:fireout what is right here:)
         // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
         kDebug() << "User cancelled, giving up";
-        emitModifyFinished(q, changeId, newItem, ResultCodeUserCanceled, QString());
+        emitModifyFinished(q, change->id, newItem, ResultCodeUserCanceled, QString());
         return;
     }
+
+    const uint atomicOperationId = change->atomicOperationId;
+    const bool hasAtomicOperationId = atomicOperationId != 0;
 
     QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
         ConflictPreventer::self()->mLatestRevisionByItemId;
