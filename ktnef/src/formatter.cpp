@@ -190,7 +190,7 @@ static KDateTime pureISOToLocalQDateTime(const QString &dtStr,
 
 QString KTnef::msTNEFToVPart(const QByteArray &tnef)
 {
-    bool bOk = false;
+    //bool bOk = false;
 
     KTNEFParser parser;
     QByteArray b(tnef);
@@ -404,7 +404,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                     event->setUid(CalFormat::createUniqueId());
                 }
                 cal->addEvent(event);
-                bOk = true;
+                //bOk = true;
                 // we finished composing a vCal
             } else if (bCompatClassNote || QLatin1String("IPM.CONTACT") == msgClass) {
                 addressee.setUid(stringProp(tnefMsg, attMSGID));
@@ -507,7 +507,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                     addressee.setBirthday(QDateTime::fromString(s));
                 }
 
-                bOk = (!addressee.isEmpty());
+                //bOk = (!addressee.isEmpty());
             } else if (QLatin1String("IPM.NOTE") == msgClass) {
 
             } // else if ... and so on ...
