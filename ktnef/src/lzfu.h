@@ -32,12 +32,13 @@
 #define LZFU_H
 
 class QIODevice;
-namespace KTnef {
+namespace KTnef
+{
 /**
  * @acronym LZFU decompress data in compressed Rich Text Format (@acronym RTF).
  * @param input compressed input data.
  * @param output decompressed output data.
  */
-int lzfu_decompress( QIODevice *input, QIODevice *output );
+int lzfu_decompress(QIODevice *input, QIODevice *output);
 }
 #endif

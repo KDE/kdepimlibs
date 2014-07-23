@@ -24,8 +24,8 @@
 
 class ParserTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testSingleAttachment();
     void testTwoAttachments();
     void testMAPIAttachments();

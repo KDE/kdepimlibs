@@ -35,7 +35,8 @@
 #include <QtCore/QString>
 #include "ktnef_export.h"
 
-namespace KTnef {
+namespace KTnef
+{
 
 /**
  * @brief
@@ -73,22 +74,22 @@ public:
      * @param value_ is the property value.
      * @param name_ is the property name.
      */
-    KTNEFProperty( int key_, int type_, const QVariant &value_,
-                   const QVariant &name_ = QVariant() );
+    KTNEFProperty(int key_, int type_, const QVariant &value_,
+                  const QVariant &name_ = QVariant());
 
     /**
      * Constructs a @acronym TNEF property with settings from another property.
      *
      * @param p is a #KTNEFProperty.
      */
-    KTNEFProperty( const KTNEFProperty &p );
+    KTNEFProperty(const KTNEFProperty &p);
 
     /**
      * Destroys the property.
      */
     ~KTNEFProperty();
 
-    KTNEFProperty &operator=( const KTNEFProperty &other );
+    KTNEFProperty &operator=(const KTNEFProperty &other);
 
     /**
      * Returns the key string of the property.
@@ -112,7 +113,7 @@ public:
      *
      * @return the formatted value string.
      */
-    static QString formatValue( const QVariant &v, bool beautify=true );
+    static QString formatValue(const QVariant &v, bool beautify = true);
 
     /**
      * Returns the integer key of the property.

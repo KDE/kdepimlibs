@@ -47,13 +47,13 @@ public:
 };
 
 KTNEFProperty::KTNEFProperty()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
-KTNEFProperty::KTNEFProperty( int key_, int type_, const QVariant &value_,
-                              const QVariant &name_ )
-    : d( new Private )
+KTNEFProperty::KTNEFProperty(int key_, int type_, const QVariant &value_,
+                             const QVariant &name_)
+    : d(new Private)
 {
     d->_key = key_;
     d->_type = type_;
@@ -61,8 +61,8 @@ KTNEFProperty::KTNEFProperty( int key_, int type_, const QVariant &value_,
     d->_name = name_;
 }
 
-KTNEFProperty::KTNEFProperty( const KTNEFProperty &p )
-    : d( new Private )
+KTNEFProperty::KTNEFProperty(const KTNEFProperty &p)
+    : d(new Private)
 {
     *d = *p.d;
 }
@@ -72,9 +72,9 @@ KTNEFProperty::~KTNEFProperty()
     delete d;
 }
 
-KTNEFProperty &KTNEFProperty::operator=( const KTNEFProperty &other )
+KTNEFProperty &KTNEFProperty::operator=(const KTNEFProperty &other)
 {
-    if ( this != &other ) {
+    if (this != &other) {
         *d = *other.d;
     }
 
@@ -83,39 +83,39 @@ KTNEFProperty &KTNEFProperty::operator=( const KTNEFProperty &other )
 
 QString KTNEFProperty::keyString() const
 {
-    if ( d->_name.isValid() ) {
-        if ( d->_name.type() == QVariant::String ) {
+    if (d->_name.isValid()) {
+        if (d->_name.type() == QVariant::String) {
             return d->_name.toString();
         } else {
-            return mapiNamedTagString( d->_name.toUInt(), d->_key );
+            return mapiNamedTagString(d->_name.toUInt(), d->_key);
         }
     } else {
-        return mapiTagString( d->_key );
+        return mapiTagString(d->_key);
     }
 }
 
-QString KTNEFProperty::formatValue( const QVariant &value, bool beautify )
+QString KTNEFProperty::formatValue(const QVariant &value, bool beautify)
 {
-    if ( value.type() == QVariant::ByteArray ) {
+    if (value.type() == QVariant::ByteArray) {
         // check the first bytes (up to 8) if they are
         // printable characters
         QByteArray arr = value.toByteArray();
         bool printable = true;
-        for ( int i=qMin( arr.size(), 8 )-1; i>=0 && printable; i-- ) {
-            printable = ( isprint( arr[ i ] ) != 0 );
+        for (int i = qMin(arr.size(), 8) - 1; i >= 0 && printable; i--) {
+            printable = (isprint(arr[ i ]) != 0);
         }
-        if ( !printable ) {
+        if (!printable) {
             QString s;
             int i;
-            int txtCount = beautify ? qMin( arr.size(), 32 ) : arr.size();
-            for ( i=0; i < txtCount; ++i ) {
-                s.append( QString().sprintf( "%02X", ( uchar )arr[ i ] ) );
-                if ( beautify ) {
-                    s.append( QLatin1String(" ") );
+            int txtCount = beautify ? qMin(arr.size(), 32) : arr.size();
+            for (i = 0; i < txtCount; ++i) {
+                s.append(QString().sprintf("%02X", (uchar)arr[ i ]));
+                if (beautify) {
+                    s.append(QLatin1String(" "));
                 }
             }
-            if ( i < arr.size() ) {
-                s.append( QLatin1String("... (size=") + QString::number( arr.size() ) + QLatin1Char(')') );
+            if (i < arr.size()) {
+                s.append(QLatin1String("... (size=") + QString::number(arr.size()) + QLatin1Char(')'));
             }
             return s;
         }
@@ -127,7 +127,7 @@ QString KTNEFProperty::formatValue( const QVariant &value, bool beautify )
 
 QString KTNEFProperty::valueString() const
 {
-    return formatValue( d->_value );
+    return formatValue(d->_value);
 }
 
 int KTNEFProperty::key() const

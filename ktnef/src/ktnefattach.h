@@ -38,11 +38,13 @@
 #include "ktnefpropertyset.h"
 #include "ktnef_export.h"
 
-namespace KTnef {
+namespace KTnef
+{
 class KTNEFProperty;
 }
 
-namespace KTnef {
+namespace KTnef
+{
 
 /**
  * @brief
@@ -113,14 +115,14 @@ public:
      * @param state a #ParseState type.
      * @return true if the state is turned-on; else returns false.
      */
-    bool checkState( int state ) const;
+    bool checkState(int state) const;
 
     /**
      * Sets the offset value of this attachment to @p offset.
      *
      * @param offset is the attachment offset to set.
      */
-    void setOffset( int offset );
+    void setOffset(int offset);
 
     /**
      * Returns the offset value of the attachment.
@@ -132,7 +134,7 @@ public:
      *
      * @param size is the attachment size to set.
      */
-    void setSize( int size );
+    void setSize(int size);
 
     /**
      * Returns the size of the attachment.
@@ -144,7 +146,7 @@ public:
      *
      * @param size is the attachment display size to set.
      */
-    void setDisplaySize( int size );
+    void setDisplaySize(int size);
 
     /**
      * Returns the display size of the attachment.
@@ -156,7 +158,7 @@ public:
      *
      * @param str is attachment name to set.
      */
-    void setName( const QString &str );
+    void setName(const QString &str);
 
     /**
      * Returns the name of the attachment.
@@ -168,7 +170,7 @@ public:
      *
      * @param indx is the attachment index to set.
      */
-    void setIndex( int indx );
+    void setIndex(int indx);
 
     /**
      * Returns the index of the attachment.
@@ -180,7 +182,7 @@ public:
      *
      * @param str is the attachment filename to set.
      */
-    void setFileName( const QString &str );
+    void setFileName(const QString &str);
 
     /**
      * Returns the filename of the attachment.
@@ -192,7 +194,7 @@ public:
      *
      * @param str is the attachment display name to set.
      */
-    void setDisplayName( const QString &str );
+    void setDisplayName(const QString &str);
 
     /**
      * Returns the display name of the attachment.
@@ -204,7 +206,7 @@ public:
      *
      * @param str is the attachment @acronym MIME tag to set.
      */
-    void setMimeTag( const QString &str );
+    void setMimeTag(const QString &str);
 
     /**
      * Returns the @acronym MIME tag of the attachment.
@@ -216,7 +218,7 @@ public:
      *
      * @param str is the attachment filename extension to set.
      */
-    void setExtension( const QString &str );
+    void setExtension(const QString &str);
 
     /**
      * Returns the filename extension of the attachment.
@@ -229,7 +231,7 @@ private:
     AttachPrivate *const d;
     //@endcond
 
-    Q_DISABLE_COPY( KTNEFAttach )
+    Q_DISABLE_COPY(KTNEFAttach)
 };
 
 }

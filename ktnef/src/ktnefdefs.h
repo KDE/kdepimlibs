@@ -156,10 +156,10 @@
 #define MAPI_TAG_CONTACT_BUSINESSADDRESS           "0x801B"    // BusinessAddress
 #define MAPI_TAG_CONTACT_OTHERADDRESS              "0x801C"    // OtherAddress
 #define MAPI_TAG_CONTACT_SELECTEDADDRESS           "0x8022"    // SelectedMailingAddress:
-                                                               // 0 = None
-                                                               // 1 = Home
-                                                               // 2 = Business
-                                                               // 3 = Other
+// 0 = None
+// 1 = Home
+// 2 = Business
+// 3 = Other
 
 #define MAPI_TAG_CONTACT_WEBPAGE                   "0x802B"    // WebPage
 #define MAPI_TAG_CONTACT_YOMIFIRSTNAME             "0x802C"    // YomiFirstName
@@ -272,9 +272,9 @@
 #define MAPI_TAG_PR_CHILDRENS_NAMES                 0x3A58101E // Children
 #define MAPI_TAG_PR_CUSTOMER_ID                     0x3A4A001E // CustomerID
 #define MAPI_TAG_PR_GENDER                          0x3A4D0002 // Gender:
-                                                               // 0 = Unspecified
-                                                               // 1 = Female
-                                                               // 2 = Male
+// 0 = Unspecified
+// 1 = Female
+// 2 = Male
 #define MAPI_TAG_PR_GOVERNMENT_ID_NUMBER            0x3A07001E // GovernmentIDNumber
 #define MAPI_TAG_PR_HOBBIES                         0x3A43001E // Hobby
 #define MAPI_TAG_PR_LANGUAGE                        0x3A0C001E // Language

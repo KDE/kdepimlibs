@@ -41,7 +41,8 @@ class QStringList;
 #include "ktnef_export.h"
 #include <qglobal.h>
 
-namespace KTnef {
+namespace KTnef
+{
 
 /**
  * @brief
@@ -129,7 +130,7 @@ public:
      * @param type is the property type
      * @param value is the property value
      */
-    void addProperty( int tag, int type, const QVariant &value );
+    void addProperty(int tag, int type, const QVariant &value);
 
     /**
      * Writes a @acronym TNEF property to the #QDataStream specified by @p stream.
@@ -147,7 +148,7 @@ public:
      * @return false if an invalid @acronym TNEF tag was specified by @p tag or
      * if there are no properties to write; else true.
      */
-    bool writeProperty( QDataStream &stream, int &bytes, int tag ) const;
+    bool writeProperty(QDataStream &stream, int &bytes, int tag) const;
 
     /**
      * Writes the attachment to the #QIODevice specified by @p file.
@@ -155,7 +156,7 @@ public:
      * @param file is the #QIODevice to write.
      * @return true if the write was successful; otherwise false.
      */
-    bool writeFile( QIODevice &file ) const;
+    bool writeFile(QIODevice &file) const;
 
     /**
      * Writes the attachment to the #QDataStream specified by @p stream.
@@ -163,7 +164,7 @@ public:
      * @param stream is the #QDataStream to write.
      * @return true if the write was successful; otherwise false.
      */
-    bool writeFile( QDataStream &stream ) const;
+    bool writeFile(QDataStream &stream) const;
 
     /**
      * Sets the sender's @p name and @p email address.
@@ -171,21 +172,21 @@ public:
      * @param name is the sender's name.
      * @param email is the sender's email address.
      */
-    void setSender( const QString &name, const QString &email );
+    void setSender(const QString &name, const QString &email);
 
     /**
      * Sets the #MessageType to @p methodType.
      *
      * @param methodType is the #MessageType.
      */
-    void setMessageType( MessageType methodType );
+    void setMessageType(MessageType methodType);
 
     /**
      * Sets the #Method to @p method.
      *
      * @param method is the #Method.
      */
-    void setMethod( Method method );
+    void setMethod(Method method);
 
     /**
      * Clears the attendees list.
@@ -201,8 +202,8 @@ public:
      * @param rsvp is true if the attendee will attend the meeting; else false
      * @param email is the email address of the attendee
      */
-    void addAttendee( const QString &name, Role role, PartStat partstat,
-                      bool rsvp, const QString &email );
+    void addAttendee(const QString &name, Role role, PartStat partstat,
+                     bool rsvp, const QString &email);
 
     /**
      * Sets the name of the organizer to @p organizer.
@@ -211,70 +212,70 @@ public:
      *
      * @param organizer is the organizer identifier.
      */
-    void setOrganizer( const QString &organizer );
+    void setOrganizer(const QString &organizer);
 
     /**
      * Sets the Starting Date and Time to @p dtStart.
      *
      * @param dtStart is the starting date/time.
      */
-    void setDtStart( const QDateTime &dtStart );
+    void setDtStart(const QDateTime &dtStart);
 
     /**
      * Sets the Ending Date and Time to @p dtEnd.
      *
      * @param dtEnd is the ending date/time.
      */
-    void setDtEnd( const QDateTime &dtEnd );
+    void setDtEnd(const QDateTime &dtEnd);
 
     /**
      * Sets the Location to @p location.
      *
      * @param location is the location.
      */
-    void setLocation( const QString &location );
+    void setLocation(const QString &location);
 
     /**
      * Sets the @acronym UID to @p uid.
      *
      * @param uid is the @acronym UID.
      */
-    void setUID( const QString &uid );
+    void setUID(const QString &uid);
 
     /**
      * Sets the timestamp to @p dtStamp.
      *
      * @param dtStamp is the timestamp.
      */
-    void setDtStamp( const QDateTime &dtStamp );
+    void setDtStamp(const QDateTime &dtStamp);
 
     /**
      * Sets the category list to @p categories.
      *
      * @param categories is the list categories.
      */
-    void setCategories( const QStringList &categories );
+    void setCategories(const QStringList &categories);
 
     /**
      * Sets the description to @p description.
      *
      * @param description is the description.
      */
-    void setDescription( const QString &description );
+    void setDescription(const QString &description);
 
     /**
      * Sets the summary to @p summary.
      *
      * @param summary is the summary.
      */
-    void setSummary( const QString &summary );
+    void setSummary(const QString &summary);
 
     /**
      * Sets the priority to @p priority.
      *
      * @param priority is the #Priority.
      */
-    void setPriority( Priority priority );
+    void setPriority(Priority priority);
 
     /**
      * Sets the alarm.
@@ -283,8 +284,8 @@ public:
      * @param action is the alaram #AlarmAction
      * @param wakeBefore is the alarm Date/Time
      */
-    void setAlarm( const QString &description, AlarmAction action,
-                   const QDateTime &wakeBefore );
+    void setAlarm(const QString &description, AlarmAction action,
+                  const QDateTime &wakeBefore);
 
 private:
     //@cond PRIVATE
@@ -292,7 +293,7 @@ private:
     PrivateData *const d;
     //@endcond
 
-    Q_DISABLE_COPY( KTNEFWriter )
+    Q_DISABLE_COPY(KTNEFWriter)
 };
 
 }

@@ -36,11 +36,13 @@
 #include "ktnefpropertyset.h"
 #include "ktnef_export.h"
 
-namespace KTnef {
+namespace KTnef
+{
 class KTNEFAttach;
 }
 
-namespace KTnef {
+namespace KTnef
+{
 
 /**
  * @brief
@@ -72,13 +74,13 @@ public:
      *
      * @return A pointer to KTNEFAttach object, or 0 if the search fails.
      */
-    KTNEFAttach *attachment( const QString &filename ) const;
+    KTNEFAttach *attachment(const QString &filename) const;
 
     /**
      * Append an attachment to the message.
      * @param attach is a pointer to a KTNEFAttach object to be attached.
      */
-    void addAttachment( KTNEFAttach *attach );
+    void addAttachment(KTNEFAttach *attach);
 
     /**
      * Clear the attachments list.
@@ -97,7 +99,7 @@ private:
     MessagePrivate *const d;
     //@endcond
 
-    Q_DISABLE_COPY( KTNEFMessage )
+    Q_DISABLE_COPY(KTNEFMessage)
 };
 
 }

@@ -54,7 +54,7 @@ public:
 };
 //@endcond
 
-KTNEFAttach::KTNEFAttach() : d( new KTnef::KTNEFAttach::AttachPrivate )
+KTNEFAttach::KTNEFAttach() : d(new KTnef::KTNEFAttach::AttachPrivate)
 {
     d->state_ = Unparsed;
     d->offset_ = -1;
@@ -80,7 +80,7 @@ void KTNEFAttach::setDataParsed()
 
 void KTNEFAttach::unsetDataParser()
 {
-    d->state_ = ( d->state_ & ~DataParsed );
+    d->state_ = (d->state_ & ~DataParsed);
 }
 
 void KTNEFAttach::setInfoParsed()
@@ -103,7 +103,7 @@ bool KTNEFAttach::infoParsed() const
     return d->state_ & InfoParsed;
 }
 
-bool KTNEFAttach::checkState( int state ) const
+bool KTNEFAttach::checkState(int state) const
 {
     return d->state_ & state;
 }
@@ -113,7 +113,7 @@ int KTNEFAttach::offset() const
     return d->offset_;
 }
 
-void KTNEFAttach::setOffset( int n )
+void KTNEFAttach::setOffset(int n)
 {
     setDataParsed();
     d->offset_ = n;
@@ -124,7 +124,7 @@ int KTNEFAttach::size() const
     return d->size_;
 }
 
-void KTNEFAttach::setSize( int s )
+void KTNEFAttach::setSize(int s)
 {
     d->size_ = s;
 }
@@ -134,7 +134,7 @@ int KTNEFAttach::displaySize() const
     return d->displaysize_;
 }
 
-void KTNEFAttach::setDisplaySize( int s )
+void KTNEFAttach::setDisplaySize(int s)
 {
     d->displaysize_ = s;
 }
@@ -144,7 +144,7 @@ QString KTNEFAttach::name() const
     return d->name_;
 }
 
-void KTNEFAttach::setName( const QString &str )
+void KTNEFAttach::setName(const QString &str)
 {
     setTitleParsed();
     d->name_ = str;
@@ -155,7 +155,7 @@ int KTNEFAttach::index() const
     return d->index_;
 }
 
-void KTNEFAttach::setIndex( int i )
+void KTNEFAttach::setIndex(int i)
 {
     setInfoParsed();
     d->index_ = i;
@@ -166,7 +166,7 @@ QString KTNEFAttach::fileName() const
     return d->filename_;
 }
 
-void KTNEFAttach::setFileName( const QString &str )
+void KTNEFAttach::setFileName(const QString &str)
 {
     d->filename_ = str;
 }
@@ -176,7 +176,7 @@ QString KTNEFAttach::displayName() const
     return d->displayname_;
 }
 
-void KTNEFAttach::setDisplayName( const QString &str )
+void KTNEFAttach::setDisplayName(const QString &str)
 {
     d->displayname_ = str;
 }
@@ -186,7 +186,7 @@ QString KTNEFAttach::mimeTag() const
     return d->mimetag_;
 }
 
-void KTNEFAttach::setMimeTag( const QString &str )
+void KTNEFAttach::setMimeTag(const QString &str)
 {
     d->mimetag_ = str;
 }
@@ -196,7 +196,7 @@ QString KTNEFAttach::extension() const
     return d->extension_;
 }
 
-void KTNEFAttach::setExtension( const QString &str )
+void KTNEFAttach::setExtension(const QString &str)
 {
     d->extension_ = str;
 }
