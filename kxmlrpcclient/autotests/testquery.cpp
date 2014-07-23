@@ -23,13 +23,13 @@
 
 #include "testquery.h"
 
-QTEST_MAIN( TestQuery )
+QTEST_MAIN(TestQuery)
 
 #include <kxmlrpcclient/query.h>
 using namespace KXmlRpc;
 
 void TestQuery::testValidity()
 {
-  Query *q = Query::create();
-  QVERIFY( q != NULL );
+    Query *q = Query::create();
+    QVERIFY(q != NULL);
 }

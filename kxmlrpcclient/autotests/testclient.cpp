@@ -23,24 +23,24 @@
 
 #include "testclient.h"
 
-QTEST_GUILESS_MAIN( TestClient )
+QTEST_GUILESS_MAIN(TestClient)
 
 #include <kxmlrpcclient/client.h>
 using namespace KXmlRpc;
 
 void TestClient::testValidity()
 {
-  Client *c = new Client();
-  c->setUrl( QUrl( QLatin1String("http://test:pass@fake.com/rpc2") ) );
-  c->setUserAgent( QLatin1String("Fake/1.0/MozillaCompat") );
-  c->setDigestAuthEnabled( true );
-  QVERIFY( c->url() == QUrl( QLatin1String("http://test:pass@fake.com/rpc2" )) );
-  QVERIFY( c->userAgent() == QLatin1String("Fake/1.0/MozillaCompat") );
-  QVERIFY( c->isDigestAuthEnabled() == true );
+    Client *c = new Client();
+    c->setUrl(QUrl(QLatin1String("http://test:pass@fake.com/rpc2")));
+    c->setUserAgent(QLatin1String("Fake/1.0/MozillaCompat"));
+    c->setDigestAuthEnabled(true);
+    QVERIFY(c->url() == QUrl(QLatin1String("http://test:pass@fake.com/rpc2")));
+    QVERIFY(c->userAgent() == QLatin1String("Fake/1.0/MozillaCompat"));
+    QVERIFY(c->isDigestAuthEnabled() == true);
 
-  Client *other = new Client( QUrl( QLatin1String("http://test:pass@fake.com/rpc2") ) );
-  QVERIFY( c->url() == other->url() );
+    Client *other = new Client(QUrl(QLatin1String("http://test:pass@fake.com/rpc2")));
+    QVERIFY(c->url() == other->url());
 
-  delete c;
-  delete other;
+    delete c;
+    delete other;
 }

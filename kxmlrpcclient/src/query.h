@@ -32,7 +32,8 @@
 class QString;
 
 /** Namespace for XmlRpc related classes */
-namespace KXmlRpc {
+namespace KXmlRpc
+{
 
 /**
   @brief
@@ -43,19 +44,19 @@ namespace KXmlRpc {
  */
 class KXMLRPCCLIENT_EXPORT Query : public QObject
 {
-  friend class Result;
-  Q_OBJECT
+    friend class Result;
+    Q_OBJECT
 
-  public:
+public:
     /**
       Constructs a query.
 
       @param id an optional id for the query.
       @param parent an optional parent for the query.
      */
-    static Query *create( const QVariant &id = QVariant(), QObject *parent = 0 );
+    static Query *create(const QVariant &id = QVariant(), QObject *parent = 0);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Calls the specified method on the specified server with
       the given argument list.
@@ -65,35 +66,35 @@ class KXMLRPCCLIENT_EXPORT Query : public QObject
       @param args an argument list to pass to said method.
       @param jobMetaData additional arguments to pass to the KIO::Job.
      */
-    void call( const QString &server, const QString &method,
-               const QList<QVariant> &args,
-               const QMap<QString, QString> &jobMetaData );
+    void call(const QString &server, const QString &method,
+              const QList<QVariant> &args,
+              const QMap<QString, QString> &jobMetaData);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       A signal sent when we receive a result from the server.
      */
-    void message( const QList<QVariant> &result, const QVariant &id );
+    void message(const QList<QVariant> &result, const QVariant &id);
 
     /**
       A signal sent when we receive an error from the server.
      */
-    void fault( int, const QString &, const QVariant &id );
+    void fault(int, const QString &, const QVariant &id);
 
     /**
       A signal sent when a query finishes.
      */
-    void finished( Query * );
+    void finished(Query *);
 
-  private:
-    explicit Query( const QVariant &id, QObject *parent = 0 );
+private:
+    explicit Query(const QVariant &id, QObject *parent = 0);
     ~Query();
 
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotData( KIO::Job *, const QByteArray & ) )
-    Q_PRIVATE_SLOT( d, void slotResult( KJob * ) )
+    Q_PRIVATE_SLOT(d, void slotData(KIO::Job *, const QByteArray &))
+    Q_PRIVATE_SLOT(d, void slotResult(KJob *))
 };
 
 } // namespace XmlRpc

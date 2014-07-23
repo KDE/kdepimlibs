@@ -32,7 +32,8 @@
 #include <QtCore/QVariant>
 
 /** Names for XmlRpc related classes */
-namespace KXmlRpc {
+namespace KXmlRpc
+{
 
 /**
   @brief
@@ -51,15 +52,15 @@ namespace KXmlRpc {
  */
 class KXMLRPCCLIENT_EXPORT Client : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Constructs a XML-RPC Client.
 
       @param parent the parent of this object, defaults to NULL.
      */
-    explicit Client( QObject *parent = 0 );
+    explicit Client(QObject *parent = 0);
 
     /**
       Constructs a XML-RPC Client, which will connect to @p url.
@@ -67,7 +68,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param url the url of the xml-rpc server.
       @param parent the parent of this object, defaults to NULL.
      */
-    explicit Client( const QUrl &url, QObject *parent = 0 );
+    explicit Client(const QUrl &url, QObject *parent = 0);
 
     /**
       Destroys the XML-RPC Client.
@@ -88,7 +89,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @see url()
      */
-    void setUrl( const QUrl &url );
+    void setUrl(const QUrl &url);
 
     /**
       Returns the user agent string currently used by the Client.
@@ -104,7 +105,7 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
 
       @see userAgent()
      */
-    void setUserAgent( const QString &userAgent );
+    void setUserAgent(const QString &userAgent);
 
     /**
       Returns true if HTTP-Digest authentication is enabled, false
@@ -120,9 +121,9 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @see isDigestAuthEnabled()
      */
 
-    void setDigestAuthEnabled( bool enabled );
+    void setDigestAuthEnabled(bool enabled);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Calls the given method on a XML-RPC server, with the given
       argument list.
@@ -135,10 +136,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our #Client object, defaults to empty
      */
-    void call( const QString &method, const QList<QVariant> &args,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QList<QVariant> &args,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -152,10 +153,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, const QVariant &arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QVariant &arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -169,10 +170,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, int arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, int arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -186,10 +187,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, bool arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, bool arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -203,10 +204,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, double arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, double arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -220,10 +221,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, const QString &arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QString &arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -237,10 +238,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, const QByteArray &arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QByteArray &arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -254,10 +255,10 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, const QDateTime &arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QDateTime &arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
     /**
       Calls the given method on a XML-RPC server, with the given
@@ -271,22 +272,22 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
       @param faultSlot the error slot itself
       @param id the id for our Client object, defaults to empty
      */
-    void call( const QString &method, const QStringList &arg,
-               QObject *msgObj, const char *messageSlot,
-               QObject *faultObj, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QStringList &arg,
+              QObject *msgObj, const char *messageSlot,
+              QObject *faultObj, const char *faultSlot,
+              const QVariant &id = QVariant());
 
-  private:
+private:
     class Private;
     Private *const d;
 
     template <typename T>
-    void call( const QString &method, const QList<T> &arg,
-               QObject *obj1, const char *messageSlot,
-               QObject *obj2, const char *faultSlot,
-               const QVariant &id = QVariant() );
+    void call(const QString &method, const QList<T> &arg,
+              QObject *obj1, const char *messageSlot,
+              QObject *obj2, const char *faultSlot,
+              const QVariant &id = QVariant());
 
-    Q_PRIVATE_SLOT( d, void queryFinished( Query * ) )
+    Q_PRIVATE_SLOT(d, void queryFinished(Query *))
 };
 
 /**
@@ -302,18 +303,18 @@ class KXMLRPCCLIENT_EXPORT Client : public QObject
   @param id the id for our Client object, defaults to empty
 */
 template <typename T>
-void Client::call( const QString &method, const QList<T> &arg,
-                   QObject *msgObj, const char *messageSlot,
-                   QObject *faultObj, const char *faultSlot,
-                   const QVariant &id )
+void Client::call(const QString &method, const QList<T> &arg,
+                  QObject *msgObj, const char *messageSlot,
+                  QObject *faultObj, const char *faultSlot,
+                  const QVariant &id)
 {
-  QList<QVariant> args;
+    QList<QVariant> args;
 
-  for ( int i = 0; i < arg.count(); ++i ) {
-    args << QVariant( arg[ i ] );
-  }
+    for (int i = 0; i < arg.count(); ++i) {
+        args << QVariant(arg[ i ]);
+    }
 
-  return call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
+    return call(method, args, faultObj, faultSlot, msgObj, messageSlot, id);
 }
 
 }
