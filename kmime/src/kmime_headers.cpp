@@ -1505,7 +1505,16 @@ QByteArray Date::as7BitString( bool withHeaderType ) const
   }
   //QT5 fix port to QDateTime Qt::RFC2822Date is not enough we need to fix it. We need to use QLocale("C") + add "ddd, ";
   //rv += d_func()->dateTime.toString(  Qt::RFC2822Date ).toLatin1();
-  QString formatDate = d_func()->dateTime.toString( QLatin1String("ddd, ") ) + d_func()->dateTime.toString(  Qt::RFC2822Date );
+  QLocale locale(QLocale::C);
+  QString formatDate;
+#if 0
+  if (d_func()->dateTime.time().second() == 0) {
+     formatDate = locale.toString(d_func()->dateTime, QLatin1String("ddd, dd MMM yyyy hh:mm ")) + d_func()->dateTime.timeZoneAbbreviation();
+  } else {
+#endif
+     formatDate = locale.toString(d_func()->dateTime, QLatin1String("ddd, ") ) + d_func()->dateTime.toString(  Qt::RFC2822Date );
+  //}
+  //qDebug()<<" formatDate:"<<formatDate;
   rv += formatDate.toLatin1();
   
   return rv;
