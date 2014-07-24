@@ -36,120 +36,135 @@
 
 #include <QByteArray>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
-  void Response::parseLine( const char * line, int len ) {
+void Response::parseLine(const char *line, int len)
+{
 
-    if ( !isWellFormed() ) return; // don't bother
+    if (!isWellFormed()) {
+        return;    // don't bother
+    }
 
-    if ( isComplete() )
-      // if the response is already complete, there can't be another line
-      mValid = false;
+    if (isComplete())
+        // if the response is already complete, there can't be another line
+    {
+        mValid = false;
+    }
 
-    if ( len > 1 && line[len-1] == '\n' && line[len-2] == '\r' )
-      len -= 2;
+    if (len > 1 && line[len - 1] == '\n' && line[len - 2] == '\r') {
+        len -= 2;
+    }
 
-    if ( len < 3 ) {
-      // can't be valid - too short
-      mValid = false;
-      mWellFormed = false;
-      return;
+    if (len < 3) {
+        // can't be valid - too short
+        mValid = false;
+        mWellFormed = false;
+        return;
     }
 
     bool ok = false;
-    unsigned int code = QByteArray( line, 3 ).toUInt( &ok );
-    if ( !ok || code < 100 || code > 559 ) {
-      // not a number or number out of range
-      mValid = false;
-      if ( !ok || code < 100 )
-        mWellFormed = false;
-      return;
+    unsigned int code = QByteArray(line, 3).toUInt(&ok);
+    if (!ok || code < 100 || code > 559) {
+        // not a number or number out of range
+        mValid = false;
+        if (!ok || code < 100) {
+            mWellFormed = false;
+        }
+        return;
     }
-    if ( mCode && code != mCode ) {
-      // different codes in one response are not allowed.
-      mValid = false;
-      return;
+    if (mCode && code != mCode) {
+        // different codes in one response are not allowed.
+        mValid = false;
+        return;
     }
     mCode = code;
 
-    if ( len == 3 || line[3] == ' ' )
-      mSawLastLine = true;
-    else if ( line[3] != '-' ) {
-      // code must be followed by either SP or hyphen (len == 3 is
-      // also accepted since broken servers exist); all else is
-      // invalid
-      mValid = false;
-      mWellFormed = false;
-      return;
+    if (len == 3 || line[3] == ' ') {
+        mSawLastLine = true;
+    } else if (line[3] != '-') {
+        // code must be followed by either SP or hyphen (len == 3 is
+        // also accepted since broken servers exist); all else is
+        // invalid
+        mValid = false;
+        mWellFormed = false;
+        return;
     }
 
-    mLines.push_back( len > 4 ? QByteArray( line+4, len-4 ).trimmed() : QByteArray() );
-  }
+    mLines.push_back(len > 4 ? QByteArray(line + 4, len - 4).trimmed() : QByteArray());
+}
 
-
-  // hackishly fixing QCStringList flaws...
-  static QByteArray join( char sep, const QCStringList & list ) {
-    if ( list.empty() )
-      return QByteArray();
+// hackishly fixing QCStringList flaws...
+static QByteArray join(char sep, const QCStringList &list)
+{
+    if (list.empty()) {
+        return QByteArray();
+    }
     QByteArray result = list.front();
-    for ( QCStringList::const_iterator it = ++list.begin() ; it != list.end() ; ++it )
-      result += sep + *it;
+    for (QCStringList::const_iterator it = ++list.begin() ; it != list.end() ; ++it) {
+        result += sep + *it;
+    }
     return result;
-  }
+}
 
-  QString Response::errorMessage() const {
+QString Response::errorMessage() const
+{
     QString msg;
-    if ( lines().count() > 1 )
-      msg = i18n("The server responded:\n%1", QString::fromLatin1(join( '\n', lines() )) );
-    else
-      msg = i18n("The server responded: \"%1\"", QString::fromLatin1(lines().front()) );
-    if ( first() == 4 )
-      msg += QLatin1Char('\n') + i18n("This is a temporary failure. You may try again later.");
+    if (lines().count() > 1) {
+        msg = i18n("The server responded:\n%1", QString::fromLatin1(join('\n', lines())));
+    } else {
+        msg = i18n("The server responded: \"%1\"", QString::fromLatin1(lines().front()));
+    }
+    if (first() == 4) {
+        msg += QLatin1Char('\n') + i18n("This is a temporary failure. You may try again later.");
+    }
     return msg;
-  }
+}
 
-  int Response::errorCode() const {
-    switch ( code() ) {
+int Response::errorCode() const
+{
+    switch (code()) {
     case 421: // Service not available, closing transmission channel
     case 454: // TLS not available due to temporary reason
-              // Temporary authentication failure
+    // Temporary authentication failure
     case 554: // Transaction failed / No SMTP service here / No valid recipients
-      return KIO::ERR_SERVICE_NOT_AVAILABLE;
+        return KIO::ERR_SERVICE_NOT_AVAILABLE;
 
     case 451: // Requested action aborted: local error in processing
-      return KIO::ERR_INTERNAL_SERVER;
+        return KIO::ERR_INTERNAL_SERVER;
 
     case 452: // Requested action not taken: insufficient system storage
     case 552: // Requested mail action aborted: exceeded storage allocation
-      return KIO::ERR_DISK_FULL;
+        return KIO::ERR_DISK_FULL;
 
     case 500: // Syntax error, command unrecognized
     case 501: // Syntax error in parameters or arguments
     case 502: // Command not implemented
     case 503: // Bad sequence of commands
     case 504: // Command parameter not implemented
-      return KIO::ERR_INTERNAL;
+        return KIO::ERR_INTERNAL;
 
     case 450: // Requested mail action not taken: mailbox unavailable
     case 550: // Requested action not taken: mailbox unavailable
     case 551: // User not local; please try <forward-path>
     case 553: // Requested action not taken: mailbox name not allowed
-      return KIO::ERR_DOES_NOT_EXIST;
+        return KIO::ERR_DOES_NOT_EXIST;
 
     case 530: // {STARTTLS,Authentication} required
     case 538: // Encryption required for requested authentication mechanism
     case 534: // Authentication mechanism is too weak
-      return KIO::ERR_UPGRADE_REQUIRED;
+        return KIO::ERR_UPGRADE_REQUIRED;
 
     case 432: // A password transition is needed
-      return KIO::ERR_COULD_NOT_AUTHENTICATE;
+        return KIO::ERR_COULD_NOT_AUTHENTICATE;
 
     default:
-      if ( isPositive() )
-        return 0;
-      else
-        return KIO::ERR_UNKNOWN;
+        if (isPositive()) {
+            return 0;
+        } else {
+            return KIO::ERR_UNKNOWN;
+        }
     }
-  }
+}
 
 } // namespace KioSMTP

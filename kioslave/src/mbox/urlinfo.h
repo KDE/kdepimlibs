@@ -36,7 +36,7 @@ public:
      * @param url The url: this url is used to split the location data off.
      * @param type The possible types of the url
      */
-    explicit UrlInfo( const QUrl &url, const UrlType type = (UrlType)( message | directory ) );
+    explicit UrlInfo(const QUrl &url, const UrlType type = (UrlType)(message | directory));
 
     /**
      * Destructor
@@ -47,7 +47,10 @@ public:
      * Returns the type of the url
      * @return the type of the url
      */
-    UrlType type() const { return m_type; }
+    UrlType type() const
+    {
+        return m_type;
+    }
 
     /**
      * @return the mimetype of the url
@@ -69,10 +72,10 @@ public:
     QString url() const;
 
 private:
-    void calculateInfo( const QUrl& url, const UrlType type );
+    void calculateInfo(const QUrl &url, const UrlType type);
 
-    bool isDirectory( const QUrl& url );
-    bool isMessage( const QUrl& url );
+    bool isDirectory(const QUrl &url);
+    bool isMessage(const QUrl &url);
 
 private:
     UrlType m_type;

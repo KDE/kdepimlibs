@@ -38,150 +38,158 @@
 
 #include <assert.h>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
-  Request Request::fromURL( const QUrl &url ) {
+Request Request::fromURL(const QUrl &url)
+{
     Request request;
 
-    const QStringList query = url.query().mid(1).split( QLatin1Char('&') );
+    const QStringList query = url.query().mid(1).split(QLatin1Char('&'));
 #ifndef NDEBUG
-    qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join( QLatin1String("\n") );
+    qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join(QLatin1String("\n"));
 #endif
-    for ( QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it ) {
-      int equalsPos = (*it).indexOf( QLatin1Char('=') );
-      if ( equalsPos <= 0 )
-        continue;
+    for (QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it) {
+        int equalsPos = (*it).indexOf(QLatin1Char('='));
+        if (equalsPos <= 0) {
+            continue;
+        }
 
-      const QString key = (*it).left( equalsPos ).toLower();
-      const QString value = QUrl::fromPercentEncoding( (*it).mid( equalsPos + 1 ).toLatin1() ); //krazy:exclude=qclasses
+        const QString key = (*it).left(equalsPos).toLower();
+        const QString value = QUrl::fromPercentEncoding((*it).mid(equalsPos + 1).toLatin1());     //krazy:exclude=qclasses
 
-      if ( key == QLatin1String("to") )
-        request.addTo( value );
-      else if ( key == QLatin1String("cc") )
-        request.addCc( value );
-      else if ( key == QLatin1String("bcc") )
-        request.addBcc( value );
-      else if ( key == QLatin1String("headers") ) {
-        request.setEmitHeaders( value == QLatin1String("0") );
-        request.setEmitHeaders( false ); // ### ???
-      }
-      else if ( key == QLatin1String("subject") )
-        request.setSubject( value );
-      else if ( key == QLatin1String("from") )
-        request.setFromAddress( value );
-      else if ( key == QLatin1String("profile") )
-        request.setProfileName( value );
-      else if ( key == QLatin1String("hostname") )
-        request.setHeloHostname( value );
-      else if ( key == QLatin1String("body") )
-        request.set8BitBody( value.toUpper() == QLatin1String("8BIT") );
-      else if ( key == QLatin1String("size") )
-        request.setSize( value.toUInt() );
-      else
-        qCWarning(SMTP_LOG) << "while parsing query: unknown query item \""
-                       << key << "\" with value \"" << value << "\"" << endl;
+        if (key == QLatin1String("to")) {
+            request.addTo(value);
+        } else if (key == QLatin1String("cc")) {
+            request.addCc(value);
+        } else if (key == QLatin1String("bcc")) {
+            request.addBcc(value);
+        } else if (key == QLatin1String("headers")) {
+            request.setEmitHeaders(value == QLatin1String("0"));
+            request.setEmitHeaders(false);   // ### ???
+        } else if (key == QLatin1String("subject")) {
+            request.setSubject(value);
+        } else if (key == QLatin1String("from")) {
+            request.setFromAddress(value);
+        } else if (key == QLatin1String("profile")) {
+            request.setProfileName(value);
+        } else if (key == QLatin1String("hostname")) {
+            request.setHeloHostname(value);
+        } else if (key == QLatin1String("body")) {
+            request.set8BitBody(value.toUpper() == QLatin1String("8BIT"));
+        } else if (key == QLatin1String("size")) {
+            request.setSize(value.toUInt());
+        } else
+            qCWarning(SMTP_LOG) << "while parsing query: unknown query item \""
+                                << key << "\" with value \"" << value << "\"" << endl;
     }
 
     return request;
-  }
+}
 
-  QByteArray Request::heloHostnameCString() const {
-    return QUrl::toAce( heloHostname() ); //krazy:exclude=qclasses
-  }
+QByteArray Request::heloHostnameCString() const
+{
+    return QUrl::toAce(heloHostname());   //krazy:exclude=qclasses
+}
 
-  static bool isUsAscii( const QString & s ) {
-    for ( int i = 0 ; i < s.length() ; ++i )
-      if ( s[i].unicode() > 127 ) return false;
+static bool isUsAscii(const QString &s)
+{
+    for (int i = 0 ; i < s.length() ; ++i)
+        if (s[i].unicode() > 127) {
+            return false;
+        }
     return true;
-  }
+}
 
-
-
-  static inline bool isSpecial( char ch ) {
+static inline bool isSpecial(char ch)
+{
     static const QByteArray specials = "()<>[]:;@\\,.\"";
-    return specials.indexOf( ch ) >= 0;
-  }
+    return specials.indexOf(ch) >= 0;
+}
 
-
-
-  static inline bool needsQuoting( char ch ) {
+static inline bool needsQuoting(char ch)
+{
     return ch == '\\' || ch == '"' || ch == '\n' ;
-  }
+}
 
-
-
-  static inline QByteArray rfc2047Encode( const QString & s ) {
+static inline QByteArray rfc2047Encode(const QString &s)
+{
     QByteArray r = s.trimmed().toUtf8().toBase64();
     return "=?utf-8?b?" + r + "?=" ; // use base64 since that always gives a valid encoded-word
-  }
+}
 
+static QByteArray quote(const QString &s)
+{
+    assert(isUsAscii(s));
 
-
-  static QByteArray quote( const QString & s ) {
-    assert( isUsAscii( s ) );
-
-    QByteArray r( s.length() * 2, 0 );
+    QByteArray r(s.length() * 2, 0);
     bool needsQuotes = false;
 
     unsigned int j = 0;
-    for ( int i = 0 ; i < s.length() ; ++i ) {
-      char ch = s[i].toLatin1();
-      if ( isSpecial( ch ) ) {
-        if ( needsQuoting( ch ) )
-          r[j++] = '\\';
-        needsQuotes = true;
-      }
-      r[j++] = ch;
+    for (int i = 0 ; i < s.length() ; ++i) {
+        char ch = s[i].toLatin1();
+        if (isSpecial(ch)) {
+            if (needsQuoting(ch)) {
+                r[j++] = '\\';
+            }
+            needsQuotes = true;
+        }
+        r[j++] = ch;
     }
-    r.truncate( j );
+    r.truncate(j);
 
-    if ( needsQuotes )
-      return '"' + r + '"';
-    else
-      return r;
-  }
+    if (needsQuotes) {
+        return '"' + r + '"';
+    } else {
+        return r;
+    }
+}
 
-
-
-  static QByteArray formatFromAddress( const QString & fromRealName, const QString & fromAddress ) {
-    if ( fromRealName.isEmpty() )
-      return fromAddress.toLatin1(); // no real name: return "joe@user.org"
+static QByteArray formatFromAddress(const QString &fromRealName, const QString &fromAddress)
+{
+    if (fromRealName.isEmpty()) {
+        return fromAddress.toLatin1();    // no real name: return "joe@user.org"
+    }
 
     // return "Joe User <joe@user.org>", "\"User, Joe\" <joe@user.org>"
     // or "=?utf-8?q?Joe_User?= <joe@user.org>", depending on real name's nature.
-    QByteArray r = isUsAscii( fromRealName ) ? quote( fromRealName ) : rfc2047Encode( fromRealName );
+    QByteArray r = isUsAscii(fromRealName) ? quote(fromRealName) : rfc2047Encode(fromRealName);
     return r + " <" + fromAddress.toLatin1() + '>';
-  }
+}
 
+static QByteArray formatSubject(QString s)
+{
+    if (isUsAscii(s)) {
+        return s.remove(QLatin1Char('\n')).toLatin1();    // don't break header folding,
+    }
+    // so remove any line break
+    // that happen to be around
+    else {
+        return rfc2047Encode(s);
+    }
+}
 
+QByteArray Request::headerFields(const QString &fromRealName) const
+{
+    if (!emitHeaders()) {
+        return 0;
+    }
 
-  static QByteArray formatSubject( QString s ) {
-    if ( isUsAscii( s ) )
-      return s.remove( QLatin1Char('\n') ).toLatin1(); // don't break header folding,
-                                          // so remove any line break
-                                          // that happen to be around
-    else
-      return rfc2047Encode( s );
-  }
+    assert(hasFromAddress());   // should have been checked for by
+    // caller (MAIL FROM comes before DATA)
 
+    QByteArray result = "From: " + formatFromAddress(fromRealName, fromAddress()) + "\r\n";
 
-
-  QByteArray Request::headerFields( const QString & fromRealName ) const {
-    if ( !emitHeaders() )
-      return 0;
-
-    assert( hasFromAddress() ); // should have been checked for by
-                                // caller (MAIL FROM comes before DATA)
-
-    QByteArray result = "From: " + formatFromAddress( fromRealName, fromAddress() ) + "\r\n";
-
-    if ( !subject().isEmpty() )
-      result += "Subject: " + formatSubject( subject() ) + "\r\n";
-    if ( !to().empty() )
-      result += QByteArray( "To: " ) + to().join( QLatin1String(",\r\n\t") /* line folding */ ).toLatin1() + "\r\n";
-    if ( !cc().empty() )
-      result += QByteArray( "Cc: " ) + cc().join( QLatin1String(",\r\n\t") /* line folding */ ).toLatin1() + "\r\n";
+    if (!subject().isEmpty()) {
+        result += "Subject: " + formatSubject(subject()) + "\r\n";
+    }
+    if (!to().empty()) {
+        result += QByteArray("To: ") + to().join(QLatin1String(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
+    }
+    if (!cc().empty()) {
+        result += QByteArray("Cc: ") + cc().join(QLatin1String(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
+    }
     return result;
-  }
+}
 
 } // namespace KioSMTP

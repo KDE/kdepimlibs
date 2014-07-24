@@ -34,7 +34,7 @@ public:
      * @param info The urlinfo which must be used
      * @param parent The MBoxProtocol parent instance, used to throw errors.
      */
-    MBoxFile( const UrlInfo* info, MBoxProtocol* parent );
+    MBoxFile(const UrlInfo *info, MBoxProtocol *parent);
 
     /**
      * Empty destructor
@@ -58,11 +58,11 @@ protected:
      * This can be used to get information about the file.
      * The file specified here is the file that must be used.
      */
-    const UrlInfo* const m_info;
+    const UrlInfo *const m_info;
 
     /**
      * A instance of the parent protocol, meant to throw errors if neccesairy.
      */
-    MBoxProtocol* const m_mbox;
+    MBoxProtocol *const m_mbox;
 };
 #endif

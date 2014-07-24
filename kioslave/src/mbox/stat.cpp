@@ -26,70 +26,70 @@
 
 #include <sys/stat.h>
 
-KIO::UDSEntry Stat::stat( const UrlInfo& info )
+KIO::UDSEntry Stat::stat(const UrlInfo &info)
 {
-    if( info.type() == UrlInfo::message ) {
-        return Stat::statMessage( info );
-    } else if( info.type() == UrlInfo::directory ) {
-        return Stat::statDirectory( info );
+    if (info.type() == UrlInfo::message) {
+        return Stat::statMessage(info);
+    } else if (info.type() == UrlInfo::directory) {
+        return Stat::statDirectory(info);
     } else {
         return KIO::UDSEntry();
     }
 }
 
-KIO::UDSEntry Stat::stat( ReadMBox& mbox, const UrlInfo& info )
+KIO::UDSEntry Stat::stat(ReadMBox &mbox, const UrlInfo &info)
 {
-    qDebug() <<"Stat::stat()";
+    qDebug() << "Stat::stat()";
     KIO::UDSEntry entry;
     QString url;
 
-    if( info.type() == UrlInfo::invalid ) {
+    if (info.type() == UrlInfo::invalid) {
         return entry;
-    } else if( info.type() == UrlInfo::message ) {
-        mbox.searchMessage( info.id() );
+    } else if (info.type() == UrlInfo::message) {
+        mbox.searchMessage(info.id());
     }
 
-    entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
-    entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String( "message/rfc822" ) );
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
+    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String("message/rfc822"));
 
-    url = QString::fromLatin1( "mbox:%1/%2" ).arg( info.filename(), mbox.currentID() );
-    entry.insert( KIO::UDSEntry::UDS_URL, url );
-    if( mbox.currentID().isEmpty() ) {
-        entry.insert( KIO::UDSEntry::UDS_NAME, QLatin1String( "" ) );
+    url = QString::fromLatin1("mbox:%1/%2").arg(info.filename(), mbox.currentID());
+    entry.insert(KIO::UDSEntry::UDS_URL, url);
+    if (mbox.currentID().isEmpty()) {
+        entry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String(""));
     } else {
-        entry.insert( KIO::UDSEntry::UDS_NAME, mbox.currentID() );
+        entry.insert(KIO::UDSEntry::UDS_NAME, mbox.currentID());
     }
 
-    entry.insert( KIO::UDSEntry::UDS_SIZE, mbox.skipMessage() );
+    entry.insert(KIO::UDSEntry::UDS_SIZE, mbox.skipMessage());
 
     return entry;
 }
 
-KIO::UDSEntry Stat::statDirectory( const UrlInfo& info )
+KIO::UDSEntry Stat::statDirectory(const UrlInfo &info)
 {
-    qDebug() <<"statDirectory()";
+    qDebug() << "statDirectory()";
     KIO::UDSEntry entry;
 
     //Specific things for a directory
-    entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR );
-    entry.insert( KIO::UDSEntry::UDS_NAME, info.filename() );
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.insert(KIO::UDSEntry::UDS_NAME, info.filename());
 
     return entry;
 }
 
-KIO::UDSEntry Stat::statMessage( const UrlInfo& info )
+KIO::UDSEntry Stat::statMessage(const UrlInfo &info)
 {
-    qDebug() <<"statMessage(" << info.url()  <<" )";
+    qDebug() << "statMessage(" << info.url()  << " )";
     KIO::UDSEntry entry;
-    QString url = QString::fromLatin1( "mbox:%1" ).arg( info.url() );
+    QString url = QString::fromLatin1("mbox:%1").arg(info.url());
 
     //Specific things for a message
-    entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
-    entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String( "message/rfc822" ) );
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
+    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String("message/rfc822"));
 
-    entry.insert( KIO::UDSEntry::UDS_URL, url );
-    url = url.right( url.length() - url.lastIndexOf( QLatin1Char('/') ) - 1 );
-    entry.insert( KIO::UDSEntry::UDS_NAME, url );
+    entry.insert(KIO::UDSEntry::UDS_URL, url);
+    url = url.right(url.length() - url.lastIndexOf(QLatin1Char('/')) - 1);
+    entry.insert(KIO::UDSEntry::UDS_NAME, url);
 
     return entry;
 }

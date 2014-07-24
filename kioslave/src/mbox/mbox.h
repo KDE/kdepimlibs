@@ -33,7 +33,7 @@ public:
     /**
      * Constructor, for the parameters,  See KIO::SlaveBase
      */
-    MBoxProtocol( const QByteArray&, const QByteArray& );
+    MBoxProtocol(const QByteArray &, const QByteArray &);
     /**
      * Empty destructor
      */
@@ -44,25 +44,25 @@ public:
      * get a file from a mbox-file
      * @param url The url which points to the virtual file to get
      */
-    virtual void get( const QUrl& url );
+    virtual void get(const QUrl &url);
 
     /**
      * This functions gives a listing back.
      * @param url The url to the mbox-file.
      */
-    virtual void listDir( const QUrl& url );
+    virtual void listDir(const QUrl &url);
 
     /**
      * This functions gives general properties about a mbox-file,
      * or mbox-email back.
      */
-    virtual void stat( const QUrl& url );
+    virtual void stat(const QUrl &url);
 
     /**
      * This functions determinate the mimetype of a given mbox-file or mbox-email.
      * @param url The url to get the mimetype from
      */
-    virtual void mimetype( const QUrl& url );
+    virtual void mimetype(const QUrl &url);
 
     /**
      * Through this functions, other class which have an instance to this
@@ -71,7 +71,7 @@ public:
      * @param errno The error number to be thrown
      * @param arg The argument of the error message of the error number.
      */
-    void emitError( int _errno, const QString& arg );
+    void emitError(int _errno, const QString &arg);
 private:
     bool m_errorState;
 };

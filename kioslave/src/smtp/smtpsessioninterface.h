@@ -25,11 +25,13 @@
 class QByteArray;
 class QString;
 
-namespace KIO {
+namespace KIO
+{
 class AuthInfo;
 }
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Response;
 
@@ -39,22 +41,22 @@ class Response;
  */
 class SMTPSessionInterface
 {
-  public:
+public:
     /** TLS request state. */
     enum TLSRequestState {
-      UseTLSIfAvailable,
-      ForceTLS,
-      ForceNoTLS
+        UseTLSIfAvailable,
+        ForceTLS,
+        ForceNoTLS
     };
 
     virtual ~SMTPSessionInterface();
     virtual bool startSsl() = 0;
 
     /** Parse capability response from the server. */
-    void parseFeatures( const KioSMTP::Response & );
+    void parseFeatures(const KioSMTP::Response &);
 
     /** Returns the server reported capabilities. */
-    const Capabilities& capabilities() const;
+    const Capabilities &capabilities() const;
 
     /** Clear the capabilities reported by the server (e.g. when reconnecting the session) */
     void clearCapabilities();
@@ -62,17 +64,17 @@ class SMTPSessionInterface
     /** This is a pure convenience wrapper around
      *  @ref KioSMTP::Capabilities::have()
      */
-    virtual bool haveCapability( const char * cap ) const;
+    virtual bool haveCapability(const char *cap) const;
 
     /** @return true is pipelining is available and allowed by metadata */
     bool canPipelineCommands() const;
 
-    virtual void error( int id, const QString & msg ) = 0;
+    virtual void error(int id, const QString &msg) = 0;
     /** Show information message box with message @p msg and caption @p caption. */
-    virtual void informationMessageBox( const QString & msg, const QString &caption ) = 0;
-    virtual bool openPasswordDialog( KIO::AuthInfo &authInfo ) = 0;
+    virtual void informationMessageBox(const QString &msg, const QString &caption) = 0;
+    virtual bool openPasswordDialog(KIO::AuthInfo &authInfo) = 0;
     virtual void dataReq() = 0;
-    virtual int readData( QByteArray & ba ) = 0;
+    virtual int readData(QByteArray &ba) = 0;
 
     /** SASL method requested for authentication. */
     virtual QString requestedSaslMethod() const = 0;
@@ -85,11 +87,10 @@ class SMTPSessionInterface
     /** Pipelining has been requested. */
     virtual bool pipeliningRequested() const;
 
-  private :
+private :
     KioSMTP::Capabilities m_capabilities;
 };
 
 }
-
 
 #endif

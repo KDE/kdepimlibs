@@ -1,16 +1,16 @@
 /*
   Copyright (c) 2004-2007 Szombathelyi György <gyurco@freemail.hu>
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   copies of the Software, and to permit persons to whom the Software is
   furnished to do so, subject to the following conditions:
-              
+
   The above copyright notice and this permission notice shall be included in
   all copies or substantial portions of the Software.
-                  
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -34,23 +34,23 @@
 
 class LDAPProtocol : public KIO::SlaveBase
 {
-  public:
-    LDAPProtocol( const QByteArray &protocol, const QByteArray &pool, const QByteArray &app );
+public:
+    LDAPProtocol(const QByteArray &protocol, const QByteArray &pool, const QByteArray &app);
     virtual ~LDAPProtocol();
 
-    virtual void setHost( const QString& host, quint16 port,
-                          const QString& user, const QString& pass );
+    virtual void setHost(const QString &host, quint16 port,
+                         const QString &user, const QString &pass);
 
     virtual void openConnection();
     virtual void closeConnection();
 
-    virtual void get( const QUrl& url );
-    virtual void stat( const QUrl& url );
-    virtual void listDir( const QUrl& url );
-    virtual void del( const QUrl& url, bool isfile );
-    virtual void put( const QUrl& url, int permissions, KIO::JobFlags flags );
+    virtual void get(const QUrl &url);
+    virtual void stat(const QUrl &url);
+    virtual void listDir(const QUrl &url);
+    virtual void del(const QUrl &url, bool isfile);
+    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
 
-  private:
+private:
 
     KLDAP::LdapConnection mConn;
     KLDAP::LdapOperation mOp;
@@ -59,14 +59,14 @@ class LDAPProtocol : public KIO::SlaveBase
 
     bool mCancel, mFirstAuth;
 
-    void controlsFromMetaData( KLDAP::LdapControls &serverctrls,
-      KLDAP::LdapControls &clientctrls );
-    void LDAPEntry2UDSEntry( const KLDAP::LdapDN &dn, KIO::UDSEntry &entry,
-      const KLDAP::LdapUrl &usrc, bool dir=false );
-    int asyncSearch( KLDAP::LdapUrl &usrc, const QByteArray &cookie = "" );
+    void controlsFromMetaData(KLDAP::LdapControls &serverctrls,
+                              KLDAP::LdapControls &clientctrls);
+    void LDAPEntry2UDSEntry(const KLDAP::LdapDN &dn, KIO::UDSEntry &entry,
+                            const KLDAP::LdapUrl &usrc, bool dir = false);
+    int asyncSearch(KLDAP::LdapUrl &usrc, const QByteArray &cookie = "");
 
-    void LDAPErr( int err = KLDAP_SUCCESS );
-    void changeCheck( KLDAP::LdapUrl &url );
+    void LDAPErr(int err = KLDAP_SUCCESS);
+    void changeCheck(KLDAP::LdapUrl &url);
 };
 
 #endif

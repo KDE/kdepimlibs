@@ -36,75 +36,92 @@
 
 #include <QString>
 
+namespace KioSMTP
+{
 
-namespace KioSMTP {
+/**
+   @short A class modelling an SMTP transaction's state
 
-  /**
-     @short A class modelling an SMTP transaction's state
+   This class models SMTP transaction state, ie. the collective
+   result of the MAIL FROM:, RCPT TO: and DATA commands. This is
+   needed since e.g. a single failed RCPT TO: command does not
+   necessarily fail the whole transaction (servers are free to
+   accept delivery for some recipients, but not for others).
 
-     This class models SMTP transaction state, ie. the collective
-     result of the MAIL FROM:, RCPT TO: and DATA commands. This is
-     needed since e.g. a single failed RCPT TO: command does not
-     necessarily fail the whole transaction (servers are free to
-     accept delivery for some recipients, but not for others).
+   The class can operate in two modes, which differ in the way
+   failed recipients are handled. If @p rcptToDenyIsFailure is true
+   (the default), then any failing RCPT TO: will cause the
+   transaction to fail. Since at the point of RCPT TO: failure
+   detection, the DATA command may have already been sent
+   (pipelining), the only way to cancel the transaction is to take
+   down the connection hard (ie. without proper quit).
 
-     The class can operate in two modes, which differ in the way
-     failed recipients are handled. If @p rcptToDenyIsFailure is true
-     (the default), then any failing RCPT TO: will cause the
-     transaction to fail. Since at the point of RCPT TO: failure
-     detection, the DATA command may have already been sent
-     (pipelining), the only way to cancel the transaction is to take
-     down the connection hard (ie. without proper quit).
-
-     Since that is not very nice behaviour, a second mode that is more
-     to the spirit of SMTP is provided that can cope with partially
-     failed RCPT TO: commands.
-  */
-  class TransactionState {
-  public:
+   Since that is not very nice behaviour, a second mode that is more
+   to the spirit of SMTP is provided that can cope with partially
+   failed RCPT TO: commands.
+*/
+class TransactionState
+{
+public:
     struct RecipientRejection {
-      RecipientRejection( const QString & who=QString(),
-                          const QString & why=QString() )
-        : recipient( who ), reason( why ) {}
-      QString recipient;
-      QString reason;
+        RecipientRejection(const QString &who = QString(),
+                           const QString &why = QString())
+            : recipient(who), reason(why) {}
+        QString recipient;
+        QString reason;
 #ifdef KIOSMTP_COMPARATORS
-      bool operator==( const RecipientRejection & other ) const {
-        return recipient == other.recipient && reason == other.reason;
-      }
+        bool operator==(const RecipientRejection &other) const
+        {
+            return recipient == other.recipient && reason == other.reason;
+        }
 #endif
     };
     typedef QList<RecipientRejection> RejectedRecipientList;
 
-    TransactionState( bool rcptToDenyIsFailure=true )
-      : mErrorCode( 0 ),
-        mRcptToDenyIsFailure( rcptToDenyIsFailure ),
-        mAtLeastOneRecipientWasAccepted( false ),
-        mDataCommandIssued( false ),
-        mDataCommandSucceeded( false ),
-        mFailed( false ),
-        mFailedFatally( false ),
-        mComplete( false ) {}
+    TransactionState(bool rcptToDenyIsFailure = true)
+        : mErrorCode(0),
+          mRcptToDenyIsFailure(rcptToDenyIsFailure),
+          mAtLeastOneRecipientWasAccepted(false),
+          mDataCommandIssued(false),
+          mDataCommandSucceeded(false),
+          mFailed(false),
+          mFailedFatally(false),
+          mComplete(false) {}
 
     /**
      * @return whether the transaction failed (e.g. the server
      * rejected all recipients. Graceful failure is handled after
      * transaction ends.
      */
-    bool failed() const { return mFailed || mFailedFatally; }
-    void setFailed() { mFailed = true; }
+    bool failed() const
+    {
+        return mFailed || mFailedFatally;
+    }
+    void setFailed()
+    {
+        mFailed = true;
+    }
 
     /**
      * @return whether the failure was so grave that an immediate
      * untidy connection shutdown is in order (ie. @ref
      * smtp_close(false)). Fatal failure is handled immediately
      */
-    bool failedFatally() const { return mFailedFatally; }
-    void setFailedFatally( int code=0, const QString & msg=QString() );
+    bool failedFatally() const
+    {
+        return mFailedFatally;
+    }
+    void setFailedFatally(int code = 0, const QString &msg = QString());
 
     /** @return whether the transaction was completed successfully */
-    bool complete() const { return mComplete; }
-    void setComplete() { mComplete = true; }
+    bool complete() const
+    {
+        return mComplete;
+    }
+    void setComplete()
+    {
+        mComplete = true;
+    }
 
     /**
      * @return an appropriate KIO error code in case the transaction
@@ -118,64 +135,78 @@ namespace KioSMTP {
      */
     QString errorMessage() const;
 
-    void setMailFromFailed( const QString & addr, const Response & r );
+    void setMailFromFailed(const QString &addr, const Response &r);
 
-    bool dataCommandIssued() const { return mDataCommandIssued; }
-    void setDataCommandIssued( bool issued ) { mDataCommandIssued = issued; }
-
-    bool dataCommandSucceeded() const {
-      return mDataCommandIssued && mDataCommandSucceeded;
+    bool dataCommandIssued() const
+    {
+        return mDataCommandIssued;
     }
-    void setDataCommandSucceeded( bool succeeded, const Response & r );
-
-    Response dataResponse() const {
-      return mDataResponse;
+    void setDataCommandIssued(bool issued)
+    {
+        mDataCommandIssued = issued;
     }
 
-    bool atLeastOneRecipientWasAccepted() const {
-      return mAtLeastOneRecipientWasAccepted;
+    bool dataCommandSucceeded() const
+    {
+        return mDataCommandIssued && mDataCommandSucceeded;
     }
-    void setRecipientAccepted() {
-      mAtLeastOneRecipientWasAccepted = true;
+    void setDataCommandSucceeded(bool succeeded, const Response &r);
+
+    Response dataResponse() const
+    {
+        return mDataResponse;
     }
 
-    bool haveRejectedRecipients() const {
-      return !mRejectedRecipients.empty();
+    bool atLeastOneRecipientWasAccepted() const
+    {
+        return mAtLeastOneRecipientWasAccepted;
     }
-    RejectedRecipientList rejectedRecipients() const {
-      return mRejectedRecipients;
-    }
-    void addRejectedRecipient( const RecipientRejection & r );
-    void addRejectedRecipient( const QString & who, const QString & why ) {
-      addRejectedRecipient( RecipientRejection( who, why ) );
+    void setRecipientAccepted()
+    {
+        mAtLeastOneRecipientWasAccepted = true;
     }
 
-    void clear() {
-      mRejectedRecipients.clear();
-      mDataResponse.clear();
-      mAtLeastOneRecipientWasAccepted
-          = mDataCommandIssued
-          = mDataCommandSucceeded
-          = mFailed = mFailedFatally
-          = mComplete = false;
+    bool haveRejectedRecipients() const
+    {
+        return !mRejectedRecipients.empty();
+    }
+    RejectedRecipientList rejectedRecipients() const
+    {
+        return mRejectedRecipients;
+    }
+    void addRejectedRecipient(const RecipientRejection &r);
+    void addRejectedRecipient(const QString &who, const QString &why)
+    {
+        addRejectedRecipient(RecipientRejection(who, why));
+    }
+
+    void clear()
+    {
+        mRejectedRecipients.clear();
+        mDataResponse.clear();
+        mAtLeastOneRecipientWasAccepted
+            = mDataCommandIssued
+              = mDataCommandSucceeded
+                = mFailed = mFailedFatally
+                            = mComplete = false;
     }
 
 #ifdef KIOSMTP_COMPARATORS
-    bool operator==( const TransactionState & other ) const {
-      return
-          mAtLeastOneRecipientWasAccepted == other.mAtLeastOneRecipientWasAccepted &&
-          mDataCommandIssued == other.mDataCommandIssued &&
-          mDataCommandSucceeded == other.mDataCommandSucceeded &&
-          mFailed == other.mFailed &&
-          mFailedFatally == other.mFailedFatally &&
-          mComplete == other.mComplete &&
-          mDataResponse.code() == other.mDataResponse.code() &&
-          mRejectedRecipients == other.mRejectedRecipients;
+    bool operator==(const TransactionState &other) const
+    {
+        return
+            mAtLeastOneRecipientWasAccepted == other.mAtLeastOneRecipientWasAccepted &&
+            mDataCommandIssued == other.mDataCommandIssued &&
+            mDataCommandSucceeded == other.mDataCommandSucceeded &&
+            mFailed == other.mFailed &&
+            mFailedFatally == other.mFailedFatally &&
+            mComplete == other.mComplete &&
+            mDataResponse.code() == other.mDataResponse.code() &&
+            mRejectedRecipients == other.mRejectedRecipients;
     }
 #endif
 
-
-  private:
+private:
     RejectedRecipientList mRejectedRecipients;
     Response mDataResponse;
     QString mErrorMessage;
@@ -187,7 +218,7 @@ namespace KioSMTP {
     bool mFailed;
     bool mFailedFatally;
     bool mComplete;
-  };
+};
 
 } // namespace KioSMTP
 

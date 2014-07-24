@@ -25,11 +25,16 @@
 #include <QStringList>
 #include <kio/slavebase.h>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
-class FakeSession : public SMTPSessionInterface {
-  public:
-    FakeSession() { clear(); }
+class FakeSession : public SMTPSessionInterface
+{
+public:
+    FakeSession()
+    {
+        clear();
+    }
 
     //
     // public members to control the API emulation below:
@@ -48,43 +53,69 @@ class FakeSession : public SMTPSessionInterface {
     bool pipelining;
     QString saslMethod;
 
-    void clear() {
-      startTLSReturnCode = true;
-      usesTLS = false;
-      lastErrorCode = 0;
-      lastErrorMessage.clear();
-      lastMessageBoxText.clear();
-      nextData.resize( 0 );
-      nextDataReturnCode = -1;
-      caps.clear();
+    void clear()
+    {
+        startTLSReturnCode = true;
+        usesTLS = false;
+        lastErrorCode = 0;
+        lastErrorMessage.clear();
+        lastMessageBoxText.clear();
+        nextData.resize(0);
+        nextDataReturnCode = -1;
+        caps.clear();
 
-      lf2crlfAndDotStuff = false;
-      saslMethod.clear();
+        lf2crlfAndDotStuff = false;
+        saslMethod.clear();
     }
 
     //
     // emulated API:
     //
-    bool startSsl() {
-      return startTLSReturnCode;
+    bool startSsl()
+    {
+        return startTLSReturnCode;
     }
-    bool haveCapability( const char * cap ) const { return caps.contains( cap ); }
-    void error( int id, const QString & msg ) {
-      lastErrorCode = id;
-      lastErrorMessage = msg;
-      qWarning() << id << msg;
+    bool haveCapability(const char *cap) const
+    {
+        return caps.contains(cap);
     }
-    void informationMessageBox(const QString& msg, const QString& caption) {
-      Q_UNUSED( caption );
-      lastMessageBoxText = msg;
+    void error(int id, const QString &msg)
+    {
+        lastErrorCode = id;
+        lastErrorMessage = msg;
+        qWarning() << id << msg;
     }
-    bool openPasswordDialog( KIO::AuthInfo & ) { return true; }
-    void dataReq() { /* noop */ }
-    int readData( QByteArray & ba ) { ba = nextData; return nextDataReturnCode; }
+    void informationMessageBox(const QString &msg, const QString &caption)
+    {
+        Q_UNUSED(caption);
+        lastMessageBoxText = msg;
+    }
+    bool openPasswordDialog(KIO::AuthInfo &)
+    {
+        return true;
+    }
+    void dataReq()
+    {
+        /* noop */
+    }
+    int readData(QByteArray &ba)
+    {
+        ba = nextData;
+        return nextDataReturnCode;
+    }
 
-    bool lf2crlfAndDotStuffingRequested() const { return lf2crlfAndDotStuff; }
-    QString requestedSaslMethod() const { return saslMethod; }
-    TLSRequestState tlsRequested() const { return SMTPSessionInterface::UseTLSIfAvailable; }
+    bool lf2crlfAndDotStuffingRequested() const
+    {
+        return lf2crlfAndDotStuff;
+    }
+    QString requestedSaslMethod() const
+    {
+        return saslMethod;
+    }
+    TLSRequestState tlsRequested() const
+    {
+        return SMTPSessionInterface::UseTLSIfAvailable;
+    }
 };
 
 }

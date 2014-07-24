@@ -31,29 +31,29 @@
 
 #include <utime.h>
 
-ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, bool savetime )
-    : MBoxFile( info, parent ),
-      m_file( 0 ),
-      m_stream( 0 ),
-      m_atend( true ),
-      m_prev_time( 0 ),
-      m_only_new( onlynew ),
-      m_savetime( savetime ),
-      m_status( false ),
-      m_prev_status( false ),
-      m_header( true )
+ReadMBox::ReadMBox(const UrlInfo *info, MBoxProtocol *parent, bool onlynew, bool savetime)
+    : MBoxFile(info, parent),
+      m_file(0),
+      m_stream(0),
+      m_atend(true),
+      m_prev_time(0),
+      m_only_new(onlynew),
+      m_savetime(savetime),
+      m_status(false),
+      m_prev_status(false),
+      m_header(true)
 {
-    if( m_info->type() == UrlInfo::invalid ) {
-        m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
-    }
-                
-    if( !open( savetime ) ) {
-        m_mbox->emitError( KIO::ERR_CANNOT_OPEN_FOR_READING, info->url() );
+    if (m_info->type() == UrlInfo::invalid) {
+        m_mbox->emitError(KIO::ERR_DOES_NOT_EXIST, info->url());
     }
 
-    if( m_info->type() == UrlInfo::message ) {
-        if( !searchMessage( m_info->id() ) ) {
-            m_mbox->emitError( KIO::ERR_DOES_NOT_EXIST, info->url() );
+    if (!open(savetime)) {
+        m_mbox->emitError(KIO::ERR_CANNOT_OPEN_FOR_READING, info->url());
+    }
+
+    if (m_info->type() == UrlInfo::message) {
+        if (!searchMessage(m_info->id())) {
+            m_mbox->emitError(KIO::ERR_DOES_NOT_EXIST, info->url());
         }
     }
 }
@@ -75,46 +75,46 @@ QString ReadMBox::currentID() const
 
 bool ReadMBox::nextLine()
 {
-    if( !m_stream ) {
+    if (!m_stream) {
         return true;
     }
-                
+
     m_current_line = m_stream->readLine();
     m_atend = m_current_line.isNull();
-    if( m_atend ) { // Cursor was at EOF
+    if (m_atend) {  // Cursor was at EOF
         m_current_id.clear();
         m_prev_status = m_status;
         return true;
     }
 
     //New message
-    if( m_current_line.left( 5 ) == QLatin1String("From ") ) {
+    if (m_current_line.left(5) == QLatin1String("From ")) {
         m_current_id = m_current_line;
         m_prev_status = m_status;
         m_status = true;
         m_header = true;
         return true;
-    } else if( m_only_new ) {
-        if( m_header && m_current_line.left( 7 ) == QLatin1String("Status:") &&
-            ! m_current_line.contains( QLatin1String("U") ) && ! m_current_line.contains( QLatin1String("N") ) ) {
-                m_status = false;
+    } else if (m_only_new) {
+        if (m_header && m_current_line.left(7) == QLatin1String("Status:") &&
+                ! m_current_line.contains(QLatin1String("U")) && ! m_current_line.contains(QLatin1String("N"))) {
+            m_status = false;
         }
     }
 
-    if( m_current_line.trimmed().isEmpty() ) {
+    if (m_current_line.trimmed().isEmpty()) {
         m_header = false;
     }
 
     return false;
 }
 
-bool ReadMBox::searchMessage( const QString& id )
+bool ReadMBox::searchMessage(const QString &id)
 {
-    if( !m_stream ) {
+    if (!m_stream) {
         return false;
     }
-                
-    while( !m_atend && m_current_id != id ) {
+
+    while (!m_atend && m_current_id != id) {
         nextLine();
     }
 
@@ -125,11 +125,11 @@ unsigned int ReadMBox::skipMessage()
 {
     unsigned int result = m_current_line.length();
 
-    if( !m_stream ) {
+    if (!m_stream) {
         return 0;
     }
 
-    while( !nextLine() ) {
+    while (!nextLine()) {
         result += m_current_line.length();
     }
 
@@ -138,7 +138,7 @@ unsigned int ReadMBox::skipMessage()
 
 void ReadMBox::rewind()
 {
-    if( !m_stream ) {
+    if (!m_stream) {
         return;
     }
 
@@ -148,10 +148,11 @@ void ReadMBox::rewind()
 
 bool ReadMBox::atEnd() const
 {
-    if( !m_stream )
+    if (!m_stream) {
         return true;
+    }
 
-    return m_atend || ( m_info->type() == UrlInfo::message && m_current_id != m_info->id() );
+    return m_atend || (m_info->type() == UrlInfo::message && m_current_id != m_info->id());
 }
 
 bool ReadMBox::inListing() const
@@ -159,27 +160,27 @@ bool ReadMBox::inListing() const
     return !m_only_new || m_prev_status;
 }
 
-bool ReadMBox::open( bool savetime )
+bool ReadMBox::open(bool savetime)
 {
-    if( savetime ) {
-        QFileInfo info( m_info->filename() );
+    if (savetime) {
+        QFileInfo info(m_info->filename());
 
         m_prev_time = new utimbuf;
         m_prev_time->actime = info.lastRead().toTime_t();
         m_prev_time->modtime = info.lastModified().toTime_t();
     }
 
-    if( m_file ) {
+    if (m_file) {
         return false; //File already open
     }
 
-    m_file = new QFile( m_info->filename() );
-    if( !m_file->open( QIODevice::ReadOnly ) ) {
+    m_file = new QFile(m_info->filename());
+    if (!m_file->open(QIODevice::ReadOnly)) {
         delete m_file;
         m_file = 0;
         return false;
     }
-    m_stream = new QTextStream( m_file );
+    m_stream = new QTextStream(m_file);
     skipMessage();
 
     return true;
@@ -187,7 +188,7 @@ bool ReadMBox::open( bool savetime )
 
 void ReadMBox::close()
 {
-    if( !m_stream ) {
+    if (!m_stream) {
         return;
     }
 
@@ -195,9 +196,9 @@ void ReadMBox::close()
     m_file->close();
     delete m_file; m_file = 0;
 
-    if( m_prev_time ) {
-        const QByteArray ba = QFile::encodeName( m_info->filename() );
-        utime( ba.constData(), m_prev_time );
+    if (m_prev_time) {
+        const QByteArray ba = QFile::encodeName(m_info->filename());
+        utime(ba.constData(), m_prev_time);
         delete m_prev_time; m_prev_time = 0;
     }
 }

@@ -21,65 +21,67 @@
 
 using namespace KioSMTP;
 
-KioSMTP::KioSlaveSession::KioSlaveSession(SMTPProtocol* protocol): m_protocol( protocol )
+KioSMTP::KioSlaveSession::KioSlaveSession(SMTPProtocol *protocol): m_protocol(protocol)
 {
 }
 
-void KioSMTP::KioSlaveSession::error(int id, const QString& msg)
+void KioSMTP::KioSlaveSession::error(int id, const QString &msg)
 {
-  m_protocol->error( id, msg );
+    m_protocol->error(id, msg);
 }
 
-void KioSlaveSession::informationMessageBox(const QString& msg, const QString& caption)
+void KioSlaveSession::informationMessageBox(const QString &msg, const QString &caption)
 {
-  m_protocol->messageBox( KIO::SlaveBase::Information, msg, caption );
+    m_protocol->messageBox(KIO::SlaveBase::Information, msg, caption);
 }
 
-bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo& authInfo)
+bool KioSMTP::KioSlaveSession::openPasswordDialog(KIO::AuthInfo &authInfo)
 {
-  return m_protocol->openPasswordDialog( authInfo );
+    return m_protocol->openPasswordDialog(authInfo);
 }
 
 void KioSMTP::KioSlaveSession::dataReq()
 {
-  m_protocol->dataReq();
+    m_protocol->dataReq();
 }
 
-int KioSMTP::KioSlaveSession::readData(QByteArray& ba)
+int KioSMTP::KioSlaveSession::readData(QByteArray &ba)
 {
-  return m_protocol->readData( ba );
+    return m_protocol->readData(ba);
 }
 
 bool KioSMTP::KioSlaveSession::startSsl()
 {
-  return m_protocol->startSsl();
+    return m_protocol->startSsl();
 }
 
 bool KioSlaveSession::eightBitMimeRequested() const
 {
-  return m_protocol->metaData( QLatin1String("8bitmime") ) == QLatin1String("on");
+    return m_protocol->metaData(QLatin1String("8bitmime")) == QLatin1String("on");
 }
 
 bool KioSlaveSession::lf2crlfAndDotStuffingRequested() const
 {
-  return m_protocol->metaData( QLatin1String("lf2crlf+dotstuff") ) == QLatin1String("slave");
+    return m_protocol->metaData(QLatin1String("lf2crlf+dotstuff")) == QLatin1String("slave");
 }
 
 bool KioSlaveSession::pipeliningRequested() const
 {
-  return m_protocol->metaData( QLatin1String("pipelining") ) != QLatin1String("off");
+    return m_protocol->metaData(QLatin1String("pipelining")) != QLatin1String("off");
 }
 
 QString KioSlaveSession::requestedSaslMethod() const
 {
-  return m_protocol->metaData( QLatin1String("sasl") );
+    return m_protocol->metaData(QLatin1String("sasl"));
 }
 
 KioSMTP::SMTPSessionInterface::TLSRequestState KioSMTP::KioSlaveSession::tlsRequested() const
 {
-  if ( m_protocol->metaData( QLatin1String("tls") ) == QLatin1String("off") )
-    return ForceNoTLS;
-  if ( m_protocol->metaData( QLatin1String("tls") ) == QLatin1String("on") )
-    return ForceTLS;
-  return UseTLSIfAvailable;
+    if (m_protocol->metaData(QLatin1String("tls")) == QLatin1String("off")) {
+        return ForceNoTLS;
+    }
+    if (m_protocol->metaData(QLatin1String("tls")) == QLatin1String("on")) {
+        return ForceTLS;
+    }
+    return UseTLSIfAvailable;
 }

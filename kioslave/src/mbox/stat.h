@@ -25,8 +25,6 @@
 class ReadMBox;
 class UrlInfo;
 
-
-
 /**
  * This class is used to get the stats of a mbox-email or mbox-file.
  * This class only uses static members.
@@ -49,7 +47,7 @@ public:
      * @param info The file information
      * @return The information of the file as destribed in UrlInfo.
      */
-    static KIO::UDSEntry stat( const UrlInfo& info );
+    static KIO::UDSEntry stat(const UrlInfo &info);
     /**
      * This function gives information with a given ReadMBox and UrlInfo.
      * Through this, it is possible to ask the stats of the next message,
@@ -58,21 +56,21 @@ public:
      * @param info The url information.
      * @return The requesteds information.
      */
-    static KIO::UDSEntry stat( ReadMBox& mbox, const UrlInfo& info );
+    static KIO::UDSEntry stat(ReadMBox &mbox, const UrlInfo &info);
 
     /**
      * This function gets the stats of a given mbox-file in an UDSEntry.
      * @param info The location of the mbox-file.
      * @return A list of Atoms.
      */
-    static KIO::UDSEntry statDirectory( const UrlInfo& info );
+    static KIO::UDSEntry statDirectory(const UrlInfo &info);
 
     /**
      * This function gets the stats of a geven mbox-message in a UDSEntry.
      * @param info The url of the mbox-message.
      * @return Information shipped in an UDSEntry.
      */
-    static KIO::UDSEntry statMessage( const UrlInfo& info );
+    static KIO::UDSEntry statMessage(const UrlInfo &info);
 };
 
 #endif

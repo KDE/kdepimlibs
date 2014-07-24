@@ -25,8 +25,6 @@
 #include <QByteArray>
 #include <QStringList>
 
-
-
 class kio_sieveResponse
 {
 public:
@@ -34,19 +32,19 @@ public:
 
     kio_sieveResponse();
 
-    const uint& getType() const;
+    const uint &getType() const;
 
-    const QByteArray& getAction() const;
+    const QByteArray &getAction() const;
     uint getQuantity() const;
-    const QByteArray& getKey() const;
-    const QByteArray& getVal() const;
-    const QByteArray& getExtra() const;
+    const QByteArray &getKey() const;
+    const QByteArray &getVal() const;
+    const QByteArray &getExtra() const;
 
-    void setQuantity(const uint& quantity);
-    void setAction(const QByteArray& newAction);
-    void setKey(const QByteArray& newKey);
-    void setVal(const QByteArray& newVal);
-    void setExtra(const QByteArray& newExtra);
+    void setQuantity(const uint &quantity);
+    void setAction(const QByteArray &newAction);
+    void setKey(const QByteArray &newKey);
+    void setVal(const QByteArray &newVal);
+    void setExtra(const QByteArray &newExtra);
 
     void clear();
 
@@ -68,14 +66,14 @@ public:
     kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
     virtual ~kio_sieveProtocol();
 
-    virtual void mimetype(const QUrl& url);
-    virtual void get(const QUrl& url);
-    virtual void put(const QUrl& url, int permissions, KIO::JobFlags flags);
+    virtual void mimetype(const QUrl &url);
+    virtual void get(const QUrl &url);
+    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
     virtual void del(const QUrl &url, bool isfile);
 
-    virtual void listDir(const QUrl& url);
-    virtual void chmod(const QUrl& url, int permissions);
-    virtual void urlStat(const QUrl& url);
+    virtual void listDir(const QUrl &url);
+    virtual void chmod(const QUrl &url, int permissions);
+    virtual void urlStat(const QUrl &url);
 
     virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &pass);
     virtual void openConnection();
@@ -89,22 +87,22 @@ public:
      * 3 - request capabilities, returned as metadata
      */
     virtual void special(const QByteArray &data);
-    bool activate(const QUrl& url);
+    bool activate(const QUrl &url);
     bool deactivate();
 
 protected:
     bool connect(bool useTLSIfAvailable = true);
     bool authenticate();
     void disconnect(bool forcibly = false);
-    void changeCheck( const QUrl &url );
+    void changeCheck(const QUrl &url);
 
     bool sendData(const QByteArray &data);
-    bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray() );
+    bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray());
     bool operationSuccessful();
     int operationResult();
 
     bool parseCapabilities(bool requestCapabilities = false);
-    bool saslInteract( void *in, KIO::AuthInfo &ai );
+    bool saslInteract(void *in, KIO::AuthInfo &ai);
 
     // IOSlave global data
     uint              m_connMode;

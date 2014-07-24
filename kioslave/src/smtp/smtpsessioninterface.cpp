@@ -25,37 +25,37 @@ SMTPSessionInterface::~SMTPSessionInterface()
 {
 }
 
-void SMTPSessionInterface::parseFeatures(const KioSMTP::Response &ehloResponse )
+void SMTPSessionInterface::parseFeatures(const KioSMTP::Response &ehloResponse)
 {
-  m_capabilities = Capabilities::fromResponse( ehloResponse );
+    m_capabilities = Capabilities::fromResponse(ehloResponse);
 }
 
-const Capabilities& KioSMTP::SMTPSessionInterface::capabilities() const
+const Capabilities &KioSMTP::SMTPSessionInterface::capabilities() const
 {
-  return m_capabilities;
+    return m_capabilities;
 }
 
 void SMTPSessionInterface::clearCapabilities()
 {
-  m_capabilities.clear();
+    m_capabilities.clear();
 }
 
-bool SMTPSessionInterface::haveCapability(const char* cap) const
+bool SMTPSessionInterface::haveCapability(const char *cap) const
 {
-  return m_capabilities.have( cap );
+    return m_capabilities.have(cap);
 }
 
 bool SMTPSessionInterface::canPipelineCommands() const
 {
-  return haveCapability("PIPELINING") && pipeliningRequested();
+    return haveCapability("PIPELINING") && pipeliningRequested();
 }
 
 bool KioSMTP::SMTPSessionInterface::eightBitMimeRequested() const
 {
-  return false;
+    return false;
 }
 
 bool KioSMTP::SMTPSessionInterface::pipeliningRequested() const
 {
-  return true;
+    return true;
 }

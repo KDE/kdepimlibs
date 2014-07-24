@@ -44,39 +44,38 @@ class QTextEdit;
 
 class InteractiveSMTPServerWindow : public QWidget
 {
-  Q_OBJECT
-  public:
-    InteractiveSMTPServerWindow( QTcpSocket * socket, QWidget * parent=0);
+    Q_OBJECT
+public:
+    InteractiveSMTPServerWindow(QTcpSocket *socket, QWidget *parent = 0);
     ~InteractiveSMTPServerWindow();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotSendResponse();
-    void slotDisplayClient( const QString & s );
-    void slotDisplayServer( const QString & s );
-    void slotDisplayMeta( const QString & s );
+    void slotDisplayClient(const QString &s);
+    void slotDisplayServer(const QString &s);
+    void slotDisplayMeta(const QString &s);
     void slotReadyRead();
-    void slotError( QAbstractSocket::SocketError error );
+    void slotError(QAbstractSocket::SocketError error);
     void slotConnectionClosed();
     void slotCloseConnection();
 
-  private:
-    QTcpSocket * mSocket;
-    QTextEdit * mTextEdit;
-    QLineEdit * mLineEdit;
-    QLabel * mLabel;
+private:
+    QTcpSocket *mSocket;
+    QTextEdit *mTextEdit;
+    QLineEdit *mLineEdit;
+    QLabel *mLabel;
 };
 
 class InteractiveSMTPServer : public QTcpServer
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    InteractiveSMTPServer( QObject * parent=0 );
+public:
+    InteractiveSMTPServer(QObject *parent = 0);
     ~InteractiveSMTPServer() {}
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void newConnectionAvailable();
 };
-
 
 #endif

@@ -4,5 +4,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KLDAP_LOG)
 
-#endif 
+#endif
 

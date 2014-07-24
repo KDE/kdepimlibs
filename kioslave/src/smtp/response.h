@@ -38,20 +38,23 @@ typedef QList<QByteArray> QCStringList;
 
 class QString;
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
-  class Response {
-  public:
+class Response
+{
+public:
     Response()
-      : mCode(0),
-        mValid(true),
-        mSawLastLine(false),
-        mWellFormed(true) {}
+        : mCode(0),
+          mValid(true),
+          mSawLastLine(false),
+          mWellFormed(true) {}
 
-    void parseLine( const char * line ) {
-      parseLine( line, qstrlen( line ) );
+    void parseLine(const char *line)
+    {
+        parseLine(line, qstrlen(line));
     }
-    void parseLine( const char * line, int len );
+    void parseLine(const char *line, int len);
 
     /** Return an internationalized error message according to the
      *  response's code. */
@@ -60,40 +63,73 @@ namespace KioSMTP {
     int errorCode() const;
 
     enum Reply {
-      UnknownReply = -1,
-      PositivePreliminary = 1,
-      PositiveCompletion = 2,
-      PositiveIntermediate = 3,
-      TransientNegative = 4,
-      PermanentNegative = 5
+        UnknownReply = -1,
+        PositivePreliminary = 1,
+        PositiveCompletion = 2,
+        PositiveIntermediate = 3,
+        TransientNegative = 4,
+        PermanentNegative = 5
     };
 
     enum Category {
-      UnknownCategory = -1,
-      SyntaxError = 0,
-      Information = 1,
-      Connections = 2,
-      MailSystem = 5
+        UnknownCategory = -1,
+        SyntaxError = 0,
+        Information = 1,
+        Connections = 2,
+        MailSystem = 5
     };
 
-    unsigned int code() const { return mCode; }
-    unsigned int first() const { return code() / 100 ; }
-    unsigned int second() const { return ( code() % 100 ) / 10 ; }
-    unsigned int third() const { return code() % 10 ; }
+    unsigned int code() const
+    {
+        return mCode;
+    }
+    unsigned int first() const
+    {
+        return code() / 100 ;
+    }
+    unsigned int second() const
+    {
+        return (code() % 100) / 10 ;
+    }
+    unsigned int third() const
+    {
+        return code() % 10 ;
+    }
 
-    bool isPositive() const { return first() <= 3 && first() >= 1 ; }
-    bool isNegative() const { return first() == 4 || first() == 5 ; }
-    bool isUnknown() const { return !isPositive() && !isNegative() ; }
+    bool isPositive() const
+    {
+        return first() <= 3 && first() >= 1 ;
+    }
+    bool isNegative() const
+    {
+        return first() == 4 || first() == 5 ;
+    }
+    bool isUnknown() const
+    {
+        return !isPositive() && !isNegative() ;
+    }
 
-    QCStringList lines() const { return mLines; }
+    QCStringList lines() const
+    {
+        return mLines;
+    }
 
-    bool isValid() const { return mValid; }
-    bool isComplete() const { return mSawLastLine; }
+    bool isValid() const
+    {
+        return mValid;
+    }
+    bool isComplete() const
+    {
+        return mSawLastLine;
+    }
 
     /** Shortcut method.
      *  @return true iff the response is valid, complete and positive
      */
-    bool isOk() const { return isValid() && isComplete() && isPositive() ; }
+    bool isOk() const
+    {
+        return isValid() && isComplete() && isPositive() ;
+    }
 
     /** Indicates whether the response was well-formed, meaning it
      *  obeyed the syntax of smtp responses. That the response
@@ -101,27 +137,34 @@ namespace KioSMTP {
      *  response codes in a multilie response. A non-well-formed
      *  response is never valid.
      */
-    bool isWellFormed() const { return mWellFormed; }
+    bool isWellFormed() const
+    {
+        return mWellFormed;
+    }
 
-    void clear() { *this = Response(); }
+    void clear()
+    {
+        *this = Response();
+    }
 
 #ifdef KIOSMTP_COMPARATORS
-    bool operator==( const Response & other ) const {
-      return mCode == other.mCode &&
-             mValid == other.mValid &&
-             mSawLastLine == other.mSawLastLine &&
-             mWellFormed == other.mWellFormed &&
-             mLines == other.mLines;
+    bool operator==(const Response &other) const
+    {
+        return mCode == other.mCode &&
+               mValid == other.mValid &&
+               mSawLastLine == other.mSawLastLine &&
+               mWellFormed == other.mWellFormed &&
+               mLines == other.mLines;
     }
 #endif
 
-  private:
+private:
     unsigned int mCode;
     QCStringList mLines;
     bool mValid;
     bool mSawLastLine;
     bool mWellFormed;
-  };
+};
 
 } // namespace KioSMTP
 

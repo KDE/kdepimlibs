@@ -23,17 +23,18 @@
 #include "smtpsessioninterface.h"
 #include "smtp.h"
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class KioSlaveSession : public SMTPSessionInterface
 {
-  public:
-    explicit KioSlaveSession( SMTPProtocol *protocol );
-    virtual void error(int id, const QString& msg);
-    virtual void informationMessageBox(const QString& msg, const QString& caption);
-    virtual bool openPasswordDialog(KIO::AuthInfo& authInfo);
+public:
+    explicit KioSlaveSession(SMTPProtocol *protocol);
+    virtual void error(int id, const QString &msg);
+    virtual void informationMessageBox(const QString &msg, const QString &caption);
+    virtual bool openPasswordDialog(KIO::AuthInfo &authInfo);
     virtual void dataReq();
-    virtual int readData(QByteArray& ba);
+    virtual int readData(QByteArray &ba);
     virtual bool startSsl();
 
     virtual QString requestedSaslMethod() const;
@@ -42,8 +43,8 @@ class KioSlaveSession : public SMTPSessionInterface
     virtual bool pipeliningRequested() const;
     virtual TLSRequestState tlsRequested() const;
 
-  private:
-    SMTPProtocol* m_protocol;
+private:
+    SMTPProtocol *m_protocol;
 };
 
 }

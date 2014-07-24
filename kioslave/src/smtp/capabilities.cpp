@@ -32,85 +32,98 @@
 #include "capabilities.h"
 #include "response.h"
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
-  Capabilities Capabilities::fromResponse( const Response & ehlo ) {
+Capabilities Capabilities::fromResponse(const Response &ehlo)
+{
     Capabilities c;
 
     // first, check whether the response was valid and indicates success:
-    if ( !ehlo.isOk()
-         || ehlo.code() / 10 != 25 // ### restrict to 250 only?
-         || ehlo.lines().empty() )
-      return c;
+    if (!ehlo.isOk()
+            || ehlo.code() / 10 != 25 // ### restrict to 250 only?
+            || ehlo.lines().empty()) {
+        return c;
+    }
 
     QCStringList l = ehlo.lines();
 
-    for ( QCStringList::const_iterator it = ++l.constBegin() ; it != l.constEnd() ; ++it )
-      c.add( QString::fromLatin1(*it) );
+    for (QCStringList::const_iterator it = ++l.constBegin() ; it != l.constEnd() ; ++it) {
+        c.add(QString::fromLatin1(*it));
+    }
 
     return c;
-  }
+}
 
-  void Capabilities::add( const QString & cap, bool replace ) {
-    QStringList tokens = cap.toUpper().split( QLatin1Char(' ') );
-    if ( tokens.empty() )
-      return;
-    QString name = tokens.front(); tokens.pop_front();
-    add( name, tokens, replace );
-  }
-
-  void Capabilities::add( const QString & name, const QStringList & args, bool replace ) {
-    if ( replace )
-      mCapabilities[name] = args;
-    else
-      mCapabilities[name] += args;
-  }
-
-  QString Capabilities::createSpecialResponse( bool tls ) const {
-    QStringList result;
-    if ( tls )
-      result.push_back( QLatin1String("STARTTLS") );
-    result += saslMethodsQSL();
-    if ( have( "PIPELINING" ) )
-      result.push_back( QLatin1String("PIPELINING") );
-    if ( have( "8BITMIME" ) )
-      result.push_back( QLatin1String("8BITMIME") );
-    if ( have( "SIZE" ) ) {
-      bool ok = false;
-      unsigned int size = 0;
-      if ( !mCapabilities[ QLatin1String("SIZE") ].isEmpty() )
-        mCapabilities[ QLatin1String("SIZE") ].front().toUInt( &ok );
-      if ( ok && !size )
-        result.push_back( QLatin1String("SIZE=*") ); // any size
-      else if ( ok )
-        result.push_back( QString::fromLatin1("SIZE=%1").arg( size ) ); // fixed max
-      else
-        result.push_back( QLatin1String("SIZE") ); // indetermined
+void Capabilities::add(const QString &cap, bool replace)
+{
+    QStringList tokens = cap.toUpper().split(QLatin1Char(' '));
+    if (tokens.empty()) {
+        return;
     }
-    return result.join( QLatin1String(" ") );
-  }
+    QString name = tokens.front(); tokens.pop_front();
+    add(name, tokens, replace);
+}
 
-  QStringList Capabilities::saslMethodsQSL() const {
+void Capabilities::add(const QString &name, const QStringList &args, bool replace)
+{
+    if (replace) {
+        mCapabilities[name] = args;
+    } else {
+        mCapabilities[name] += args;
+    }
+}
+
+QString Capabilities::createSpecialResponse(bool tls) const
+{
     QStringList result;
-    for ( QMap<QString,QStringList>::const_iterator it = mCapabilities.begin();
-          it != mCapabilities.end(); ++it ) {
-      if ( it.key() == QLatin1String("AUTH") ) {
-        result += it.value();
-      } else if ( it.key().startsWith( QLatin1String( "AUTH=" ) ) ) {
-        result.push_back( it.key().mid( qstrlen("AUTH=") ) );
-        result += it.value();
-      }
+    if (tls) {
+        result.push_back(QLatin1String("STARTTLS"));
+    }
+    result += saslMethodsQSL();
+    if (have("PIPELINING")) {
+        result.push_back(QLatin1String("PIPELINING"));
+    }
+    if (have("8BITMIME")) {
+        result.push_back(QLatin1String("8BITMIME"));
+    }
+    if (have("SIZE")) {
+        bool ok = false;
+        unsigned int size = 0;
+        if (!mCapabilities[ QLatin1String("SIZE") ].isEmpty()) {
+            mCapabilities[ QLatin1String("SIZE") ].front().toUInt(&ok);
+        }
+        if (ok && !size) {
+            result.push_back(QLatin1String("SIZE=*"));    // any size
+        } else if (ok) {
+            result.push_back(QString::fromLatin1("SIZE=%1").arg(size));    // fixed max
+        } else {
+            result.push_back(QLatin1String("SIZE"));    // indetermined
+        }
+    }
+    return result.join(QLatin1String(" "));
+}
+
+QStringList Capabilities::saslMethodsQSL() const
+{
+    QStringList result;
+    for (QMap<QString, QStringList>::const_iterator it = mCapabilities.begin();
+            it != mCapabilities.end(); ++it) {
+        if (it.key() == QLatin1String("AUTH")) {
+            result += it.value();
+        } else if (it.key().startsWith(QLatin1String("AUTH="))) {
+            result.push_back(it.key().mid(qstrlen("AUTH=")));
+            result += it.value();
+        }
     }
     result.sort();
-    for (int i = 0, j = 1; j < result.count(); i = j++ ) {
-      if ( result.at(i) == result.at(j) ) {
-        result.removeAt( j-- );
-      }
+    for (int i = 0, j = 1; j < result.count(); i = j++) {
+        if (result.at(i) == result.at(j)) {
+            result.removeAt(j--);
+        }
     }
     return result;
-  }
-
-
+}
 
 } // namespace KioSMTP
 

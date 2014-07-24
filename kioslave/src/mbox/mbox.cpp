@@ -33,16 +33,18 @@
 
 #include <stdlib.h>
 
-extern "C" { Q_DECL_EXPORT int kdemain(int argc, char* argv[]); }
+extern "C" {
+    Q_DECL_EXPORT int kdemain(int argc, char *argv[]);
+}
 
-int kdemain( int argc, char * argv[] )
+int kdemain(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     app.setApplicationName(QLatin1String("kio_mbox"));
 
     if (argc != 4) {
         fprintf(stderr, "Usage: kio_mbox protocol "
-                        "domain-socket1 domain-socket2\n");
+                "domain-socket1 domain-socket2\n");
         exit(-1);
     }
 
@@ -52,9 +54,9 @@ int kdemain( int argc, char * argv[] )
     return 0;
 }
 
-MBoxProtocol::MBoxProtocol( const QByteArray& arg1, const QByteArray& arg2 )
-    : KIO::SlaveBase( "mbox2", arg1, arg2 ),
-      m_errorState( true )
+MBoxProtocol::MBoxProtocol(const QByteArray &arg1, const QByteArray &arg2)
+    : KIO::SlaveBase("mbox2", arg1, arg2),
+      m_errorState(true)
 {
 }
 
@@ -62,97 +64,97 @@ MBoxProtocol::~MBoxProtocol()
 {
 }
 
-void MBoxProtocol::get( const QUrl& url )
+void MBoxProtocol::get(const QUrl &url)
 {
     m_errorState = false;
 
-    UrlInfo info( url, UrlInfo::message );
+    UrlInfo info(url, UrlInfo::message);
     QString line;
     QByteArray ba_line;
 
-    if( info.type() == UrlInfo::invalid && !m_errorState ) {
-        error( KIO::ERR_DOES_NOT_EXIST, info.url() );
+    if (info.type() == UrlInfo::invalid && !m_errorState) {
+        error(KIO::ERR_DOES_NOT_EXIST, info.url());
         return;
     }
 
-    ReadMBox mbox( &info, this );
+    ReadMBox mbox(&info, this);
 
-    while( !mbox.atEnd() && !m_errorState) {
+    while (!mbox.atEnd() && !m_errorState) {
         line = mbox.currentLine();
         line += QLatin1Char('\n');
-        ba_line = QByteArray( line.toUtf8() );
-        ba_line.truncate( ba_line.size() - 1 ); //Removing training '\0'
-        data( ba_line );
+        ba_line = QByteArray(line.toUtf8());
+        ba_line.truncate(ba_line.size() - 1);   //Removing training '\0'
+        data(ba_line);
         mbox.nextLine();
     };
 
-    if( !m_errorState ) {
-        data( QByteArray() );
+    if (!m_errorState) {
+        data(QByteArray());
         finished();
     }
 }
 
-void MBoxProtocol::listDir( const QUrl& url )
+void MBoxProtocol::listDir(const QUrl &url)
 {
     m_errorState = false;
 
     KIO::UDSEntry entry;
-    UrlInfo info( url, UrlInfo::directory );
-    ReadMBox mbox( &info, this, hasMetaData( QLatin1String("onlynew") ), hasMetaData( QLatin1String("savetime") ) );
+    UrlInfo info(url, UrlInfo::directory);
+    ReadMBox mbox(&info, this, hasMetaData(QLatin1String("onlynew")), hasMetaData(QLatin1String("savetime")));
 
-    if( m_errorState ) {
+    if (m_errorState) {
         return;
     }
 
-    if( info.type() != UrlInfo::directory ) {
-        error( KIO::ERR_DOES_NOT_EXIST, info.url() );
+    if (info.type() != UrlInfo::directory) {
+        error(KIO::ERR_DOES_NOT_EXIST, info.url());
         return;
     }
 
-    while( !mbox.atEnd() && !m_errorState ) {
-        entry = Stat::stat( mbox, info );
-        if( mbox.inListing() ) {
-            listEntry( entry, false );
+    while (!mbox.atEnd() && !m_errorState) {
+        entry = Stat::stat(mbox, info);
+        if (mbox.inListing()) {
+            listEntry(entry, false);
         }
     }
 
-    listEntry( KIO::UDSEntry(), true );
+    listEntry(KIO::UDSEntry(), true);
     finished();
 }
 
-void MBoxProtocol::stat( const QUrl& url )
+void MBoxProtocol::stat(const QUrl &url)
 {
-    UrlInfo info( url );
-    if( info.type() == UrlInfo::invalid ) {
-        error( KIO::ERR_DOES_NOT_EXIST, url.path() );
+    UrlInfo info(url);
+    if (info.type() == UrlInfo::invalid) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     } else {
-        statEntry( Stat::stat( info ) );
+        statEntry(Stat::stat(info));
     }
     finished();
 }
 
-void MBoxProtocol::mimetype( const QUrl& url )
+void MBoxProtocol::mimetype(const QUrl &url)
 {
     m_errorState = false;
 
-    UrlInfo info( url );
+    UrlInfo info(url);
 
-    if( m_errorState ) {
+    if (m_errorState) {
         return;
     }
 
-    if( info.type() == UrlInfo::invalid ) {
-        error( KIO::ERR_DOES_NOT_EXIST, i18n( "Invalid URL" ) );
+    if (info.type() == UrlInfo::invalid) {
+        error(KIO::ERR_DOES_NOT_EXIST, i18n("Invalid URL"));
     } else {
-        mimeType( info.mimetype() );
+        mimeType(info.mimetype());
     }
     finished();
 }
 
-void MBoxProtocol::emitError( int _errno, const QString& arg )
+void MBoxProtocol::emitError(int _errno, const QString &arg)
 {
     m_errorState = true;
-    error( _errno, arg );
+    error(_errno, arg);
 }
 

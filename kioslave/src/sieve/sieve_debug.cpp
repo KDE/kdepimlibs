@@ -20,4 +20,3 @@
 #include "sieve_debug.h"
 Q_LOGGING_CATEGORY(SIEVE_LOG, "log_sieve")
 
-

@@ -24,12 +24,12 @@
 #include <QFileInfo>
 #include <QString>
 
-UrlInfo::UrlInfo( const QUrl &url, const UrlType type )
-    : m_type( invalid ),
-      m_filename( new QString ),
-      m_id( new QString )
+UrlInfo::UrlInfo(const QUrl &url, const UrlType type)
+    : m_type(invalid),
+      m_filename(new QString),
+      m_id(new QString)
 {
-    calculateInfo( url, type );
+    calculateInfo(url, type);
 }
 
 UrlInfo::~UrlInfo()
@@ -40,7 +40,7 @@ UrlInfo::~UrlInfo()
 
 QString UrlInfo::mimetype() const
 {
-    switch( m_type ) {
+    switch (m_type) {
     case message:
         return QLatin1String("message/rfc822");
     case directory:
@@ -66,38 +66,37 @@ QString UrlInfo::url() const
     return *m_filename + QLatin1Char('/') + *m_id;
 }
 
-
-void UrlInfo::calculateInfo( const QUrl &url, const UrlType type )
+void UrlInfo::calculateInfo(const QUrl &url, const UrlType type)
 {
     bool found = false;
 
-    if( !found && type & UrlInfo::message ) {
-        found = isMessage( url );
+    if (!found && type & UrlInfo::message) {
+        found = isMessage(url);
     }
-    if( !found && type & UrlInfo::directory ) {
-        found = isDirectory( url );
+    if (!found && type & UrlInfo::directory) {
+        found = isDirectory(url);
     }
-    if( !found ) {
+    if (!found) {
         m_type = invalid;
         *m_filename = QLatin1String("");
         *m_id = QLatin1String("");
     }
 }
 
-bool UrlInfo::isDirectory( const QUrl &url )
+bool UrlInfo::isDirectory(const QUrl &url)
 {
     //Check is url is in the form mbox://{filename}
     QString filename = url.path();
     QFileInfo info;
 
     //Remove ending /
-    while( filename.length() > 1 && filename.right( 1 ) == QLatin1String("/") ) {
-        filename.remove( filename.length()-2, 1 );
+    while (filename.length() > 1 && filename.right(1) == QLatin1String("/")) {
+        filename.remove(filename.length() - 2, 1);
     }
 
     //Is this a directory?
-    info.setFile( filename );
-    if( !info.isFile() ) {
+    info.setFile(filename);
+    if (!info.isFile()) {
         return false;
     }
 
@@ -109,28 +108,28 @@ bool UrlInfo::isDirectory( const QUrl &url )
     return true;
 }
 
-bool UrlInfo::isMessage( const QUrl &url )
+bool UrlInfo::isMessage(const QUrl &url)
 {
     QString path = url.path();
     QFileInfo info;
-    int cutindex = path.lastIndexOf( QLatin1Char('/') );
+    int cutindex = path.lastIndexOf(QLatin1Char('/'));
 
     //Does it contain at least one /?
-    if( cutindex < 0 ) {
+    if (cutindex < 0) {
         return false;
     }
 
     //Does the mbox-file exists?
-    info.setFile( path.left( cutindex ) );
-    if( !info.isFile() ) {
+    info.setFile(path.left(cutindex));
+    if (!info.isFile()) {
         return false;
     }
 
     //Settings parameters
-    qDebug() <<"urlInfo::isMessage(" << url <<" )";
+    qDebug() << "urlInfo::isMessage(" << url << " )";
     m_type = message;
-    *m_id = path.right( path.length() - cutindex - 1 );
-    *m_filename = path.left( cutindex );
+    *m_id = path.right(path.length() - cutindex - 1);
+    *m_filename = path.left(cutindex);
 
     return true;
 }

@@ -63,7 +63,8 @@ static const unsigned int SIEVE_DEFAULT_RECIEVE_BUFFER = 512;
 using namespace KIO;
 extern "C"
 {
-    Q_DECL_EXPORT int kdemain(int argc, char **argv) {
+    Q_DECL_EXPORT int kdemain(int argc, char **argv)
+    {
         QApplication app(argc, argv);
         app.setApplicationName(QLatin1String("kio_sieve"));
 
@@ -95,7 +96,7 @@ kio_sieveResponse::kio_sieveResponse()
 }
 
 /* ---------------------------------------------------------------------------------- */
-const uint& kio_sieveResponse::getType() const
+const uint &kio_sieveResponse::getType() const
 {
     return rType;
 }
@@ -107,58 +108,58 @@ uint kio_sieveResponse::getQuantity() const
 }
 
 /* ---------------------------------------------------------------------------------- */
-const QByteArray& kio_sieveResponse::getAction() const
+const QByteArray &kio_sieveResponse::getAction() const
 {
     return key;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const QByteArray& kio_sieveResponse::getKey() const
+const QByteArray &kio_sieveResponse::getKey() const
 {
     return key;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const QByteArray& kio_sieveResponse::getVal() const
+const QByteArray &kio_sieveResponse::getVal() const
 {
-        return val;
+    return val;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const QByteArray& kio_sieveResponse::getExtra() const
+const QByteArray &kio_sieveResponse::getExtra() const
 {
     return extra;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setQuantity(const uint& newQty)
+void kio_sieveResponse::setQuantity(const uint &newQty)
 {
     rType = QUANTITY;
     quantity = newQty;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setAction(const QByteArray& newAction)
+void kio_sieveResponse::setAction(const QByteArray &newAction)
 {
     rType = ACTION;
     key = newAction;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setKey(const QByteArray& newKey)
+void kio_sieveResponse::setKey(const QByteArray &newKey)
 {
     rType = KEY_VAL_PAIR;
     key = newKey;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setVal(const QByteArray& newVal)
+void kio_sieveResponse::setVal(const QByteArray &newVal)
 {
     val = newVal;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setExtra(const QByteArray& newExtra)
+void kio_sieveResponse::setExtra(const QByteArray &newExtra)
 {
     extra = newExtra;
 }
@@ -185,19 +186,19 @@ kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteA
 /* ---------------------------------------------------------------------------------- */
 kio_sieveProtocol::~kio_sieveProtocol()
 {
-    if ( isConnected() ) {
+    if (isConnected()) {
         disconnect();
     }
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveProtocol::setHost (const QString &host, quint16 port, const QString &user, const QString &pass)
+void kio_sieveProtocol::setHost(const QString &host, quint16 port, const QString &user, const QString &pass)
 {
-    if ( isConnected() &&
-         ( m_sServer != host ||
-           m_port != port ||
-           m_sUser != user ||
-           m_sPass != pass ) ) {
+    if (isConnected() &&
+            (m_sServer != host ||
+             m_port != port ||
+             m_sUser != user ||
+             m_sPass != pass)) {
         disconnect();
     }
     m_sServer = host;
@@ -229,7 +230,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
         ksDebug << "Looping receive" << endl;
 
         if (r.getType() == kio_sieveResponse::ACTION) {
-            if ( r.getAction().toLower().contains("ok") ) {
+            if (r.getAction().toLower().contains("ok")) {
                 ksDebug << "Sieve server ready & awaiting authentication." << endl;
                 break;
             } else {
@@ -273,13 +274,12 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
     return ret;
 }
 
-
 /* ---------------------------------------------------------------------------------- */
 /**
  * Checks if connection parameters have changed.
  * If it it, close the current connection
  */
-void kio_sieveProtocol::changeCheck( const QUrl &url )
+void kio_sieveProtocol::changeCheck(const QUrl &url)
 {
     QString auth;
 
@@ -289,31 +289,31 @@ void kio_sieveProtocol::changeCheck( const QUrl &url )
     } else {
         // ... and if not found, check the x-mech=AUTH query part of the url.
         QString query = url.query();
-        if ( query.startsWith(QLatin1Char('?')) ) {
-            query.remove( 0, 1 );
+        if (query.startsWith(QLatin1Char('?'))) {
+            query.remove(0, 1);
         }
-        QStringList q = query.split( QLatin1Char(',') );
+        QStringList q = query.split(QLatin1Char(','));
         QStringList::iterator it;
 
-        for ( it = q.begin(); it != q.end(); ++it ) {
-            if ( ( (*it).section(QLatin1Char('='),0,0) ).toLower() == QLatin1String("x-mech") ) {
-                auth = ( (*it).section(QLatin1Char('='),1) ).toUpper();
+        for (it = q.begin(); it != q.end(); ++it) {
+            if (((*it).section(QLatin1Char('='), 0, 0)).toLower() == QLatin1String("x-mech")) {
+                auth = ((*it).section(QLatin1Char('='), 1)).toUpper();
                 break;
             }
         }
     }
     ksDebug << "auth: " << auth << " m_sAuth: " << m_sAuth << endl;
-    if ( m_sAuth != auth ) {
+    if (m_sAuth != auth) {
         m_sAuth = auth;
-        if ( isConnected() ) {
+        if (isConnected()) {
             disconnect();
         }
     }
     // For TLS, only disconnect if we are unencrypted and are
     // no longer allowed (otherwise, it's still fine):
     const bool allowUnencryptedNow = QUrlQuery(url).queryItemValue(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
-    if ( m_allowUnencrypted && !allowUnencryptedNow ) {
-        if ( isConnected() ) {
+    if (m_allowUnencrypted && !allowUnencryptedNow) {
+        if (isConnected()) {
             disconnect();
         }
     }
@@ -330,7 +330,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
     ksDebug << endl;
 
     if (isConnected()) {
-       return true;
+        return true;
     }
 
     infoMessage(i18n("Connecting to %1...", m_sServer));
@@ -352,20 +352,19 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
         return false;
     }
 
-
     // Attempt to start TLS
-    if ( !m_allowUnencrypted && !QSslSocket::supportsSsl() ) {
-        error( ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
+    if (!m_allowUnencrypted && !QSslSocket::supportsSsl()) {
+        error(ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it."));
         disconnect();
         return false;
     }
 
-    if ( !m_allowUnencrypted && useTLSIfAvailable && QSslSocket::supportsSsl() && !m_supportsTLS &&
-         messageBox( WarningContinueCancel,
-                   i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
-                        "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
-                   i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel") ) != KMessageBox::Continue ) {
-        error( ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
+    if (!m_allowUnencrypted && useTLSIfAvailable && QSslSocket::supportsSsl() && !m_supportsTLS &&
+            messageBox(WarningContinueCancel,
+                       i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                            "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                       i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel")) != KMessageBox::Continue) {
+        error(ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server."));
         disconnect();
         return false;
     }
@@ -379,24 +378,24 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
             if (startSsl()) {
                 ksDebug << "TLS enabled successfully." << endl;
                 // reparse capabilities:
-                parseCapabilities( requestCapabilitiesAfterStartTLS() );
+                parseCapabilities(requestCapabilitiesAfterStartTLS());
             } else {
                 ksDebug << "TLS initiation failed.";
-                if ( m_allowUnencrypted ) {
+                if (m_allowUnencrypted) {
                     disconnect(true);
                     return connect(false);
                 }
-                messageBox( Information, i18n("Your Sieve server claims to support TLS, "
-                                              "but negotiation was unsuccessful."),
-                                         i18n("Connection Failed") );
+                messageBox(Information, i18n("Your Sieve server claims to support TLS, "
+                                             "but negotiation was unsuccessful."),
+                           i18n("Connection Failed"));
                 disconnect(true);
                 return false;
             }
-        } else if ( !m_allowUnencrypted ) {
+        } else if (!m_allowUnencrypted) {
             ksDebug << "Server incapable of TLS.";
             disconnect();
-            error( ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. "
-                                                       "Disable TLS if you want to connect without encryption.") );
+            error(ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. "
+                                          "Disable TLS if you want to connect without encryption."));
             return false;
         } else {
             ksDebug << "Server incapable of TLS. Transmitted documents will be unencrypted." << endl;
@@ -405,7 +404,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
         ksDebug << "We are incapable of TLS. Transmitted documents will be unencrypted." << endl;
     }
 
-    assert( m_allowUnencrypted || isUsingSsl() );
+    assert(m_allowUnencrypted || isUsingSsl());
 
     infoMessage(i18n("Authenticating user..."));
     if (!authenticate()) {
@@ -452,7 +451,7 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 void kio_sieveProtocol::special(const QByteArray &data)
 {
     int tmp;
-    QDataStream stream( data );
+    QDataStream stream(data);
     QUrl url;
 
     stream >> tmp;
@@ -480,9 +479,9 @@ void kio_sieveProtocol::special(const QByteArray &data)
 }
 
 /* ---------------------------------------------------------------------------------- */
-bool kio_sieveProtocol::activate(const QUrl& url)
+bool kio_sieveProtocol::activate(const QUrl &url)
 {
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return false;
     }
@@ -529,28 +528,29 @@ bool kio_sieveProtocol::deactivate()
     }
 }
 
-static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
-  if ( in.isEmpty() ) {
-    return;
-  }
-  const unsigned int oldOutSize = out.size();
-  out.resize( oldOutSize + 2 * in.size() );
-  const char * s = in.begin();
-  const char * const end = in.end();
-  char * d = out.begin() + oldOutSize;
-  char last = '\0';
-  while ( s < end ) {
-    if ( *s == '\n' && last != '\r' ) {
-      *d++ = '\r';
+static void append_lf2crlf(QByteArray &out, const QByteArray &in)
+{
+    if (in.isEmpty()) {
+        return;
     }
-    *d++ = last = *s++;
-  }
-  out.resize( d - out.begin() );
+    const unsigned int oldOutSize = out.size();
+    out.resize(oldOutSize + 2 * in.size());
+    const char *s = in.begin();
+    const char *const end = in.end();
+    char *d = out.begin() + oldOutSize;
+    char last = '\0';
+    while (s < end) {
+        if (*s == '\n' && last != '\r') {
+            *d++ = '\r';
+        }
+        *d++ = last = *s++;
+    }
+    out.resize(d - out.begin());
 }
 
-void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
+void kio_sieveProtocol::put(const QUrl &url, int /*permissions*/, KIO::JobFlags)
 {
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return;
     }
@@ -569,13 +569,13 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
         dataReq();
         QByteArray buffer;
         const int newSize = readData(buffer);
-        append_lf2crlf( data, buffer );
-        if ( newSize < 0 ) {
+        append_lf2crlf(data, buffer);
+        if (newSize < 0) {
             // read error: network in unknown state so disconnect
             error(ERR_COULD_NOT_READ, i18n("KIO data supply error."));
             return;
         }
-        if ( newSize == 0 ) {
+        if (newSize == 0) {
             break;
         }
     }
@@ -595,7 +595,7 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
     // (will be fixed in Cyrus 2.1.10)
 
     if (!sendData("PUTSCRIPT \"" + filename.toUtf8() + "\" {"
-                  + QByteArray::number( bufLen ) + "+}")) {
+                  + QByteArray::number(bufLen) + "+}")) {
         return;
     }
 
@@ -661,7 +661,7 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
 
                 error(ERR_INTERNAL_SERVER, i18n("The script did not upload successfully.\n"
                                                 "This is probably due to errors in the script.\n"
-                                                "The server responded:\n%1", QString::fromLatin1( errmsg.data(), errmsg.size() ) ));
+                                                "The server responded:\n%1", QString::fromLatin1(errmsg.data(), errmsg.size())));
 
                 // clear the rest of the incoming data
                 receiveData();
@@ -687,28 +687,29 @@ void kio_sieveProtocol::put(const QUrl& url, int /*permissions*/, KIO::JobFlags)
     finished();
 }
 
-static void inplace_crlf2lf( QByteArray & in ) {
-  if ( in.isEmpty() ) {
-    return;
-  }
-  QByteArray & out = in; // inplace
-  const char * s = in.begin();
-  const char * const end = in.end();
-  char * d = out.begin();
-  char last = '\0';
-  while ( s < end ) {
-    if ( *s == '\n' && last == '\r' ) {
-      --d;
+static void inplace_crlf2lf(QByteArray &in)
+{
+    if (in.isEmpty()) {
+        return;
     }
-    *d++ = last = *s++;
-  }
-  out.resize( d - out.begin() );
+    QByteArray &out = in;  // inplace
+    const char *s = in.begin();
+    const char *const end = in.end();
+    char *d = out.begin();
+    char last = '\0';
+    while (s < end) {
+        if (*s == '\n' && last == '\r') {
+            --d;
+        }
+        *d++ = last = *s++;
+    }
+    out.resize(d - out.begin());
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveProtocol::get(const QUrl& url)
+void kio_sieveProtocol::get(const QUrl &url)
 {
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return;
     }
@@ -731,39 +732,39 @@ void kio_sieveProtocol::get(const QUrl& url)
     if (receiveData() && r.getType() == kio_sieveResponse::QUANTITY) {
         // determine script size
         ssize_t total_len = r.getQuantity();
-        totalSize( total_len );
+        totalSize(total_len);
 
         ssize_t recv_len = 0;
         do {
             // wait for data...
-            if ( !waitForResponse( 600 ) ) {
-                error( KIO::ERR_SERVER_TIMEOUT, m_sServer );
-                disconnect( true );
+            if (!waitForResponse(600)) {
+                error(KIO::ERR_SERVER_TIMEOUT, m_sServer);
+                disconnect(true);
                 return;
             }
 
             // ...read data...
             // Only read as much as we need, otherwise we slurp in the OK that
             // operationSuccessful() is expecting below.
-            QByteArray dat( qMin( total_len - recv_len, ssize_t(64 * 1024 )), '\0' );
-            ssize_t this_recv_len = read( dat.data(), dat.size() );
+            QByteArray dat(qMin(total_len - recv_len, ssize_t(64 * 1024)), '\0');
+            ssize_t this_recv_len = read(dat.data(), dat.size());
 
-            if ( this_recv_len < 1 && !isConnected() ) {
-                error( KIO::ERR_CONNECTION_BROKEN, m_sServer );
-                disconnect( true );
+            if (this_recv_len < 1 && !isConnected()) {
+                error(KIO::ERR_CONNECTION_BROKEN, m_sServer);
+                disconnect(true);
                 return;
             }
 
-            dat.resize( this_recv_len );
-            inplace_crlf2lf( dat );
+            dat.resize(this_recv_len);
+            inplace_crlf2lf(dat);
             // send data to slaveinterface
-            data( dat );
+            data(dat);
 
             recv_len += this_recv_len;
-            processedSize( recv_len );
-        } while ( recv_len < total_len );
+            processedSize(recv_len);
+        } while (recv_len < total_len);
 
-        infoMessage(i18n("Finishing up...") );
+        infoMessage(i18n("Finishing up..."));
         data(QByteArray());
 
         if (operationSuccessful()) {
@@ -788,7 +789,7 @@ void kio_sieveProtocol::del(const QUrl &url, bool isfile)
         return;
     }
 
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return;
     }
@@ -818,26 +819,26 @@ void kio_sieveProtocol::del(const QUrl &url, bool isfile)
     finished();
 }
 
-void kio_sieveProtocol::chmod(const QUrl& url, int permissions)
+void kio_sieveProtocol::chmod(const QUrl &url, int permissions)
 {
-  switch ( permissions ) {
-  case 0700: // activate
-    activate(url);
-    break;
-  case 0600: // deactivate
-    deactivate();
-    break;
-  default: // unsupported
-    error(ERR_CANNOT_CHMOD, i18n("Cannot chmod to anything but 0700 (active) or 0600 (inactive script)."));
-    return;
-  }
+    switch (permissions) {
+    case 0700: // activate
+        activate(url);
+        break;
+    case 0600: // deactivate
+        deactivate();
+        break;
+    default: // unsupported
+        error(ERR_CANNOT_CHMOD, i18n("Cannot chmod to anything but 0700 (active) or 0600 (inactive script)."));
+        return;
+    }
 
-  finished();
+    finished();
 }
 
-void kio_sieveProtocol::urlStat(const QUrl& url)
+void kio_sieveProtocol::urlStat(const QUrl &url)
 {
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return;
     }
@@ -860,44 +861,46 @@ void kio_sieveProtocol::urlStat(const QUrl& url)
             return;
         }
 
-        while(receiveData()) {
+        while (receiveData()) {
             if (r.getType() == kio_sieveResponse::ACTION) {
                 if (r.getAction().toLower().count("ok") == 1)
                     // Script list completed
+                {
                     break;
-
-                } else {
-                    if (filename == QString::fromUtf8(r.getKey())) {
-                        entry.clear();
-
-                        entry.insert(KIO::UDSEntry::UDS_NAME,QString::fromUtf8(r.getKey()));
-
-                        entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
-
-                        if ( r.getExtra() == "ACTIVE" ) {
-                            entry.insert(KIO::UDSEntry::UDS_ACCESS,0700);
-                        } else {
-                            entry.insert(KIO::UDSEntry::UDS_ACCESS,0600);
-                        }
-
-                        entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
-
-                        //setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
-
-                        statEntry(entry);
-                        // cannot break here because we need to clear
-                        // the rest of the incoming data.
-                    }
                 }
+
+            } else {
+                if (filename == QString::fromUtf8(r.getKey())) {
+                    entry.clear();
+
+                    entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromUtf8(r.getKey()));
+
+                    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
+
+                    if (r.getExtra() == "ACTIVE") {
+                        entry.insert(KIO::UDSEntry::UDS_ACCESS, 0700);
+                    } else {
+                        entry.insert(KIO::UDSEntry::UDS_ACCESS, 0600);
+                    }
+
+                    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("application/sieve"));
+
+                    //setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
+
+                    statEntry(entry);
+                    // cannot break here because we need to clear
+                    // the rest of the incoming data.
+                }
+            }
         }
     }
 
     finished();
 }
 
-void kio_sieveProtocol::listDir(const QUrl& url)
+void kio_sieveProtocol::listDir(const QUrl &url)
 {
-    changeCheck( url );
+    changeCheck(url);
     if (!connect()) {
         return;
     }
@@ -908,7 +911,7 @@ void kio_sieveProtocol::listDir(const QUrl& url)
 
     UDSEntry entry;
 
-    while(receiveData()) {
+    while (receiveData()) {
         if (r.getType() == kio_sieveResponse::ACTION) {
             if (r.getAction().toLower().count("ok") == 1) {
                 // Script list completed.
@@ -917,17 +920,17 @@ void kio_sieveProtocol::listDir(const QUrl& url)
 
         } else {
             entry.clear();
-            entry.insert(KIO::UDSEntry::UDS_NAME,QString::fromUtf8(r.getKey()));
+            entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromUtf8(r.getKey()));
 
-            entry.insert(KIO::UDSEntry::UDS_FILE_TYPE,S_IFREG);
+            entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
 
-            if ( r.getExtra() == "ACTIVE" ) {
+            if (r.getExtra() == "ACTIVE") {
                 entry.insert(KIO::UDSEntry::UDS_ACCESS, 0700);// mark exec'able
             } else {
-                entry.insert(KIO::UDSEntry::UDS_ACCESS,0600);
+                entry.insert(KIO::UDSEntry::UDS_ACCESS, 0600);
             }
 
-            entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
+            entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("application/sieve"));
 
             //asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 
@@ -942,16 +945,16 @@ void kio_sieveProtocol::listDir(const QUrl& url)
 }
 
 /* ---------------------------------------------------------------------------------- */
-bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
+bool kio_sieveProtocol::saslInteract(void *in, AuthInfo &ai)
 {
     ksDebug << "sasl_interact" << endl;
-    sasl_interact_t *interact = ( sasl_interact_t * ) in;
+    sasl_interact_t *interact = (sasl_interact_t *) in;
 
     //some mechanisms do not require username && pass, so it doesn't need a popup
     //window for getting this info
-    for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
-        if ( interact->id == SASL_CB_AUTHNAME ||
-             interact->id == SASL_CB_PASS ) {
+    for (; interact->id != SASL_CB_LIST_END; interact++) {
+        if (interact->id == SASL_CB_AUTHNAME ||
+                interact->id == SASL_CB_PASS) {
 
             if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
                 if (!openPasswordDialog(ai)) {
@@ -968,20 +971,20 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
         }
     }
 
-    interact = ( sasl_interact_t * ) in;
-    while( interact->id != SASL_CB_LIST_END ) {
+    interact = (sasl_interact_t *) in;
+    while (interact->id != SASL_CB_LIST_END) {
         ksDebug << "SASL_INTERACT id: " << interact->id << endl;
-        switch( interact->id ) {
+        switch (interact->id) {
         case SASL_CB_USER:
         case SASL_CB_AUTHNAME:
             ksDebug << "SASL_CB_[AUTHNAME|USER]: '" << m_sUser << "'" << endl;
-            interact->result = strdup( m_sUser.toUtf8() );
-            interact->len = strlen( (const char *) interact->result );
+            interact->result = strdup(m_sUser.toUtf8());
+            interact->len = strlen((const char *) interact->result);
             break;
         case SASL_CB_PASS:
             ksDebug << "SASL_CB_PASS: [hidden] " << endl;
-            interact->result = strdup( m_sPass.toUtf8() );
-            interact->len = strlen( (const char *) interact->result );
+            interact->result = strdup(m_sPass.toUtf8());
+            interact->len = strlen((const char *) interact->result);
             break;
         default:
             interact->result = NULL; interact->len = 0;
@@ -993,7 +996,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 }
 
 #define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1", \
-      QString::fromUtf8( sasl_errdetail( conn ) )));
+                         QString::fromUtf8( sasl_errdetail( conn ) )));
 
 bool kio_sieveProtocol::authenticate()
 {
@@ -1012,7 +1015,7 @@ bool kio_sieveProtocol::authenticate()
     AuthInfo ai;
     ai.url.setScheme(QLatin1String("sieve"));
     ai.url.setHost(m_sServer);
-    ai.url.setPort( m_port );
+    ai.url.setPort(m_port);
     ai.username = m_sUser;
     ai.password = m_sPass;
     ai.keepPassword = true;
@@ -1020,8 +1023,8 @@ bool kio_sieveProtocol::authenticate()
     ai.comment = i18n("Please enter your authentication details for your sieve account "
                       "(usually the same as your email password):");
 
-    result = sasl_client_new( "sieve", m_sServer.toLatin1(), 0, 0, callbacks, 0, &conn );
-    if ( result != SASL_OK ) {
+    result = sasl_client_new("sieve", m_sServer.toLatin1(), 0, 0, callbacks, 0, &conn);
+    if (result != SASL_OK) {
         ksDebug << "sasl_client_new failed with: " << result << endl;
         SASLERROR
         return false;
@@ -1030,42 +1033,42 @@ bool kio_sieveProtocol::authenticate()
     QStringList strList;
 //    strList.append("NTLM");
 
-    if ( !m_sAuth.isEmpty() ) {
-        strList.append( m_sAuth );
+    if (!m_sAuth.isEmpty()) {
+        strList.append(m_sAuth);
     } else {
         strList = m_sasl_caps;
     }
 
     do {
         result = sasl_client_start(conn, strList.join(QLatin1String(" ")).toLatin1(),
-                    &client_interact, &out, &outlen, &mechusing);
+                                   &client_interact, &out, &outlen, &mechusing);
 
         if (result == SASL_INTERACT) {
-            if ( !saslInteract( client_interact, ai ) ) {
-                sasl_dispose( &conn );
+            if (!saslInteract(client_interact, ai)) {
+                sasl_dispose(&conn);
                 return false;
             };
         }
-    } while ( result == SASL_INTERACT );
+    } while (result == SASL_INTERACT);
 
-    if ( result != SASL_CONTINUE && result != SASL_OK ) {
+    if (result != SASL_CONTINUE && result != SASL_OK) {
         ksDebug << "sasl_client_start failed with: " << result << endl;
         SASLERROR
-        sasl_dispose( &conn );
+        sasl_dispose(&conn);
         return false;
     }
 
     ksDebug << "Preferred authentication method is " << mechusing << "." << endl;
 
-    QString firstCommand = QLatin1String("AUTHENTICATE \"") + QString::fromLatin1( mechusing ) + QLatin1String("\"");
-    challenge = QByteArray::fromRawData( out, outlen ).toBase64();
-    if ( !challenge.isEmpty() ) {
+    QString firstCommand = QLatin1String("AUTHENTICATE \"") + QString::fromLatin1(mechusing) + QLatin1String("\"");
+    challenge = QByteArray::fromRawData(out, outlen).toBase64();
+    if (!challenge.isEmpty()) {
         firstCommand += QLatin1String(" \"");
-        firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
+        firstCommand += QString::fromLatin1(challenge.data(), challenge.size());
         firstCommand += QLatin1Char('\"');
     }
 
-    if (!sendData( firstCommand.toLatin1() )) {
+    if (!sendData(firstCommand.toLatin1())) {
         return false;
     }
 
@@ -1079,7 +1082,7 @@ bool kio_sieveProtocol::authenticate()
         ksDebug << "Challenge len  " << r.getQuantity() << endl;
 
         if (r.getType() != kio_sieveResponse::QUANTITY) {
-            sasl_dispose( &conn );
+            sasl_dispose(&conn);
             error(ERR_UNSUPPORTED_PROTOCOL, QString::fromLatin1(mechusing));
             return false;
         }
@@ -1089,40 +1092,40 @@ bool kio_sieveProtocol::authenticate()
         receiveData();
 
         if (r.getType() != kio_sieveResponse::ACTION && r.getAction().length() != qty) {
-            sasl_dispose( &conn );
+            sasl_dispose(&conn);
             error(ERR_UNSUPPORTED_PROTOCOL, i18n("A protocol error occurred during authentication.\n"
                                                  "Choose a different authentication method to %1.", QLatin1String(mechusing)));
             return false;
         }
-        challenge = QByteArray::fromBase64( QByteArray::fromRawData( r.getAction().data(), qty ) );
+        challenge = QByteArray::fromBase64(QByteArray::fromRawData(r.getAction().data(), qty));
 //        ksDebug << "S:  [" << r.getAction() << "]." << endl;
 
         do {
             result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
-                            challenge.size(), &client_interact, &out, &outlen);
+                                      challenge.size(), &client_interact, &out, &outlen);
 
             if (result == SASL_INTERACT) {
-                if ( !saslInteract( client_interact, ai ) ) {
-                    sasl_dispose( &conn );
+                if (!saslInteract(client_interact, ai)) {
+                    sasl_dispose(&conn);
                     return false;
                 };
             }
-        } while ( result == SASL_INTERACT );
+        } while (result == SASL_INTERACT);
 
         ksDebug << "sasl_client_step: " << result << endl;
-        if ( result != SASL_CONTINUE && result != SASL_OK ) {
+        if (result != SASL_CONTINUE && result != SASL_OK) {
             ksDebug << "sasl_client_step failed with: " << result << endl;
             SASLERROR
-            sasl_dispose( &conn );
+            sasl_dispose(&conn);
             return false;
         }
 
-        sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
+        sendData('\"' + QByteArray::fromRawData(out, outlen).toBase64() + '\"');
 //    ksDebug << "C-1:  [" << out << "]." << endl;
-    } while ( true );
+    } while (true);
 
     ksDebug << "Challenges finished." << endl;
-    sasl_dispose( &conn );
+    sasl_dispose(&conn);
 
     if (operationResult() == OK) {
         // Authentication succeeded.
@@ -1130,25 +1133,24 @@ bool kio_sieveProtocol::authenticate()
     } else {
         // Authentication failed.
         error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1",
-                                  QString::fromLatin1( r.getAction() ) ) );
+                                               QString::fromLatin1(r.getAction())));
         return false;
     }
 }
 
 /* --------------------------------------------------------------------------- */
-void kio_sieveProtocol::mimetype(const QUrl & url)
+void kio_sieveProtocol::mimetype(const QUrl &url)
 {
     ksDebug << "Requesting mimetype for " << url.toDisplayString() << endl;
 
     if (url.fileName().isEmpty()) {
-        mimeType( QLatin1String("inode/directory") );
+        mimeType(QLatin1String("inode/directory"));
     } else {
-        mimeType( QLatin1String("application/sieve") );
+        mimeType(QLatin1String("application/sieve"));
     }
 
     finished();
 }
-
 
 /* --------------------------------------------------------------------------- */
 bool kio_sieveProtocol::sendData(const QByteArray &data)
@@ -1174,7 +1176,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
     QByteArray interpret;
     int start, end;
 
-    if ( reparse.isEmpty() ) {
+    if (reparse.isEmpty()) {
         if (!waitForData) {
             // is there data waiting?
             if (atEnd()) {
@@ -1185,10 +1187,10 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
         // read data from the server
         char buffer[SIEVE_DEFAULT_RECIEVE_BUFFER];
         const ssize_t numRead = readLine(buffer, SIEVE_DEFAULT_RECIEVE_BUFFER - 1);
-        if ( numRead < 0 ) {
+        if (numRead < 0) {
             return false;
         }
-        buffer[SIEVE_DEFAULT_RECIEVE_BUFFER-1] = '\0';
+        buffer[SIEVE_DEFAULT_RECIEVE_BUFFER - 1] = '\0';
 
         // strip LF/CR
         interpret = QByteArray(buffer, qstrlen(buffer) - 2);
@@ -1201,27 +1203,26 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 
     //ksDebug << "S: " << interpret << endl;
 
-    switch(interpret[0]) {
-    case '{':
-        {
-            // expecting {quantity}
-            start = 0;
-            end = interpret.indexOf("+}", start + 1);
-            // some older versions of Cyrus enclose the literal size just in { } instead of { +}
-            if ( end == -1 ) {
-                end = interpret.indexOf('}', start + 1);
-            }
-
-            bool ok = false;
-            r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
-            if (!ok) {
-                disconnect();
-                error(ERR_INTERNAL_SERVER, i18n("A protocol error occurred."));
-                return false;
-            }
-
-            return true;
+    switch (interpret[0]) {
+    case '{': {
+        // expecting {quantity}
+        start = 0;
+        end = interpret.indexOf("+}", start + 1);
+        // some older versions of Cyrus enclose the literal size just in { } instead of { +}
+        if (end == -1) {
+            end = interpret.indexOf('}', start + 1);
         }
+
+        bool ok = false;
+        r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt(&ok));
+        if (!ok) {
+            disconnect();
+            error(ERR_INTERNAL_SERVER, i18n("A protocol error occurred."));
+            return false;
+        }
+
+        return true;
+    }
     case '"':
         // expecting "key" "value" pairs
         break;
@@ -1296,19 +1297,19 @@ int kio_sieveProtocol::operationResult()
 
 bool kio_sieveProtocol::requestCapabilitiesAfterStartTLS() const
 {
-  // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
-  // not standard conform, but we need to support that anyway.
-  // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-  QRegExp regExp( QLatin1String("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive );
-  if ( regExp.indexIn( m_implementation ) >= 0 ) {
-    const int major = regExp.cap( 1 ).toInt();
-    const int minor = regExp.cap( 2 ).toInt();
-    const int patch = regExp.cap( 3 ).toInt();
-    const QString vendor = regExp.cap( 4 );
-    if ( major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == QLatin1String("-kolab-nocaps")) ) {
-      ksDebug <<" kio_sieveProtocol::requestCapabilitiesAfterStartTLS : Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"" << endl;
-      return true;
+    // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
+    // not standard conform, but we need to support that anyway.
+    // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
+    QRegExp regExp(QLatin1String("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive);
+    if (regExp.indexIn(m_implementation) >= 0) {
+        const int major = regExp.cap(1).toInt();
+        const int minor = regExp.cap(2).toInt();
+        const int patch = regExp.cap(3).toInt();
+        const QString vendor = regExp.cap(4);
+        if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == QLatin1String("-kolab-nocaps"))) {
+            ksDebug << " kio_sieveProtocol::requestCapabilitiesAfterStartTLS : Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"" << endl;
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
