@@ -29,6 +29,10 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 
+set( SHARED_MIME_INFO_MINIMUM_VERSION "0.40" )
+find_package( SharedMimeInfo REQUIRED )
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
   find_package(KF5Mime CONFIG REQUIRED)

@@ -142,3 +142,8 @@ ecm_generate_pri_file(BASE_NAME AkonadiMime
     LIB_NAME KF5AkonadiMime
     DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
 )
+
+## install the MIME type spec file for KDEPIM specific MIME types
+install(FILES kdepimlibs-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+
