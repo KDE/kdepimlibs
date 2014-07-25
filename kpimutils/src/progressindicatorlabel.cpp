@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-
 #include "progressindicatorlabel.h"
 #include "progressindicatorwidget.h"
 
 #include <QHBoxLayout>
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorLabelPrivate
 {
 public:

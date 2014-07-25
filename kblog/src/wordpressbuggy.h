@@ -34,9 +34,10 @@ class QUrl;
   @author Christian Weilbach \<christian_weilbach\@web.de\>
 */
 
-namespace KBlog {
+namespace KBlog
+{
 
-    class WordpressBuggyPrivate;
+class WordpressBuggyPrivate;
 /**
   @brief
   A class that can be used for access to blogs (Wordpress, Drupal <5.6
@@ -67,14 +68,14 @@ namespace KBlog {
 */
 class KBLOG_EXPORT WordpressBuggy : public MovableType
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create an object for WordpressBuggy
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit WordpressBuggy( const QUrl &server, QObject *parent = 0 );
+    explicit WordpressBuggy(const QUrl &server, QObject *parent = 0);
 
     /**
       Destroy the object.
@@ -85,7 +86,7 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
       Create a new post on server.
       @param post is send to the server.
     */
-    void createPost( KBlog::BlogPost *post );
+    void createPost(KBlog::BlogPost *post);
 
     /**
       Modify a post on server.
@@ -95,23 +96,23 @@ class KBLOG_EXPORT WordpressBuggy : public MovableType
       @see BlogPost::setPostId( const QString& )
       @see modifiedPost( KBlog::BlogPost* )
     */
-    void modifyPost( KBlog::BlogPost *post );
+    void modifyPost(KBlog::BlogPost *post);
 
     /**
       Returns the  of the inherited object.
     */
     QString interfaceName() const;
 
-  protected:
+protected:
     /**
       Constructor needed for private inheritance.
     */
-    WordpressBuggy( const QUrl &server, WordpressBuggyPrivate &dd, QObject *parent = 0 );
+    WordpressBuggy(const QUrl &server, WordpressBuggyPrivate &dd, QObject *parent = 0);
 
-  private:
-    Q_DECLARE_PRIVATE( WordpressBuggy )
-    Q_PRIVATE_SLOT( d_func(), void slotCreatePost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(), void slotModifyPost( KJob * ) )
+private:
+    Q_DECLARE_PRIVATE(WordpressBuggy)
+    Q_PRIVATE_SLOT(d_func(), void slotCreatePost(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotModifyPost(KJob *))
 };
 
 } //namespace KBlog

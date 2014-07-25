@@ -28,7 +28,7 @@
 
 #include <QtCore/QObject>
 
-template <class T,class S> class QMap;
+template <class T, class S> class QMap;
 
 class KTimeZone;
 class QUrl;
@@ -50,7 +50,8 @@ class QUrl;
 */
 
 /** Namespace for blog related classes. */
-namespace KBlog {
+namespace KBlog
+{
 
 class BlogPost;
 class BlogComment;
@@ -70,8 +71,8 @@ class BlogPrivate;
 
 class KBLOG_EXPORT Blog : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Constructor used by the remote interface implementations.
 
@@ -82,9 +83,9 @@ class KBLOG_EXPORT Blog : public QObject
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    explicit Blog( const QUrl &server, QObject *parent = 0,
-                   const QString &applicationName = QString(),
-                   const QString &applicationVersion = QString() );
+    explicit Blog(const QUrl &server, QObject *parent = 0,
+                  const QString &applicationName = QString(),
+                  const QString &applicationVersion = QString());
 
     /**
       Destroys the Blog object.
@@ -95,18 +96,18 @@ class KBLOG_EXPORT Blog : public QObject
       Enumeration for possible errors.
     */
     enum ErrorType {
-      /** An error in the XML-RPC client. */
-      XmlRpc,
-      /** An error in the syndication client. */
-      Atom,
-      /** A parsing error. */
-      ParsingError,
-      /** An error on authentication. */
-      AuthenticationError,
-      /** An error where the method called is not supported by this object. */
-      NotSupported,
-      /** Any other miscellaneous error. */
-      Other
+        /** An error in the XML-RPC client. */
+        XmlRpc,
+        /** An error in the syndication client. */
+        Atom,
+        /** A parsing error. */
+        ParsingError,
+        /** An error on authentication. */
+        AuthenticationError,
+        /** An error where the method called is not supported by this object. */
+        NotSupported,
+        /** Any other miscellaneous error. */
+        Other
     };
 
     /**
@@ -123,8 +124,8 @@ class KBLOG_EXPORT Blog : public QObject
     HTTP user agent string.
     @see userAgent()
     */
-    void setUserAgent( const QString &applicationName,
-                       const QString &applicationVersion );
+    void setUserAgent(const QString &applicationName,
+                      const QString &applicationVersion);
 
     /**
       Returns the name of the blogging API this object implements.
@@ -136,7 +137,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param blogId the ID of the blog to send/receive from.
       @see blogId();
     */
-    virtual void setBlogId( const QString &blogId );
+    virtual void setBlogId(const QString &blogId);
 
     /**
       Returns the unique ID for the specific blog on the server.
@@ -150,7 +151,7 @@ class KBLOG_EXPORT Blog : public QObject
 
       @see password();
     */
-    virtual void setPassword( const QString &password );
+    virtual void setPassword(const QString &password);
 
     /**
       Returns the password of the blog.
@@ -163,7 +164,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param username the blog's username.
       @see username()
     */
-    virtual void setUsername( const QString &username );
+    virtual void setUsername(const QString &username);
 
     /**
       Returns the username used in blog authentication.
@@ -178,7 +179,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param url the blog's XML-RPC URL.
       @see url()
     */
-    virtual void setUrl( const QUrl &url );
+    virtual void setUrl(const QUrl &url);
 
     /**
       Get the URL for the blog's XML-RPC interface.
@@ -193,7 +194,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param timeZone the time zone of the server.
       @see timeZone()
     */
-    virtual void setTimeZone( const KTimeZone &timeZone );
+    virtual void setTimeZone(const KTimeZone &timeZone);
 
     /**
       Get the time zone of the blog's server.
@@ -209,7 +210,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param number the number of posts to fetch.
       @see listedRecentPosts( const QList<KBlog::BlogPost>& posts )
     */
-    virtual void listRecentPosts( int number ) = 0;
+    virtual void listRecentPosts(int number) = 0;
 
     /**
       Fetch a blog post from the server with a specific ID.
@@ -221,7 +222,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see fetchedPost()
       @see listedRecentPosts( int number )
     */
-    virtual void fetchPost( KBlog::BlogPost *post ) = 0;
+    virtual void fetchPost(KBlog::BlogPost *post) = 0;
 
     /**
       Modify an existing blog post on the server.
@@ -233,7 +234,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see modifiedPost()
       @see listedRecentPosts( int number )
     */
-    virtual void modifyPost( KBlog::BlogPost *post ) = 0;
+    virtual void modifyPost(KBlog::BlogPost *post) = 0;
 
     /**
       Create a new blog post on the server.
@@ -241,7 +242,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the blog post to create.
       @see createdPost()
     */
-    virtual void createPost( KBlog::BlogPost *post ) = 0;
+    virtual void createPost(KBlog::BlogPost *post) = 0;
 
     /**
       Remove an existing blog post from the server.
@@ -252,9 +253,9 @@ class KBLOG_EXPORT Blog : public QObject
       @see removedPost()
       @see listedRecentPosts( int number )
     */
-    virtual void removePost( KBlog::BlogPost *post ) = 0;
+    virtual void removePost(KBlog::BlogPost *post) = 0;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       This signal is emitted when a listRecentPosts() job fetches a post
       from the blogging server.
@@ -263,7 +264,7 @@ class KBLOG_EXPORT Blog : public QObject
       @see listRecentPosts()
     */
     void listedRecentPosts(
-        const QList<KBlog::BlogPost>& posts );
+        const QList<KBlog::BlogPost> &posts);
 
     /**
       This signal is emitted when a createPost() job creates a new blog post
@@ -272,7 +273,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the created post.
       @see createPost()
     */
-    void createdPost( KBlog::BlogPost *post );
+    void createdPost(KBlog::BlogPost *post);
 
     /**
       This signal is emitted when a fetchPost() job fetches a post
@@ -281,7 +282,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the fetched post.
       @see fetchPost()
     */
-    void fetchedPost( KBlog::BlogPost *post );
+    void fetchedPost(KBlog::BlogPost *post);
 
     /**
       This signal is emitted when a modifyPost() job modifies a post
@@ -290,7 +291,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the modified post.
       @see modifyPost()
     */
-    void modifiedPost( KBlog::BlogPost *post );
+    void modifiedPost(KBlog::BlogPost *post);
 
     /**
       This signal is emitted when a removePost() job removes a post
@@ -299,7 +300,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the removed post.
       @see removePost()
     */
-    void removedPost( KBlog::BlogPost *post );
+    void removedPost(KBlog::BlogPost *post);
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -309,7 +310,7 @@ class KBLOG_EXPORT Blog : public QObject
       @param errorMessage the error message.
       @see ErrorType
     */
-    void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
+    void error(KBlog::Blog::ErrorType type, const QString &errorMessage);
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -320,8 +321,8 @@ class KBLOG_EXPORT Blog : public QObject
       @param post the post that caused the error.
       @see ErrorType
     */
-    void errorPost( KBlog::Blog::ErrorType type,
-                    const QString &errorMessage, KBlog::BlogPost *post );
+    void errorPost(KBlog::Blog::ErrorType type,
+                   const QString &errorMessage, KBlog::BlogPost *post);
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -332,8 +333,8 @@ class KBLOG_EXPORT Blog : public QObject
       @param media the media that caused the error.
       @see ErrorType
     */
-    void errorMedia( KBlog::Blog::ErrorType type,
-                     const QString &errorMessage, KBlog::BlogMedia *media );
+    void errorMedia(KBlog::Blog::ErrorType type,
+                    const QString &errorMessage, KBlog::BlogMedia *media);
 
     /**
       This signal is emitted when an error occurs with XML parsing or a
@@ -345,11 +346,11 @@ class KBLOG_EXPORT Blog : public QObject
       @param comment the comment that caused the error.
       @see ErrorType
     */
-    void errorComment( KBlog::Blog::ErrorType type,
-                       const QString &errorMessage, KBlog::BlogPost *post,
-                       KBlog::BlogComment *comment );
+    void errorComment(KBlog::Blog::ErrorType type,
+                      const QString &errorMessage, KBlog::BlogPost *post,
+                      KBlog::BlogComment *comment);
 
-  protected:
+protected:
     /** A pointer to the corresponding 'Private' class */
     BlogPrivate *const d_ptr;
 
@@ -364,12 +365,12 @@ class KBLOG_EXPORT Blog : public QObject
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    Blog( const QUrl &server, BlogPrivate &dd, QObject *parent = 0,
-          const QString &applicationName = QString(),
-          const QString &applicationVersion = QString() );
+    Blog(const QUrl &server, BlogPrivate &dd, QObject *parent = 0,
+         const QString &applicationName = QString(),
+         const QString &applicationVersion = QString());
 
-  private:
-    Q_DECLARE_PRIVATE( Blog )
+private:
+    Q_DECLARE_PRIVATE(Blog)
 };
 
 } //namespace KBlog

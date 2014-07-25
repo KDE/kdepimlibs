@@ -23,7 +23,8 @@
 #include "kpimutils_export.h"
 
 #include <QWidget>
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorLabelPrivate;
 class KPIMUTILS_EXPORT ProgressIndicatorLabel : public QWidget
 {
@@ -44,7 +45,7 @@ public Q_SLOTS:
 
 private:
     friend class ProgressIndicatorLabelPrivate;
-    ProgressIndicatorLabelPrivate * const d;
+    ProgressIndicatorLabelPrivate *const d;
 };
 }
 

@@ -26,11 +26,12 @@
 #include <QString>
 #include <QUrl>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class BlogMediaPrivate
 {
-  public:
+public:
     BlogMedia *q_ptr;
     QString mName;
     QUrl mUrl;
@@ -40,93 +41,93 @@ class BlogMediaPrivate
     BlogMedia::Status mStatus;
 };
 
-BlogMedia::BlogMedia(): d_ptr( new BlogMediaPrivate )
+BlogMedia::BlogMedia(): d_ptr(new BlogMediaPrivate)
 {
-  d_ptr->q_ptr=this;
+    d_ptr->q_ptr = this;
 }
 
-BlogMedia::BlogMedia( const BlogMedia &m )
-  : d_ptr( new BlogMediaPrivate )
+BlogMedia::BlogMedia(const BlogMedia &m)
+    : d_ptr(new BlogMediaPrivate)
 {
-  d_ptr->q_ptr = this;
-  d_ptr->mName = m.name();
-  d_ptr->mUrl = m.url();
-  d_ptr->mMimetype = m.mimetype();
-  d_ptr->mData = m.data();
-  d_ptr->mStatus = m.status();
-  d_ptr->mError = m.error();
+    d_ptr->q_ptr = this;
+    d_ptr->mName = m.name();
+    d_ptr->mUrl = m.url();
+    d_ptr->mMimetype = m.mimetype();
+    d_ptr->mData = m.data();
+    d_ptr->mStatus = m.status();
+    d_ptr->mError = m.error();
 }
 
 BlogMedia::~BlogMedia()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
 QString BlogMedia::name() const
 {
-  return d_ptr->mName;
+    return d_ptr->mName;
 }
 
-void BlogMedia::setName( const QString &name )
+void BlogMedia::setName(const QString &name)
 {
-  d_ptr->mName = name;
+    d_ptr->mName = name;
 }
 
 QUrl BlogMedia::url() const
 {
-  return d_ptr->mUrl;
+    return d_ptr->mUrl;
 }
 
-void BlogMedia::setUrl( const QUrl &url )
+void BlogMedia::setUrl(const QUrl &url)
 {
-  d_ptr->mUrl = url;
+    d_ptr->mUrl = url;
 }
 
 QString BlogMedia::mimetype() const
 {
-  return d_ptr->mMimetype;
+    return d_ptr->mMimetype;
 }
 
-void BlogMedia::setMimetype( const QString &mimetype )
+void BlogMedia::setMimetype(const QString &mimetype)
 {
-  d_ptr->mMimetype = mimetype;
+    d_ptr->mMimetype = mimetype;
 }
 
 QByteArray BlogMedia::data() const
 {
-  return d_ptr->mData;
+    return d_ptr->mData;
 }
 
-void BlogMedia::setData( const QByteArray &data )
+void BlogMedia::setData(const QByteArray &data)
 {
-  d_ptr->mData = data;
+    d_ptr->mData = data;
 }
 
 BlogMedia::Status BlogMedia::status() const
 {
-  return d_ptr->mStatus;
+    return d_ptr->mStatus;
 }
 
-void BlogMedia::setStatus( BlogMedia::Status status )
+void BlogMedia::setStatus(BlogMedia::Status status)
 {
-  d_ptr->mStatus = status;
+    d_ptr->mStatus = status;
 }
 
 QString BlogMedia::error() const
 {
-  return d_ptr->mError;
+    return d_ptr->mError;
 }
 
-void BlogMedia::setError( const QString &error )
+void BlogMedia::setError(const QString &error)
 {
-  d_ptr->mError = error;
+    d_ptr->mError = error;
 }
 
-BlogMedia &BlogMedia::operator=( const BlogMedia &m )
+BlogMedia &BlogMedia::operator=(const BlogMedia &m)
 {
-  BlogMedia copy( m );
-  swap( copy );
-  return *this;
+    BlogMedia copy(m);
+    swap(copy);
+    return *this;
 }
 
 } //namespace KBlog

@@ -28,11 +28,12 @@
 #include <KDateTime>
 #include <QUrl>
 
-namespace KBlog{
+namespace KBlog
+{
 
 class BlogCommentPrivate
 {
-  public:
+public:
     BlogComment *q_ptr;
     QString mTitle;
     QString mContent;

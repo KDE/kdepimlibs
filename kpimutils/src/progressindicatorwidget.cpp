@@ -22,7 +22,8 @@
 #include <QTimer>
 #include <KIconLoader>
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 
 IndicatorProgress::IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent)
     : QObject(parent),
@@ -43,8 +44,9 @@ void IndicatorProgress::slotTimerDone()
 {
     mIndicator->setPixmap(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
-    if (mProgressCount == 8)
+    if (mProgressCount == 8) {
         mProgressCount = 0;
+    }
 
     mProgressTimer->start(300);
 }
@@ -59,8 +61,9 @@ void IndicatorProgress::startAnimation()
 void IndicatorProgress::stopAnimation()
 {
     mIsActive = false;
-    if (mProgressTimer->isActive())
+    if (mProgressTimer->isActive()) {
         mProgressTimer->stop();
+    }
     mIndicator->clear();
 }
 
@@ -91,7 +94,7 @@ ProgressIndicatorWidget::ProgressIndicatorWidget(QWidget *parent)
     : QLabel(parent),
       d(new ProgressIndicatorWidgetPrivate(this))
 {
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 }
 
 ProgressIndicatorWidget::~ProgressIndicatorWidget()
@@ -113,7 +116,6 @@ bool ProgressIndicatorWidget::isActive() const
 {
     return d->indicator->isActive();
 }
-
 
 }
 

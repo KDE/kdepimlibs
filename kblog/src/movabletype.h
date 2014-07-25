@@ -36,9 +36,10 @@ class QUrl;
   @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
 
-namespace KBlog {
+namespace KBlog
+{
 
-    class MovableTypePrivate;
+class MovableTypePrivate;
 /**
   @brief
   A class that can be used for access to Movable Type blogs. Almost every
@@ -59,15 +60,15 @@ namespace KBlog {
 */
 class KBLOG_EXPORT MovableType : public MetaWeblog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create an object for Movable Type
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit MovableType( const QUrl &server, QObject *parent = 0 );
+    explicit MovableType(const QUrl &server, QObject *parent = 0);
 
     /**
       Destroy the object.
@@ -87,7 +88,7 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
       @see     void listedRecentPosts( const QList\<KBlog::BlogPost\>& )
       @see     BlogPost::Status
     */
-    void listRecentPosts( int number );
+    void listRecentPosts(int number);
 
     /**
       Get the list of trackback pings from the server.
@@ -99,15 +100,15 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
       @see listedTrackBackPings( KBlog::BlogPost *, const QList\<QMap\<QString,QString\> \>& )
 
     */
-    virtual void listTrackBackPings( KBlog::BlogPost *post );
+    virtual void listTrackBackPings(KBlog::BlogPost *post);
 
-    void createPost( KBlog::BlogPost *post );
+    void createPost(KBlog::BlogPost *post);
 
-    void modifyPost( KBlog::BlogPost *post );
+    void modifyPost(KBlog::BlogPost *post);
 
-    void fetchPost( KBlog::BlogPost *post );
+    void fetchPost(KBlog::BlogPost *post);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       This signal is emitted when the trackback pings are fetched completely.
 
@@ -116,32 +117,32 @@ class KBLOG_EXPORT MovableType : public MetaWeblog
 
       @see listTrackBackPings()
     */
-    void listedTrackBackPings( KBlog::BlogPost *post, const QList<QMap<QString,QString> > &pings );
+    void listedTrackBackPings(KBlog::BlogPost *post, const QList<QMap<QString, QString> > &pings);
 
-  protected:
+protected:
     /**
       Constructor needed for private inheritance.
     */
-    MovableType( const QUrl &server, MovableTypePrivate &dd, QObject *parent = 0 );
+    MovableType(const QUrl &server, MovableTypePrivate &dd, QObject *parent = 0);
 
-  private:
-    Q_DECLARE_PRIVATE( MovableType )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListTrackBackPings( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotGetPostCategories(const QList<QVariant>&,const QVariant&) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotSetPostCategories(const QList<QVariant>&,const QVariant&) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotTriggerCreatePost() )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotTriggerModifyPost() )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotTriggerFetchPost() )
+private:
+    Q_DECLARE_PRIVATE(MovableType)
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListTrackBackPings(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotCreatePost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotModifyPost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotGetPostCategories(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotSetPostCategories(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotTriggerCreatePost())
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotTriggerModifyPost())
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotTriggerFetchPost())
 };
 
 } //namespace KBlog

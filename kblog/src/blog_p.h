@@ -29,11 +29,12 @@
 #include <QUrl>
 #include <kxmlrpcclient/client.h>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class BlogPrivate
 {
-  public:
+public:
     BlogPrivate();
     virtual ~BlogPrivate();
     Blog *q_ptr;
@@ -43,7 +44,7 @@ class BlogPrivate
     QString mUserAgent;
     QUrl mUrl;
     KTimeZone mTimeZone;
-    Q_DECLARE_PUBLIC( Blog )
+    Q_DECLARE_PUBLIC(Blog)
 };
 
 } //namespace KBlog

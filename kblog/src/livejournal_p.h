@@ -28,16 +28,17 @@
 
 #include <kxmlrpcclient/client.h>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class LiveJournalPrivate : public BlogPrivate
 {
-  public:
+public:
     QString mAppId;
-    QMap<QString,QString> mCategories;
+    QMap<QString, QString> mCategories;
     KXmlRpc::Client *mXmlRpcClient;
-    QMap<unsigned int,KBlog::BlogPost*> mCallMap;
-    QMap<unsigned int,QString> mCallMapAddFriend;
+    QMap<unsigned int, KBlog::BlogPost *> mCallMap;
+    QMap<unsigned int, QString> mCallMapAddFriend;
     unsigned int mCallCounter;
     QString mServerMessage;
     QString mUserId;
@@ -47,54 +48,54 @@ class LiveJournalPrivate : public BlogPrivate
     virtual ~LiveJournalPrivate();
 
     enum GenerateCookieOption {
-      LongExpiriation = 0x01,
-      FixedIP = 0x02
+        LongExpiriation = 0x01,
+        FixedIP = 0x02
     };
-    Q_DECLARE_FLAGS( GenerateCookieOptions, GenerateCookieOption )
+    Q_DECLARE_FLAGS(GenerateCookieOptions, GenerateCookieOption)
 
-    virtual void generateCookie( const GenerateCookieOptions &options );
+    virtual void generateCookie(const GenerateCookieOptions &options);
 
-    virtual void expireCookie( const QString &cookie, bool expireAll );
+    virtual void expireCookie(const QString &cookie, bool expireAll);
 
-    virtual QMap<QString,QVariant> defaultArgs();
+    virtual QMap<QString, QVariant> defaultArgs();
 
-    virtual void slotAddFriend( const QList<QVariant> &result,
-                                const QVariant &id );
-    virtual void slotAssignFriendToCategory( const QList<QVariant> &result,
-                                             const QVariant &id );
-    virtual void slotCreatePost( const QList<QVariant> &result,
-                                 const QVariant &id );
-    virtual void slotDeleteFriend( const QList<QVariant> &result,
-                                   const QVariant &id );
+    virtual void slotAddFriend(const QList<QVariant> &result,
+                               const QVariant &id);
+    virtual void slotAssignFriendToCategory(const QList<QVariant> &result,
+                                            const QVariant &id);
+    virtual void slotCreatePost(const QList<QVariant> &result,
+                                const QVariant &id);
+    virtual void slotDeleteFriend(const QList<QVariant> &result,
+                                  const QVariant &id);
 //     virtual void slotExpireCookie( const QList<QVariant> &result,
 //                                    const QVariant &id );
-    virtual void slotError( int, const QString &, const QVariant & );
-    virtual void slotFetchPost( const QList<QVariant> &result,
-                                const QVariant &id );
-    virtual void slotFetchUserInfo( const QList<QVariant> &result,
-                                    const QVariant &id );
+    virtual void slotError(int, const QString &, const QVariant &);
+    virtual void slotFetchPost(const QList<QVariant> &result,
+                               const QVariant &id);
+    virtual void slotFetchUserInfo(const QList<QVariant> &result,
+                                   const QVariant &id);
 //     virtual void slotGenerateCookie( const QList<QVariant> &result,
 //                                      const QVariant &id );
-    virtual void slotListCategories( const QList<QVariant> &result,
-                                     const QVariant &id );
-    virtual void slotListFriends( const QList<QVariant> &result,
-                                  const QVariant &id );
-    virtual void slotListFriendsOf( const QList<QVariant> &result,
-                                    const QVariant &id );
-    virtual void slotListMoods( const QList<QVariant> &result,
-                                const QVariant &id );
-    virtual void slotListPictureKeywords( const QList<QVariant> &result,
-                                          const QVariant &id );
-    virtual void slotListRecentPosts( const QList<QVariant> &result,
-                                      const QVariant &id );
-    virtual void slotModifyPost( const QList<QVariant> &result,
-                                 const QVariant &id );
-    virtual void slotRemovePost( const QList<QVariant> &result,
-                                 const QVariant &id );
-    Q_DECLARE_PUBLIC( LiveJournal )
+    virtual void slotListCategories(const QList<QVariant> &result,
+                                    const QVariant &id);
+    virtual void slotListFriends(const QList<QVariant> &result,
+                                 const QVariant &id);
+    virtual void slotListFriendsOf(const QList<QVariant> &result,
+                                   const QVariant &id);
+    virtual void slotListMoods(const QList<QVariant> &result,
+                               const QVariant &id);
+    virtual void slotListPictureKeywords(const QList<QVariant> &result,
+                                         const QVariant &id);
+    virtual void slotListRecentPosts(const QList<QVariant> &result,
+                                     const QVariant &id);
+    virtual void slotModifyPost(const QList<QVariant> &result,
+                                const QVariant &id);
+    virtual void slotRemovePost(const QList<QVariant> &result,
+                                const QVariant &id);
+    Q_DECLARE_PUBLIC(LiveJournal)
 
-  private:
-    bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
+private:
+    bool readPostFromMap(BlogPost *post, const QMap<QString, QVariant> &postInfo);
 };
 
 }

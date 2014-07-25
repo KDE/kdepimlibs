@@ -29,7 +29,8 @@
 
 class QUrl;
 
-namespace KBlog {
+namespace KBlog
+{
 
 class BlogMediaPrivate;
 
@@ -48,7 +49,7 @@ class BlogMediaPrivate;
 class KBLOG_EXPORT BlogMedia
 {
 
-  public:
+public:
     /**
       Default constructor. Creates an empty BlogMedia object.
     */
@@ -57,7 +58,7 @@ class KBLOG_EXPORT BlogMedia
     /**
       Copy Constructor needed for list handling.
     */
-    BlogMedia( const BlogMedia &media );
+    BlogMedia(const BlogMedia &media);
 
     /**
       Virtual default destructor.
@@ -80,7 +81,7 @@ class KBLOG_EXPORT BlogMedia
 
       @see name()
     */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
       Returns the server side url.
@@ -97,7 +98,7 @@ class KBLOG_EXPORT BlogMedia
 
       @see url()
     */
-    void setUrl( const QUrl &url );
+    void setUrl(const QUrl &url);
 
     /**
       Returns the mimetype.
@@ -113,7 +114,7 @@ class KBLOG_EXPORT BlogMedia
 
       @see mimetype()
     */
-    void setMimetype( const QString &mimetype );
+    void setMimetype(const QString &mimetype);
 
     /**
       Returns the data of the file.
@@ -129,19 +130,19 @@ class KBLOG_EXPORT BlogMedia
 
        @see data()
     */
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     /**
        The different possible status. At the moment you cannot do
        much with media objects.
     */
     enum Status {
-       /** Status of freshly constructed media object on the client side. */
-       New,
-       /** Status of a media object successfully created on the server. */
-       Created,
-       /** Status when an error on uploading has occurred. */
-       Error
+        /** Status of freshly constructed media object on the client side. */
+        New,
+        /** Status of a media object successfully created on the server. */
+        Created,
+        /** Status when an error on uploading has occurred. */
+        Error
     };
 
     /**
@@ -159,7 +160,7 @@ class KBLOG_EXPORT BlogMedia
 
        @see status()
     */
-    void setStatus( Status status );
+    void setStatus(Status status);
 
     /**
        Returns the error string.
@@ -174,22 +175,23 @@ class KBLOG_EXPORT BlogMedia
 
        @see error()
     */
-    void setError( const QString &error );
+    void setError(const QString &error);
 
     /**
        Overloaded for QList handling.
        @param media The media file to copy.
     */
-    BlogMedia &operator=( const BlogMedia &media );
+    BlogMedia &operator=(const BlogMedia &media);
 
     /**
       The swap operator.
     */
-    void swap( BlogMedia &other ) {
-        qSwap( this->d_ptr, other.d_ptr );
+    void swap(BlogMedia &other)
+    {
+        qSwap(this->d_ptr, other.d_ptr);
     }
 
-  private:
+private:
     BlogMediaPrivate *d_ptr; //krazy:exclude=dpointer can't constify due to bic and swap being declared inline
 };
 

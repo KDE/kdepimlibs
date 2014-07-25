@@ -27,14 +27,14 @@
 #include "qurl.h"
 #include "kdatetime.h"
 
-Q_DECLARE_METATYPE( KBlog::BlogComment::Status )
+Q_DECLARE_METATYPE(KBlog::BlogComment::Status)
 
 using namespace KBlog;
 
 class testBlogComment: public QObject
 {
-   Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testValidity();
     void testValidity_data();
 };
@@ -43,67 +43,67 @@ class testBlogComment: public QObject
 
 void testBlogComment::testValidity_data()
 {
-    QTest::addColumn<QString>( "commentId" );
-    QTest::addColumn<QString>( "title" );
-    QTest::addColumn<QString>( "content" );
-    QTest::addColumn<QString>( "name" );
-    QTest::addColumn<QString>( "email" );
-    QTest::addColumn<QUrl>( "url" );
-    QTest::addColumn<BlogComment::Status>( "status" );
-    QTest::addColumn<QString>( "error" );
-    QTest::addColumn<KDateTime>( "creationDateTime" );
-    QTest::addColumn<KDateTime>( "modificationDateTime" );
+    QTest::addColumn<QString>("commentId");
+    QTest::addColumn<QString>("title");
+    QTest::addColumn<QString>("content");
+    QTest::addColumn<QString>("name");
+    QTest::addColumn<QString>("email");
+    QTest::addColumn<QUrl>("url");
+    QTest::addColumn<BlogComment::Status>("status");
+    QTest::addColumn<QString>("error");
+    QTest::addColumn<KDateTime>("creationDateTime");
+    QTest::addColumn<KDateTime>("modificationDateTime");
 
-    QTest::newRow( "SimpleTest" )
-      << QString::fromLatin1( "ABC123" )
-      << QString::fromLatin1( "Title" )
-      << QString::fromLatin1( "Content" )
-      << QString::fromLatin1( "Name" )
-      << QString::fromLatin1( "E-Mail" )
-      << QUrl(QLatin1String("http://my.link/in/outer/space/fancy/ABC123"))
-      << BlogComment::New
-      << QString::fromLatin1( "Error" )
-      << KDateTime( QDateTime::currentDateTime() )
-      << KDateTime( QDateTime::currentDateTime() );
+    QTest::newRow("SimpleTest")
+            << QString::fromLatin1("ABC123")
+            << QString::fromLatin1("Title")
+            << QString::fromLatin1("Content")
+            << QString::fromLatin1("Name")
+            << QString::fromLatin1("E-Mail")
+            << QUrl(QLatin1String("http://my.link/in/outer/space/fancy/ABC123"))
+            << BlogComment::New
+            << QString::fromLatin1("Error")
+            << KDateTime(QDateTime::currentDateTime())
+            << KDateTime(QDateTime::currentDateTime());
 }
 
 void testBlogComment::testValidity()
 {
     BlogComment p;
 
-    QFETCH( QString, commentId );
-    QFETCH( QString, title );
-    QFETCH( QString, content );
-    QFETCH( QString, name );
-    QFETCH( QString, email );
-    QFETCH( QUrl, url );
-    QFETCH( BlogComment::Status, status );
-    QFETCH( QString, error );
-    QFETCH( KDateTime, creationDateTime );
-    QFETCH( KDateTime, modificationDateTime );
+    QFETCH(QString, commentId);
+    QFETCH(QString, title);
+    QFETCH(QString, content);
+    QFETCH(QString, name);
+    QFETCH(QString, email);
+    QFETCH(QUrl, url);
+    QFETCH(BlogComment::Status, status);
+    QFETCH(QString, error);
+    QFETCH(KDateTime, creationDateTime);
+    QFETCH(KDateTime, modificationDateTime);
 
-    p.setCommentId( commentId );
-    p.setTitle( title );
-    p.setContent( content );
-    p.setName( name );
-    p.setEmail( email );
-    p.setUrl( url );
-    p.setStatus( status );
-    p.setError( error );
-    p.setCreationDateTime( creationDateTime );
-    p.setModificationDateTime( modificationDateTime );
+    p.setCommentId(commentId);
+    p.setTitle(title);
+    p.setContent(content);
+    p.setName(name);
+    p.setEmail(email);
+    p.setUrl(url);
+    p.setStatus(status);
+    p.setError(error);
+    p.setCreationDateTime(creationDateTime);
+    p.setModificationDateTime(modificationDateTime);
 
-    QCOMPARE( p.commentId(), commentId );
-    QCOMPARE( p.title(), title );
-    QCOMPARE( p.content(), content );
-    QCOMPARE( p.name(), name );
-    QCOMPARE( p.email(), email );
-    QCOMPARE( p.url(), url );
-    QCOMPARE( p.status(), status );
-    QCOMPARE( p.error(), error );
-    QCOMPARE( p.creationDateTime(), creationDateTime );
-    QCOMPARE( p.modificationDateTime (), modificationDateTime );
+    QCOMPARE(p.commentId(), commentId);
+    QCOMPARE(p.title(), title);
+    QCOMPARE(p.content(), content);
+    QCOMPARE(p.name(), name);
+    QCOMPARE(p.email(), email);
+    QCOMPARE(p.url(), url);
+    QCOMPARE(p.status(), status);
+    QCOMPARE(p.error(), error);
+    QCOMPARE(p.creationDateTime(), creationDateTime);
+    QCOMPARE(p.modificationDateTime(), modificationDateTime);
 
 }
 
-QTEST_GUILESS_MAIN( testBlogComment )
+QTEST_GUILESS_MAIN(testBlogComment)

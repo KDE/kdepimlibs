@@ -27,16 +27,20 @@
 class QDateTime;
 class QString;
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace KMime {
-  class Message;
-  typedef boost::shared_ptr<Message> MessagePtr;
+namespace KMime
+{
+class Message;
+typedef boost::shared_ptr<Message> MessagePtr;
 }
-namespace Akonadi {
-namespace NoteUtils {
+namespace Akonadi
+{
+namespace NoteUtils
+{
 
 /**
 * @return mimetype for notes
@@ -57,50 +61,50 @@ AKONADI_NOTES_EXPORT QString noteIconName();
 class AKONADI_NOTES_EXPORT Attachment
 {
 public:
-  /**
-   * Create an attachment referencing a url only
-   */
-  Attachment( const QUrl &url, const QString &mimetype );
-  /**
-   * Create an attachment with the content stored inline
-   */
-  Attachment( const QByteArray &data, const QString &mimetype );
-  Attachment( const Attachment & );
-  ~Attachment();
+    /**
+     * Create an attachment referencing a url only
+     */
+    Attachment(const QUrl &url, const QString &mimetype);
+    /**
+     * Create an attachment with the content stored inline
+     */
+    Attachment(const QByteArray &data, const QString &mimetype);
+    Attachment(const Attachment &);
+    ~Attachment();
 
-  bool operator==( const Attachment & ) const;
-  void operator=( const Attachment & );
+    bool operator==(const Attachment &) const;
+    void operator=(const Attachment &);
 
-  /**
-   * Returns the url for url-only attachments
-   */
-  QUrl url() const;
+    /**
+     * Returns the url for url-only attachments
+     */
+    QUrl url() const;
 
-  /**
-   * Returns the date for inline attachments
-   */
-  QByteArray data() const;
+    /**
+     * Returns the date for inline attachments
+     */
+    QByteArray data() const;
 
-  /**
-   * Returns the mimetype
-   */
-  QString mimetype() const;
+    /**
+     * Returns the mimetype
+     */
+    QString mimetype() const;
 
-  /**
-   * Sets the label to be presented to the user
-   */
-  void setLabel( const QString &label );
+    /**
+     * Sets the label to be presented to the user
+     */
+    void setLabel(const QString &label);
 
-  /**
-   * Returns the label of the attachment
-   */
-  QString label() const;
+    /**
+     * Returns the label of the attachment
+     */
+    QString label() const;
 private:
-  //@cond PRIVATE
-  class AttachmentPrivate;
-  AttachmentPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( Attachment )
-  //@endcond
+    //@cond PRIVATE
+    class AttachmentPrivate;
+    AttachmentPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(Attachment)
+    //@endcond
 };
 
 /**
@@ -144,125 +148,125 @@ private:
 class AKONADI_NOTES_EXPORT NoteMessageWrapper
 {
 public:
-  NoteMessageWrapper();
-  explicit NoteMessageWrapper( const KMime::MessagePtr & );
-  ~NoteMessageWrapper();
+    NoteMessageWrapper();
+    explicit NoteMessageWrapper(const KMime::MessagePtr &);
+    ~NoteMessageWrapper();
 
-   /**
-     * Set the uid of the note
-     * @param uid should be globally unique
-     */
-  void setUid( const QString &uid );
+    /**
+      * Set the uid of the note
+      * @param uid should be globally unique
+      */
+    void setUid(const QString &uid);
 
-  /**
-    * Returns the uid of the note
-    */
-  QString uid() const;
+    /**
+      * Returns the uid of the note
+      */
+    QString uid() const;
 
-  enum Classification {
-    Public,
-    Private,
-    Confidential
-  };
+    enum Classification {
+        Public,
+        Private,
+        Confidential
+    };
 
-  /**
-    * Set the classification of the note
-    */
-  void setClassification( Classification );
+    /**
+      * Set the classification of the note
+      */
+    void setClassification(Classification);
 
-  /**
-    * Returns the classification of the note
-    */
-  Classification classification() const;
+    /**
+      * Returns the classification of the note
+      */
+    Classification classification() const;
 
-  /**
-    * Set the title of the note
-    */
-  void setTitle( const QString &title );
+    /**
+      * Set the title of the note
+      */
+    void setTitle(const QString &title);
 
-  /**
-    * Returns the title of the note
-    */
-  QString title() const;
+    /**
+      * Returns the title of the note
+      */
+    QString title() const;
 
-  /**
-    * Set the text of the note
-    *
-    * @param format only Qt::PlainText and Qt::RichText is supported
-    */
-  void setText( const QString &text, Qt::TextFormat format = Qt::PlainText );
+    /**
+      * Set the text of the note
+      *
+      * @param format only Qt::PlainText and Qt::RichText is supported
+      */
+    void setText(const QString &text, Qt::TextFormat format = Qt::PlainText);
 
-  /**
-    * Returns the text of the note
-    */
-  QString text() const;
+    /**
+      * Returns the text of the note
+      */
+    QString text() const;
 
-  /**
-    * @return Qt::PlainText or Qt::RichText
-    */
-  Qt::TextFormat textFormat() const;
+    /**
+      * @return Qt::PlainText or Qt::RichText
+      */
+    Qt::TextFormat textFormat() const;
 
-  /**
-    * @return plaintext version of the text (if richtext)
-    */
-  QString toPlainText() const;
+    /**
+      * @return plaintext version of the text (if richtext)
+      */
+    QString toPlainText() const;
 
-  /**
-    * Set the creation date of the note (stored in the mime header)
-    */
-  void setCreationDate( const QDateTime &creationDate );
+    /**
+      * Set the creation date of the note (stored in the mime header)
+      */
+    void setCreationDate(const QDateTime &creationDate);
 
-  /**
-    * Returns the creation date of the note
-    */
-  QDateTime creationDate() const;
+    /**
+      * Returns the creation date of the note
+      */
+    QDateTime creationDate() const;
 
-  /**
-    * Set the lastModified-date of the note
-    */
-  void setLastModifiedDate( const QDateTime &lastModifiedDate );
+    /**
+      * Set the lastModified-date of the note
+      */
+    void setLastModifiedDate(const QDateTime &lastModifiedDate);
 
-  /**
-    * Returns the lastModified-date of the note
-    */
-  QDateTime lastModifiedDate() const;
+    /**
+      * Returns the lastModified-date of the note
+      */
+    QDateTime lastModifiedDate() const;
 
-  /**
-    * Set the origin (creator) of the note (stored in the mime header)
-    * This is usually the application creating the note.
-    * @param from must be an address in the style of foo@kde.org.
-    */
-  void setFrom( const QString &from );
+    /**
+      * Set the origin (creator) of the note (stored in the mime header)
+      * This is usually the application creating the note.
+      * @param from must be an address in the style of foo@kde.org.
+      */
+    void setFrom(const QString &from);
 
-  /**
-    * Returns the origin (creator) of the note
-    */
-  QString from() const;
+    /**
+      * Returns the origin (creator) of the note
+      */
+    QString from() const;
 
-  /**
-    * Returns a reference to the list of attachments of the note
-    */
-  QList<Attachment> &attachments();
+    /**
+      * Returns a reference to the list of attachments of the note
+      */
+    QList<Attachment> &attachments();
 
-  /**
-    * Returns a reference to the custom-value map
-    * @return key-value map containing all custom values
-    */
-  QMap<QString, QString> &custom();
+    /**
+      * Returns a reference to the custom-value map
+      * @return key-value map containing all custom values
+      */
+    QMap<QString, QString> &custom();
 
-  /**
-    * Assemble a KMime message with the given values
-    *
-    * The message can then i.e. be stored inside an akonadi item
-    */
-  KMime::MessagePtr message() const;
+    /**
+      * Assemble a KMime message with the given values
+      *
+      * The message can then i.e. be stored inside an akonadi item
+      */
+    KMime::MessagePtr message() const;
 
 private:
-  //@cond PRIVATE
-  class NoteMessageWrapperPrivate;
-  NoteMessageWrapperPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( NoteMessageWrapper )
-  //@endcond
+    //@cond PRIVATE
+    class NoteMessageWrapperPrivate;
+    NoteMessageWrapperPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(NoteMessageWrapper)
+    //@endcond
 };
 
 }

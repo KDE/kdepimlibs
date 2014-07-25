@@ -29,11 +29,12 @@
 #include <kdatetime.h>
 #include <QUrl>
 
-namespace KBlog{
+namespace KBlog
+{
 
 class BlogPostPrivate
 {
-  public:
+public:
     bool mPrivate;
     BlogPost *q_ptr;
     QString mPostId;
@@ -54,7 +55,7 @@ class BlogPostPrivate
     BlogPost::Status mStatus;
     KDateTime mCreationDateTime;
     KDateTime mModificationDateTime;
-    QString cleanRichText( QString richText ) const;
+    QString cleanRichText(QString richText) const;
 };
 
 } // namespace

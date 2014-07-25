@@ -35,7 +35,8 @@ class QUrl;
 
   @author Mike McQuaid \<mike\@mikemcquaid.com\>
 */
-namespace KBlog {
+namespace KBlog
+{
 
 class LiveJournalPrivate;
 
@@ -56,35 +57,35 @@ class LiveJournalPrivate;
 */
 class KBLOG_EXPORT LiveJournal : public Blog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create an object for Movable Type
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit LiveJournal( const QUrl &server, QObject *parent = 0 );
+    explicit LiveJournal(const QUrl &server, QObject *parent = 0);
 
     /**
       Destroy the object.
     */
     virtual ~LiveJournal();
 
-    virtual void addFriend( const QString &username, int group,
-                            const QColor &fgcolor = QColor( "#000000" ),
-                            const QColor &bgcolor = QColor( "#FFFFFF" ) );
+    virtual void addFriend(const QString &username, int group,
+                           const QColor &fgcolor = QColor("#000000"),
+                           const QColor &bgcolor = QColor("#FFFFFF"));
 
-    virtual void assignFriendToCategory( const QString &username, int category );
+    virtual void assignFriendToCategory(const QString &username, int category);
 
     /**
       Create a new post on server.
 
       @param post is send to the server.
     */
-    void createPost( KBlog::BlogPost *post );
+    void createPost(KBlog::BlogPost *post);
 
-    virtual void deleteFriend( const QString &username );
+    virtual void deleteFriend(const QString &username);
 
     /**
       Fetch the Post with postId.
@@ -92,7 +93,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
       @see  void fetchedPost( KBlog::BlogPost &post )
     */
-    void fetchPost( KBlog::BlogPost *post );
+    void fetchPost(KBlog::BlogPost *post);
 
     virtual void fetchUserInfo();
 
@@ -119,7 +120,7 @@ class KBLOG_EXPORT LiveJournal : public Blog
 
       @see     void listRecentPostsFinished()
     */
-    void listRecentPosts( int number );
+    void listRecentPosts(int number);
 
     /**
       Modify a post on server.
@@ -127,74 +128,74 @@ class KBLOG_EXPORT LiveJournal : public Blog
       @param post is used to send the modified post including the
       correct postId from it to the server.
     */
-    void modifyPost( KBlog::BlogPost *post );
+    void modifyPost(KBlog::BlogPost *post);
 
-    void removePost( KBlog::BlogPost *post );
+    void removePost(KBlog::BlogPost *post);
     /**
       Set the Url of the server.
 
       @param server is the server url.
     */
-    void setUrl( const QUrl &server );
+    void setUrl(const QUrl &server);
 
     QString serverMessage() const;
 
     QString userId() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void addedFriend();
     void assignedFriendToCategory();
     void deletedFriend();
     void expiredCookie();
     void expiredAllCookies();
-    void generatedCookie( const QString &cookie );
-    void listedCategories( const QMap<QString, QString> &categories );
-    void listedFriends( const QMap<QString, QMap<QString, QString> > &friends );
-    void listedFriendsOf( const QMap<QString,
-                          QMap<QString, QString> > &friendsOf );
-    void listedMoods( const QMap<int, QString> &moods );
-    void listedPictureKeywords( const QMap<QString, KUrl> &pictureKeywords );
+    void generatedCookie(const QString &cookie);
+    void listedCategories(const QMap<QString, QString> &categories);
+    void listedFriends(const QMap<QString, QMap<QString, QString> > &friends);
+    void listedFriendsOf(const QMap<QString,
+                         QMap<QString, QString> > &friendsOf);
+    void listedMoods(const QMap<int, QString> &moods);
+    void listedPictureKeywords(const QMap<QString, KUrl> &pictureKeywords);
     void fetchedUserInfo();
 
-  protected:
-    LiveJournal( const QUrl &server, LiveJournalPrivate &dd, QObject *parent = 0 );
+protected:
+    LiveJournal(const QUrl &server, LiveJournalPrivate &dd, QObject *parent = 0);
 
-  private:
-    Q_DECLARE_PRIVATE( LiveJournal )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotAddFriend( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotAssignFriendToCategory( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotCreatePost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotDeleteFriend( const QList<QVariant> &, const QVariant & ) )
+private:
+    Q_DECLARE_PRIVATE(LiveJournal)
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotAddFriend(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotAssignFriendToCategory(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotCreatePost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotDeleteFriend(const QList<QVariant> &, const QVariant &))
 //     Q_PRIVATE_SLOT( d_func(),
 //                     void slotExpireCookie( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchPost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchUserInfo( const QList<QVariant> &, const QVariant & ) )
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotFetchPost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotFetchUserInfo(const QList<QVariant> &, const QVariant &))
 //     Q_PRIVATE_SLOT( d_func(),
 //                     void slotGenerateCookie( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListCategories( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListFriends( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListFriendsOf( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListMoods( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListPictureKeywords( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListRecentPosts( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotModifyPost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotRemovePost( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotError( int, const QString &, const QVariant & ) )
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListCategories(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListFriends(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListFriendsOf(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListMoods(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListPictureKeywords(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListRecentPosts(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotModifyPost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotRemovePost(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotError(int, const QString &, const QVariant &))
 };
 // Q_DECLARE_OPERATORS_FOR_FLAGS( LiveJournal::GenerateCookieOptions )
 

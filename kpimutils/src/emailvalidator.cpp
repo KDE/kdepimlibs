@@ -23,28 +23,28 @@
 
 using namespace KPIMUtils;
 
-EmailValidator::EmailValidator( QObject *parent ) : QValidator( parent )
+EmailValidator::EmailValidator(QObject *parent) : QValidator(parent)
 {
 }
 
-QValidator::State EmailValidator::validate( QString &str, int &pos ) const
+QValidator::State EmailValidator::validate(QString &str, int &pos) const
 {
-  Q_UNUSED( pos );
+    Q_UNUSED(pos);
 
-  if ( KPIMUtils::isValidSimpleAddress( str ) ) {
-    return QValidator::Acceptable;
-  }
+    if (KPIMUtils::isValidSimpleAddress(str)) {
+        return QValidator::Acceptable;
+    }
 
-  // we'll say any string that doesn't have whitespace
-  // is an intermediate email string
-  if ( QRegExp( QLatin1String("\\s") ).indexIn( str ) > -1 ) {
-    return QValidator::Invalid;
-  }
+    // we'll say any string that doesn't have whitespace
+    // is an intermediate email string
+    if (QRegExp(QLatin1String("\\s")).indexIn(str) > -1) {
+        return QValidator::Invalid;
+    }
 
-  return QValidator::Intermediate;
+    return QValidator::Intermediate;
 }
 
-void EmailValidator::fixup( QString &str ) const
+void EmailValidator::fixup(QString &str) const
 {
-  str = str.trimmed();
+    str = str.trimmed();
 }

@@ -31,109 +31,109 @@
 
 using namespace KBlog;
 
-Blog::Blog( const QUrl &server, QObject *parent, const QString &applicationName,
-            const QString &applicationVersion ) :
-    QObject( parent ), d_ptr( new BlogPrivate )
+Blog::Blog(const QUrl &server, QObject *parent, const QString &applicationName,
+           const QString &applicationVersion) :
+    QObject(parent), d_ptr(new BlogPrivate)
 {
-  Q_UNUSED( server );
-  d_ptr->q_ptr = this;
-  setUserAgent( applicationName, applicationVersion );
+    Q_UNUSED(server);
+    d_ptr->q_ptr = this;
+    setUserAgent(applicationName, applicationVersion);
 }
 
-Blog::Blog( const QUrl &server, BlogPrivate &dd, QObject *parent,
-            const QString &applicationName, const QString &applicationVersion )
-  : QObject( parent ), d_ptr( &dd )
+Blog::Blog(const QUrl &server, BlogPrivate &dd, QObject *parent,
+           const QString &applicationName, const QString &applicationVersion)
+    : QObject(parent), d_ptr(&dd)
 {
-  Q_UNUSED( server );
-  d_ptr->q_ptr = this;
-  setUserAgent( applicationName, applicationVersion );
+    Q_UNUSED(server);
+    d_ptr->q_ptr = this;
+    setUserAgent(applicationName, applicationVersion);
 }
 
 Blog::~Blog()
 {
-  qDebug() << "~Blog()";
-  delete d_ptr;
+    qDebug() << "~Blog()";
+    delete d_ptr;
 }
 
 QString Blog::userAgent() const
 {
-  Q_D( const Blog );
-  return d->mUserAgent;
+    Q_D(const Blog);
+    return d->mUserAgent;
 }
 
-void Blog::setUserAgent( const QString &applicationName,
-                         const QString &applicationVersion )
+void Blog::setUserAgent(const QString &applicationName,
+                        const QString &applicationVersion)
 {
-  Q_D( Blog );
-  QString userAgent;
-  if ( !applicationName.isEmpty() &&
-       !applicationVersion.isEmpty() ) {
-    userAgent = QLatin1Char('(') + applicationName + QLatin1Char('/') + applicationVersion + QStringLiteral(") KDE-KBlog/");
-  } else {
-    userAgent = QStringLiteral("KDE-KBlog/");
-  }
-  userAgent += QLatin1String(KDE_VERSION_STRING);
-  d->mUserAgent = userAgent;
+    Q_D(Blog);
+    QString userAgent;
+    if (!applicationName.isEmpty() &&
+            !applicationVersion.isEmpty()) {
+        userAgent = QLatin1Char('(') + applicationName + QLatin1Char('/') + applicationVersion + QStringLiteral(") KDE-KBlog/");
+    } else {
+        userAgent = QStringLiteral("KDE-KBlog/");
+    }
+    userAgent += QLatin1String(KDE_VERSION_STRING);
+    d->mUserAgent = userAgent;
 }
 
-void Blog::setPassword( const QString &pass )
+void Blog::setPassword(const QString &pass)
 {
-  Q_D( Blog );
-  d->mPassword = pass;
+    Q_D(Blog);
+    d->mPassword = pass;
 }
 
 QString Blog::password() const
 {
-  Q_D( const Blog );
-  return d->mPassword;
+    Q_D(const Blog);
+    return d->mPassword;
 }
 
 QString Blog::username() const
 {
-  Q_D( const Blog );
-  return d->mUsername;
+    Q_D(const Blog);
+    return d->mUsername;
 }
 
-void Blog::setUsername( const QString &username )
+void Blog::setUsername(const QString &username)
 {
-  Q_D( Blog );
-  d->mUsername = username;
+    Q_D(Blog);
+    d->mUsername = username;
 }
 
-void Blog::setBlogId( const QString &blogId )
+void Blog::setBlogId(const QString &blogId)
 {
-  Q_D( Blog );
-  d->mBlogId = blogId;
+    Q_D(Blog);
+    d->mBlogId = blogId;
 }
 
 QString Blog::blogId() const
 {
-  Q_D( const Blog );
-  return d->mBlogId;
+    Q_D(const Blog);
+    return d->mBlogId;
 }
 
-void Blog::setUrl( const QUrl &url )
+void Blog::setUrl(const QUrl &url)
 {
-  Q_D( Blog );
-  d->mUrl = url;
+    Q_D(Blog);
+    d->mUrl = url;
 }
 
 QUrl Blog::url() const
 {
-  Q_D( const Blog );
-  return d->mUrl;
+    Q_D(const Blog);
+    return d->mUrl;
 }
 
-void Blog::setTimeZone( const KTimeZone &tz )
+void Blog::setTimeZone(const KTimeZone &tz)
 {
-  Q_D( Blog );
-  d->mTimeZone = tz;
+    Q_D(Blog);
+    d->mTimeZone = tz;
 }
 
 KTimeZone Blog::timeZone()
 {
-  Q_D( const Blog );
-  return d->mTimeZone;
+    Q_D(const Blog);
+    return d->mTimeZone;
 }
 
 BlogPrivate::BlogPrivate() : q_ptr(0)
@@ -142,5 +142,5 @@ BlogPrivate::BlogPrivate() : q_ptr(0)
 
 BlogPrivate::~BlogPrivate()
 {
-  qDebug() << "~BlogPrivate()";
+    qDebug() << "~BlogPrivate()";
 }

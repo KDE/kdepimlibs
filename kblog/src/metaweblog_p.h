@@ -28,29 +28,30 @@
 
 #include <kxmlrpcclient/client.h>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class MetaWeblogPrivate : public Blogger1Private
 {
-  public:
-    QMap<QString,QString> mCategories;
-    QList<QMap<QString,QString> > mCategoriesList;
+public:
+    QMap<QString, QString> mCategories;
+    QList<QMap<QString, QString> > mCategoriesList;
     unsigned int mCallMediaCounter;
-    QMap<unsigned int,KBlog::BlogMedia*> mCallMediaMap;
+    QMap<unsigned int, KBlog::BlogMedia *> mCallMediaMap;
     MetaWeblogPrivate();
     ~MetaWeblogPrivate();
     virtual void loadCategories();
     virtual void saveCategories();
-    virtual void slotListCategories( const QList<QVariant> &result,
-                                     const QVariant &id );
-    virtual void slotCreateMedia( const QList<QVariant> &result,
-                                  const QVariant &id );
-    Q_DECLARE_PUBLIC( MetaWeblog )
+    virtual void slotListCategories(const QList<QVariant> &result,
+                                    const QVariant &id);
+    virtual void slotCreateMedia(const QList<QVariant> &result,
+                                 const QVariant &id);
+    Q_DECLARE_PUBLIC(MetaWeblog)
 
-    QList<QVariant> defaultArgs( const QString &id = QString() );
-    bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
-    bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
-    QString getCallFromFunction( FunctionToCall type );
+    QList<QVariant> defaultArgs(const QString &id = QString());
+    bool readPostFromMap(BlogPost *post, const QMap<QString, QVariant> &postInfo);
+    bool readArgsFromPost(QList<QVariant> *args, const BlogPost &post);
+    QString getCallFromFunction(FunctionToCall type);
     bool mCatLoaded;
 };
 

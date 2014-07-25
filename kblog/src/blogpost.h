@@ -34,10 +34,10 @@ class QStringList;
 class KDateTime;
 class QUrl;
 
-
-namespace KBlog {
-  class Blog;
-  class BlogPostPrivate;
+namespace KBlog
+{
+class Blog;
+class BlogPostPrivate;
 
 /**
   @brief
@@ -70,18 +70,18 @@ public:
     /**
       Constructor.
     */
-    BlogPost( const KBlog::BlogPost &post );
+    BlogPost(const KBlog::BlogPost &post);
 
     /**
       Constructor.
       @param postId The ID of the post on the server.
     */
-    explicit BlogPost( const QString &postId = QString() );
+    explicit BlogPost(const QString &postId = QString());
 
     /** Constructor to create a blog post from a KCalCore Journal.
       @param journal The journal to use to create the post. Must not be null.
      */
-    explicit BlogPost( const KCalCore::Journal::Ptr &journal );
+    explicit BlogPost(const KCalCore::Journal::Ptr &journal);
 
     /**
       Virtual default destructor.
@@ -93,7 +93,7 @@ public:
       @param blog The blog object to convert.
       @return journal
      */
-    KCalCore::Journal::Ptr journal( const Blog &blog ) const;
+    KCalCore::Journal::Ptr journal(const Blog &blog) const;
 
     /**
       Returns the ID used by the journal in creation, if created from a journal.
@@ -116,7 +116,7 @@ public:
 
       @see isPrivate()
     */
-    void setPrivate( bool privatePost );
+    void setPrivate(bool privatePost);
 
     /**
       Returns the postId. This is for fetched posts.
@@ -132,7 +132,7 @@ public:
 
       @see postId()
     */
-    void setPostId( const QString &postId );
+    void setPostId(const QString &postId);
 
     /**
       Returns the title.
@@ -148,7 +148,7 @@ public:
 
       @see title()
     */
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
 
     /**
       Returns the content.
@@ -164,7 +164,7 @@ public:
 
       @see content()
     */
-    void setContent( const QString &content );
+    void setContent(const QString &content);
 
 //     QString abbreviatedContent() const; // TODO check if necessary
 //     void setAbbreviatedContent( const QString &abbreviatedContent );
@@ -183,7 +183,7 @@ public:
 
      @see additionalContent()
     */
-    void setAdditionalContent( const QString &additionalContent );
+    void setAdditionalContent(const QString &additionalContent);
 
     /**
      Returns the Wordpress posts Slug (or permalink will use for post)
@@ -201,7 +201,7 @@ public:
 
      @see slug()
     */
-    void setSlug( const QString &slug );
+    void setSlug(const QString &slug);
     /**
       Returns the link path.
       @return link
@@ -216,7 +216,7 @@ public:
 
       @see link()
     */
-    void setLink( const QUrl &link ) const;
+    void setLink(const QUrl &link) const;
 
     /**
       Returns the perma link path.
@@ -232,7 +232,7 @@ public:
 
       @see permaLink()
     */
-    void setPermaLink( const QUrl &permalink ) const;
+    void setPermaLink(const QUrl &permalink) const;
 
     /**
       Returns whether comments should be allowed.
@@ -248,7 +248,7 @@ public:
 
       @see isCommentAllowed()
     */
-    void setCommentAllowed( bool commentAllowed );
+    void setCommentAllowed(bool commentAllowed);
 
     /**
       Returns whether track back should be allowed.
@@ -264,7 +264,7 @@ public:
 
       @see isTrackBackAllowed()
     */
-    void setTrackBackAllowed ( bool allowTrackBacks );
+    void setTrackBackAllowed(bool allowTrackBacks);
 
     /**
       Returns the summary.
@@ -280,7 +280,7 @@ public:
 
       @see summary()
     */
-    void setSummary( const QString &summary );
+    void setSummary(const QString &summary);
 
     /**
       Returns the tags list as a QStringList.
@@ -296,7 +296,7 @@ public:
 
       @see tags()
     */
-    void setTags( const QStringList &tags );
+    void setTags(const QStringList &tags);
 
 //     QList<KUrl> trackBackUrls() const; // TODO check if necessary
 //     void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
@@ -315,7 +315,7 @@ public:
 
       @see mood()
     */
-    void setMood( const QString &mood );
+    void setMood(const QString &mood);
 
     /**
       Returns the music.
@@ -331,7 +331,7 @@ public:
 
       @see music()
     */
-    void setMusic( const QString &music );
+    void setMusic(const QString &music);
 
     /**
       Returns the categories.
@@ -348,7 +348,7 @@ public:
 
       @see categories()
     */
-    void setCategories( const QStringList &categories );
+    void setCategories(const QStringList &categories);
 
     /**
       Returns the creation date time.
@@ -365,7 +365,7 @@ public:
 
       @see creationTime()
     */
-    void setCreationDateTime( const KDateTime &datetime );
+    void setCreationDateTime(const KDateTime &datetime);
 
     /**
       Returns the modification date time.
@@ -381,30 +381,30 @@ public:
 
       @see modificationTime(), setCreationDateTime()
     */
-    void setModificationDateTime( const KDateTime &datetime );
+    void setModificationDateTime(const KDateTime &datetime);
 
     /**
       The enumartion of the different post status, reflecting the status changes
       on the server.
     */
     enum Status {
-      /** Status of a freshly constructed post on the client. */
-      New,
-      /** Status of a successfully fetched post.
-      @see Blog::fetchPost( KBlog::BlogPost* ) */
-      Fetched,
-      /** Status of a successfully created post.
-      @see Blog::createPost( KBlog::BlogPost* ) */
-      Created,
-      /** Status of a successfully modified post.
-      @see Blog::modifyPost( KBlog::BlogPost* ) */
-      Modified,
-      /** Status of a successfully removed post.
-      @see Blog::removePost( KBlog::BlogPost* ) */
-      Removed,
-      /** Status when an error on the server side occurred.
-      @see error() */
-      Error
+        /** Status of a freshly constructed post on the client. */
+        New,
+        /** Status of a successfully fetched post.
+        @see Blog::fetchPost( KBlog::BlogPost* ) */
+        Fetched,
+        /** Status of a successfully created post.
+        @see Blog::createPost( KBlog::BlogPost* ) */
+        Created,
+        /** Status of a successfully modified post.
+        @see Blog::modifyPost( KBlog::BlogPost* ) */
+        Modified,
+        /** Status of a successfully removed post.
+        @see Blog::removePost( KBlog::BlogPost* ) */
+        Removed,
+        /** Status when an error on the server side occurred.
+        @see error() */
+        Error
     };
 
     /**
@@ -421,7 +421,7 @@ public:
 
       @see status(), Status
     */
-    void setStatus( Status status );
+    void setStatus(Status status);
 
     /**
       Returns the last error.
@@ -437,21 +437,22 @@ public:
 
       @see error(), Error
     */
-    void setError( const QString &error );
+    void setError(const QString &error);
 
     /**
       The overloaed = operator.
     */
-    BlogPost &operator=( const BlogPost &post );
+    BlogPost &operator=(const BlogPost &post);
 
     /**
       The swap operator.
     */
-    void swap( BlogPost &other ) {
-        qSwap( this->d_ptr, other.d_ptr );
+    void swap(BlogPost &other)
+    {
+        qSwap(this->d_ptr, other.d_ptr);
     }
 
-  private:
+private:
     BlogPostPrivate *d_ptr;  //krazy:exclude=dpointer can't constify due to bic and swap being declared inline
 };
 

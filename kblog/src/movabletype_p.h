@@ -32,39 +32,40 @@ class QByteArray;
 
 namespace KIO
 {
-  class Job;
+class Job;
 }
 
-namespace KBlog {
+namespace KBlog
+{
 
 class MovableTypePrivate : public MetaWeblogPrivate
 {
-  public:
-    QMap<KJob *,QByteArray> mSetPostCategoriesBuffer;
+public:
+    QMap<KJob *, QByteArray> mSetPostCategoriesBuffer;
     QMap<KJob *, QString> mSetPostCategoriesMap;
     MovableTypePrivate();
     virtual ~MovableTypePrivate();
-    virtual void slotListTrackBackPings( const QList<QVariant> &result,
-                                         const QVariant &id );
-    void slotCreatePost( const QList<QVariant> &, const QVariant & );
-    void slotFetchPost( const QList<QVariant> &, const QVariant & );
-    void slotModifyPost( const QList<QVariant> &, const QVariant & );
-    void slotSetPostCategories(const QList<QVariant>&,const QVariant&);
-    void slotGetPostCategories(const QList<QVariant>&,const QVariant&);
+    virtual void slotListTrackBackPings(const QList<QVariant> &result,
+                                        const QVariant &id);
+    void slotCreatePost(const QList<QVariant> &, const QVariant &);
+    void slotFetchPost(const QList<QVariant> &, const QVariant &);
+    void slotModifyPost(const QList<QVariant> &, const QVariant &);
+    void slotSetPostCategories(const QList<QVariant> &, const QVariant &);
+    void slotGetPostCategories(const QList<QVariant> &, const QVariant &);
     void slotTriggerCreatePost();
     void slotTriggerModifyPost();
     void slotTriggerFetchPost();
-    Q_DECLARE_PUBLIC( MovableType )
+    Q_DECLARE_PUBLIC(MovableType)
 
-    QList<QVariant> defaultArgs( const QString &id = QString() );
-    virtual void setPostCategories( BlogPost *post, bool publishAfterCategories );
-    bool readPostFromMap( BlogPost *post, const QMap<QString, QVariant> &postInfo );
-    bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
-    QMap<int,bool> mPublishAfterCategories;
-    QList<BlogPost*> mCreatePostCache;
-    QList<BlogPost*> mModifyPostCache;
-    QList<BlogPost*> mFetchPostCache;
-    QList<BlogPost*> mSilentCreationList;
+    QList<QVariant> defaultArgs(const QString &id = QString());
+    virtual void setPostCategories(BlogPost *post, bool publishAfterCategories);
+    bool readPostFromMap(BlogPost *post, const QMap<QString, QVariant> &postInfo);
+    bool readArgsFromPost(QList<QVariant> *args, const BlogPost &post);
+    QMap<int, bool> mPublishAfterCategories;
+    QList<BlogPost *> mCreatePostCache;
+    QList<BlogPost *> mModifyPostCache;
+    QList<BlogPost *> mFetchPostCache;
+    QList<BlogPost *> mSilentCreationList;
 };
 
 }

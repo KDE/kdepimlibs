@@ -37,9 +37,10 @@ class QUrl;
   @author Christian Weilbach \<christian\@whiletaker.homeip.net\>
 */
 
-namespace KBlog {
+namespace KBlog
+{
 
-    class MetaWeblogPrivate;
+class MetaWeblogPrivate;
 /**
   @brief
   A class that can be used for access to MetaWeblog  blogs. Almost every
@@ -64,15 +65,15 @@ namespace KBlog {
 */
 class KBLOG_EXPORT MetaWeblog : public Blogger1
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create an object for MetaWeblog
 
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit MetaWeblog( const QUrl &server, QObject *parent = 0 );
+    explicit MetaWeblog(const QUrl &server, QObject *parent = 0);
 
     /**
       Destroy the object.
@@ -96,9 +97,9 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @param media The media to send.
     */
-    virtual void createMedia( KBlog::BlogMedia *media );
+    virtual void createMedia(KBlog::BlogMedia *media);
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
       This signal is emitted when a media has been created
@@ -108,7 +109,7 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see createMedia( KBlog::BlogMedia *media )
     */
-    void createdMedia( KBlog::BlogMedia *media );
+    void createdMedia(KBlog::BlogMedia *media);
 
     /**
       This signal is emitted when the last category of the listCategories()
@@ -119,20 +120,20 @@ class KBLOG_EXPORT MetaWeblog : public Blogger1
 
       @see listCategories()
     */
-    void listedCategories( const QList<QMap<QString,QString> >& categories );
+    void listedCategories(const QList<QMap<QString, QString> > &categories);
 
-  protected:
+protected:
     /**
       Constructor needed for private inheritance.
     */
-    MetaWeblog( const QUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0 );
+    MetaWeblog(const QUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0);
 
-  private:
-    Q_DECLARE_PRIVATE( MetaWeblog )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListCategories( const QList<QVariant> &, const QVariant & ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotCreateMedia( const QList<QVariant> &, const QVariant & ) )
+private:
+    Q_DECLARE_PRIVATE(MetaWeblog)
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListCategories(const QList<QVariant> &, const QVariant &))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotCreateMedia(const QList<QVariant> &, const QVariant &))
 };
 
 } //namespace KBlog

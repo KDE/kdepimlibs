@@ -30,31 +30,32 @@
 
 class KJob;
 class QByteArray;
-template <class T,class S>class QMap;
+template <class T, class S>class QMap;
 
 namespace KIO
 {
-  class Job;
+class Job;
 }
 
-namespace KBlog {
+namespace KBlog
+{
 
 class WordpressBuggyPrivate : public MovableTypePrivate
 {
-  public:
-    QMap<KJob *,KBlog::BlogPost *> mCreatePostMap;
-    QMap<KJob *,KBlog::BlogPost *> mModifyPostMap;
+public:
+    QMap<KJob *, KBlog::BlogPost *> mCreatePostMap;
+    QMap<KJob *, KBlog::BlogPost *> mModifyPostMap;
     WordpressBuggyPrivate();
     virtual ~WordpressBuggyPrivate();
-    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
+    virtual QList<QVariant> defaultArgs(const QString &id = QString());
 
     //adding these two lines prevents the symbols from MovableTypePrivate
     //to be hidden by the symbols below that.
     using MovableTypePrivate::slotCreatePost;
     using MovableTypePrivate::slotModifyPost;
-    virtual void slotCreatePost( KJob * );
-    virtual void slotModifyPost( KJob * );
-    Q_DECLARE_PUBLIC( WordpressBuggy )
+    virtual void slotCreatePost(KJob *);
+    virtual void slotModifyPost(KJob *);
+    Q_DECLARE_PUBLIC(WordpressBuggy)
 };
 
 }

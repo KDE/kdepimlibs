@@ -29,57 +29,57 @@
 using namespace Akonadi::NoteUtils;
 class NotesTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
 
     void testSerializeAndParse()
     {
-      NoteMessageWrapper note;
-      note.setTitle(QLatin1String("title"));
-      note.setText(QLatin1String("title"));
-      note.setUid(QLatin1String("uid"));
-      note.setClassification(NoteMessageWrapper::Private);
-      note.setFrom(QLatin1String("from@kde.org"));
-      note.setCreationDate(QDateTime(QDate(2012,3,3), QTime(3,3,3), Qt::UTC));
-      note.setLastModifiedDate(QDateTime(QDate(2012,3,3), QTime(4,4,4), Qt::UTC));
-      Attachment a("testfile2", QLatin1String("mimetype/mime3"));
-      a.setLabel(QLatin1String("label"));
-      note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << Attachment("testfile", QLatin1String("mimetype/mime2")) << a;
-      note.custom().insert(QLatin1String("key1"), QLatin1String("value1"));
-      note.custom().insert(QLatin1String("key2"), QLatin1String("value2"));
-      note.custom().insert(QLatin1String("key3"), QLatin1String("value3"));
+        NoteMessageWrapper note;
+        note.setTitle(QLatin1String("title"));
+        note.setText(QLatin1String("title"));
+        note.setUid(QLatin1String("uid"));
+        note.setClassification(NoteMessageWrapper::Private);
+        note.setFrom(QLatin1String("from@kde.org"));
+        note.setCreationDate(QDateTime(QDate(2012, 3, 3), QTime(3, 3, 3), Qt::UTC));
+        note.setLastModifiedDate(QDateTime(QDate(2012, 3, 3), QTime(4, 4, 4), Qt::UTC));
+        Attachment a("testfile2", QLatin1String("mimetype/mime3"));
+        a.setLabel(QLatin1String("label"));
+        note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << Attachment("testfile", QLatin1String("mimetype/mime2")) << a;
+        note.custom().insert(QLatin1String("key1"), QLatin1String("value1"));
+        note.custom().insert(QLatin1String("key2"), QLatin1String("value2"));
+        note.custom().insert(QLatin1String("key3"), QLatin1String("value3"));
 
-      KMime::MessagePtr msg = note.message();
+        KMime::MessagePtr msg = note.message();
 //       qWarning() << msg->encodedContent();
 
-      NoteMessageWrapper result(msg);
+        NoteMessageWrapper result(msg);
 
-      QCOMPARE(result.title(), note.title());
-      QCOMPARE(result.text(), note.text());
-      QCOMPARE(result.textFormat(), note.textFormat());
-      QCOMPARE(result.uid(), note.uid());
-      QCOMPARE(result.classification(), note.classification());
-      QCOMPARE(result.from(), note.from());
-      QCOMPARE(result.creationDate(), note.creationDate());
-      QCOMPARE(result.lastModifiedDate(), note.lastModifiedDate());
-      QCOMPARE(result.custom(), note.custom());
-      QCOMPARE(result.attachments(), note.attachments());
+        QCOMPARE(result.title(), note.title());
+        QCOMPARE(result.text(), note.text());
+        QCOMPARE(result.textFormat(), note.textFormat());
+        QCOMPARE(result.uid(), note.uid());
+        QCOMPARE(result.classification(), note.classification());
+        QCOMPARE(result.from(), note.from());
+        QCOMPARE(result.creationDate(), note.creationDate());
+        QCOMPARE(result.lastModifiedDate(), note.lastModifiedDate());
+        QCOMPARE(result.custom(), note.custom());
+        QCOMPARE(result.attachments(), note.attachments());
 
 //       qWarning() << result.message()->encodedContent();
     }
 
     void createIfEmpty()
     {
-      NoteMessageWrapper note;
-      NoteMessageWrapper result(note.message());
+        NoteMessageWrapper note;
+        NoteMessageWrapper result(note.message());
 //       qDebug() << result.uid();
-      QVERIFY(!result.uid().isEmpty());
-      QVERIFY(result.creationDate().isValid());
-      QVERIFY(result.lastModifiedDate().isValid());
+        QVERIFY(!result.uid().isEmpty());
+        QVERIFY(result.creationDate().isValid());
+        QVERIFY(result.lastModifiedDate().isValid());
     }
 
 };
 
-QTEST_MAIN( NotesTest )
+QTEST_MAIN(NotesTest)
 
 #include "notestest.moc"

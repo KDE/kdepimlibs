@@ -27,7 +27,8 @@
 #include <QLabel>
 
 class QTimer;
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorWidgetPrivate;
 class ProgressIndicatorWidget;
 class IndicatorProgress : public QObject
@@ -41,7 +42,6 @@ public:
 
     void startAnimation();
     void stopAnimation();
-
 
 private Q_SLOTS:
     void slotTimerDone();
@@ -73,7 +73,7 @@ public Q_SLOTS:
 
 private:
     friend class ProgressIndicatorWidgetPrivate;
-    ProgressIndicatorWidgetPrivate * const d;
+    ProgressIndicatorWidgetPrivate *const d;
 };
 
 }

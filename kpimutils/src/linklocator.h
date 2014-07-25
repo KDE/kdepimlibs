@@ -33,7 +33,8 @@
 
 #include <QtCore/QString>
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 
 /**
   LinkLocator assists in identifying sections of text that can usefully
@@ -47,7 +48,7 @@ namespace KPIMUtils {
 */
 class KPIMUTILS_EXPORT LinkLocator
 {
-  public:
+public:
     /**
       Constructs a LinkLocator that will search a plaintext string
       from a given starting point.
@@ -55,7 +56,7 @@ class KPIMUTILS_EXPORT LinkLocator
       @param text The string in which to search.
       @param pos  An index into 'text' from where the search should begin.
     */
-    explicit LinkLocator( const QString &text, int pos = 0 );
+    explicit LinkLocator(const QString &text, int pos = 0);
 
     /**
      * Destructor.
@@ -71,7 +72,7 @@ class KPIMUTILS_EXPORT LinkLocator
 
       @param length A new maximum length of URLs that will be matched by getUrl().
     */
-    void setMaxUrlLen( int length );
+    void setMaxUrlLen(int length);
 
     /**
       Returns the current limit on the maximum length of a URL.
@@ -90,7 +91,7 @@ class KPIMUTILS_EXPORT LinkLocator
       @param length The new maximum length of email addresses that will be
       matched by getEmailAddress().
     */
-    void setMaxAddressLen( int length );
+    void setMaxAddressLen(int length);
 
     /**
       Returns the current limit on the maximum length of an email address.
@@ -140,8 +141,8 @@ class KPIMUTILS_EXPORT LinkLocator
       @return An HTML version of the text supplied in the 'plainText'
       parameter, suitable for inclusion in the BODY of an HTML document.
     */
-    static QString convertToHtml( const QString &plainText, int flags = 0,
-                                  int maxUrlLen = 4096, int maxAddressLen = 255 );
+    static QString convertToHtml(const QString &plainText, int flags = 0,
+                                 int maxUrlLen = 4096, int maxAddressLen = 255);
 
     static const int PreserveSpaces = 0x01;
     static const int ReplaceSmileys = 0x02;
@@ -153,9 +154,9 @@ class KPIMUTILS_EXPORT LinkLocator
       @param iconPath path to the PNG image
       @return A data URL, QString() if the image could not be read.
     */
-    static QString pngToDataUrl( const QString & iconPath );
+    static QString pngToDataUrl(const QString &iconPath);
 
-  protected:
+protected:
     /**
       The plaintext string being scanned for URLs and email addresses.
     */
@@ -167,7 +168,7 @@ class KPIMUTILS_EXPORT LinkLocator
     int mPos;
 
     bool atUrl() const;
-    bool isEmptyUrl( const QString &url ) const;
+    bool isEmptyUrl(const QString &url) const;
 
     /**
       Highlight text according to *bold*, /italic/ and _underlined_ markup.
@@ -175,8 +176,8 @@ class KPIMUTILS_EXPORT LinkLocator
     */
     QString highlightedText();
 
-  private:
-    private:
+private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

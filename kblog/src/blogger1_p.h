@@ -30,41 +30,42 @@
 
 #include <QList>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class Blogger1Private : public BlogPrivate
 {
-  public:
+public:
     QString mAppId;
     KXmlRpc::Client *mXmlRpcClient;
     unsigned int mCallCounter; // TODO a better counter
-    QMap<unsigned int,KBlog::BlogPost*> mCallMap;
+    QMap<unsigned int, KBlog::BlogPost *> mCallMap;
     Blogger1Private();
     virtual ~Blogger1Private();
 
-    virtual void slotFetchUserInfo( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotListBlogs( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotListRecentPosts( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotFetchPost( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotCreatePost( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotModifyPost( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotRemovePost( const QList<QVariant> &result, const QVariant &id );
-    virtual void slotError( int number, const QString &errorString, const QVariant &id );
+    virtual void slotFetchUserInfo(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotListBlogs(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotListRecentPosts(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotFetchPost(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotCreatePost(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotModifyPost(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotRemovePost(const QList<QVariant> &result, const QVariant &id);
+    virtual void slotError(int number, const QString &errorString, const QVariant &id);
 
-    Q_DECLARE_PUBLIC( KBlog::Blogger1 )
+    Q_DECLARE_PUBLIC(KBlog::Blogger1)
 
     enum FunctionToCall {
-      GetRecentPosts,
-      CreatePost,
-      ModifyPost,
-      FetchPost
+        GetRecentPosts,
+        CreatePost,
+        ModifyPost,
+        FetchPost
     };
-    virtual QList<QVariant> defaultArgs( const QString &id = QString() );
-    QList<QVariant> blogger1Args( const QString &id = QString() );
-    virtual bool readPostFromMap( BlogPost *post,
-                                     const QMap<QString, QVariant> &postInfo );
-    virtual bool readArgsFromPost( QList<QVariant> *args, const BlogPost &post );
-    virtual QString getCallFromFunction( FunctionToCall type );
+    virtual QList<QVariant> defaultArgs(const QString &id = QString());
+    QList<QVariant> blogger1Args(const QString &id = QString());
+    virtual bool readPostFromMap(BlogPost *post,
+                                 const QMap<QString, QVariant> &postInfo);
+    virtual bool readArgsFromPost(QList<QVariant> *args, const BlogPost &post);
+    virtual QString getCallFromFunction(FunctionToCall type);
 };
 
 }

@@ -25,7 +25,8 @@
 
 #include <QValidator>
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 
 /**
   A validator that enforces correct email addresses.
@@ -33,12 +34,12 @@ namespace KPIMUtils {
 */
 class KPIMUTILS_EXPORT EmailValidator : public QValidator //krazy:exclude=dpointer
 {
-  public:
-    EmailValidator( QObject *parent );
+public:
+    EmailValidator(QObject *parent);
 
-    virtual State validate( QString &str, int &pos ) const;
+    virtual State validate(QString &str, int &pos) const;
 
-    virtual void fixup( QString &str ) const;
+    virtual void fixup(QString &str) const;
 };
 
 }

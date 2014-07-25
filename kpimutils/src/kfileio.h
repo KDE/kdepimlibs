@@ -27,7 +27,8 @@ class QByteArray;
 class QString;
 class QWidget;
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 
 /**
   Loads the file with the given filename. Optionally, you can force the data
@@ -41,9 +42,9 @@ namespace KPIMUtils {
 
   @return The contents of the file or an empty QByteArray if loading failed.
 */
- KPIMUTILS_EXPORT QByteArray kFileToByteArray( const QString & fileName,
-                                               bool ensureNewline = true,
-                                               bool withDialogs = true );
+KPIMUTILS_EXPORT QByteArray kFileToByteArray(const QString &fileName,
+        bool ensureNewline = true,
+        bool withDialogs = true);
 
 /**
   Writes the contents of @p buffer to the file with the given filename.
@@ -61,11 +62,11 @@ namespace KPIMUtils {
   @return True if writing the data to the file succeeded.
   @return False if writing the data to the file failed.
 */
-KPIMUTILS_EXPORT bool kByteArrayToFile( const QByteArray & buffer,
-                                        const QString & fileName,
-                                        bool askIfExists = false,
-                                        bool createBackup = true,
-                                        bool withDialogs = true );
+KPIMUTILS_EXPORT bool kByteArrayToFile(const QByteArray &buffer,
+                                       const QString &fileName,
+                                       bool askIfExists = false,
+                                       bool createBackup = true,
+                                       bool withDialogs = true);
 
 /**
   Checks and corrects the permissions of a file or folder, and if requested
@@ -86,10 +87,10 @@ KPIMUTILS_EXPORT bool kByteArrayToFile( const QByteArray & buffer,
   @return It will return a string with all files and folders which do not
           have the right permissions. If empty, then all permissions are ok.
 */
-KPIMUTILS_EXPORT QString checkAndCorrectPermissionsIfPossible( const QString &toCheck,
-                                              const bool recursive,
-                                              const bool wantItReadable,
-                                              const bool wantItWritable );
+KPIMUTILS_EXPORT QString checkAndCorrectPermissionsIfPossible(const QString &toCheck,
+        const bool recursive,
+        const bool wantItReadable,
+        const bool wantItWritable);
 
 /**
  * Removed a directory on the local filesystem whether it is empty or not. All
@@ -100,7 +101,7 @@ KPIMUTILS_EXPORT QString checkAndCorrectPermissionsIfPossible( const QString &to
  *
  * @return Success or failure.
  */
-KPIMUTILS_EXPORT bool removeDirAndContentsRecursively( const QString & path );
+KPIMUTILS_EXPORT bool removeDirAndContentsRecursively(const QString &path);
 
 }
 

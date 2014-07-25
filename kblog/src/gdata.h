@@ -40,10 +40,11 @@ class QUrl;
   \par Maintainer: Christian Weilbach \<christian_weilbach\@web.de\>
  */
 
-namespace KBlog {
+namespace KBlog
+{
 
-  class GDataPrivate;
-  class BlogComment;
+class GDataPrivate;
+class BlogComment;
 
 /**
   @brief
@@ -69,14 +70,14 @@ namespace KBlog {
  */
 class KBLOG_EXPORT GData : public Blog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create an object for GData
       @param server The server url for the xmlrpc gateway.
       @param parent The parent object, inherited from QObject.
     */
-    explicit GData( const QUrl &server, QObject *parent = 0 );
+    explicit GData(const QUrl &server, QObject *parent = 0);
 
     /**
       Destructor.
@@ -92,7 +93,7 @@ class KBLOG_EXPORT GData : public Blog
       @see createPost( KBlog::BlogPost* )
       @see modifiyPost( KBlog::BlogPost* )
     */
-    virtual void setFullName( const QString &fullName );
+    virtual void setFullName(const QString &fullName);
 
     /**
       Returns the full name of user of the blog.
@@ -114,7 +115,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see profileId()
     */
-    virtual void setProfileId( const QString &pid );
+    virtual void setProfileId(const QString &pid);
 
     /**
       Returns the  of the inherited object.
@@ -143,7 +144,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see void listedComments( KBlog::BlogPost*, const QList\<KBlog::BlogComment\>& )
     */
-    virtual void listComments( KBlog::BlogPost *post );
+    virtual void listComments(KBlog::BlogPost *post);
 
     /**
       List the all comments available for this authentication on the server.
@@ -160,7 +161,7 @@ class KBLOG_EXPORT GData : public Blog
       @see     void fetchPost( KBlog::BlogPost* )
       @see     BlogPost::Status
     */
-    void listRecentPosts( int number );
+    void listRecentPosts(int number);
 
     /**
       List recent posts on the server depending on meta information about the post.
@@ -174,11 +175,11 @@ class KBLOG_EXPORT GData : public Blog
       @see     void listedPosts( const QList\<KBlog::BlogPost\>& )
       @see     void fetchPost( KBlog::BlogPost* )
     */
-    virtual void listRecentPosts( const QStringList &label=QStringList(), int number=0,
-                                  const KDateTime &upMinTime=KDateTime(),
-                                  const KDateTime &upMaxTime=KDateTime(),
-                                  const KDateTime &pubMinTime=KDateTime(),
-                                  const KDateTime &pubMaxTime=KDateTime() );
+    virtual void listRecentPosts(const QStringList &label = QStringList(), int number = 0,
+                                 const KDateTime &upMinTime = KDateTime(),
+                                 const KDateTime &upMaxTime = KDateTime(),
+                                 const KDateTime &pubMinTime = KDateTime(),
+                                 const KDateTime &pubMaxTime = KDateTime());
 
     /**
       Fetch the Post with a specific id.
@@ -187,13 +188,13 @@ class KBLOG_EXPORT GData : public Blog
       @see BlogPost::setPostId( const QString& )
       @see fetchedPost( KBlog::BlogPost *post )
     */
-    void fetchPost( KBlog::BlogPost *post );
+    void fetchPost(KBlog::BlogPost *post);
 
     /**
       Modify a post on server.
       @param post This is used to send the modified post including the correct id.
     */
-    void modifyPost( KBlog::BlogPost *post );
+    void modifyPost(KBlog::BlogPost *post);
 
     /**
       Create a new post on server.
@@ -201,7 +202,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see createdPost( KBlog::BlogPost *post )
     */
-    void createPost( KBlog::BlogPost *post );
+    void createPost(KBlog::BlogPost *post);
 
     /**
       Remove a post from the server.
@@ -210,7 +211,7 @@ class KBLOG_EXPORT GData : public Blog
       @see BlogPost::setPostId( const QString& )
       @see removedPost( KBlog::BlogPost* )
     */
-    void removePost( KBlog::BlogPost *post );
+    void removePost(KBlog::BlogPost *post);
 
     /**
       Create a comment on the server.
@@ -220,7 +221,7 @@ class KBLOG_EXPORT GData : public Blog
       @see BlogPost::setPostId( const QString& )
       @see createdComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment );
+    virtual void createComment(KBlog::BlogPost *post, KBlog::BlogComment *comment);
 
     /**
       Remove a comment from the server.
@@ -230,9 +231,9 @@ class KBLOG_EXPORT GData : public Blog
       @see BlogPost::setPostId( const QString& )
       @see removedComment( KBlog::BlogPost*, KBlog::BlogComment*  )
     */
-    virtual void removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment );
+    virtual void removeComment(KBlog::BlogPost *post, KBlog::BlogComment *comment);
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
       This signal is emitted when a list of blogs has been fetched
@@ -241,7 +242,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see listBlogs()
     */
-    void listedBlogs( const QList<QMap<QString,QString> >& blogsList );
+    void listedBlogs(const QList<QMap<QString, QString> > &blogsList);
 
     /**
       This signal is emitted when a list of all comments has been
@@ -250,7 +251,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see listAllComments()
     */
-    void listedAllComments( const QList<KBlog::BlogComment> &commentsList );
+    void listedAllComments(const QList<KBlog::BlogComment> &commentsList);
 
     /**
       This signal is emitted when a list of comments has been fetched
@@ -260,7 +261,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see listComments( KBlog::BlogPost* )
     */
-    void listedComments( KBlog::BlogPost *post, const QList<KBlog::BlogComment> &comments );
+    void listedComments(KBlog::BlogPost *post, const QList<KBlog::BlogComment> &comments);
 
     /**
       This signal is emitted when a comment has been created
@@ -270,7 +271,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see createComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     */
-    void createdComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
+    void createdComment(const KBlog::BlogPost *post, const KBlog::BlogComment *comment);
 
     /**
       This signal is emitted when a comment has been removed
@@ -280,7 +281,7 @@ class KBLOG_EXPORT GData : public Blog
 
       @see removeComment( KBlog::BlogPost *post, KBlog::BlogComment *comment )
     */
-    void removedComment( const KBlog::BlogPost *post, const KBlog::BlogComment *comment );
+    void removedComment(const KBlog::BlogPost *post, const KBlog::BlogComment *comment);
 
     /**
       This signal is emitted when the profile id has been
@@ -289,43 +290,43 @@ class KBLOG_EXPORT GData : public Blog
 
       @see fetchProfileId()
     */
-    void fetchedProfileId( const QString &profileId );
+    void fetchedProfileId(const QString &profileId);
 
-  protected:
+protected:
     /**
       Overloaded for private inheritance handling.
     */
-    GData( const QUrl &server, GDataPrivate &dd, QObject *parent = 0 );
+    GData(const QUrl &server, GDataPrivate &dd, QObject *parent = 0);
 
-  private:
-    Q_DECLARE_PRIVATE( GData )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchProfileId( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListBlogs( Syndication::Loader *,
-                                        Syndication::FeedPtr, Syndication::ErrorCode ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListComments( Syndication::Loader *,
-                                           Syndication::FeedPtr, Syndication::ErrorCode ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListAllComments( Syndication::Loader *,
-                                              Syndication::FeedPtr, Syndication::ErrorCode ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotListRecentPosts( Syndication::Loader *,
-                                              Syndication::FeedPtr, Syndication::ErrorCode ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotFetchPost( Syndication::Loader *,
-                                        Syndication::FeedPtr, Syndication::ErrorCode ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotCreatePost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotModifyPost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotRemovePost( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotCreateComment( KJob * ) )
-    Q_PRIVATE_SLOT( d_func(),
-                    void slotRemoveComment( KJob * ) )
+private:
+    Q_DECLARE_PRIVATE(GData)
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotFetchProfileId(KJob *))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListBlogs(Syndication::Loader *,
+                                      Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListComments(Syndication::Loader *,
+                                         Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListAllComments(Syndication::Loader *,
+                                            Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotListRecentPosts(Syndication::Loader *,
+                                            Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotFetchPost(Syndication::Loader *,
+                                      Syndication::FeedPtr, Syndication::ErrorCode))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotCreatePost(KJob *))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotModifyPost(KJob *))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotRemovePost(KJob *))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotCreateComment(KJob *))
+    Q_PRIVATE_SLOT(d_func(),
+                   void slotRemoveComment(KJob *))
 };
 
 } //namespace KBlog

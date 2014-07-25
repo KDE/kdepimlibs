@@ -24,8 +24,8 @@
 
 class EMailTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testGetNameAndEmail();
     void testGetNameAndEmail_data();
     void testIsValidEmailAddress();
