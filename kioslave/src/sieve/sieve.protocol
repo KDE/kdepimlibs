@@ -22,6 +22,7 @@ Description[de]=Ein Ein-/Ausgabemodul für das Mailfilter-Protokoll Sieve
 Description[el]=Ένα ioslave για το πρωτόκολλο φιλτραρίσματος αλληλογραφίας Sieve
 Description[en_GB]=An ioslave for the Sieve mail filtering protocol
 Description[es]=Un esclavo de E/S para el protocolo de filtrado de correo Sieve
+Description[et]=Sieve kirjade filtreerimise protokolli IO-moodul
 Description[fi]=I/O-asiakas Sieve-postinsuodatusyhteyskäytännölle
 Description[fr]=Un module d'entrées / sorties pour le protocole de filtrage de messagerie « Sieve »
 Description[ga]=Sclábhaí I/A le haghaidh prótacail scagtha ríomhphoist Sieve
