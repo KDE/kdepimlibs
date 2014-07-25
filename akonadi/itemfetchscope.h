@@ -31,6 +31,7 @@ template <typename T> class QSet;
 namespace Akonadi {
 
 class ItemFetchScopePrivate;
+class TagFetchScope;
 
 /**
  * @short Specifies which parts of an item should be fetched from the Akonadi storage.
@@ -344,6 +345,38 @@ public:
      * @since 4.13
      */
     bool fetchTags() const;
+
+    /**
+     * Sets wether complete tags should be fetched.
+     *
+     * If @param fetch is true the full tags will be fetched using @param tagFetchScope,
+     * otherwise only the id is retrieved.
+     * 
+     * Calling this with @param fetch = true will automatically enable tag retrieval.
+     *
+     * The default is @c false.
+     *
+     * @param fetch whether or not to load complete tags.
+     * @param tagFetchScope scope to load complete tags.
+     * @since 4.15
+     */
+    void setFetchCompleteTags(bool fetch, const TagFetchScope &tagFetchScope);
+
+    /**
+     * Returns whether full tags should be retrieved.
+     *
+     * @see setFetchCompleteTags()
+     * @since 4.15
+     */
+    bool fetchCompleteTags() const;
+
+    /**
+     * Returns the TagFetchScope to load complete tags.
+     *
+     * @see setFetchCompleteTags()
+     * @since 4.15
+     */
+    TagFetchScope tagFetchScope() const;
 
     /**
      * Returns whether to fetch list of virtual collections the item is linked to

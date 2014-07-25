@@ -194,6 +194,25 @@ bool ItemFetchScope::fetchTags() const
     return d->mFetchTags;
 }
 
+void ItemFetchScope::setFetchCompleteTags(bool fetch, const TagFetchScope &tagFetchScope)
+{
+    if (fetch) {
+        d->mFetchTags = true;
+    }
+    d->mFetchCompleteTags = fetch;
+    d->mTagFetchScope = tagFetchScope;
+}
+
+bool ItemFetchScope::fetchCompleteTags() const
+{
+    return d->mFetchCompleteTags;
+}
+
+TagFetchScope ItemFetchScope::tagFetchScope() const
+{
+    return d->mTagFetchScope;
+}
+
 void ItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
 {
     d->mFetchVRefs = fetchVRefs;

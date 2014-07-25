@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testCreateMerge();
     void testAttributes();
     void testTagItem();
+    void testFetchFullTagWithItem();
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
     void testMonitor();
@@ -344,6 +345,43 @@ void TagTest::testTagItem()
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
+}
+
+void TagTest::testFetchFullTagWithItem()
+{
+    Akonadi::Monitor monitor;
+    monitor.itemFetchScope().setFetchTags(true);
+    monitor.setAllMonitored(true);
+    const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
+    Tag tag;
+    {
+        TagCreateJob *createjob = new TagCreateJob(Tag("gid1"), this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    Item item1;
+    {
+        item1.setMimeType( "application/octet-stream" );
+        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        AKVERIFYEXEC(append);
+        item1 = append->item();
+    }
+
+    //FIXME
+    //This should also be possible with create, but isn't
+    item1.setTag(tag);
+
+    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    AKVERIFYEXEC(modJob);
+
+    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    fetchJob->fetchScope().setFetchTags(true);
+    fetchJob->fetchScope().setFetchCompleteTags(true, TagFetchScope());
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().first().tags().size(), 1);
+    Tag t = fetchJob->items().first().tags().first();
+    QCOMPARE(t, tag);
 }
 
 void TagTest::testModifyItemWithTagByGID()
