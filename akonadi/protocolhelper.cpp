@@ -448,7 +448,7 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " GID";
   if ( fetchScope.fetchTags() ) {
     command += " TAGS";
-    if ( fetchScope.fetchCompleteTags() ) {
+    if ( !fetchScope.fetchTagIdOnly() ) {
       command += " " + ProtocolHelper::tagFetchScopeToByteArray( fetchScope.tagFetchScope() );
     }
   }

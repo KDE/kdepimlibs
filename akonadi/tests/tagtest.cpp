@@ -377,7 +377,7 @@ void TagTest::testFetchFullTagWithItem()
 
     ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
-    fetchJob->fetchScope().setFetchCompleteTags(true, TagFetchScope());
+    fetchJob->fetchScope().setFetchTagIdOnly(false);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
     Tag t = fetchJob->items().first().tags().first();

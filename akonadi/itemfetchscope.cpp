@@ -194,18 +194,24 @@ bool ItemFetchScope::fetchTags() const
     return d->mFetchTags;
 }
 
-void ItemFetchScope::setFetchCompleteTags(bool fetch, const TagFetchScope &tagFetchScope)
+void ItemFetchScope::setFetchTagIdOnly(bool idOnly)
 {
-    if (fetch) {
-        d->mFetchTags = true;
-    }
-    d->mFetchCompleteTags = fetch;
+    d->mFetchTagIdOnly = idOnly;
+}
+
+bool ItemFetchScope::fetchTagIdOnly() const
+{
+    return d->mFetchTagIdOnly;
+}
+
+void ItemFetchScope::setTagFetchScope(const TagFetchScope &tagFetchScope)
+{
     d->mTagFetchScope = tagFetchScope;
 }
 
-bool ItemFetchScope::fetchCompleteTags() const
+TagFetchScope &ItemFetchScope::tagFetchScope()
 {
-    return d->mFetchCompleteTags;
+    return d->mTagFetchScope;
 }
 
 TagFetchScope ItemFetchScope::tagFetchScope() const

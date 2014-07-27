@@ -347,33 +347,62 @@ public:
     bool fetchTags() const;
 
     /**
-     * Sets wether complete tags should be fetched.
+     * Sets wether only the id of the tags should be retieved or the complete tag.
      *
-     * If @param fetch is true the full tags will be fetched using @param tagFetchScope,
-     * otherwise only the id is retrieved.
-     * 
-     * Calling this with @param fetch = true will automatically enable tag retrieval.
+     * The default is @c true.
      *
-     * The default is @c false.
-     *
-     * @param fetch whether or not to load complete tags.
-     * @param tagFetchScope scope to load complete tags.
+     * @see tagFetchScope()
      * @since 4.15
      */
-    void setFetchCompleteTags(bool fetch, const TagFetchScope &tagFetchScope);
+    void setFetchTagIdOnly(bool fetchIdOnly);
 
     /**
-     * Returns whether full tags should be retrieved.
+     * Sets wether only the id of the tags should be retieved or the complete tag.
      *
-     * @see setFetchCompleteTags()
+     * @see tagFetchScope()
      * @since 4.15
      */
-    bool fetchCompleteTags() const;
+    bool fetchTagIdOnly() const;
 
     /**
-     * Returns the TagFetchScope to load complete tags.
+     * Sets the tag fetch scope.
      *
-     * @see setFetchCompleteTags()
+     * The TagFetchScope controls how much of an tags's data is fetched
+     * from the server.
+     *
+     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     *
+     * @param fetchScope The new fetch scope for tag fetch operations.
+     * @see fetchScope(), setFetchTagIdOnly()
+     * @since 4.15
+     */
+    void setTagFetchScope(const TagFetchScope &fetchScope);
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the TagFetchScope documentation
+     * for an example.
+     *
+     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setFetchScope() for replacing the current tag fetch scope, setFetchTagIdOnly()
+     * @since 4.15
+     */
+    TagFetchScope &tagFetchScope();
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     *
+     * @return a reference to the current tag fetch scope
+     *
+     * @see setFetchScope() for replacing the current tag fetch scope, setFetchTagIdOnly()
      * @since 4.15
      */
     TagFetchScope tagFetchScope() const;

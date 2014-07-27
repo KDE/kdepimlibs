@@ -45,7 +45,7 @@ public:
         , mFetchRid(true)
         , mFetchGid(false)
         , mFetchTags(false)
-        , mFetchCompleteTags(false)
+        , mFetchTagIdOnly(true)
         , mFetchVRefs(false)
     {
     }
@@ -66,7 +66,7 @@ public:
         mFetchRid = other.mFetchRid;
         mFetchGid = other.mFetchGid;
         mFetchTags = other.mFetchTags;
-        mFetchCompleteTags = other.mFetchCompleteTags;
+        mFetchTagIdOnly = other.mFetchTagIdOnly;
         mTagFetchScope = other.mTagFetchScope;
         mFetchVRefs = other.mFetchVRefs;
     }
@@ -85,7 +85,7 @@ public:
     bool mFetchRid;
     bool mFetchGid;
     bool mFetchTags;
-    bool mFetchCompleteTags;
+    bool mFetchTagIdOnly;
     TagFetchScope mTagFetchScope;
     bool mFetchVRefs;
 };
