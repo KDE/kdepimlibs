@@ -19,10 +19,10 @@
 
 #include "headfetcher.h"
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include "kmime/messageparts.h"
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include "akonadi/kmime/messageparts.h"
 
 #include <QtCore/QDebug>
 #include <QApplication>

@@ -16,3 +16,13 @@ target_link_libraries( requester KF5::AkonadiMime )
 set(requester_exe_string "QLatin1String( \\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\\" )" )
 add_definitions( -DREQUESTER_EXE="${requester_exe_string}" )
 
+# convenience macro to add akonadi demo application
+macro(add_akonadimime_demo _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  add_executable(${_name} ${_test})
+  target_link_libraries(${_name}  KF5AkonadiMime KF5::Mime)
+endmacro()
+
+# demo applications
+add_akonadimime_demo(headfetcher.cpp)
