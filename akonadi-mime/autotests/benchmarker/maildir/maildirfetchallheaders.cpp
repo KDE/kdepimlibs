@@ -18,18 +18,18 @@
     02110-1301, USA.
 */
 
-#include "maildirfetchunreadheaders.h"
+#include "maildirfetchallheaders.h"
 #include "maildir.h"
 
 #include <QDebug>
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include <kmime/kmime_message.h>
-#include "kmime/messageparts.h"
+#include "akonadi/kmime/messageparts.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -37,26 +37,23 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-MailDirFetchUnreadHeaders::MailDirFetchUnreadHeaders():MailDir(){}
+MailDirFetchAllHeaders::MailDirFetchAllHeaders():MailDir(){}
 
-void MailDirFetchUnreadHeaders::runTest() {
+void MailDirFetchAllHeaders::runTest() {
   timer.start();
-  qDebug() << "  Listing headers of unread messages of every folder.";
-  CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj3->fetchScope().setResource( currentInstance.identifier() );
-  clj3->exec();
-  Collection::List list3 = clj3->collections();
-  foreach ( const Collection &collection, list3 ) {
+  qDebug() << "  Listing all headers of every folder.";
+  CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
+  clj->fetchScope().setResource( currentInstance.identifier() );
+  clj->exec();
+  Collection::List list = clj->collections();
+  foreach ( const Collection &collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
     foreach ( const Item &item, ifj->items() ) {
-      // filter read messages
-      if ( !item.hasFlag( "\\SEEN" ) ) {
-        a = item.payload<MessagePtr>()->subject()->asUnicodeString();
-      }
+      a = item.payload<MessagePtr>()->subject()->asUnicodeString();
     }
   }
-  outputStats( "unreadheaderlist" );
+  outputStats( QLatin1String("fullheaderlist") );
 }

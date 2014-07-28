@@ -18,31 +18,22 @@
     02110-1301, USA.
 */
 
+#include "maildirimport.h"
 #include "maildir.h"
-
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-
-#include <kmime/kmime_message.h>
-#include "kmime/messageparts.h"
-
-
-#include <boost/shared_ptr.hpp>
+#include <QDebug>
+#include <QTest>
 
 #define WAIT_TIME 100
 
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
+MailDirImport::MailDirImport(const QString &dir):MailDir(dir){}
 
-using namespace Akonadi;
-
-MailDir::MailDir(const QString &dir) : MakeTest()
-{
-  createAgent("akonadi_maildir_resource");
-  configureDBusIface("Maildir",dir);
+void MailDirImport::runTest() {
+  done = false;
+  timer.start();
+  qDebug() << "  Synchronising resource.";
+  currentInstance.synchronize();
+  while(!done)
+    QTest::qWait( WAIT_TIME );
+  outputStats( QLatin1String("import") );
 }
 
-MailDir::MailDir() : MakeTest(){}

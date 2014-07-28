@@ -19,7 +19,7 @@
 
 #include "vcardimport.h"
 #include "vcard.h"
-
+#include <QTest>
 #include <QDebug>
 
 #define WAIT_TIME 50
@@ -33,5 +33,5 @@ void VCardImport::runTest() {
   currentInstance.synchronize();
   while(!done)
      QTest::qWait( WAIT_TIME );
-  outputStats( "import");
+  outputStats( QLatin1String("import"));
 }

@@ -1,6 +1,5 @@
 /*
     Copyright (c) 2009 Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
-    based on kdepimlibs/akonadi/tests/benchmarker.cpp wrote by Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,22 +17,12 @@
     02110-1301, USA.
 */
 
-#include "maildirimport.h"
-#include "maildir.h"
-#include <QDebug>
-#include <QTest>
+#include "vcard.h"
 
-#define WAIT_TIME 100
-
-MailDirImport::MailDirImport(const QString &dir):MailDir(dir){}
-
-void MailDirImport::runTest() {
-  done = false;
-  timer.start();
-  qDebug() << "  Synchronising resource.";
-  currentInstance.synchronize();
-  while(!done)
-    QTest::qWait( WAIT_TIME );
-  outputStats( "import" );
+VCard::VCard(const QString &dir) : MakeTest()
+{
+  createAgent(QLatin1String("akonadi_vcarddir_resource"));
+  configureDBusIface(QLatin1String("VCard"), dir);
 }
 
+VCard::VCard() : MakeTest(){}

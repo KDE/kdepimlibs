@@ -46,3 +46,5 @@ if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
   add_akonadi_isolated_test( localfoldersrequestjobtest.cpp )
   add_akonadi_isolated_test( racetest.cpp )
 endif()
+
+add_subdirectory(benchmarker)

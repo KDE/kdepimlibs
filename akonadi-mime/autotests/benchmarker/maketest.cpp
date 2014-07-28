@@ -20,12 +20,12 @@
 
 #include "test.h"
 
-#include "../../dbusconnectionpool.h"
+#include "AkonadiCore/dbusconnectionpool.h"
 
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/collectiondeletejob.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
 
 #include <QDebug>
 #include <QTest>
@@ -61,11 +61,11 @@ void MakeTest::createAgent(const QString &name)
 
 void MakeTest::configureDBusIface(const QString &name,const QString &dir)
 {
-  QDBusInterface *configIface = new QDBusInterface( "org.freedesktop.Akonadi.Resource." + currentInstance.identifier(),
-      "/Settings", "org.kde.Akonadi." + name + ".Settings", DBusConnectionPool::threadConnection(), this );
+  QDBusInterface *configIface = new QDBusInterface( QLatin1String("org.freedesktop.Akonadi.Resource.") + currentInstance.identifier(),
+      QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.") + name + QLatin1String(".Settings"), DBusConnectionPool::threadConnection(), this );
 
-  configIface->call( "setPath", dir );
-  configIface->call( "setReadOnly", true );
+  configIface->call( QLatin1String("setPath"), dir );
+  configIface->call( QLatin1String("setReadOnly"), true );
 
   if ( !configIface->isValid())
     qFatal( "Could not configure instance %s.", qPrintable( currentInstance.identifier() ) );
@@ -93,7 +93,7 @@ void MakeTest::instanceStatusChanged( const AgentInstance &instance )
 
 void MakeTest::outputStats( const QString &description )
 {
-  output( description + "\t\t" + currentAccount + "\t\t" + QByteArray::number( timer.elapsed() ) + '\n' );
+  output( description + QLatin1String("\t\t") + currentAccount + QLatin1String("\t\t") + QString::number( timer.elapsed() ) + QLatin1Char('\n') );
 }
 
 void MakeTest::output( const QString &message )
@@ -114,7 +114,7 @@ void MakeTest::removeCollections()
     CollectionDeleteJob *cdj = new CollectionDeleteJob( collection, this );
     cdj->exec();
   }
-  outputStats( "removeallcollections" );
+  outputStats( QLatin1String("removeallcollections") );
 }
 
 void MakeTest::removeResource()

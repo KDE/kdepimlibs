@@ -18,37 +18,45 @@
     02110-1301, USA.
 */
 
-#include "maildirremovereadmessages.h"
+#include "maildirfetchunreadheaders.h"
 #include "maildir.h"
+
 #include <QDebug>
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+
+#include <kmime/kmime_message.h>
+#include "akonadi/kmime/messageparts.h"
+
+#include <boost/shared_ptr.hpp>
+
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-MailDirRemoveReadMessages::MailDirRemoveReadMessages():MailDir(){}
+MailDirFetchUnreadHeaders::MailDirFetchUnreadHeaders():MailDir(){}
 
-void MailDirRemoveReadMessages::runTest() {
+void MailDirFetchUnreadHeaders::runTest() {
   timer.start();
-  qDebug() << "  Removing read messages from every folder.";
-  CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj4->fetchScope().setResource( currentInstance.identifier() );
-  clj4->exec();
-  Collection::List list4 = clj4->collections();
-  foreach ( const Collection &collection, list4 ) {
+  qDebug() << "  Listing headers of unread messages of every folder.";
+  CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
+  clj3->fetchScope().setResource( currentInstance.identifier() );
+  clj3->exec();
+  Collection::List list3 = clj3->collections();
+  foreach ( const Collection &collection, list3 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
+    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
+    QString a;
     foreach ( const Item &item, ifj->items() ) {
-      // delete read messages
-      if ( item.hasFlag( "\\SEEN" ) ) {
-        ItemDeleteJob *idj = new ItemDeleteJob( item, this);
-        idj->exec();
+      // filter read messages
+      if ( !item.hasFlag( "\\SEEN" ) ) {
+        a = item.payload<MessagePtr>()->subject()->asUnicodeString();
       }
     }
   }
-  outputStats( "removereaditems" );
-
+  outputStats( QLatin1String("unreadheaderlist") );
 }

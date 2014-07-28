@@ -18,42 +18,37 @@
     02110-1301, USA.
 */
 
-#include "maildirfetchallheaders.h"
+#include "maildir20percentread.h"
 #include "maildir.h"
 
 #include <QDebug>
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-
-#include <kmime/kmime_message.h>
-#include "kmime/messageparts.h"
-
-#include <boost/shared_ptr.hpp>
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 
 using namespace Akonadi;
 
-MailDirFetchAllHeaders::MailDirFetchAllHeaders():MailDir(){}
+MailDir20PercentAsRead::MailDir20PercentAsRead():MailDir(){}
 
-void MailDirFetchAllHeaders::runTest() {
+void MailDir20PercentAsRead::runTest() {
   timer.start();
-  qDebug() << "  Listing all headers of every folder.";
-  CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj->fetchScope().setResource( currentInstance.identifier() );
-  clj->exec();
-  Collection::List list = clj->collections();
-  foreach ( const Collection &collection, list ) {
+  qDebug() << "  Marking 20% of messages as read.";
+  CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
+  clj2->fetchScope().setResource( currentInstance.identifier() );
+  clj2->exec();
+  Collection::List list2 = clj2->collections();
+  foreach ( const Collection &collection, list2 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
-    QString a;
-    foreach ( const Item &item, ifj->items() ) {
-      a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+    Item::List itemlist = ifj->items();
+    for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
+      Item item = itemlist[i];
+      item.setFlag( "\\SEEN" );
+      ItemModifyJob *isj = new ItemModifyJob( item, this );
+      isj->exec();
     }
   }
-  outputStats( "fullheaderlist" );
+  outputStats( QLatin1String("mark20percentread") );
 }

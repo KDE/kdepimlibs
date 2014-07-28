@@ -18,37 +18,37 @@
     02110-1301, USA.
 */
 
-#include "maildir20percentread.h"
+#include "maildirremovereadmessages.h"
 #include "maildir.h"
-
 #include <QDebug>
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemdeletejob.h>
+#include <AkonadiCore/itemfetchjob.h>
 
 using namespace Akonadi;
 
-MailDir20PercentAsRead::MailDir20PercentAsRead():MailDir(){}
+MailDirRemoveReadMessages::MailDirRemoveReadMessages():MailDir(){}
 
-void MailDir20PercentAsRead::runTest() {
+void MailDirRemoveReadMessages::runTest() {
   timer.start();
-  qDebug() << "  Marking 20% of messages as read.";
-  CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj2->fetchScope().setResource( currentInstance.identifier() );
-  clj2->exec();
-  Collection::List list2 = clj2->collections();
-  foreach ( const Collection &collection, list2 ) {
+  qDebug() << "  Removing read messages from every folder.";
+  CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
+  clj4->fetchScope().setResource( currentInstance.identifier() );
+  clj4->exec();
+  Collection::List list4 = clj4->collections();
+  foreach ( const Collection &collection, list4 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->exec();
-    Item::List itemlist = ifj->items();
-    for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
-      Item item = itemlist[i];
-      item.setFlag( "\\SEEN" );
-      ItemModifyJob *isj = new ItemModifyJob( item, this );
-      isj->exec();
+    foreach ( const Item &item, ifj->items() ) {
+      // delete read messages
+      if ( item.hasFlag( "\\SEEN" ) ) {
+        ItemDeleteJob *idj = new ItemDeleteJob( item, this);
+        idj->exec();
+      }
     }
   }
-  outputStats( "mark20percentread" );
+  outputStats( QLatin1String("removereaditems") );
+
 }

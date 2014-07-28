@@ -21,8 +21,8 @@
 #ifndef MAKETEST_H
 #define MAKETEST_H
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/job.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/job.h>
 
 #include <QTime>
 
