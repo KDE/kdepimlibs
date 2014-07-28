@@ -2,7 +2,7 @@
 # FIXME Delete this block when akonadi-mime is split
 # If building the monolithic kdepimlibs, kcfg2dbus.xsl is in akonadi/
 if(NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${Akonadi-Mime_SOURCE_DIR}")
-  set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR})
+  set(KF5Akonadi_DATA_DIR ${Akonadi_SOURCE_DIR}/src/core/)
 endif()
 
 # generates a D-Bus interface description from a KConfigXT file
