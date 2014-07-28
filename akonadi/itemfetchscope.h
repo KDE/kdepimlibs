@@ -347,33 +347,15 @@ public:
     bool fetchTags() const;
 
     /**
-     * Sets wether only the id of the tags should be retieved or the complete tag.
-     *
-     * The default is @c true.
-     *
-     * @see tagFetchScope()
-     * @since 4.15
-     */
-    void setFetchTagIdOnly(bool fetchIdOnly);
-
-    /**
-     * Sets wether only the id of the tags should be retieved or the complete tag.
-     *
-     * @see tagFetchScope()
-     * @since 4.15
-     */
-    bool fetchTagIdOnly() const;
-
-    /**
      * Sets the tag fetch scope.
      *
      * The TagFetchScope controls how much of an tags's data is fetched
      * from the server.
      *
-     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
      *
      * @param fetchScope The new fetch scope for tag fetch operations.
-     * @see fetchScope(), setFetchTagIdOnly()
+     * @see fetchScope()
      * @since 4.15
      */
     void setTagFetchScope(const TagFetchScope &fetchScope);
@@ -386,11 +368,11 @@ public:
      * without storing it in a local variable. See the TagFetchScope documentation
      * for an example.
      *
-     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
      *
      * @return a reference to the current tag fetch scope
      *
-     * @see setFetchScope() for replacing the current tag fetch scope, setFetchTagIdOnly()
+     * @see setFetchScope() for replacing the current tag fetch scope
      * @since 4.15
      */
     TagFetchScope &tagFetchScope();
@@ -398,11 +380,11 @@ public:
     /**
      * Returns the tag fetch scope.
      *
-     * Note that the tag fetch scope is only used if fetchTagIdOnly() is false.
+     * By default setFetchIdOnly is set to true on the tag fetch scope.
      *
      * @return a reference to the current tag fetch scope
      *
-     * @see setFetchScope() for replacing the current tag fetch scope, setFetchTagIdOnly()
+     * @see setFetchScope() for replacing the current tag fetch scope
      * @since 4.15
      */
     TagFetchScope tagFetchScope() const;

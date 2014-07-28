@@ -194,16 +194,6 @@ bool ItemFetchScope::fetchTags() const
     return d->mFetchTags;
 }
 
-void ItemFetchScope::setFetchTagIdOnly(bool idOnly)
-{
-    d->mFetchTagIdOnly = idOnly;
-}
-
-bool ItemFetchScope::fetchTagIdOnly() const
-{
-    return d->mFetchTagIdOnly;
-}
-
 void ItemFetchScope::setTagFetchScope(const TagFetchScope &tagFetchScope)
 {
     d->mTagFetchScope = tagFetchScope;

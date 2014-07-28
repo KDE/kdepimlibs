@@ -45,9 +45,9 @@ public:
         , mFetchRid(true)
         , mFetchGid(false)
         , mFetchTags(false)
-        , mFetchTagIdOnly(true)
         , mFetchVRefs(false)
     {
+        mTagFetchScope.setFetchIdOnly(true);
     }
 
     ItemFetchScopePrivate(const ItemFetchScopePrivate &other)
@@ -66,7 +66,6 @@ public:
         mFetchRid = other.mFetchRid;
         mFetchGid = other.mFetchGid;
         mFetchTags = other.mFetchTags;
-        mFetchTagIdOnly = other.mFetchTagIdOnly;
         mTagFetchScope = other.mTagFetchScope;
         mFetchVRefs = other.mFetchVRefs;
     }
@@ -85,7 +84,6 @@ public:
     bool mFetchRid;
     bool mFetchGid;
     bool mFetchTags;
-    bool mFetchTagIdOnly;
     TagFetchScope mTagFetchScope;
     bool mFetchVRefs;
 };
