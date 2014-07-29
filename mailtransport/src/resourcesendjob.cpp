@@ -24,7 +24,6 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
-
 #include <kmime/kmime_message.h>
 
 #include <collection.h>
@@ -43,9 +42,9 @@ using namespace MailTransport;
  */
 class MailTransport::ResourceSendJobPrivate
 {
-  public:
-    ResourceSendJobPrivate( ResourceSendJob *qq )
-      : q( qq )
+public:
+    ResourceSendJobPrivate(ResourceSendJob *qq)
+        : q(qq)
     {
     }
 
@@ -56,37 +55,37 @@ class MailTransport::ResourceSendJobPrivate
 
 void ResourceSendJobPrivate::slotEmitResult()
 {
-  // KCompositeJob took care of the error.
-  q->emitResult();
+    // KCompositeJob took care of the error.
+    q->emitResult();
 }
 
-ResourceSendJob::ResourceSendJob( Transport *transport, QObject *parent )
-  : TransportJob( transport, parent ), d( new ResourceSendJobPrivate( this ) )
+ResourceSendJob::ResourceSendJob(Transport *transport, QObject *parent)
+    : TransportJob(transport, parent), d(new ResourceSendJobPrivate(this))
 {
 }
 
 ResourceSendJob::~ResourceSendJob()
 {
-  delete d;
+    delete d;
 }
 
 void ResourceSendJob::doStart()
 {
-  Message::Ptr msg = Message::Ptr( new Message );
-  msg->setContent( data() );
-  MessageQueueJob *job = new MessageQueueJob;
-  job->setMessage( msg );
-  job->transportAttribute().setTransportId( transport()->id() );
-  // Default dispatch mode (send now).
-  // Move to default sent-mail collection.
-  job->addressAttribute().setFrom( sender() );
-  job->addressAttribute().setTo( to() );
-  job->addressAttribute().setCc( cc() );
-  job->addressAttribute().setBcc( bcc() );
-  addSubjob( job );
-  // Once the item is in the outbox, there is nothing more we can do.
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotEmitResult()) );
-  job->start();
+    Message::Ptr msg = Message::Ptr(new Message);
+    msg->setContent(data());
+    MessageQueueJob *job = new MessageQueueJob;
+    job->setMessage(msg);
+    job->transportAttribute().setTransportId(transport()->id());
+    // Default dispatch mode (send now).
+    // Move to default sent-mail collection.
+    job->addressAttribute().setFrom(sender());
+    job->addressAttribute().setTo(to());
+    job->addressAttribute().setCc(cc());
+    job->addressAttribute().setBcc(bcc());
+    addSubjob(job);
+    // Once the item is in the outbox, there is nothing more we can do.
+    connect(job, SIGNAL(result(KJob *)), this, SLOT(slotEmitResult()));
+    job->start();
 }
 
 #include "moc_resourcesendjob_p.cpp"

@@ -27,7 +27,8 @@
 
 class TransportComboBoxPrivate;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   A combo-box for selecting a mail transport.
@@ -35,14 +36,14 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new mail transport selection combo box.
       @param parent The paren widget.
     */
-    TransportComboBox( QWidget *parent = 0 );
+    TransportComboBox(QWidget *parent = 0);
 
     ~TransportComboBox();
 
@@ -55,7 +56,7 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
       Selects the given transport.
       @param transportId The transport identifier.
     */
-    void setCurrentTransport( int transportId );
+    void setCurrentTransport(int transportId);
 
     /**
       Returns the type of the selected transport.
@@ -73,10 +74,10 @@ public Q_SLOTS:
      */
     void updateComboboxList();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void fillComboBox();
 
-  private:
+private:
     TransportComboBoxPrivate *const d;
 };
 

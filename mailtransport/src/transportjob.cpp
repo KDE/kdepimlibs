@@ -28,7 +28,7 @@ using namespace MailTransport;
 
 class MailTransport::TransportJob::Private
 {
-  public:
+public:
     Transport *transport;
     QString sender;
     QStringList to;
@@ -38,93 +38,93 @@ class MailTransport::TransportJob::Private
     QBuffer *buffer;
 };
 
-TransportJob::TransportJob( Transport *transport, QObject *parent )
-  : KCompositeJob( parent ), d( new Private )
+TransportJob::TransportJob(Transport *transport, QObject *parent)
+    : KCompositeJob(parent), d(new Private)
 {
-  d->transport = transport;
-  d->buffer = 0;
+    d->transport = transport;
+    d->buffer = 0;
 }
 
 TransportJob::~ TransportJob()
 {
-  delete d->transport;
-  delete d;
+    delete d->transport;
+    delete d;
 }
 
-void TransportJob::setSender( const QString &sender )
+void TransportJob::setSender(const QString &sender)
 {
-  d->sender = sender;
+    d->sender = sender;
 }
 
-void TransportJob::setTo( const QStringList &to )
+void TransportJob::setTo(const QStringList &to)
 {
-  d->to = to;
+    d->to = to;
 }
 
-void TransportJob::setCc( const QStringList &cc )
+void TransportJob::setCc(const QStringList &cc)
 {
-  d->cc = cc;
+    d->cc = cc;
 }
 
-void TransportJob::setBcc( const QStringList &bcc )
+void TransportJob::setBcc(const QStringList &bcc)
 {
-  d->bcc = bcc;
+    d->bcc = bcc;
 }
 
-void TransportJob::setData( const QByteArray &data )
+void TransportJob::setData(const QByteArray &data)
 {
-  d->data = data;
+    d->data = data;
 }
 
 Transport *TransportJob::transport() const
 {
-  return d->transport;
+    return d->transport;
 }
 
 QString TransportJob::sender() const
 {
-  return d->sender;
+    return d->sender;
 }
 
 QStringList TransportJob::to() const
 {
-  return d->to;
+    return d->to;
 }
 
 QStringList TransportJob::cc() const
 {
-  return d->cc;
+    return d->cc;
 }
 
 QStringList TransportJob::bcc() const
 {
-  return d->bcc;
+    return d->bcc;
 }
 
 QByteArray TransportJob::data() const
 {
-  return d->data;
+    return d->data;
 }
 
 QBuffer *TransportJob::buffer()
 {
-  if ( !d->buffer ) {
-    d->buffer = new QBuffer( this );
-    d->buffer->setData( d->data );
-    d->buffer->open( QIODevice::ReadOnly );
-    Q_ASSERT( d->buffer->isOpen() );
-  }
-  return d->buffer;
+    if (!d->buffer) {
+        d->buffer = new QBuffer(this);
+        d->buffer->setData(d->data);
+        d->buffer->open(QIODevice::ReadOnly);
+        Q_ASSERT(d->buffer->isOpen());
+    }
+    return d->buffer;
 }
 
 void TransportJob::start()
 {
-  if ( !transport()->isValid() ) {
-    setError( UserDefinedError );
-    setErrorText( i18n( "The outgoing account \"%1\" is not correctly configured.",
-                        transport()->name() ) );
-    emitResult();
-    return;
-  }
-  doStart();
+    if (!transport()->isValid()) {
+        setError(UserDefinedError);
+        setErrorText(i18n("The outgoing account \"%1\" is not correctly configured.",
+                          transport()->name()));
+        emitResult();
+        return;
+    }
+    doStart();
 }

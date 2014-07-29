@@ -20,7 +20,6 @@
 #include "configmodule.h"
 #include "transportmanagementwidget.h"
 
-
 #include <KPluginFactory>
 #include <KPluginLoader>
 
@@ -28,15 +27,15 @@
 
 using namespace MailTransport;
 
-K_PLUGIN_FACTORY( MailTransportConfigFactory, registerPlugin<ConfigModule>(); )
+K_PLUGIN_FACTORY(MailTransportConfigFactory, registerPlugin<ConfigModule>();)
 
-ConfigModule::ConfigModule( QWidget * parent, const QVariantList & args ) :
-    KCModule( parent, args )
+ConfigModule::ConfigModule(QWidget *parent, const QVariantList &args) :
+    KCModule(parent, args)
 {
-  setButtons( 0 );
-  QVBoxLayout *l = new QVBoxLayout( this );
-  l->setMargin( 0 );
-  TransportManagementWidget *tmw = new TransportManagementWidget( this );
-  l->addWidget( tmw );
+    setButtons(0);
+    QVBoxLayout *l = new QVBoxLayout(this);
+    l->setMargin(0);
+    TransportManagementWidget *tmw = new TransportManagementWidget(this);
+    l->addWidget(tmw);
 }
 #include "configmodule.moc"

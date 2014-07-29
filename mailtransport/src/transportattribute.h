@@ -24,7 +24,8 @@
 
 #include <attribute.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 
@@ -39,11 +40,11 @@ class Transport;
 */
 class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
       Creates a new TransportAttribute.
     */
-    explicit TransportAttribute( int id = -1 );
+    explicit TransportAttribute(int id = -1);
 
     /**
       Destroys this TransportAttribute.
@@ -54,7 +55,7 @@ class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
     virtual TransportAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
     /**
       Returns the transport id to use for sending this message.
@@ -72,9 +73,9 @@ class MAILTRANSPORT_EXPORT TransportAttribute : public Akonadi::Attribute
     /**
       Sets the transport id to use for sending this message.
     */
-    void setTransportId( int id );
+    void setTransportId(int id);
 
-  private:
+private:
     class Private;
     Private *const d;
 

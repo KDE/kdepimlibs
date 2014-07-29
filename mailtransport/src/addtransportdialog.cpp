@@ -27,7 +27,6 @@
 #include <QDebug>
 #include <QDialogButtonBox>
 
-
 #include <QPushButton>
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>
@@ -39,9 +38,9 @@ using namespace MailTransport;
 */
 class AddTransportDialog::Private
 {
-  public:
-    Private( AddTransportDialog *qq )
-      : q( qq ), okButton( 0 )
+public:
+    Private(AddTransportDialog *qq)
+        : q(qq), okButton(0)
     {
     }
 
@@ -64,132 +63,130 @@ class AddTransportDialog::Private
     ::Ui::AddTransportDialog ui;
 };
 
-
 void AddTransportDialog::Private::writeConfig()
 {
-  KConfigGroup group( KSharedConfig::openConfig(), "AddTransportDialog" );
-  group.writeEntry( "Size", q->size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AddTransportDialog");
+    group.writeEntry("Size", q->size());
 }
 
 void AddTransportDialog::Private::readConfig()
 {
-  KConfigGroup group( KSharedConfig::openConfig(), "AddTransportDialog" );
-  const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
-  if ( sizeDialog.isValid() ) {
-    q->resize( sizeDialog );
-  }
+    KConfigGroup group(KSharedConfig::openConfig(), "AddTransportDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(300, 200));
+    if (sizeDialog.isValid()) {
+        q->resize(sizeDialog);
+    }
 }
 
 TransportType AddTransportDialog::Private::selectedType() const
 {
-  QList<QTreeWidgetItem*> sel = ui.typeListView->selectedItems();
-  if ( !sel.empty() ) {
-    return sel.first()->data( 0, Qt::UserRole ).value<TransportType>();
-  }
-  return TransportType();
+    QList<QTreeWidgetItem *> sel = ui.typeListView->selectedItems();
+    if (!sel.empty()) {
+        return sel.first()->data(0, Qt::UserRole).value<TransportType>();
+    }
+    return TransportType();
 }
 
 void AddTransportDialog::Private::doubleClicked()
 {
-  if (selectedType().isValid() && !ui.name->text().trimmed().isEmpty()) {
-    q->accept();
-  }
+    if (selectedType().isValid() && !ui.name->text().trimmed().isEmpty()) {
+        q->accept();
+    }
 }
 
 void AddTransportDialog::Private::updateOkButton()
 {
-  // Make sure a type is selected before allowing the user to continue.
-  okButton->setEnabled( selectedType().isValid() && !ui.name->text().trimmed().isEmpty() );
+    // Make sure a type is selected before allowing the user to continue.
+    okButton->setEnabled(selectedType().isValid() && !ui.name->text().trimmed().isEmpty());
 }
 
-AddTransportDialog::AddTransportDialog( QWidget *parent )
-  : QDialog( parent ), d( new Private( this ) )
+AddTransportDialog::AddTransportDialog(QWidget *parent)
+    : QDialog(parent), d(new Private(this))
 {
-  // Setup UI.
-  {
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    QWidget *widget = new QWidget( this );
-    d->ui.setupUi( widget );
-    mainLayout->addWidget(widget);
-    setWindowTitle( i18n( "Create Outgoing Account" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    d->okButton = buttonBox->button(QDialogButtonBox::Ok);
-    d->okButton->setText( i18nc( "create and configure a mail transport", "Create and Configure" ) );
-    d->okButton->setEnabled(false);
-    d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    mainLayout->addWidget( buttonBox );
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-
+    // Setup UI.
+    {
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        setLayout(mainLayout);
+        QWidget *widget = new QWidget(this);
+        d->ui.setupUi(widget);
+        mainLayout->addWidget(widget);
+        setWindowTitle(i18n("Create Outgoing Account"));
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        d->okButton = buttonBox->button(QDialogButtonBox::Ok);
+        d->okButton->setText(i18nc("create and configure a mail transport", "Create and Configure"));
+        d->okButton->setEnabled(false);
+        d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        mainLayout->addWidget(buttonBox);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
 #ifdef KDEPIM_MOBILE_UI
-    d->ui.descLabel->hide();
-    d->ui.setDefault->hide();
+        d->ui.descLabel->hide();
+        d->ui.setDefault->hide();
 #endif
-  }
+    }
 
-  // Populate type list.
-  foreach ( const TransportType &type, TransportManager::self()->types() ) {
-    QTreeWidgetItem *treeItem = new QTreeWidgetItem( d->ui.typeListView );
-    treeItem->setText( 0, type.name() );
-    treeItem->setText( 1, type.description() );
-    treeItem->setData( 0, Qt::UserRole, QVariant::fromValue( type ) ); // the transport type
-  }
-  d->ui.typeListView->resizeColumnToContents( 0 );
-  updateGeometry();
-  d->ui.typeListView->setFocus();
+    // Populate type list.
+    foreach (const TransportType &type, TransportManager::self()->types()) {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem(d->ui.typeListView);
+        treeItem->setText(0, type.name());
+        treeItem->setText(1, type.description());
+        treeItem->setData(0, Qt::UserRole, QVariant::fromValue(type));     // the transport type
+    }
+    d->ui.typeListView->resizeColumnToContents(0);
+    updateGeometry();
+    d->ui.typeListView->setFocus();
 
-  // Connect user input.
-  connect( d->ui.typeListView, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-      this, SLOT(updateOkButton()) );
-  connect( d->ui.typeListView, SIGNAL(itemSelectionChanged()),
-      this, SLOT(updateOkButton()) );
-  connect( d->ui.typeListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-           this, SLOT(doubleClicked()) );
-  connect( d->ui.name, SIGNAL(textChanged(QString)),
-           this, SLOT(updateOkButton()) );
-  d->readConfig();
+    // Connect user input.
+    connect(d->ui.typeListView, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+            this, SLOT(updateOkButton()));
+    connect(d->ui.typeListView, SIGNAL(itemSelectionChanged()),
+            this, SLOT(updateOkButton()));
+    connect(d->ui.typeListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+            this, SLOT(doubleClicked()));
+    connect(d->ui.name, SIGNAL(textChanged(QString)),
+            this, SLOT(updateOkButton()));
+    d->readConfig();
 }
 
 AddTransportDialog::~AddTransportDialog()
 {
-  d->writeConfig();
-  delete d;
+    d->writeConfig();
+    delete d;
 }
 
 void AddTransportDialog::accept()
 {
-  if ( !d->selectedType().isValid() ) {
-    return;
-  }
+    if (!d->selectedType().isValid()) {
+        return;
+    }
 
-  // Create a new transport and configure it.
-  Transport *transport = TransportManager::self()->createTransport();
-  transport->setTransportType( d->selectedType() );
-  if ( d->selectedType().type() == Transport::EnumType::Akonadi ) {
-    // Create a resource instance if Akonadi-type transport.
-    using namespace Akonadi;
-    AgentInstanceCreateJob *cjob = new AgentInstanceCreateJob( d->selectedType().agentType() );
-    if ( !cjob->exec() ) {
-      qWarning() << "Failed to create agent instance of type"
-        << d->selectedType().agentType().identifier();
-      return;
+    // Create a new transport and configure it.
+    Transport *transport = TransportManager::self()->createTransport();
+    transport->setTransportType(d->selectedType());
+    if (d->selectedType().type() == Transport::EnumType::Akonadi) {
+        // Create a resource instance if Akonadi-type transport.
+        using namespace Akonadi;
+        AgentInstanceCreateJob *cjob = new AgentInstanceCreateJob(d->selectedType().agentType());
+        if (!cjob->exec()) {
+            qWarning() << "Failed to create agent instance of type"
+                       << d->selectedType().agentType().identifier();
+            return;
+        }
+        transport->setHost(cjob->instance().identifier());
     }
-    transport->setHost( cjob->instance().identifier() );
-  }
-  transport->setName( d->ui.name->text().trimmed() );
-  transport->forceUniqueName();
-  if ( TransportManager::self()->configureTransport( transport, this ) ) {
-    // The user clicked OK and the transport settings were saved.
-    TransportManager::self()->addTransport( transport );
+    transport->setName(d->ui.name->text().trimmed());
+    transport->forceUniqueName();
+    if (TransportManager::self()->configureTransport(transport, this)) {
+        // The user clicked OK and the transport settings were saved.
+        TransportManager::self()->addTransport(transport);
 #ifndef KDEPIM_MOBILE_UI
-    if ( d->ui.setDefault->isChecked() ) {
-      TransportManager::self()->setDefaultTransport( transport->id() );
-    }
+        if (d->ui.setDefault->isChecked()) {
+            TransportManager::self()->setDefaultTransport(transport->id());
+        }
 #endif
-    QDialog::accept();
-  }
+        QDialog::accept();
+    }
 }
 
 #include "moc_addtransportdialog.cpp"

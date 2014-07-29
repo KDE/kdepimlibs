@@ -23,19 +23,20 @@
 
 class KJob;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @internal
 */
 class DispatcherInterfacePrivate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
-  public Q_SLOTS:
-    void massModifyResult( KJob *job );
+public Q_SLOTS:
+    void massModifyResult(KJob *job);
 
 };
 

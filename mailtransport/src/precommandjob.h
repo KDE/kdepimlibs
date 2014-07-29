@@ -30,7 +30,8 @@
 
 class PreCommandJobPrivate;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   Job to execute a command.
@@ -42,15 +43,15 @@ namespace MailTransport {
  */
 class MAILTRANSPORT_EXPORT PrecommandJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new precommand job.
       @param precommand The command to run.
       @param parent The parent object.
     */
-    explicit PrecommandJob( const QString &precommand, QObject *parent = 0 );
+    explicit PrecommandJob(const QString &precommand, QObject *parent = 0);
 
     /**
       Destroys this job.
@@ -63,19 +64,19 @@ class MAILTRANSPORT_EXPORT PrecommandJob : public KJob
     */
     virtual void start();
 
-  protected:
+protected:
 
     /**
       Reimplemented from KJob.
     */
     virtual bool doKill();
 
-  private:
+private:
     friend class ::PreCommandJobPrivate;
     PreCommandJobPrivate *const d;
-    Q_PRIVATE_SLOT( d, void slotFinished( int, QProcess::ExitStatus ) )
-    Q_PRIVATE_SLOT( d, void slotStarted() )
-    Q_PRIVATE_SLOT( d, void slotError( QProcess::ProcessError error ) )
+    Q_PRIVATE_SLOT(d, void slotFinished(int, QProcess::ExitStatus))
+    Q_PRIVATE_SLOT(d, void slotStarted())
+    Q_PRIVATE_SLOT(d, void slotError(QProcess::ProcessError error))
 };
 
 } // namespace MailTransport

@@ -25,26 +25,27 @@
 
 #include <agenttype.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @internal
 */
 class TransportType::Private : public QSharedData
 {
-  public:
+public:
     Private()
     {
-      mType = -1;
+        mType = -1;
     }
 
-    Private( const Private &other )
-      : QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      mType = other.mType;
-      mName = other.mName;
-      mDescription = other.mDescription;
-      mAgentType = other.mAgentType;
+        mType = other.mType;
+        mName = other.mName;
+        mDescription = other.mDescription;
+        mAgentType = other.mAgentType;
     }
 
     int mType;

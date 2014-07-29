@@ -22,18 +22,17 @@
 
 #include <QObject>
 
-
 /**
   This class uses the DispatcherInterface to send an abort() signal th the MDA.
 */
 class Runner : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     Runner();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void sendAbort();
 
 };

@@ -34,48 +34,48 @@
 
 using namespace MailTransport;
 
-TransportConfigWidget::TransportConfigWidget( Transport *transport, QWidget *parent )
-  : QWidget( parent ), d_ptr( new TransportConfigWidgetPrivate )
+TransportConfigWidget::TransportConfigWidget(Transport *transport, QWidget *parent)
+    : QWidget(parent), d_ptr(new TransportConfigWidgetPrivate)
 {
-  init( transport );
+    init(transport);
 }
 
-TransportConfigWidget::TransportConfigWidget( TransportConfigWidgetPrivate &dd,
-                                              Transport *transport, QWidget *parent )
-  : QWidget( parent ), d_ptr( &dd )
+TransportConfigWidget::TransportConfigWidget(TransportConfigWidgetPrivate &dd,
+        Transport *transport, QWidget *parent)
+    : QWidget(parent), d_ptr(&dd)
 {
-  init( transport );
+    init(transport);
 }
 
 TransportConfigWidget::~ TransportConfigWidget()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
-void TransportConfigWidget::init( Transport *transport )
+void TransportConfigWidget::init(Transport *transport)
 {
-  Q_D( TransportConfigWidget );
-  qDebug() << "this" << this << "d" << d;
-  Q_ASSERT( transport );
-  d->transport = transport;
+    Q_D(TransportConfigWidget);
+    qDebug() << "this" << this << "d" << d;
+    Q_ASSERT(transport);
+    d->transport = transport;
 
-  d->manager = new KConfigDialogManager( this, transport );
-  //d->manager->updateWidgets(); // no-op; ui is set up in subclasses.
+    d->manager = new KConfigDialogManager(this, transport);
+    //d->manager->updateWidgets(); // no-op; ui is set up in subclasses.
 }
 
 KConfigDialogManager *TransportConfigWidget::configManager() const
 {
-  Q_D( const TransportConfigWidget );
-  Q_ASSERT( d->manager );
-  return d->manager;
+    Q_D(const TransportConfigWidget);
+    Q_ASSERT(d->manager);
+    return d->manager;
 }
 
 void TransportConfigWidget::apply()
 {
-  Q_D( TransportConfigWidget );
-  d->manager->updateSettings();
-  d->transport->forceUniqueName();
-  d->transport->save();
-  qDebug() << "Config written.";
+    Q_D(TransportConfigWidget);
+    d->manager->updateSettings();
+    d->transport->forceUniqueName();
+    d->transport->save();
+    qDebug() << "Config written.";
 }
 

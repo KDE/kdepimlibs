@@ -21,60 +21,59 @@
 
 #include "transportmanager.h"
 
-
 using namespace Akonadi;
 using namespace MailTransport;
 
 class TransportAttribute::Private
 {
-  public:
+public:
     int mId;
 };
 
-TransportAttribute::TransportAttribute( int id )
-  : d( new Private )
+TransportAttribute::TransportAttribute(int id)
+    : d(new Private)
 {
-  d->mId = id;
+    d->mId = id;
 }
 
 TransportAttribute::~TransportAttribute()
 {
-  delete d;
+    delete d;
 }
 
 TransportAttribute *TransportAttribute::clone() const
 {
-  return new TransportAttribute( d->mId );
+    return new TransportAttribute(d->mId);
 }
 
 QByteArray TransportAttribute::type() const
 {
-  static const QByteArray sType( "TransportAttribute" );
-  return sType;
+    static const QByteArray sType("TransportAttribute");
+    return sType;
 }
 
 QByteArray TransportAttribute::serialized() const
 {
-  return QByteArray::number( d->mId );
+    return QByteArray::number(d->mId);
 }
 
-void TransportAttribute::deserialize( const QByteArray &data )
+void TransportAttribute::deserialize(const QByteArray &data)
 {
-  d->mId = data.toInt();
+    d->mId = data.toInt();
 }
 
 int TransportAttribute::transportId() const
 {
-  return d->mId;
+    return d->mId;
 }
 
 Transport *TransportAttribute::transport() const
 {
-  return TransportManager::self()->transportById( d->mId, false );
+    return TransportManager::self()->transportById(d->mId, false);
 }
 
-void TransportAttribute::setTransportId( int id )
+void TransportAttribute::setTransportId(int id)
 {
-  d->mId = id;
+    d->mId = id;
 }
 

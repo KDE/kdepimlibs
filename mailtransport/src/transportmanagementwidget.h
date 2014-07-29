@@ -27,37 +27,38 @@
 
 #include <QWidget>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   A widget to manage mail transports.
 */
 class MAILTRANSPORT_EXPORT TransportManagementWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new TransportManagementWidget.
       @param parent The parent widget.
     */
-    TransportManagementWidget( QWidget *parent = 0 );
+    TransportManagementWidget(QWidget *parent = 0);
 
     /**
       Destroys the widget.
     */
     virtual ~TransportManagementWidget();
 
-  private:
+private:
     class Private;
-    Private * const d;
-    Q_PRIVATE_SLOT( d, void defaultClicked() )
-    Q_PRIVATE_SLOT( d, void removeClicked() )
-    Q_PRIVATE_SLOT( d, void renameClicked() )
-    Q_PRIVATE_SLOT( d, void editClicked() )
-    Q_PRIVATE_SLOT( d, void addClicked() )
-    Q_PRIVATE_SLOT( d, void updateButtonState() )
-    Q_PRIVATE_SLOT( d, void slotCustomContextMenuRequested(const QPoint&))
+    Private *const d;
+    Q_PRIVATE_SLOT(d, void defaultClicked())
+    Q_PRIVATE_SLOT(d, void removeClicked())
+    Q_PRIVATE_SLOT(d, void renameClicked())
+    Q_PRIVATE_SLOT(d, void editClicked())
+    Q_PRIVATE_SLOT(d, void addClicked())
+    Q_PRIVATE_SLOT(d, void updateButtonState())
+    Q_PRIVATE_SLOT(d, void slotCustomContextMenuRequested(const QPoint &))
 };
 
 } // namespace MailTransport

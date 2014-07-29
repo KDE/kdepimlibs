@@ -22,7 +22,8 @@
 
 #include <QTreeWidget>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @internal
@@ -30,19 +31,19 @@ namespace MailTransport {
 */
 class TransportListView : public QTreeWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TransportListView( QWidget *parent = 0 );
+public:
+    explicit TransportListView(QWidget *parent = 0);
     //virtual ~TransportListView() {}
 
     // overloaded from QTreeWidget
-    void editItem( QTreeWidgetItem *item, int column = 0 );
+    void editItem(QTreeWidgetItem *item, int column = 0);
 
-  protected Q_SLOTS:
-    void commitData( QWidget *editor );
+protected Q_SLOTS:
+    void commitData(QWidget *editor);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void fillTransportList();
 
 };

@@ -26,7 +26,8 @@
 
 class TransportPrivate;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class TransportType;
 
@@ -49,17 +50,17 @@ class TransportType;
 // config options... (cberzan)
 class MAILTRANSPORT_EXPORT Transport : public TransportBase
 {
-  Q_OBJECT
-  friend class TransportManager;
-  friend class TransportManagerPrivate;
+    Q_OBJECT
+    friend class TransportManager;
+    friend class TransportManagerPrivate;
 
-  public:
+public:
     /**
       Destructor
     */
     virtual ~Transport();
 
-    typedef QList<Transport*> List;
+    typedef QList<Transport *> List;
 
     /**
       Returns true if this transport is valid, ie. has all necessary data set.
@@ -75,7 +76,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       Sets the password of this transport.
       @param passwd The new password.
     */
-    void setPassword( const QString &passwd );
+    void setPassword(const QString &passwd);
 
     /**
       Makes sure the transport has a unique name.  Adds #1, #2, #3 etc. if
@@ -115,7 +116,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
 
       @since 4.5
     */
-    static QString authenticationTypeString( int type );
+    static QString authenticationTypeString(int type);
 
     /**
       Returns a deep copy of this Transport object which will no longer be
@@ -139,14 +140,14 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
       @see TransportType.
       @since 4.4
     */
-    void setTransportType( const TransportType &type );
+    void setTransportType(const TransportType &type);
 
-  protected:
+protected:
     /**
       Creates a Transport object. Should only be used by TransportManager.
       @param cfgGroup The KConfig group to read its data from.
     */
-    Transport( const QString &cfgGroup );
+    Transport(const QString &cfgGroup);
 
     virtual void usrRead();
     virtual bool usrSave();
@@ -161,12 +162,12 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     void migrateToWallet();
 
-  private Q_SLOTS:
+private Q_SLOTS:
 
     // Used by our friend, TransportManager
     void readPassword();
 
-  private:
+private:
     TransportPrivate *const d;
 };
 

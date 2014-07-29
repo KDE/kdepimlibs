@@ -28,7 +28,8 @@
 
 #include <QDialog>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 
@@ -39,9 +40,9 @@ class Transport;
  */
 class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new mail transport configuration dialog for the given
      * Transport object.
@@ -57,21 +58,21 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportConfigDialog : public QDialog
      * added to the TransportManager yet.
      * @param parent The parent widget.
      */
-    explicit TransportConfigDialog( Transport *transport, QWidget *parent = 0 );
+    explicit TransportConfigDialog(Transport *transport, QWidget *parent = 0);
 
     /**
      * Destroys the transport config dialog.
      */
     virtual ~TransportConfigDialog();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void okClicked() )
-    Q_PRIVATE_SLOT( d, void slotTextChanged(const QString &) )
-    Q_PRIVATE_SLOT( d, void slotEnabledOkButton(bool) )
+    Q_PRIVATE_SLOT(d, void okClicked())
+    Q_PRIVATE_SLOT(d, void slotTextChanged(const QString &))
+    Q_PRIVATE_SLOT(d, void slotEnabledOkButton(bool))
     //@endcond
 };
 

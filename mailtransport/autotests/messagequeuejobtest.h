@@ -29,15 +29,15 @@
  */
 class MessageQueueJobTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
     void testValidMessages();
     void testInvalidMessages();
 
-  private:
-    void verifyOutboxContents( qlonglong count );
+private:
+    void verifyOutboxContents(qlonglong count);
 
 };
 

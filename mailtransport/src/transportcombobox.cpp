@@ -21,7 +21,6 @@
 #include "transport.h"
 #include "transportmanager.h"
 
-
 using namespace MailTransport;
 
 /**
@@ -30,72 +29,72 @@ using namespace MailTransport;
  */
 class TransportComboBoxPrivate
 {
-  public:
+public:
     QList<int> transports;
 };
 
-TransportComboBox::TransportComboBox( QWidget *parent )
-  : KComboBox( parent ), d( new TransportComboBoxPrivate )
+TransportComboBox::TransportComboBox(QWidget *parent)
+    : KComboBox(parent), d(new TransportComboBoxPrivate)
 {
-  QMetaObject::invokeMethod(this, "updateComboboxList");
-  connect( TransportManager::self(), SIGNAL(transportsChanged()),
-           SLOT(updateComboboxList()) );
+    QMetaObject::invokeMethod(this, "updateComboboxList");
+    connect(TransportManager::self(), SIGNAL(transportsChanged()),
+            SLOT(updateComboboxList()));
 }
 
 TransportComboBox::~TransportComboBox()
 {
-   delete d;
+    delete d;
 }
 
 int TransportComboBox::currentTransportId() const
 {
-  if ( currentIndex() >= 0 && currentIndex() < d->transports.count() ) {
-    return d->transports.at( currentIndex() );
-  }
-  return -1;
+    if (currentIndex() >= 0 && currentIndex() < d->transports.count()) {
+        return d->transports.at(currentIndex());
+    }
+    return -1;
 }
 
-void TransportComboBox::setCurrentTransport( int transportId )
+void TransportComboBox::setCurrentTransport(int transportId)
 {
-  const int i = d->transports.indexOf( transportId );
-  if ( i >= 0 && i < count() ) {
-    setCurrentIndex( i );
-  }
+    const int i = d->transports.indexOf(transportId);
+    if (i >= 0 && i < count()) {
+        setCurrentIndex(i);
+    }
 }
 
 TransportBase::EnumType::type TransportComboBox::transportType() const
 {
-  int transtype = TransportManager::self()->transportById( currentTransportId() )->type();
-  return static_cast<TransportBase::EnumType::type>( transtype );
+    int transtype = TransportManager::self()->transportById(currentTransportId())->type();
+    return static_cast<TransportBase::EnumType::type>(transtype);
 }
 
 void TransportComboBox::updateComboboxList()
 {
-  fillComboBox();
+    fillComboBox();
 }
 
 void TransportComboBox::fillComboBox()
 {
-  const int oldTransport = currentTransportId();
-  clear();
+    const int oldTransport = currentTransportId();
+    clear();
 
-  int defaultId = 0;
-  if ( !TransportManager::self()->isEmpty() ) {
-    const QStringList listNames = TransportManager::self()->transportNames();
-    const QList<int> listIds = TransportManager::self()->transportIds();
-    addItems( listNames );
-    setTransportList(listIds);
-    defaultId = TransportManager::self()->defaultTransportId();
-  }
+    int defaultId = 0;
+    if (!TransportManager::self()->isEmpty()) {
+        const QStringList listNames = TransportManager::self()->transportNames();
+        const QList<int> listIds = TransportManager::self()->transportIds();
+        addItems(listNames);
+        setTransportList(listIds);
+        defaultId = TransportManager::self()->defaultTransportId();
+    }
 
-  if ( oldTransport != -1 ) {
-    setCurrentTransport( oldTransport );
-  } else {
-    setCurrentTransport( defaultId );
-  }
+    if (oldTransport != -1) {
+        setCurrentTransport(oldTransport);
+    } else {
+        setCurrentTransport(defaultId);
+    }
 }
 
 void TransportComboBox::setTransportList(const QList<int> &transportList)
 {
-  d->transports = transportList;
+    d->transports = transportList;
 }

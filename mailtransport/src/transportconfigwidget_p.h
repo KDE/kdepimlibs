@@ -24,14 +24,15 @@
 
 #include <KConfigDialogManager>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @internal
 */
 class TransportConfigWidgetPrivate
 {
-  public:
+public:
     Transport *transport;
     KConfigDialogManager *manager;
 

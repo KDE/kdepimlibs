@@ -24,7 +24,6 @@
 
 #include <QDebug>
 
-
 #include <agentmanager.h>
 #include <collection.h>
 #include <specialmailcollections.h>
@@ -33,16 +32,16 @@
 using namespace Akonadi;
 using namespace MailTransport;
 
-Q_GLOBAL_STATIC( DispatcherInterfacePrivate, sInstance )
+Q_GLOBAL_STATIC(DispatcherInterfacePrivate, sInstance)
 
-void DispatcherInterfacePrivate::massModifyResult( KJob *job )
+void DispatcherInterfacePrivate::massModifyResult(KJob *job)
 {
-  // Nothing to do here, really.  If the job fails, the user can retry it.
-  if ( job->error() ) {
-    qDebug() << "failed" << job->errorString();
-  } else {
-    qDebug() << "succeeded.";
-  }
+    // Nothing to do here, really.  If the job fails, the user can retry it.
+    if (job->error()) {
+        qDebug() << "failed" << job->errorString();
+    } else {
+        qDebug() << "succeeded.";
+    }
 }
 
 DispatcherInterface::DispatcherInterface()
@@ -51,52 +50,52 @@ DispatcherInterface::DispatcherInterface()
 
 AgentInstance DispatcherInterface::dispatcherInstance() const
 {
-  AgentInstance a =
-    AgentManager::self()->instance( QLatin1String( "akonadi_maildispatcher_agent" ) );
-  if ( !a.isValid() ) {
-    qWarning() << "Could not get MDA instance.";
-  }
-  return a;
+    AgentInstance a =
+        AgentManager::self()->instance(QLatin1String("akonadi_maildispatcher_agent"));
+    if (!a.isValid()) {
+        qWarning() << "Could not get MDA instance.";
+    }
+    return a;
 }
 
 void DispatcherInterface::dispatchManually()
 {
-  Collection outbox =
-    SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if ( !outbox.isValid() ) {
+    Collection outbox =
+        SpecialMailCollections::self()->defaultCollection(SpecialMailCollections::Outbox);
+    if (!outbox.isValid()) {
 //    qCritical() << "Could not access Outbox.";
-    return;
-  }
+        return;
+    }
 
-  FilterActionJob *mjob = new FilterActionJob( outbox, new SendQueuedAction, sInstance );
-  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
+    FilterActionJob *mjob = new FilterActionJob(outbox, new SendQueuedAction, sInstance);
+    QObject::connect(mjob, SIGNAL(result(KJob *)), sInstance, SLOT(massModifyResult(KJob *)));
 }
 
 void DispatcherInterface::retryDispatching()
 {
-  Collection outbox =
-    SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if ( !outbox.isValid() ) {
+    Collection outbox =
+        SpecialMailCollections::self()->defaultCollection(SpecialMailCollections::Outbox);
+    if (!outbox.isValid()) {
 //    qCritical() << "Could not access Outbox.";
-    return;
-  }
+        return;
+    }
 
-  FilterActionJob *mjob = new FilterActionJob( outbox, new ClearErrorAction, sInstance );
-  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
+    FilterActionJob *mjob = new FilterActionJob(outbox, new ClearErrorAction, sInstance);
+    QObject::connect(mjob, SIGNAL(result(KJob *)), sInstance, SLOT(massModifyResult(KJob *)));
 }
 
-void DispatcherInterface::dispatchManualTransport( int transportId )
+void DispatcherInterface::dispatchManualTransport(int transportId)
 {
-  Collection outbox =
-    SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
-  if ( !outbox.isValid() ) {
+    Collection outbox =
+        SpecialMailCollections::self()->defaultCollection(SpecialMailCollections::Outbox);
+    if (!outbox.isValid()) {
 //    qCritical() << "Could not access Outbox.";
-    return;
-  }
+        return;
+    }
 
-  FilterActionJob *mjob =
-    new FilterActionJob( outbox, new DispatchManualTransportAction( transportId ), sInstance );
-  QObject::connect( mjob, SIGNAL(result(KJob*)), sInstance, SLOT(massModifyResult(KJob*)) );
+    FilterActionJob *mjob =
+        new FilterActionJob(outbox, new DispatchManualTransportAction(transportId), sInstance);
+    QObject::connect(mjob, SIGNAL(result(KJob *)), sInstance, SLOT(massModifyResult(KJob *)));
 }
 
 #include "moc_dispatcherinterface_p.cpp"

@@ -25,7 +25,8 @@
 #include <attribute.h>
 #include <collection.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   Attribute determining what will happen to a message after it is sent.  The
@@ -37,21 +38,21 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
       What to do with the item in the outbox after it has been sent successfully.
     */
     enum SentBehaviour {
-      Delete,                      ///< Delete the item from the outbox.
-      MoveToCollection,            ///< Move the item to a custom collection.
-      MoveToDefaultSentCollection  ///< Move the item to the default sent-mail collection.
+        Delete,                      ///< Delete the item from the outbox.
+        MoveToCollection,            ///< Move the item to a custom collection.
+        MoveToDefaultSentCollection  ///< Move the item to the default sent-mail collection.
     };
 
     /**
       Creates a new SentBehaviourAttribute.
     */
-    explicit SentBehaviourAttribute( SentBehaviour beh = MoveToDefaultSentCollection,
-        Akonadi::Collection moveToCollection = Akonadi::Collection( -1 ) );
+    explicit SentBehaviourAttribute(SentBehaviour beh = MoveToDefaultSentCollection,
+                                    Akonadi::Collection moveToCollection = Akonadi::Collection(-1));
 
     /**
       Destroys the SentBehaviourAttribute.
@@ -62,7 +63,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
     virtual SentBehaviourAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
     /**
       Returns the sent-behaviour of the message.
@@ -75,7 +76,7 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
       @param beh the sent-behaviour to set
       @see SentBehaviour.
     */
-    void setSentBehaviour( SentBehaviour beh );
+    void setSentBehaviour(SentBehaviour beh);
 
     /**
       Returns the collection to which the item should be moved after it is sent.
@@ -89,9 +90,9 @@ class MAILTRANSPORT_EXPORT SentBehaviourAttribute : public Akonadi::Attribute
       @param moveToCollection target collection for "move to" operation
       @see setSentBehaviour.
     */
-    void setMoveToCollection( Akonadi::Collection moveToCollection );
+    void setMoveToCollection(Akonadi::Collection moveToCollection);
 
-  private:
+private:
     class Private;
     Private *const d;
 

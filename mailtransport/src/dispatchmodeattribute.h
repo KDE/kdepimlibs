@@ -26,7 +26,8 @@
 
 #include <attribute.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   Attribute determining how and when a message from the outbox should be
@@ -38,20 +39,20 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
       Determines how the message is sent.
     */
     enum DispatchMode {
-      Automatic,    ///< Send message as soon as possible, but no earlier than
-                    ///  specified by setSendAfter()
-      Manual        ///< Send message only when the user requests so.
+        Automatic,    ///< Send message as soon as possible, but no earlier than
+        ///  specified by setSendAfter()
+        Manual        ///< Send message only when the user requests so.
     };
 
     /**
       Creates a new DispatchModeAttribute.
     */
-    explicit DispatchModeAttribute( DispatchMode mode = Automatic );
+    explicit DispatchModeAttribute(DispatchMode mode = Automatic);
 
     /**
       Destroys the DispatchModeAttribute.
@@ -62,7 +63,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
     virtual DispatchModeAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
     /**
       Returns the dispatch mode for the message.
@@ -75,7 +76,7 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
       @param mode the dispatch mode to set
       @see DispatchMode.
     */
-    void setDispatchMode( DispatchMode mode );
+    void setDispatchMode(DispatchMode mode);
 
     /**
       Returns the date and time when the message should be sent.
@@ -88,9 +89,9 @@ class MAILTRANSPORT_EXPORT DispatchModeAttribute : public Akonadi::Attribute
       @param date the date and time to set
       @see setDispatchMode.
     */
-    void setSendAfter( const QDateTime &date );
+    void setSendAfter(const QDateTime &date);
 
-  private:
+private:
     class Private;
     Private *const d;
 

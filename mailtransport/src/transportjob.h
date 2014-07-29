@@ -1,20 +1,20 @@
-  /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+/*
+  Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef MAILTRANSPORT_TRANSPORTJOB_H
@@ -28,7 +28,8 @@
 
 class QBuffer;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 
@@ -40,9 +41,9 @@ class Transport;
 */
 class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
 {
-  friend class TransportManager;
+    friend class TransportManager;
 
-  public:
+public:
     /**
       Deletes this transport job.
     */
@@ -52,30 +53,30 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
       Sets the sender of the mail.
       @p sender must be the plain email address, not including display name.
     */
-    void setSender( const QString &sender );
+    void setSender(const QString &sender);
 
     /**
       Sets the "To" receiver(s) of the mail.
       @p to must be the plain email address(es), not including display name.
     */
-    void setTo( const QStringList &to );
+    void setTo(const QStringList &to);
 
     /**
       Sets the "Cc" receiver(s) of the mail.
       @p cc must be the plain email address(es), not including display name.
     */
-    void setCc( const QStringList &cc );
+    void setCc(const QStringList &cc);
 
     /**
       Sets the "Bcc" receiver(s) of the mail.
       @p bcc must be the plain email address(es), not including display name.
     */
-    void setBcc( const QStringList &bcc );
+    void setBcc(const QStringList &bcc);
 
     /**
       Sets the content of the mail.
     */
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     /**
       Starts this job. It is recommended to not call this method directly but use
@@ -90,7 +91,7 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
     */
     Transport *transport() const;
 
-  protected:
+protected:
     /**
       Creates a new mail transport job.
       @param transport The transport configuration. This must be a deep copy of
@@ -98,7 +99,7 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
       @param parent The parent object.
       @see TransportManager::createTransportJob()
     */
-    explicit TransportJob( Transport *transport, QObject *parent = 0 );
+    explicit TransportJob(Transport *transport, QObject *parent = 0);
 
     /**
       Returns the sender of the mail.
@@ -136,7 +137,7 @@ class MAILTRANSPORT_DEPRECATED_EXPORT TransportJob : public KCompositeJob
     */
     virtual void doStart() = 0;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

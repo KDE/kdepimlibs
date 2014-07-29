@@ -26,20 +26,19 @@
 #include <collection.h>
 #include <item.h>
 
-
 class FilterActionTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
     void testMassModifyItem();
     void testMassModifyItems();
     void testMassModifyCollection();
 
-  private:
-    Akonadi::Collection createCollection( const QString &name );
-    Akonadi::Item createItem( const Akonadi::Collection &col, bool accept );
+private:
+    Akonadi::Collection createCollection(const QString &name);
+    Akonadi::Item createItem(const Akonadi::Collection &col, bool accept);
 };
 
 #endif

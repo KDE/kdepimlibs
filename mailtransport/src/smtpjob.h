@@ -25,14 +25,16 @@
 
 #include <transportjob.h>
 
-namespace KIO {
-  class Job;
-  class Slave;
+namespace KIO
+{
+class Job;
+class Slave;
 }
 
 class SmtpJobPrivate;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class SmtpSession;
 
@@ -50,38 +52,38 @@ class SmtpSession;
 */
 class MAILTRANSPORT_DEPRECATED_EXPORT SmtpJob : public TransportJob
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Creates a SmtpJob.
       @param transport The transport settings.
       @param parent The parent object.
     */
-    explicit SmtpJob( Transport *transport, QObject *parent = 0 );
+    explicit SmtpJob(Transport *transport, QObject *parent = 0);
 
     /**
       Deletes this job.
     */
     virtual ~SmtpJob();
 
-  protected:
+protected:
     virtual void doStart();
     virtual bool doKill();
 
-  protected Q_SLOTS:
-    virtual void slotResult( KJob *job );
-    void slaveError( KIO::Slave *slave, int errorCode, const QString &errorMsg );
+protected Q_SLOTS:
+    virtual void slotResult(KJob *job);
+    void slaveError(KIO::Slave *slave, int errorCode, const QString &errorMsg);
 
-  private:
+private:
     void startSmtpJob();
 
-  private Q_SLOTS:
-    void dataRequest( KIO::Job *job, QByteArray &data );
+private Q_SLOTS:
+    void dataRequest(KIO::Job *job, QByteArray &data);
 
-  private:
+private:
     friend class ::SmtpJobPrivate;
     SmtpJobPrivate *const d;
-    Q_PRIVATE_SLOT( d, void smtpSessionResult( MailTransport::SmtpSession* ) )
+    Q_PRIVATE_SLOT(d, void smtpSessionResult(MailTransport::SmtpSession *))
 };
 
 } // namespace MailTransport

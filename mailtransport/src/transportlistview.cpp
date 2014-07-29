@@ -34,92 +34,92 @@
 
 using namespace MailTransport;
 
-TransportListView::TransportListView( QWidget *parent )
-  : QTreeWidget( parent )
+TransportListView::TransportListView(QWidget *parent)
+    : QTreeWidget(parent)
 {
-  setHeaderLabels( QStringList()
-                     << i18nc( "@title:column email transport name", "Name" )
-                     << i18nc( "@title:column email transport type", "Type" ) );
-  setRootIsDecorated( false );
-  header()->setMovable( false );
-  header()->setResizeMode( QHeaderView::ResizeToContents );
-  setAllColumnsShowFocus( true );
-  setAlternatingRowColors( true );
-  setSortingEnabled( true );
-  sortByColumn( 0, Qt::AscendingOrder );
-  setSelectionMode( SingleSelection );
+    setHeaderLabels(QStringList()
+                    << i18nc("@title:column email transport name", "Name")
+                    << i18nc("@title:column email transport type", "Type"));
+    setRootIsDecorated(false);
+    header()->setMovable(false);
+    header()->setResizeMode(QHeaderView::ResizeToContents);
+    setAllColumnsShowFocus(true);
+    setAlternatingRowColors(true);
+    setSortingEnabled(true);
+    sortByColumn(0, Qt::AscendingOrder);
+    setSelectionMode(SingleSelection);
 
-  fillTransportList();
-  connect( TransportManager::self(), SIGNAL(transportsChanged()),
-           this, SLOT(fillTransportList()) );
+    fillTransportList();
+    connect(TransportManager::self(), SIGNAL(transportsChanged()),
+            this, SLOT(fillTransportList()));
 }
 
-void TransportListView::editItem( QTreeWidgetItem *item, int column )
+void TransportListView::editItem(QTreeWidgetItem *item, int column)
 {
-  // TODO: is there a nicer way to make only the 'name' column editable?
-  if ( column == 0 && item ) {
-    Qt::ItemFlags oldFlags = item->flags();
-    item->setFlags( oldFlags | Qt::ItemIsEditable );
-    QTreeWidget::editItem( item, 0 );
-    item->setFlags( oldFlags );
-    const int id = item->data( 0, Qt::UserRole ).toInt();
-    Transport *t = TransportManager::self()->transportById( id );
-    if ( !t ) {
-      qWarning() << "Transport" << id << "not known by manager.";
-      return;
+    // TODO: is there a nicer way to make only the 'name' column editable?
+    if (column == 0 && item) {
+        Qt::ItemFlags oldFlags = item->flags();
+        item->setFlags(oldFlags | Qt::ItemIsEditable);
+        QTreeWidget::editItem(item, 0);
+        item->setFlags(oldFlags);
+        const int id = item->data(0, Qt::UserRole).toInt();
+        Transport *t = TransportManager::self()->transportById(id);
+        if (!t) {
+            qWarning() << "Transport" << id << "not known by manager.";
+            return;
+        }
+        if (TransportManager::self()->defaultTransportId() == t->id()) {
+            item->setText(0, t->name());
+        }
     }
-    if ( TransportManager::self()->defaultTransportId() == t->id() ) {
-      item->setText( 0, t->name() );
-    }
-  }
 }
 
-void TransportListView::commitData( QWidget *editor )
+void TransportListView::commitData(QWidget *editor)
 {
-  if ( selectedItems().isEmpty() ) {
-    // transport was deleted by someone else???
-    qDebug() << "No selected item.";
-    return;
-  }
-  QTreeWidgetItem *item = selectedItems().first();
-  QLineEdit *edit = dynamic_cast<QLineEdit*>( editor ); // krazy:exclude=qclasses
-  Q_ASSERT( edit ); // original code had if
+    if (selectedItems().isEmpty()) {
+        // transport was deleted by someone else???
+        qDebug() << "No selected item.";
+        return;
+    }
+    QTreeWidgetItem *item = selectedItems().first();
+    QLineEdit *edit = dynamic_cast<QLineEdit *>(editor);  // krazy:exclude=qclasses
+    Q_ASSERT(edit);   // original code had if
 
-  const int id = item->data( 0, Qt::UserRole ).toInt();
-  Transport *t = TransportManager::self()->transportById( id );
-  if ( !t ) {
-    qWarning() << "Transport" << id << "not known by manager.";
-    return;
-  }
-  qDebug() << "Renaming transport" << id << "to" << edit->text();
-  t->setName( edit->text() );
-  t->forceUniqueName();
-  t->save();
+    const int id = item->data(0, Qt::UserRole).toInt();
+    Transport *t = TransportManager::self()->transportById(id);
+    if (!t) {
+        qWarning() << "Transport" << id << "not known by manager.";
+        return;
+    }
+    qDebug() << "Renaming transport" << id << "to" << edit->text();
+    t->setName(edit->text());
+    t->forceUniqueName();
+    t->save();
 }
 
 void TransportListView::fillTransportList()
 {
-  // try to preserve the selection
-  int selected = -1;
-  if ( currentItem() ) {
-    selected = currentItem()->data( 0, Qt::UserRole ).toInt();
-  }
+    // try to preserve the selection
+    int selected = -1;
+    if (currentItem()) {
+        selected = currentItem()->data(0, Qt::UserRole).toInt();
+    }
 
-  clear();
-  foreach ( Transport *t, TransportManager::self()->transports() ) {
-    QTreeWidgetItem *item = new QTreeWidgetItem( this );
-    item->setData( 0, Qt::UserRole, t->id() );
-    QString name = t->name();
-    if ( TransportManager::self()->defaultTransportId() == t->id() ) {
-      name += i18nc( "@label the default mail transport", " (Default)" );
-      QFont font( item->font(0) );
-      font.setBold( true );
-      item->setFont( 0, font );
+    clear();
+    foreach (Transport *t, TransportManager::self()->transports()) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(this);
+        item->setData(0, Qt::UserRole, t->id());
+        QString name = t->name();
+        if (TransportManager::self()->defaultTransportId() == t->id()) {
+            name += i18nc("@label the default mail transport", " (Default)");
+            QFont font(item->font(0));
+            font.setBold(true);
+            item->setFont(0, font);
+        }
+        item->setText(0, name);
+        item->setText(1, t->transportType().name());
+        if (t->id() == selected) {
+            setCurrentItem(item);
+        }
     }
-    item->setText( 0, name );
-    item->setText( 1, t->transportType().name() );
-    if ( t->id() == selected ) {
-      setCurrentItem( item );
-    }
-  }
 }

@@ -29,15 +29,15 @@ using namespace Akonadi;
 
 class Akonadi::FilterActionJob::Private
 {
-  public:
-    Private( FilterActionJob *qq )
-      : q( qq ), functor( 0 )
+public:
+    Private(FilterActionJob *qq)
+        : q(qq), functor(0)
     {
     }
 
     ~Private()
     {
-      delete functor;
+        delete functor;
     }
 
     FilterActionJob *q;
@@ -47,87 +47,87 @@ class Akonadi::FilterActionJob::Private
     ItemFetchScope fetchScope;
 
     // slots:
-    void fetchResult( KJob *job );
+    void fetchResult(KJob *job);
 
     void traverseItems();
 };
 
-void FilterActionJob::Private::fetchResult( KJob *job )
+void FilterActionJob::Private::fetchResult(KJob *job)
 {
-  if ( job->error() ) {
-    // KCompositeJob takes care of errors.
-    return;
-  }
+    if (job->error()) {
+        // KCompositeJob takes care of errors.
+        return;
+    }
 
-  ItemFetchJob *fjob = dynamic_cast<ItemFetchJob*>( job );
-  Q_ASSERT( fjob );
-  Q_ASSERT( items.isEmpty() );
-  items = fjob->items();
-  traverseItems();
+    ItemFetchJob *fjob = dynamic_cast<ItemFetchJob *>(job);
+    Q_ASSERT(fjob);
+    Q_ASSERT(items.isEmpty());
+    items = fjob->items();
+    traverseItems();
 }
 
 void FilterActionJob::Private::traverseItems()
 {
-  Q_ASSERT( functor );
-  qDebug() << "Traversing" << items.count() << "items.";
-  foreach ( const Item &item, items ) {
-    if ( functor->itemAccepted( item ) ) {
-      functor->itemAction( item, q );
-      qDebug() << "Added subjob for item" << item.id();
+    Q_ASSERT(functor);
+    qDebug() << "Traversing" << items.count() << "items.";
+    foreach (const Item &item, items) {
+        if (functor->itemAccepted(item)) {
+            functor->itemAction(item, q);
+            qDebug() << "Added subjob for item" << item.id();
+        }
     }
-  }
-  if ( q->subjobs().isEmpty() ) {
-    qDebug() << "No subjobs; I am done";
-  } else {
-    qDebug() << "Have subjobs; Done when last of them is";
-  }
-  q->commit();
+    if (q->subjobs().isEmpty()) {
+        qDebug() << "No subjobs; I am done";
+    } else {
+        qDebug() << "Have subjobs; Done when last of them is";
+    }
+    q->commit();
 }
 
 FilterAction::~FilterAction()
 {
 }
 
-FilterActionJob::FilterActionJob( const Item &item, FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent ), d( new Private( this ) )
+FilterActionJob::FilterActionJob(const Item &item, FilterAction *functor, QObject *parent)
+    : TransactionSequence(parent), d(new Private(this))
 {
-  d->functor = functor;
-  d->items << item;
+    d->functor = functor;
+    d->items << item;
 }
 
-FilterActionJob::FilterActionJob( const Item::List &items, FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent ), d( new Private( this ) )
+FilterActionJob::FilterActionJob(const Item::List &items, FilterAction *functor, QObject *parent)
+    : TransactionSequence(parent), d(new Private(this))
 {
-  d->functor = functor;
-  d->items = items;
+    d->functor = functor;
+    d->items = items;
 }
 
-FilterActionJob::FilterActionJob( const Collection &collection,
-                                  FilterAction *functor, QObject *parent )
-  : TransactionSequence( parent ), d( new Private( this ) )
+FilterActionJob::FilterActionJob(const Collection &collection,
+                                 FilterAction *functor, QObject *parent)
+    : TransactionSequence(parent), d(new Private(this))
 {
-  d->functor = functor;
-  Q_ASSERT( collection.isValid() );
-  d->collection = collection;
+    d->functor = functor;
+    Q_ASSERT(collection.isValid());
+    d->collection = collection;
 }
 
 FilterActionJob::~FilterActionJob()
 {
-  delete d;
+    delete d;
 }
 
 void FilterActionJob::doStart()
 {
-  if ( d->collection.isValid() ) {
-    qDebug() << "Fetching collection" << d->collection.id();
-    ItemFetchJob *fjob = new ItemFetchJob( d->collection, this );
-    Q_ASSERT( d->functor );
-    d->fetchScope = d->functor->fetchScope();
-    fjob->setFetchScope( d->fetchScope );
-    connect( fjob, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)) );
-  } else {
-    d->traverseItems();
-  }
+    if (d->collection.isValid()) {
+        qDebug() << "Fetching collection" << d->collection.id();
+        ItemFetchJob *fjob = new ItemFetchJob(d->collection, this);
+        Q_ASSERT(d->functor);
+        d->fetchScope = d->functor->fetchScope();
+        fjob->setFetchScope(d->fetchScope);
+        connect(fjob, SIGNAL(result(KJob *)), this, SLOT(fetchResult(KJob *)));
+    } else {
+        d->traverseItems();
+    }
 }
 
 #include "moc_filteractionjob_p.cpp"

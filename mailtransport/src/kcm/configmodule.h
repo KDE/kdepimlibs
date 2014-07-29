@@ -22,16 +22,17 @@
 
 #include <KCModule>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   KCModule for transport management.
 */
 class ConfigModule : public KCModule
 {
-  public:
-    explicit ConfigModule( QWidget *parent = 0,
-                           const QVariantList &args = QVariantList() );
+public:
+    explicit ConfigModule(QWidget *parent = 0,
+                          const QVariantList &args = QVariantList());
 };
 
 } // namespace MailTransport

@@ -24,7 +24,8 @@
 
 #include <QtNetwork/QSslSocket>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class SocketPrivate;
 
@@ -36,16 +37,16 @@ class SocketPrivate;
  */
 class MAILTRANSPORT_EXPORT Socket : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * Contructor, it will not auto connect. Call reconnect() to connect to
      * the parameters given.
      * @param parent the parent
      */
-    explicit Socket( QObject *parent );
+    explicit Socket(QObject *parent);
 
     /**
      * Destructor
@@ -61,7 +62,7 @@ class MAILTRANSPORT_EXPORT Socket : public QObject
     /**
      * Write @p text to the socket
      */
-    virtual void write( const QString &text );
+    virtual void write(const QString &text);
 
     /**
      * @return true when the connection is live and kicking
@@ -71,44 +72,44 @@ class MAILTRANSPORT_EXPORT Socket : public QObject
     /**
      * set the protocol to use
      */
-    void setProtocol( const QString &proto );
+    void setProtocol(const QString &proto);
 
     /**
      * set the server to use
      */
-    void setServer( const QString &server );
+    void setServer(const QString &server);
 
     /**
      * set the port to use. If not specified, it will use the default
      * belonging to the protocol.
      */
-    void setPort( int port );
+    void setPort(int port);
 
     /**
      * this will be a secure connection
      */
-    void setSecure( bool what );
+    void setSecure(bool what);
 
     /**
      * If you want to start TLS encryption, call this. For example after the starttls command.
      */
     void startTLS();
 
-  private:
-    Q_DECLARE_PRIVATE( Socket )
+private:
+    Q_DECLARE_PRIVATE(Socket)
     SocketPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void slotConnected() )
-    Q_PRIVATE_SLOT( d, void slotStateChanged( QAbstractSocket::SocketState state ) )
-    Q_PRIVATE_SLOT( d, void slotModeChanged( QSslSocket::SslMode  state ) )
-    Q_PRIVATE_SLOT( d, void slotSocketRead() )
-    Q_PRIVATE_SLOT( d, void slotSslErrors( const QList<QSslError> &errors ) )
+    Q_PRIVATE_SLOT(d, void slotConnected())
+    Q_PRIVATE_SLOT(d, void slotStateChanged(QAbstractSocket::SocketState state))
+    Q_PRIVATE_SLOT(d, void slotModeChanged(QSslSocket::SslMode  state))
+    Q_PRIVATE_SLOT(d, void slotSocketRead())
+    Q_PRIVATE_SLOT(d, void slotSslErrors(const QList<QSslError> &errors))
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * emits the incoming data
      */
-    void data( const QString & );
+    void data(const QString &);
 
     /**
      * emitted when there is a connection (ready to send something).

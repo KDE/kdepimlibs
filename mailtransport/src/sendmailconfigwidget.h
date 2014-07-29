@@ -28,7 +28,8 @@
 
 #include "transportconfigwidget.h"
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 
@@ -43,22 +44,22 @@ class SendmailConfigWidgetPrivate;
 */
 class SendmailConfigWidget : public TransportConfigWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SendmailConfigWidget( Transport *transport, QWidget *parent = 0 );
+public:
+    explicit SendmailConfigWidget(Transport *transport, QWidget *parent = 0);
     bool pathIsEmpty() const;
-  Q_SIGNALS:
+Q_SIGNALS:
     void enableButtonOk(bool);
 
-  private Q_SLOTS:
-    void slotTextChanged( const QString &text );
+private Q_SLOTS:
+    void slotTextChanged(const QString &text);
 
-  protected:
-    SendmailConfigWidget( SendmailConfigWidgetPrivate &dd, Transport *transport, QWidget *parent );
+protected:
+    SendmailConfigWidget(SendmailConfigWidgetPrivate &dd, Transport *transport, QWidget *parent);
 
-  private:
-    Q_DECLARE_PRIVATE( SendmailConfigWidget )
+private:
+    Q_DECLARE_PRIVATE(SendmailConfigWidget)
 
     void init();
 

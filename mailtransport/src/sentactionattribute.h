@@ -29,7 +29,8 @@
 
 #include <attribute.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
  * @short An Attribute that stores the action to execute after sending.
@@ -42,20 +43,20 @@ namespace MailTransport {
  */
 class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * @short A sent action.
      */
     class MAILTRANSPORT_EXPORT Action
     {
-      public:
+    public:
         /**
          * Describes the action type.
          */
         enum Type {
-          Invalid,         ///< An invalid action.
-          MarkAsReplied,   ///< The message will be marked as replied.
-          MarkAsForwarded  ///< The message will be marked as forwarded.
+            Invalid,         ///< An invalid action.
+            MarkAsReplied,   ///< The message will be marked as replied.
+            MarkAsForwarded  ///< The message will be marked as forwarded.
         };
 
         /**
@@ -74,12 +75,12 @@ class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
          * @param action The action that shall be executed.
          * @param value The action specific argument.
          */
-        Action( Type type, const QVariant &value );
+        Action(Type type, const QVariant &value);
 
         /**
          * Creates an action from an @p other action.
          */
-        Action( const Action &other );
+        Action(const Action &other);
 
         /**
          * Destroys the action.
@@ -99,14 +100,14 @@ class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
         /**
          * @internal
          */
-        Action &operator=( const Action &other );
+        Action &operator=(const Action &other);
 
         /**
          * @internal
          */
-        bool operator==( const Action &other ) const;
+        bool operator==(const Action &other) const;
 
-      private:
+    private:
         //@cond PRIVATE
         class Private;
         QSharedDataPointer<Private> d;
@@ -129,7 +130,7 @@ class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
      * @param type The type of the action that shall be executed.
      * @param value The action specific argument.
      */
-    void addAction( Action::Type type, const QVariant &value );
+    void addAction(Action::Type type, const QVariant &value);
 
     /**
      * Returns the list of actions.
@@ -140,9 +141,9 @@ class MAILTRANSPORT_EXPORT SentActionAttribute : public Akonadi::Attribute
     virtual SentActionAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

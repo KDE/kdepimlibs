@@ -30,11 +30,13 @@
 
 class KJob;
 
-namespace KWallet {
-  class Wallet;
+namespace KWallet
+{
+class Wallet;
 }
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 class TransportJob;
@@ -53,13 +55,13 @@ class TransportManagerPrivate;
 */
 class MAILTRANSPORT_EXPORT TransportManager : public QObject
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.pim.TransportManager" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.pim.TransportManager")
 
-  friend class Transport;
-  friend class TransportManagerPrivate;
+    friend class Transport;
+    friend class TransportManagerPrivate;
 
-  public:
+public:
 
     /**
       Destructor.
@@ -87,7 +89,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       soon as the event loop is entered again due to remote changes. If you need
       to store a Transport object, store the transport identifier instead.
     */
-    Transport *transportById( int id, bool def = true ) const;
+    Transport *transportById(int id, bool def = true) const;
 
     /**
       Returns the transport object with the given name.
@@ -97,7 +99,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @returns A Transport object for immediate use, see transportById() for
       limitations.
     */
-    Transport *transportByName( const QString &name, bool def = true ) const;
+    Transport *transportByName(const QString &name, bool def = true) const;
 
     /**
       Returns a list of all available transports.
@@ -123,7 +125,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       TransportMananger, ie. you must not delete @p transport.
       @param transport The Transport object to add.
     */
-    void addTransport( Transport *transport );
+    void addTransport(Transport *transport);
 
     /**
       Creates a mail transport job for the given transport identifier.
@@ -133,7 +135,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @deprecated use MessageQueueJob to queue messages
                   and rely on the Dispatcher Agent to send them.
     */
-    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( int transportId );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob(int transportId);
 
     /**
       Creates a mail transport job for the given transport identifer,
@@ -144,7 +146,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @deprecated use MessageQueueJob to queue messages
                   and rely on the Dispatcher Agent to send them.
     */
-    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob( const QString &transport );
+    MAILTRANSPORT_DEPRECATED TransportJob *createTransportJob(const QString &transport);
 
     /**
       Executes the given transport job. This is the preferred way to start
@@ -155,7 +157,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @deprecated use MessageQueueJob to queue messages
                   and rely on the Dispatcher Agent to send them.
     */
-    MAILTRANSPORT_DEPRECATED void schedule( TransportJob *job );
+    MAILTRANSPORT_DEPRECATED void schedule(TransportJob *job);
 
     /**
       Tries to create a transport based on KEMailSettings.
@@ -165,10 +167,10 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
 
     /// Describes when to show the transport creation dialog
     enum ShowCondition {
-      Always,              ///< Show the transport creation dialog unconditionally
-      IfNoTransportExists  ///< Only show the transport creation dialog if no transport currently
-                           ///  exists. Ask the user if he wants to add a transport in
-                           ///  the other case.
+        Always,              ///< Show the transport creation dialog unconditionally
+        IfNoTransportExists  ///< Only show the transport creation dialog if no transport currently
+        ///  exists. Ask the user if he wants to add a transport in
+        ///  the other case.
     };
 
     /**
@@ -178,7 +180,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @return True if a new transport has been created and configured.
       @since 4.4
     */
-    bool showTransportCreationDialog( QWidget *parent, ShowCondition showCondition = Always );
+    bool showTransportCreationDialog(QWidget *parent, ShowCondition showCondition = Always);
 
     /**
       Open a configuration dialog for an existing transport.
@@ -188,9 +190,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @return True if the user clicked Ok, false if the user cancelled.
       @since 4.4
     */
-    bool configureTransport( Transport *transport, QWidget *parent );
+    bool configureTransport(Transport *transport, QWidget *parent);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Returns true if there are no mail transports at all.
     */
@@ -221,15 +223,15 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       Sets the default transport. The change will be in effect immediately.
       @param id The identifier of the new default transport.
     */
-    Q_SCRIPTABLE void setDefaultTransport( int id );
+    Q_SCRIPTABLE void setDefaultTransport(int id);
 
     /**
       Deletes the specified transport.
       @param id The identifier of the mail transport to remove.
     */
-    Q_SCRIPTABLE void removeTransport( int id );
+    Q_SCRIPTABLE void removeTransport(int id);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       Emitted when transport settings have changed (by this or any other
       TransportManager instance).
@@ -255,7 +257,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param id The identifier of the deleted transport.
       @param name The name of the deleted transport.
     */
-    void transportRemoved( int id, const QString &name );
+    void transportRemoved(int id, const QString &name);
 
     /**
       Emitted when a transport has been renamed.
@@ -263,9 +265,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param oldName The old name.
       @param newName The new name.
     */
-    void transportRenamed( int id, const QString &oldName, const QString &newName );
+    void transportRenamed(int id, const QString &oldName, const QString &newName);
 
-  protected:
+protected:
     /**
       Returns a pointer to an open wallet if available, 0 otherwise.
       The wallet is opened synchronously if necessary.
@@ -282,20 +284,20 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     */
     TransportManager();
 
-  private:
+private:
 
     // These are used by our friend, Transport
     void emitChangesCommitted();
 
-  private:
+private:
     TransportManagerPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void slotTransportsChanged() )
-    Q_PRIVATE_SLOT( d, void slotWalletOpened( bool success ) )
-    Q_PRIVATE_SLOT( d, void dbusServiceUnregistered() )
-    Q_PRIVATE_SLOT( d, void agentTypeAdded( const Akonadi::AgentType &atype ) )
-    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const Akonadi::AgentType &atype ) )
-    Q_PRIVATE_SLOT( d, void jobResult( KJob *job ) )
+    Q_PRIVATE_SLOT(d, void slotTransportsChanged())
+    Q_PRIVATE_SLOT(d, void slotWalletOpened(bool success))
+    Q_PRIVATE_SLOT(d, void dbusServiceUnregistered())
+    Q_PRIVATE_SLOT(d, void agentTypeAdded(const Akonadi::AgentType &atype))
+    Q_PRIVATE_SLOT(d, void agentTypeRemoved(const Akonadi::AgentType &atype))
+    Q_PRIVATE_SLOT(d, void jobResult(KJob *job))
 };
 
 } // namespace MailTransport

@@ -22,19 +22,18 @@
 
 #include <QObject>
 
-
 /**
   This class uses the SendQueuedAction to mark all queued messages in the
   outbox for immediate sending.
 */
 class Runner : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     Runner();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void checkFolders();
 
 };

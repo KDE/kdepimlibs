@@ -25,7 +25,8 @@
 #include <item.h>
 #include <transactionsequence.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Collection;
 class ItemFetchScope;
@@ -74,7 +75,7 @@ class FilterActionJob;
  */
 class MAILTRANSPORT_EXPORT FilterAction
 {
-  public:
+public:
     /**
      * Destroys this filter action.
      *
@@ -95,7 +96,7 @@ class MAILTRANSPORT_EXPORT FilterAction
      * Returns @c true if the @p item is accepted by the filter and should be
      * acted upon by the FilterActionJob.
      */
-    virtual bool itemAccepted( const Akonadi::Item &item ) const = 0;
+    virtual bool itemAccepted(const Akonadi::Item &item) const = 0;
 
     /**
      * Returns a job to act on the @p item.
@@ -103,8 +104,8 @@ class MAILTRANSPORT_EXPORT FilterAction
      * @param item the item to work on
      * @param parent the parent job
      */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
-                                      Akonadi::FilterActionJob *parent ) const = 0;
+    virtual Akonadi::Job *itemAction(const Akonadi::Item &item,
+                                     Akonadi::FilterActionJob *parent) const = 0;
 };
 
 /**
@@ -130,9 +131,9 @@ class MAILTRANSPORT_EXPORT FilterAction
  */
 class MAILTRANSPORT_EXPORT FilterActionJob : public TransactionSequence
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a filter action job to act on a single item.
      *
@@ -140,7 +141,7 @@ class MAILTRANSPORT_EXPORT FilterActionJob : public TransactionSequence
      * @param functor The FilterAction to use.
      * @param parent The parent object.
      */
-    FilterActionJob( const Item &item, FilterAction *functor, QObject *parent = 0 );
+    FilterActionJob(const Item &item, FilterAction *functor, QObject *parent = 0);
 
     /**
      * Creates a filter action job to act on a set of items.
@@ -149,7 +150,7 @@ class MAILTRANSPORT_EXPORT FilterActionJob : public TransactionSequence
      * @param functor The FilterAction to use.
      * @param parent The parent object.
      */
-    FilterActionJob( const Item::List &items, FilterAction *functor, QObject *parent = 0 );
+    FilterActionJob(const Item::List &items, FilterAction *functor, QObject *parent = 0);
 
     /**
      * Creates a filter action job to act on items in a collection.
@@ -159,23 +160,23 @@ class MAILTRANSPORT_EXPORT FilterActionJob : public TransactionSequence
      * @param functor The FilterAction to use.
      * @param parent The parent object.
      */
-    FilterActionJob( const Collection &collection, FilterAction *functor, QObject *parent = 0 );
+    FilterActionJob(const Collection &collection, FilterAction *functor, QObject *parent = 0);
 
     /**
      * Destroys the filter action job.
      */
     ~FilterActionJob();
 
-  protected:
+protected:
     /* reimpl */
     virtual void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void fetchResult(KJob *))
     //@endcond
 };
 

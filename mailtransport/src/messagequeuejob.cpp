@@ -43,11 +43,11 @@ using namespace MailTransport;
 */
 class MailTransport::MessageQueueJob::Private
 {
-  public:
-    Private( MessageQueueJob *qq )
-      : q( qq )
+public:
+    Private(MessageQueueJob *qq)
+        : q(qq)
     {
-      started = false;
+        started = false;
     }
 
     MessageQueueJob *const q;
@@ -67,172 +67,172 @@ class MailTransport::MessageQueueJob::Private
     bool validate();
 
     // slot
-    void outboxRequestResult( KJob *job );
+    void outboxRequestResult(KJob *job);
 
 };
 
 bool MessageQueueJob::Private::validate()
 {
-  if ( !message ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Empty message." ) );
-    q->emitResult();
-    return false;
-  }
+    if (!message) {
+        q->setError(UserDefinedError);
+        q->setErrorText(i18n("Empty message."));
+        q->emitResult();
+        return false;
+    }
 
-  if ( addressAttribute.to().count() + addressAttribute.cc().count() +
-       addressAttribute.bcc().count() == 0 ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Message has no recipients." ) );
-    q->emitResult();
-    return false;
-  }
+    if (addressAttribute.to().count() + addressAttribute.cc().count() +
+            addressAttribute.bcc().count() == 0) {
+        q->setError(UserDefinedError);
+        q->setErrorText(i18n("Message has no recipients."));
+        q->emitResult();
+        return false;
+    }
 
-  const int transport = transportAttribute.transportId();
-  if ( TransportManager::self()->transportById( transport, false ) == 0 ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Message has invalid transport." ) );
-    q->emitResult();
-    return false;
-  }
+    const int transport = transportAttribute.transportId();
+    if (TransportManager::self()->transportById(transport, false) == 0) {
+        q->setError(UserDefinedError);
+        q->setErrorText(i18n("Message has invalid transport."));
+        q->emitResult();
+        return false;
+    }
 
-  if ( sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToCollection &&
-       !( sentBehaviourAttribute.moveToCollection().isValid() ) ) {
-    q->setError( UserDefinedError );
-    q->setErrorText( i18n( "Message has invalid sent-mail folder." ) );
-    q->emitResult();
-    return false;
-  } else if ( sentBehaviourAttribute.sentBehaviour() ==
-              SentBehaviourAttribute::MoveToDefaultSentCollection ) {
-    // TODO require SpecialMailCollections::SentMail here?
-  }
+    if (sentBehaviourAttribute.sentBehaviour() == SentBehaviourAttribute::MoveToCollection &&
+            !(sentBehaviourAttribute.moveToCollection().isValid())) {
+        q->setError(UserDefinedError);
+        q->setErrorText(i18n("Message has invalid sent-mail folder."));
+        q->emitResult();
+        return false;
+    } else if (sentBehaviourAttribute.sentBehaviour() ==
+               SentBehaviourAttribute::MoveToDefaultSentCollection) {
+        // TODO require SpecialMailCollections::SentMail here?
+    }
 
-  return true; // all ok
+    return true; // all ok
 }
 
-void MessageQueueJob::Private::outboxRequestResult( KJob *job )
+void MessageQueueJob::Private::outboxRequestResult(KJob *job)
 {
-  Q_ASSERT( !started );
-  started = true;
+    Q_ASSERT(!started);
+    started = true;
 
-  if ( job->error() ) {
-    qCritical() << "Failed to get the Outbox folder:" << job->error() << job->errorString();
-    q->setError( job->error() );
-    q->emitResult();
-    return;
-  }
+    if (job->error()) {
+        qCritical() << "Failed to get the Outbox folder:" << job->error() << job->errorString();
+        q->setError(job->error());
+        q->emitResult();
+        return;
+    }
 
-  if ( !validate() ) {
-    // The error has been set; the result has been emitted.
-    return;
-  }
+    if (!validate()) {
+        // The error has been set; the result has been emitted.
+        return;
+    }
 
-  SpecialMailCollectionsRequestJob *requestJob =
-    qobject_cast<SpecialMailCollectionsRequestJob*>( job );
-  if ( !requestJob ) {
-    return;
-  }
+    SpecialMailCollectionsRequestJob *requestJob =
+        qobject_cast<SpecialMailCollectionsRequestJob *>(job);
+    if (!requestJob) {
+        return;
+    }
 
-  // Create item.
-  Item item;
-  item.setMimeType( QLatin1String( "message/rfc822" ) );
-  item.setPayload<Message::Ptr>( message );
+    // Create item.
+    Item item;
+    item.setMimeType(QLatin1String("message/rfc822"));
+    item.setPayload<Message::Ptr>(message);
 
-  // Set attributes.
-  item.addAttribute( addressAttribute.clone() );
-  item.addAttribute( dispatchModeAttribute.clone() );
-  item.addAttribute( sentBehaviourAttribute.clone() );
-  item.addAttribute( sentActionAttribute.clone() );
-  item.addAttribute( transportAttribute.clone() );
+    // Set attributes.
+    item.addAttribute(addressAttribute.clone());
+    item.addAttribute(dispatchModeAttribute.clone());
+    item.addAttribute(sentBehaviourAttribute.clone());
+    item.addAttribute(sentActionAttribute.clone());
+    item.addAttribute(transportAttribute.clone());
 
-  // Update status flags
-  if ( KMime::isSigned( message.get() ) ) {
-    item.setFlag( Akonadi::MessageFlags::Signed );
-  }
+    // Update status flags
+    if (KMime::isSigned(message.get())) {
+        item.setFlag(Akonadi::MessageFlags::Signed);
+    }
 
-  if ( KMime::isEncrypted( message.get() ) ) {
-    item.setFlag( Akonadi::MessageFlags::Encrypted );
-  }
+    if (KMime::isEncrypted(message.get())) {
+        item.setFlag(Akonadi::MessageFlags::Encrypted);
+    }
 
-  if ( KMime::isInvitation( message.get() ) ) {
-    item.setFlag( Akonadi::MessageFlags::HasInvitation );
-  }
+    if (KMime::isInvitation(message.get())) {
+        item.setFlag(Akonadi::MessageFlags::HasInvitation);
+    }
 
-  if ( KMime::hasAttachment( message.get() ) ) {
-    item.setFlag( Akonadi::MessageFlags::HasAttachment );
-  }
+    if (KMime::hasAttachment(message.get())) {
+        item.setFlag(Akonadi::MessageFlags::HasAttachment);
+    }
 
-  // Set flags.
-  item.setFlag( Akonadi::MessageFlags::Queued );
+    // Set flags.
+    item.setFlag(Akonadi::MessageFlags::Queued);
 
-  // Store the item in the outbox.
-  const Collection collection = requestJob->collection();
-  Q_ASSERT( collection.isValid() );
-  ItemCreateJob *cjob = new ItemCreateJob( item, collection ); // job autostarts
-  q->addSubjob( cjob );
+    // Store the item in the outbox.
+    const Collection collection = requestJob->collection();
+    Q_ASSERT(collection.isValid());
+    ItemCreateJob *cjob = new ItemCreateJob(item, collection);   // job autostarts
+    q->addSubjob(cjob);
 }
 
-MessageQueueJob::MessageQueueJob( QObject *parent )
-  : KCompositeJob( parent ), d( new Private( this ) )
+MessageQueueJob::MessageQueueJob(QObject *parent)
+    : KCompositeJob(parent), d(new Private(this))
 {
 }
 
 MessageQueueJob::~MessageQueueJob()
 {
-  delete d;
+    delete d;
 }
 
 Message::Ptr MessageQueueJob::message() const
 {
-  return d->message;
+    return d->message;
 }
 
 DispatchModeAttribute &MessageQueueJob::dispatchModeAttribute()
 {
-  return d->dispatchModeAttribute;
+    return d->dispatchModeAttribute;
 }
 
 AddressAttribute &MessageQueueJob::addressAttribute()
 {
-  return d->addressAttribute;
+    return d->addressAttribute;
 }
 
 TransportAttribute &MessageQueueJob::transportAttribute()
 {
-  return d->transportAttribute;
+    return d->transportAttribute;
 }
 
 SentBehaviourAttribute &MessageQueueJob::sentBehaviourAttribute()
 {
-  return d->sentBehaviourAttribute;
+    return d->sentBehaviourAttribute;
 }
 
 SentActionAttribute &MessageQueueJob::sentActionAttribute()
 {
-  return d->sentActionAttribute;
+    return d->sentActionAttribute;
 }
 
-void MessageQueueJob::setMessage( Message::Ptr message )
+void MessageQueueJob::setMessage(Message::Ptr message)
 {
-  d->message = message;
+    d->message = message;
 }
 
 void MessageQueueJob::start()
 {
-  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
-  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(outboxRequestResult(KJob*)) );
-  rjob->start();
+    SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
+    rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
+    connect(rjob, SIGNAL(result(KJob *)), this, SLOT(outboxRequestResult(KJob *)));
+    rjob->start();
 }
 
-void MessageQueueJob::slotResult( KJob *job )
+void MessageQueueJob::slotResult(KJob *job)
 {
-  // error handling
-  KCompositeJob::slotResult( job );
+    // error handling
+    KCompositeJob::slotResult(job);
 
-  if ( !error() ) {
-    emitResult();
-  }
+    if (!error()) {
+        emitResult();
+    }
 }
 
 #include "moc_messagequeuejob.cpp"

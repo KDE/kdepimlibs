@@ -29,17 +29,17 @@ using namespace MailTransport;
 
 class SentActionAttribute::Action::Private : public QSharedData
 {
-  public:
+public:
     Private()
-      : mType( Invalid )
+        : mType(Invalid)
     {
     }
 
-    Private( const Private &other )
-      : QSharedData( other )
+    Private(const Private &other)
+        : QSharedData(other)
     {
-      mType = other.mType;
-      mValue = other.mValue;
+        mType = other.mType;
+        mValue = other.mValue;
     }
 
     Type mType;
@@ -47,19 +47,19 @@ class SentActionAttribute::Action::Private : public QSharedData
 };
 
 SentActionAttribute::Action::Action()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-SentActionAttribute::Action::Action( Type type, const QVariant &value )
-  : d( new Private )
+SentActionAttribute::Action::Action(Type type, const QVariant &value)
+    : d(new Private)
 {
-  d->mType = type;
-  d->mValue = value;
+    d->mType = type;
+    d->mValue = value;
 }
 
-SentActionAttribute::Action::Action( const Action &other )
-  : d( other.d )
+SentActionAttribute::Action::Action(const Action &other)
+    : d(other.d)
 {
 }
 
@@ -69,102 +69,102 @@ SentActionAttribute::Action::~Action()
 
 SentActionAttribute::Action::Type SentActionAttribute::Action::type() const
 {
-  return d->mType;
+    return d->mType;
 }
 
 QVariant SentActionAttribute::Action::value() const
 {
-  return d->mValue;
+    return d->mValue;
 }
 
-SentActionAttribute::Action &SentActionAttribute::Action::operator=( const Action &other )
+SentActionAttribute::Action &SentActionAttribute::Action::operator=(const Action &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
+    if (this != &other) {
+        d = other.d;
+    }
 
-  return *this;
+    return *this;
 }
 
-bool SentActionAttribute::Action::operator==( const Action &other ) const
+bool SentActionAttribute::Action::operator==(const Action &other) const
 {
-  return ( ( d->mType == other.d->mType ) && ( d->mValue == other.d->mValue ) );
+    return ((d->mType == other.d->mType) && (d->mValue == other.d->mValue));
 }
 
 class SentActionAttribute::Private
 {
-  public:
+public:
     Action::List mActions;
 };
 
 SentActionAttribute::SentActionAttribute()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
 SentActionAttribute::~SentActionAttribute()
 {
-  delete d;
+    delete d;
 }
 
-void SentActionAttribute::addAction( Action::Type type, const QVariant &value )
+void SentActionAttribute::addAction(Action::Type type, const QVariant &value)
 {
-  d->mActions.append( Action( type, value ) );
+    d->mActions.append(Action(type, value));
 }
 
 SentActionAttribute::Action::List SentActionAttribute::actions() const
 {
-  return d->mActions;
+    return d->mActions;
 }
 
 SentActionAttribute *SentActionAttribute::clone() const
 {
-  SentActionAttribute *attribute = new SentActionAttribute;
-  attribute->d->mActions = d->mActions;
+    SentActionAttribute *attribute = new SentActionAttribute;
+    attribute->d->mActions = d->mActions;
 
-  return attribute;
+    return attribute;
 }
 
 QByteArray SentActionAttribute::type() const
 {
-  static const QByteArray sType( "SentActionAttribute" );
-  return sType;
+    static const QByteArray sType("SentActionAttribute");
+    return sType;
 }
 
 QByteArray SentActionAttribute::serialized() const
 {
-  QVariantList list;
-  foreach ( const Action &action, d->mActions ) {
-    QVariantMap map;
-    map.insert( QString::number( action.type() ), action.value() );
+    QVariantList list;
+    foreach (const Action &action, d->mActions) {
+        QVariantMap map;
+        map.insert(QString::number(action.type()), action.value());
 
-    list << QVariant( map );
-  }
+        list << QVariant(map);
+    }
 
-  QByteArray data;
-  QDataStream stream( &data, QIODevice::WriteOnly );
-  stream.setVersion( QDataStream::Qt_4_6 );
-  stream << list;
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_4_6);
+    stream << list;
 
-  return data;
+    return data;
 }
 
-void SentActionAttribute::deserialize( const QByteArray &data )
+void SentActionAttribute::deserialize(const QByteArray &data)
 {
-  d->mActions.clear();
+    d->mActions.clear();
 
-  QDataStream stream( data );
-  stream.setVersion( QDataStream::Qt_4_6 );
+    QDataStream stream(data);
+    stream.setVersion(QDataStream::Qt_4_6);
 
-  QVariantList list;
-  stream >> list;
+    QVariantList list;
+    stream >> list;
 
-  foreach ( const QVariant &variant, list ) {
-    const QVariantMap map = variant.toMap();
-    QMapIterator<QString, QVariant> it( map );
-    while ( it.hasNext() ) {
-      it.next();
-      d->mActions << Action( static_cast<Action::Type>( it.key().toInt() ), it.value() );
+    foreach (const QVariant &variant, list) {
+        const QVariantMap map = variant.toMap();
+        QMapIterator<QString, QVariant> it(map);
+        while (it.hasNext()) {
+            it.next();
+            d->mActions << Action(static_cast<Action::Type>(it.key().toInt()), it.value());
+        }
     }
-  }
 }

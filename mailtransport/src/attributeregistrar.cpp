@@ -26,19 +26,20 @@
 #include <attributefactory.h>
 
 #ifndef KDELIBS_STATIC_LIBS
-namespace {
+namespace
+{
 
 // Anonymous namespace; function is invisible outside this file.
 bool dummy()
 {
-  using namespace Akonadi;
-  using namespace MailTransport;
-  AttributeFactory::registerAttribute<DispatchModeAttribute>();
-  AttributeFactory::registerAttribute<ErrorAttribute>();
-  AttributeFactory::registerAttribute<SentActionAttribute>();
-  AttributeFactory::registerAttribute<SentBehaviourAttribute>();
-  AttributeFactory::registerAttribute<TransportAttribute>();
-  return true;
+    using namespace Akonadi;
+    using namespace MailTransport;
+    AttributeFactory::registerAttribute<DispatchModeAttribute>();
+    AttributeFactory::registerAttribute<ErrorAttribute>();
+    AttributeFactory::registerAttribute<SentActionAttribute>();
+    AttributeFactory::registerAttribute<SentBehaviourAttribute>();
+    AttributeFactory::registerAttribute<TransportAttribute>();
+    return true;
 }
 
 // Called when this library is loaded.
@@ -50,14 +51,14 @@ const bool registered = dummy();
 
 extern bool ___MailTransport____INIT()
 {
-  using namespace Akonadi;
-  using namespace MailTransport;
-  AttributeFactory::registerAttribute<DispatchModeAttribute>();
-  AttributeFactory::registerAttribute<ErrorAttribute>();
-  AttributeFactory::registerAttribute<SentActionAttribute>();
-  AttributeFactory::registerAttribute<SentBehaviourAttribute>();
-  AttributeFactory::registerAttribute<TransportAttribute>();
-  return true;
+    using namespace Akonadi;
+    using namespace MailTransport;
+    AttributeFactory::registerAttribute<DispatchModeAttribute>();
+    AttributeFactory::registerAttribute<ErrorAttribute>();
+    AttributeFactory::registerAttribute<SentActionAttribute>();
+    AttributeFactory::registerAttribute<SentBehaviourAttribute>();
+    AttributeFactory::registerAttribute<TransportAttribute>();
+    return true;
 }
 
 #endif

@@ -37,73 +37,73 @@ using namespace MailTransport;
  */
 class SendMailJobPrivate
 {
-  public:
+public:
     QProcess *process;
     QString lastError;
 };
 
-SendmailJob::SendmailJob( Transport *transport, QObject *parent )
-  : TransportJob( transport, parent ), d( new SendMailJobPrivate )
+SendmailJob::SendmailJob(Transport *transport, QObject *parent)
+    : TransportJob(transport, parent), d(new SendMailJobPrivate)
 {
-  d->process = new QProcess( this );
-  connect( d->process,
-           SIGNAL(finished(int,QProcess::ExitStatus)),
-           SLOT(sendmailExited(int,QProcess::ExitStatus)) );
-  connect( d->process, SIGNAL(error(QProcess::ProcessError)),
-           SLOT(receivedError()) );
-  connect( d->process, SIGNAL(readyReadStandardError()),
-           SLOT(receivedStdErr()) );
+    d->process = new QProcess(this);
+    connect(d->process,
+            SIGNAL(finished(int, QProcess::ExitStatus)),
+            SLOT(sendmailExited(int, QProcess::ExitStatus)));
+    connect(d->process, SIGNAL(error(QProcess::ProcessError)),
+            SLOT(receivedError()));
+    connect(d->process, SIGNAL(readyReadStandardError()),
+            SLOT(receivedStdErr()));
 }
 
 SendmailJob::~ SendmailJob()
 {
-  delete d;
+    delete d;
 }
 
 void SendmailJob::doStart()
 {
-  QStringList arguments;
-  arguments << QLatin1String( "-i" ) << QLatin1String( "-f" )
-            << sender() << to() << cc() << bcc();
-  d->process->start( transport()->host(), arguments );
+    QStringList arguments;
+    arguments << QLatin1String("-i") << QLatin1String("-f")
+              << sender() << to() << cc() << bcc();
+    d->process->start(transport()->host(), arguments);
 
-  if ( !d->process->waitForStarted() ) {
-    setError( UserDefinedError );
-    setErrorText( i18n( "Failed to execute mailer program %1", transport()->host() ) );
-    emitResult();
-  } else {
-    d->process->write( buffer()->readAll() );
-    d->process->closeWriteChannel();
-  }
+    if (!d->process->waitForStarted()) {
+        setError(UserDefinedError);
+        setErrorText(i18n("Failed to execute mailer program %1", transport()->host()));
+        emitResult();
+    } else {
+        d->process->write(buffer()->readAll());
+        d->process->closeWriteChannel();
+    }
 }
 
-void SendmailJob::sendmailExited( int exitCode, QProcess::ExitStatus exitStatus )
+void SendmailJob::sendmailExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
-  if ( exitStatus != 0 || exitCode != 0 ) {
-    setError( UserDefinedError );
-    if ( d->lastError.isEmpty() ) {
-      setErrorText( i18n( "Sendmail exited abnormally." ) );
-    } else {
-      setErrorText( i18n( "Sendmail exited abnormally: %1", d->lastError ) );
+    if (exitStatus != 0 || exitCode != 0) {
+        setError(UserDefinedError);
+        if (d->lastError.isEmpty()) {
+            setErrorText(i18n("Sendmail exited abnormally."));
+        } else {
+            setErrorText(i18n("Sendmail exited abnormally: %1", d->lastError));
+        }
     }
-  }
-  emitResult();
+    emitResult();
 }
 
 void SendmailJob::receivedError()
 {
-  d->lastError += d->process->errorString();
+    d->lastError += d->process->errorString();
 }
 
 void SendmailJob::receivedStdErr()
 {
-  d->lastError += QLatin1String( d->process->readAllStandardError() );
+    d->lastError += QLatin1String(d->process->readAllStandardError());
 }
 
 bool SendmailJob::doKill()
 {
-  delete d->process;
-  d->process = 0;
-  return true;
+    delete d->process;
+    d->process = 0;
+    return true;
 }
 

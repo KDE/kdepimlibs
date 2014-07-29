@@ -26,7 +26,8 @@
 
 #include <attribute.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
  * @short An Attribute to mark messages that failed to be sent.
@@ -38,13 +39,13 @@ namespace MailTransport {
  */
 class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Creates a new error attribute.
      *
      * @param msg The i18n'ed error message.
      */
-    explicit ErrorAttribute( const QString &msg = QString() );
+    explicit ErrorAttribute(const QString &msg = QString());
 
     /**
      * Destroys the error attribute.
@@ -59,15 +60,15 @@ class MAILTRANSPORT_EXPORT ErrorAttribute : public Akonadi::Attribute
     /**
      * Sets the i18n'ed error message.
      */
-    void setMessage( const QString &msg );
+    void setMessage(const QString &msg);
 
     /* reimpl */
     virtual ErrorAttribute *clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
-    virtual void deserialize( const QByteArray &data );
+    virtual void deserialize(const QByteArray &data);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

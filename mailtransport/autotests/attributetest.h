@@ -27,9 +27,9 @@
 */
 class AttributeTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initTestCase();
     void testRegistrar();
     void testSerialization();

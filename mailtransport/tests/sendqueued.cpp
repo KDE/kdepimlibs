@@ -35,25 +35,25 @@ using namespace MailTransport;
 
 Runner::Runner()
 {
-  Control::start();
+    Control::start();
 
-  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
-  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(checkFolders()) );
-  rjob->start();
+    SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
+    rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
+    connect(rjob, SIGNAL(result(KJob *)), this, SLOT(checkFolders()));
+    rjob->start();
 }
 
 void Runner::checkFolders()
 {
-  DispatcherInterface().dispatchManually();
+    DispatcherInterface().dispatchManually();
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication app(argc, argv);
-  app.setApplicationName(QLatin1String("sendqueued"));
+    QApplication app(argc, argv);
+    app.setApplicationName(QLatin1String("sendqueued"));
 
-  new Runner();
-  return app.exec();
+    new Runner();
+    return app.exec();
 }
 

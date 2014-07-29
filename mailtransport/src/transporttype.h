@@ -27,7 +27,8 @@
 
 #include <agenttype.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class AddTransportDialog;
 class TransportManager;
@@ -50,12 +51,12 @@ class TransportManager;
 */
 class MAILTRANSPORT_EXPORT TransportType
 {
-  friend class AddTransportDialog;
-  friend class Transport;
-  friend class TransportManager;
-  friend class TransportManagerPrivate;
+    friend class AddTransportDialog;
+    friend class Transport;
+    friend class TransportManager;
+    friend class TransportManagerPrivate;
 
-  public:
+public:
     /**
       Describes a list of transport types.
     */
@@ -69,7 +70,7 @@ class MAILTRANSPORT_EXPORT TransportType
     /**
       Creates a copy of the @p other TransportType.
     */
-    TransportType( const TransportType &other );
+    TransportType(const TransportType &other);
 
     /**
       Destroys the TransportType.
@@ -79,12 +80,12 @@ class MAILTRANSPORT_EXPORT TransportType
     /**
      * Replaces the transport type by the @p other.
      */
-    TransportType &operator=( const TransportType &other );
+    TransportType &operator=(const TransportType &other);
 
     /**
      * Compares the transport type with the @p other.
      */
-    bool operator==( const TransportType &other ) const;
+    bool operator==(const TransportType &other) const;
 
     /**
       Returns whether the transport type is valid.
@@ -113,7 +114,7 @@ class MAILTRANSPORT_EXPORT TransportType
     */
     Akonadi::AgentType agentType() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -122,6 +123,6 @@ class MAILTRANSPORT_EXPORT TransportType
 
 } // namespace MailTransport
 
-Q_DECLARE_METATYPE( MailTransport::TransportType )
+Q_DECLARE_METATYPE(MailTransport::TransportType)
 
 #endif // MAILTRANSPORT_TRANSPORTTYPE_H

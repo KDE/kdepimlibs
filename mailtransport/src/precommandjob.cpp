@@ -35,80 +35,80 @@ using namespace MailTransport;
  */
 class PreCommandJobPrivate
 {
-  public:
-    PreCommandJobPrivate( PrecommandJob *parent );
+public:
+    PreCommandJobPrivate(PrecommandJob *parent);
     QProcess *process;
     QString precommand;
     PrecommandJob *q;
 
     // Slots
-    void slotFinished( int, QProcess::ExitStatus );
+    void slotFinished(int, QProcess::ExitStatus);
     void slotStarted();
-    void slotError( QProcess::ProcessError error );
+    void slotError(QProcess::ProcessError error);
 };
 
-PreCommandJobPrivate::PreCommandJobPrivate( PrecommandJob *parent )
-  : process( 0 ), q( parent )
+PreCommandJobPrivate::PreCommandJobPrivate(PrecommandJob *parent)
+    : process(0), q(parent)
 {
 }
 
-PrecommandJob::PrecommandJob( const QString &precommand, QObject *parent )
-  : KJob( parent ), d( new PreCommandJobPrivate( this ) )
+PrecommandJob::PrecommandJob(const QString &precommand, QObject *parent)
+    : KJob(parent), d(new PreCommandJobPrivate(this))
 {
-  d->precommand = precommand;
-  d->process = new QProcess( this );
-  connect( d->process, SIGNAL(started()), SLOT(slotStarted()) );
-  connect( d->process, SIGNAL(error(QProcess::ProcessError)),
-           SLOT(slotError(QProcess::ProcessError)) );
-  connect( d->process, SIGNAL(finished(int,QProcess::ExitStatus)),
-           SLOT(slotFinished(int,QProcess::ExitStatus)) );
+    d->precommand = precommand;
+    d->process = new QProcess(this);
+    connect(d->process, SIGNAL(started()), SLOT(slotStarted()));
+    connect(d->process, SIGNAL(error(QProcess::ProcessError)),
+            SLOT(slotError(QProcess::ProcessError)));
+    connect(d->process, SIGNAL(finished(int, QProcess::ExitStatus)),
+            SLOT(slotFinished(int, QProcess::ExitStatus)));
 }
 
 PrecommandJob::~ PrecommandJob()
 {
-  delete d;
+    delete d;
 }
 
 void PrecommandJob::start()
 {
-  d->process->start( d->precommand );
+    d->process->start(d->precommand);
 }
 
 void PreCommandJobPrivate::slotStarted()
 {
-  emit q->infoMessage( q, i18n( "Executing precommand" ),
-                       i18n( "Executing precommand '%1'.", precommand ) );
+    emit q->infoMessage(q, i18n("Executing precommand"),
+                        i18n("Executing precommand '%1'.", precommand));
 }
 
-void PreCommandJobPrivate::slotError( QProcess::ProcessError error )
+void PreCommandJobPrivate::slotError(QProcess::ProcessError error)
 {
-  q->setError( KJob::UserDefinedError );
-  if ( error == QProcess::FailedToStart ) {
-    q->setErrorText( i18n( "Unable to start precommand '%1'.", precommand ) );
-  } else {
-    q->setErrorText( i18n( "Error while executing precommand '%1'.", precommand ) );
-  }
-  q->emitResult();
+    q->setError(KJob::UserDefinedError);
+    if (error == QProcess::FailedToStart) {
+        q->setErrorText(i18n("Unable to start precommand '%1'.", precommand));
+    } else {
+        q->setErrorText(i18n("Error while executing precommand '%1'.", precommand));
+    }
+    q->emitResult();
 }
 
 bool PrecommandJob::doKill()
 {
-  delete d->process;
-  d->process = 0;
-  return true;
+    delete d->process;
+    d->process = 0;
+    return true;
 }
 
-void PreCommandJobPrivate::slotFinished( int exitCode, QProcess::ExitStatus exitStatus )
+void PreCommandJobPrivate::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-  if ( exitStatus == QProcess::CrashExit ) {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "The precommand crashed." ) );
-  } else if ( exitCode != 0 ) {
-    q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "The precommand exited with code %1.",
-                           process->exitStatus() ) );
-  }
-  q->emitResult();
+    if (exitStatus == QProcess::CrashExit) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("The precommand crashed."));
+    } else if (exitCode != 0) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("The precommand exited with code %1.",
+                             process->exitStatus()));
+    }
+    q->emitResult();
 }
 
 #include "moc_precommandjob.cpp"

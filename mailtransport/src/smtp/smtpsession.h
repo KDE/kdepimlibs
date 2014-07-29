@@ -25,47 +25,48 @@
 class QIODevice;
 class QUrl;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class SmtpSessionPrivate;
 
 /** Connection to an SMTP server. */
 class SmtpSession : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit SmtpSession( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit SmtpSession(QObject *parent = 0);
     ~SmtpSession();
 
     /** Open connection to host. */
-    void connectToHost( const QUrl &url );
+    void connectToHost(const QUrl &url);
 
     /** Close the connection to the SMTP server. */
-    void disconnectFromHost( bool nice = true );
+    void disconnectFromHost(bool nice = true);
 
     /** Sets the SASL method used for authentication. */
-    void setSaslMethod( const QString &method );
+    void setSaslMethod(const QString &method);
 
     /**  Enable TLS encryption. */
-    void setUseTLS( bool useTLS );
+    void setUseTLS(bool useTLS);
 
     /** Send a message. */
-    void sendMessage( const QUrl &destination, QIODevice *data );
+    void sendMessage(const QUrl &destination, QIODevice *data);
 
     /** Returns the error nmeesage, if any.  */
     QString errorMessage() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /** Emitted when an email transfer has been completed. */
-    void result( MailTransport::SmtpSession *session );
+    void result(MailTransport::SmtpSession *session);
 
-  private:
+private:
     friend class SmtpSessionPrivate;
-    SmtpSessionPrivate * const d;
-    Q_PRIVATE_SLOT( d, void socketConnected() )
-    Q_PRIVATE_SLOT( d, void receivedNewData() )
-    Q_PRIVATE_SLOT( d, void socketError(KTcpSocket::Error) )
-    Q_PRIVATE_SLOT( d, void socketDisconnected() )
+    SmtpSessionPrivate *const d;
+    Q_PRIVATE_SLOT(d, void socketConnected())
+    Q_PRIVATE_SLOT(d, void receivedNewData())
+    Q_PRIVATE_SLOT(d, void socketError(KTcpSocket::Error))
+    Q_PRIVATE_SLOT(d, void socketDisconnected())
 };
 
 }

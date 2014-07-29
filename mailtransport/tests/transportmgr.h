@@ -31,21 +31,21 @@ class KTextEdit;
 
 class TransportMgr : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     TransportMgr();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void removeAllBtnClicked();
     void editBtnClicked();
     void sendBtnClicked();
     void cancelBtnClicked();
-    void jobResult( KJob *job );
-    void jobPercent( KJob *job, unsigned long percent );
-    void jobInfoMessage( KJob *job, const QString &info, const QString &info2 );
+    void jobResult(KJob *job);
+    void jobPercent(KJob *job, unsigned long percent);
+    void jobInfoMessage(KJob *job, const QString &info, const QString &info2);
 
-  private:
+private:
     MailTransport::TransportComboBox *mComboBox;
     QLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     KTextEdit *mMailEdit;

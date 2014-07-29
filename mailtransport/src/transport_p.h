@@ -28,7 +28,7 @@
  */
 class TransportPrivate
 {
-  public:
+public:
     MailTransport::TransportType transportType;
     QString password;
     bool passwordLoaded;

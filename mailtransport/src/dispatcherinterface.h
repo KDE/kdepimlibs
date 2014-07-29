@@ -26,7 +26,8 @@
 
 //krazy:excludeall=dpointer
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @short An interface for applications to interact with the dispatcher agent.
@@ -42,7 +43,7 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_EXPORT DispatcherInterface
 {
-  public:
+public:
 
     /**
       Creates a new dispatcher interface.
@@ -74,7 +75,7 @@ class MAILTRANSPORT_EXPORT DispatcherInterface
       @param transportId the transport to dispatch "manual dispatch" messages with
       @since 4.5
     */
-    void dispatchManualTransport( int transportId );
+    void dispatchManualTransport(int transportId);
 };
 
 } // namespace MailTransport

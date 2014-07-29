@@ -36,53 +36,53 @@ using namespace MailTransport;
 
 class MailTransport::SendmailConfigWidgetPrivate : public TransportConfigWidgetPrivate
 {
-  public:
+public:
     ::Ui::SendmailSettings ui;
 
 };
 
-SendmailConfigWidget::SendmailConfigWidget( Transport *transport, QWidget *parent )
-  : TransportConfigWidget( *new SendmailConfigWidgetPrivate, transport, parent )
+SendmailConfigWidget::SendmailConfigWidget(Transport *transport, QWidget *parent)
+    : TransportConfigWidget(*new SendmailConfigWidgetPrivate, transport, parent)
 {
-  init();
+    init();
 }
 
-SendmailConfigWidget::SendmailConfigWidget( SendmailConfigWidgetPrivate &dd,
-                                            Transport *transport, QWidget *parent )
-  : TransportConfigWidget( dd, transport, parent )
+SendmailConfigWidget::SendmailConfigWidget(SendmailConfigWidgetPrivate &dd,
+        Transport *transport, QWidget *parent)
+    : TransportConfigWidget(dd, transport, parent)
 {
-  init();
+    init();
 }
 
 void SendmailConfigWidget::init()
 {
-  Q_D( SendmailConfigWidget );
+    Q_D(SendmailConfigWidget);
 
-  d->ui.setupUi( this );
-  d->ui.kcfg_host->setMode( KFile::File|KFile::ExistingOnly|KFile::LocalOnly );
-  d->ui.kcfg_host->setFocus();
-  d->manager->addWidget( this ); // otherwise it doesn't find out about these widgets
-  d->manager->updateWidgets();
+    d->ui.setupUi(this);
+    d->ui.kcfg_host->setMode(KFile::File | KFile::ExistingOnly | KFile::LocalOnly);
+    d->ui.kcfg_host->setFocus();
+    d->manager->addWidget(this);   // otherwise it doesn't find out about these widgets
+    d->manager->updateWidgets();
 
-  if ( d->ui.kcfg_host->url().isEmpty() ) {
-    // Locate sendmail.
-    // This is imperfect, because it shows the standard path if an empty path
-    // is saved in the config.
-    d->ui.kcfg_host->setText( QStandardPaths::findExecutable( QLatin1String( "sendmail" ) ) );
-  }
-  connect( d->ui.kcfg_host->lineEdit(), SIGNAL(textChanged(QString)),
-           SLOT(slotTextChanged(QString)) );
-  slotTextChanged( d->ui.kcfg_host->text() );
+    if (d->ui.kcfg_host->url().isEmpty()) {
+        // Locate sendmail.
+        // This is imperfect, because it shows the standard path if an empty path
+        // is saved in the config.
+        d->ui.kcfg_host->setText(QStandardPaths::findExecutable(QLatin1String("sendmail")));
+    }
+    connect(d->ui.kcfg_host->lineEdit(), SIGNAL(textChanged(QString)),
+            SLOT(slotTextChanged(QString)));
+    slotTextChanged(d->ui.kcfg_host->text());
 }
 
-void SendmailConfigWidget::slotTextChanged( const QString &text )
+void SendmailConfigWidget::slotTextChanged(const QString &text)
 {
-  Q_EMIT enableButtonOk( !text.isEmpty() );
+    Q_EMIT enableButtonOk(!text.isEmpty());
 }
 
 bool SendmailConfigWidget::pathIsEmpty() const
 {
-  Q_D( const SendmailConfigWidget );
-  return d->ui.kcfg_host->text().isEmpty();
+    Q_D(const SendmailConfigWidget);
+    return d->ui.kcfg_host->text().isEmpty();
 }
 

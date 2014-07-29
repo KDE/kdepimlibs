@@ -30,7 +30,8 @@
 
 class KConfigDialogManager;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 class TransportConfigWidgetPrivate;
@@ -58,16 +59,16 @@ class TransportConfigWidgetPrivate;
 */
 class TransportConfigWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new mail transport configuration widget for the given
       Transport object.
       @param transport The Transport object to configure.
       @param parent The parent widget.
     */
-    explicit TransportConfigWidget( Transport *transport, QWidget *parent = 0 );
+    explicit TransportConfigWidget(Transport *transport, QWidget *parent = 0);
 
     /**
       Destroys the widget.
@@ -80,7 +81,7 @@ class TransportConfigWidget : public QWidget
     */
     KConfigDialogManager *configManager() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Saves the transport's settings.
 
@@ -91,15 +92,15 @@ class TransportConfigWidget : public QWidget
     // TODO: do we also want to check for invalid settings?
     virtual void apply();
 
-  protected:
+protected:
     TransportConfigWidgetPrivate *const d_ptr;
-    TransportConfigWidget( TransportConfigWidgetPrivate &dd,
-                           Transport *transport, QWidget *parent );
+    TransportConfigWidget(TransportConfigWidgetPrivate &dd,
+                          Transport *transport, QWidget *parent);
 
-  private:
-    Q_DECLARE_PRIVATE( TransportConfigWidget )
+private:
+    Q_DECLARE_PRIVATE(TransportConfigWidget)
 
-    void init( Transport *transport );
+    void init(Transport *transport);
 
 };
 

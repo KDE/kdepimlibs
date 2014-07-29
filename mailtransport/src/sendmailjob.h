@@ -30,7 +30,8 @@
 
 class SendMailJobPrivate;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   Mail transport job for sendmail.
@@ -39,30 +40,30 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_DEPRECATED_EXPORT SendmailJob : public TransportJob
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Creates a SendmailJob.
       @param transport The transport settings.
       @param parent The parent object.
     */
-    explicit SendmailJob( Transport *transport, QObject *parent = 0 );
+    explicit SendmailJob(Transport *transport, QObject *parent = 0);
 
     /**
       Destroys this job.
     */
     virtual ~SendmailJob();
 
-  protected:
+protected:
     virtual void doStart();
     virtual bool doKill();
 
-  private Q_SLOTS:
-    void sendmailExited( int, QProcess::ExitStatus );
+private Q_SLOTS:
+    void sendmailExited(int, QProcess::ExitStatus);
     void receivedError();
     void receivedStdErr();
 
-  private:
+private:
     SendMailJobPrivate *const d;
 };
 

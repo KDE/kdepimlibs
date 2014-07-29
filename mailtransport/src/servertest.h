@@ -29,7 +29,8 @@
 
 class QProgressBar;
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class ServerTestPrivate;
 
@@ -40,12 +41,12 @@ class ServerTestPrivate;
  */
 class MAILTRANSPORT_EXPORT ServerTest : public QWidget
 {
-  Q_OBJECT
-  Q_PROPERTY( QString server READ server WRITE setServer )
-  Q_PROPERTY( QString protocol READ protocol WRITE setProtocol )
-  Q_PROPERTY( QProgressBar *progressBar READ progressBar WRITE setProgressBar )
+    Q_OBJECT
+    Q_PROPERTY(QString server READ server WRITE setServer)
+    Q_PROPERTY(QString protocol READ protocol WRITE setProtocol)
+    Q_PROPERTY(QProgressBar *progressBar READ progressBar WRITE setProgressBar)
 
-  public:
+public:
 
     /**
      * This enumeration has the special capabilities a server might
@@ -53,9 +54,9 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * @since 4.1
      */
     enum Capability {
-      Pipelining, ///< POP3 only. The server supports pipeplining of commands
-      Top,        ///< POP3 only. The server supports fetching only the headers
-      UIDL        ///< POP3 only. The server has support for unique identifiers
+        Pipelining, ///< POP3 only. The server supports pipeplining of commands
+        Top,        ///< POP3 only. The server supports fetching only the headers
+        UIDL        ///< POP3 only. The server has support for unique identifiers
     };
 
     /**
@@ -63,7 +64,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      *
      * @param parent The parent widget.
      */
-    ServerTest( QWidget *parent = 0 );
+    ServerTest(QWidget *parent = 0);
 
     /**
      * Destroys the server test.
@@ -73,7 +74,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
     /**
      * Sets the server to test.
      */
-    void setServer( const QString &server );
+    void setServer(const QString &server);
 
     /**
      * Returns the server to test.
@@ -99,7 +100,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      *
      * @since 4.1
      */
-    void setPort( Transport::EnumEncryption::type encryptionMode, uint port );
+    void setPort(Transport::EnumEncryption::type encryptionMode, uint port);
 
     /**
      * @param encryptionMode the port of this encryption mode is returned.
@@ -110,7 +111,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      *
      * @since 4.1
      */
-    int port( Transport::EnumEncryption::type encryptionMode );
+    int port(Transport::EnumEncryption::type encryptionMode);
 
     /**
      * Sets a fake hostname for the test. This is currently only used when
@@ -122,7 +123,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      *
      * @param fakeHostname the fake hostname to send
      */
-    void setFakeHostname( const QString &fakeHostname );
+    void setFakeHostname(const QString &fakeHostname);
 
     /**
      * @return the fake hostname, as set before with @ref setFakeHostname
@@ -134,7 +135,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * and hide() and will count down. It does not take ownership of
      * the progressbar.
      */
-    void setProgressBar( QProgressBar *pb );
+    void setProgressBar(QProgressBar *pb);
 
     /**
      * Returns the used progress bar.
@@ -145,7 +146,7 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      * Sets @p protocol the protocol to test, currently supported are
      * "smtp", "pop" and "imap".
      */
-    void setProtocol( const QString &protocol );
+    void setProtocol(const QString &protocol);
 
     /**
      * Returns the protocol.
@@ -200,25 +201,25 @@ class MAILTRANSPORT_EXPORT ServerTest : public QWidget
      */
     QList<Capability> capabilities() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This will be emitted when the test is done. It will contain
      * the values from the enum EnumEncryption which are possible.
      */
-    void finished( QList<int> );
+    void finished(QList<int>);
 
-  private:
-    Q_DECLARE_PRIVATE( ServerTest )
+private:
+    Q_DECLARE_PRIVATE(ServerTest)
     ServerTestPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void slotNormalPossible() )
-    Q_PRIVATE_SLOT( d, void slotTlsDone() )
-    Q_PRIVATE_SLOT( d, void slotSslPossible() )
-    Q_PRIVATE_SLOT( d, void slotReadNormal( const QString &text ) )
-    Q_PRIVATE_SLOT( d, void slotReadSecure( const QString &text ) )
-    Q_PRIVATE_SLOT( d, void slotNormalNotPossible() )
-    Q_PRIVATE_SLOT( d, void slotSslNotPossible() )
-    Q_PRIVATE_SLOT( d, void slotUpdateProgress() )
+    Q_PRIVATE_SLOT(d, void slotNormalPossible())
+    Q_PRIVATE_SLOT(d, void slotTlsDone())
+    Q_PRIVATE_SLOT(d, void slotSslPossible())
+    Q_PRIVATE_SLOT(d, void slotReadNormal(const QString &text))
+    Q_PRIVATE_SLOT(d, void slotReadSecure(const QString &text))
+    Q_PRIVATE_SLOT(d, void slotNormalNotPossible())
+    Q_PRIVATE_SLOT(d, void slotSslNotPossible())
+    Q_PRIVATE_SLOT(d, void slotUpdateProgress())
 };
 
 } // namespace MailTransport

@@ -28,7 +28,8 @@
 
 #include "transportconfigwidget.h"
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class Transport;
 
@@ -43,26 +44,26 @@ class SMTPConfigWidgetPrivate;
 */
 class SMTPConfigWidget : public TransportConfigWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SMTPConfigWidget( Transport *transport, QWidget *parent = 0 );
+public:
+    explicit SMTPConfigWidget(Transport *transport, QWidget *parent = 0);
     //virtual ~SMTPConfigWidget();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /** reimpl */
     virtual void apply();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void checkSmtpCapabilities();
     void passwordsLoaded();
-    void slotFinished( QList<int> results );
-    void hostNameChanged( const QString &text );
-    void encryptionChanged( int enc );
+    void slotFinished(QList<int> results);
+    void hostNameChanged(const QString &text);
+    void encryptionChanged(int enc);
     void ensureValidAuthSelection();
 
-  private:
-    Q_DECLARE_PRIVATE( SMTPConfigWidget )
+private:
+    Q_DECLARE_PRIVATE(SMTPConfigWidget)
 
     void init();
 

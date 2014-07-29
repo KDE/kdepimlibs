@@ -39,7 +39,8 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @short Provides an interface for sending email.
@@ -85,15 +86,15 @@ namespace MailTransport {
 */
 class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new MessageQueueJob.
       @param parent the QObject parent
       This is not an autostarting job; you need to call start() yourself.
     */
-    explicit MessageQueueJob( QObject *parent = 0 );
+    explicit MessageQueueJob(QObject *parent = 0);
 
     /**
       Destroys the MessageQueueJob.
@@ -141,7 +142,7 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     /**
       Sets the message to be sent.
     */
-    void setMessage( KMime::Message::Ptr message );
+    void setMessage(KMime::Message::Ptr message);
 
     /**
       Creates the item and places it in the outbox.
@@ -149,20 +150,20 @@ class MAILTRANSPORT_EXPORT MessageQueueJob : public KCompositeJob
     */
     virtual void start();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /**
       Called when the ItemCreateJob subjob finishes.
 
       (reimplemented from KCompositeJob)
     */
-    virtual void slotResult( KJob * );
+    virtual void slotResult(KJob *);
 
-  private:
+private:
     class Private;
     friend class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void outboxRequestResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void outboxRequestResult(KJob *))
 
 };
 

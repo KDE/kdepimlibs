@@ -26,22 +26,22 @@
 
 using namespace MailTransport;
 
-QString Legacy::decryptKMail( const QString &data )
+QString Legacy::decryptKMail(const QString &data)
 {
-  return KStringHandler::obscure( data );
+    return KStringHandler::obscure(data);
 }
 
-QString Legacy::decryptKNode( const QString &data )
+QString Legacy::decryptKNode(const QString &data)
 {
-  uint i, val, len = data.length();
-  QString result;
+    uint i, val, len = data.length();
+    QString result;
 
-  for ( i = 0; i < len; ++i ) {
-    val = data[i].toLatin1();
-    val -= ' ';
-    val = ( 255 - ' ' ) - val;
-    result += QLatin1Char( (char)( val + ' ' ) );
-  }
+    for (i = 0; i < len; ++i) {
+        val = data[i].toLatin1();
+        val -= ' ';
+        val = (255 - ' ') - val;
+        result += QLatin1Char((char)(val + ' '));
+    }
 
-  return result;
+    return result;
 }

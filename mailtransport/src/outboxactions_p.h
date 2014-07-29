@@ -27,7 +27,8 @@
 #include <itemfetchscope.h>
 #include <job.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   FilterAction that finds all messages with a DispatchMode of Manual
@@ -42,7 +43,7 @@ namespace MailTransport {
 */
 class SendQueuedAction : public Akonadi::FilterAction
 {
-  public:
+public:
     /** Creates a SendQueuedAction. */
     SendQueuedAction();
 
@@ -53,13 +54,13 @@ class SendQueuedAction : public Akonadi::FilterAction
     virtual Akonadi::ItemFetchScope fetchScope() const;
 
     /* reimpl */
-    virtual bool itemAccepted( const Akonadi::Item &item ) const;
+    virtual bool itemAccepted(const Akonadi::Item &item) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
-                                      Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction(const Akonadi::Item &item,
+                                     Akonadi::FilterActionJob *parent) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };
@@ -77,7 +78,7 @@ class SendQueuedAction : public Akonadi::FilterAction
 */
 class ClearErrorAction : public Akonadi::FilterAction
 {
-  public:
+public:
     /** Creates a ClearErrorAction. */
     ClearErrorAction();
 
@@ -88,13 +89,13 @@ class ClearErrorAction : public Akonadi::FilterAction
     virtual Akonadi::ItemFetchScope fetchScope() const;
 
     /* reimpl */
-    virtual bool itemAccepted( const Akonadi::Item &item ) const;
+    virtual bool itemAccepted(const Akonadi::Item &item) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
-                                      Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction(const Akonadi::Item &item,
+                                     Akonadi::FilterActionJob *parent) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };
@@ -112,8 +113,8 @@ class ClearErrorAction : public Akonadi::FilterAction
 */
 class DispatchManualTransportAction : public Akonadi::FilterAction
 {
-  public:
-    DispatchManualTransportAction( int transportId );
+public:
+    DispatchManualTransportAction(int transportId);
 
     virtual ~DispatchManualTransportAction();
 
@@ -121,13 +122,13 @@ class DispatchManualTransportAction : public Akonadi::FilterAction
     virtual Akonadi::ItemFetchScope fetchScope() const;
 
     /* reimpl */
-    virtual bool itemAccepted( const Akonadi::Item &item ) const;
+    virtual bool itemAccepted(const Akonadi::Item &item) const;
 
     /* reimpl */
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item,
-                                      Akonadi::FilterActionJob *parent ) const;
+    virtual Akonadi::Job *itemAction(const Akonadi::Item &item,
+                                     Akonadi::FilterActionJob *parent) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 

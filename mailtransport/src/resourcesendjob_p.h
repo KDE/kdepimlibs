@@ -24,7 +24,8 @@
 
 #include <item.h>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 class ResourceSendJobPrivate;
 
@@ -43,29 +44,29 @@ class ResourceSendJobPrivate;
 */
 class MAILTRANSPORT_DEPRECATED ResourceSendJob : public TransportJob
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Creates an ResourceSendJob.
       @param transport The transport object to use.
       @param parent The parent object.
     */
-    explicit ResourceSendJob( Transport *transport, QObject *parent = 0 );
+    explicit ResourceSendJob(Transport *transport, QObject *parent = 0);
 
     /**
       Destroys this job.
     */
     virtual ~ResourceSendJob();
 
-  protected:
+protected:
     /** reimpl */
     virtual void doStart();
 
-  private:
+private:
     friend class ResourceSendJobPrivate;
     ResourceSendJobPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void slotEmitResult() )
+    Q_PRIVATE_SLOT(d, void slotEmitResult())
 
 };
 

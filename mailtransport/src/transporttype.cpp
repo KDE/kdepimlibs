@@ -26,12 +26,12 @@
 using namespace MailTransport;
 
 TransportType::TransportType()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
-TransportType::TransportType( const TransportType &other )
-  : d( other.d )
+TransportType::TransportType(const TransportType &other)
+    : d(other.d)
 {
 }
 
@@ -39,52 +39,52 @@ TransportType::~TransportType()
 {
 }
 
-TransportType &TransportType::operator=( const TransportType &other )
+TransportType &TransportType::operator=(const TransportType &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
-  return *this;
+    if (this != &other) {
+        d = other.d;
+    }
+    return *this;
 }
 
-bool TransportType::operator==( const TransportType &other ) const
+bool TransportType::operator==(const TransportType &other) const
 {
-  if ( d->mType == Transport::EnumType::Akonadi &&
-       other.d->mType == Transport::EnumType::Akonadi ) {
-    return ( d->mAgentType == other.d->mAgentType );
-  }
-  return ( d->mType == other.d->mType );
+    if (d->mType == Transport::EnumType::Akonadi &&
+            other.d->mType == Transport::EnumType::Akonadi) {
+        return (d->mAgentType == other.d->mAgentType);
+    }
+    return (d->mType == other.d->mType);
 }
 
 bool TransportType::isValid() const
 {
-  using namespace Akonadi;
+    using namespace Akonadi;
 
-  if ( d->mType == Transport::EnumType::Akonadi ) {
-    return d->mAgentType.isValid() &&
-      AgentManager::self()->types().contains( d->mAgentType );
-  } else {
-    return d->mType >= 0;
-  }
+    if (d->mType == Transport::EnumType::Akonadi) {
+        return d->mAgentType.isValid() &&
+               AgentManager::self()->types().contains(d->mAgentType);
+    } else {
+        return d->mType >= 0;
+    }
 }
 
 TransportBase::EnumType::type TransportType::type() const
 {
-  return static_cast<TransportBase::EnumType::type>( d->mType );
+    return static_cast<TransportBase::EnumType::type>(d->mType);
 }
 
 QString TransportType::name() const
 {
-  return d->mName;
+    return d->mName;
 }
 
 QString TransportType::description() const
 {
-  return d->mDescription;
+    return d->mDescription;
 }
 
 Akonadi::AgentType TransportType::agentType() const
 {
-  Q_ASSERT( d->mType == Transport::EnumType::Akonadi );
-  return d->mAgentType;
+    Q_ASSERT(d->mType == Transport::EnumType::Akonadi);
+    return d->mAgentType;
 }

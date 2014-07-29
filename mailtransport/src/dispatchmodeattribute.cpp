@@ -28,86 +28,85 @@ using namespace MailTransport;
 
 class DispatchModeAttribute::Private
 {
-  public:
+public:
     DispatchMode mMode;
     QDateTime mDueDate;
 };
 
-DispatchModeAttribute::DispatchModeAttribute( DispatchMode mode )
-  : d( new Private )
+DispatchModeAttribute::DispatchModeAttribute(DispatchMode mode)
+    : d(new Private)
 {
-  d->mMode = mode;
+    d->mMode = mode;
 }
 
 DispatchModeAttribute::~DispatchModeAttribute()
 {
-  delete d;
+    delete d;
 }
 
 DispatchModeAttribute *DispatchModeAttribute::clone() const
 {
-  DispatchModeAttribute * const cloned = new DispatchModeAttribute( d->mMode );
-  cloned->setSendAfter( d->mDueDate );
-  return cloned;
+    DispatchModeAttribute *const cloned = new DispatchModeAttribute(d->mMode);
+    cloned->setSendAfter(d->mDueDate);
+    return cloned;
 }
 
 QByteArray DispatchModeAttribute::type() const
 {
-  static const QByteArray sType( "DispatchModeAttribute" );
-  return sType;
+    static const QByteArray sType("DispatchModeAttribute");
+    return sType;
 }
 
 QByteArray DispatchModeAttribute::serialized() const
 {
-  switch ( d->mMode ) {
-    case Automatic:
-    {
-      if ( !d->mDueDate.isValid() ) {
-        return "immediately";
-      } else {
-        return "after" + d->mDueDate.toString( Qt::ISODate ).toLatin1();
-      }
+    switch (d->mMode) {
+    case Automatic: {
+        if (!d->mDueDate.isValid()) {
+            return "immediately";
+        } else {
+            return "after" + d->mDueDate.toString(Qt::ISODate).toLatin1();
+        }
     }
     case Manual: return "never";
-  }
+    }
 
-  Q_ASSERT( false );
-  return QByteArray(); // suppress control-reaches-end-of-non-void-function warning
+    Q_ASSERT(false);
+    return QByteArray(); // suppress control-reaches-end-of-non-void-function warning
 }
 
-void DispatchModeAttribute::deserialize( const QByteArray &data )
+void DispatchModeAttribute::deserialize(const QByteArray &data)
 {
-  d->mDueDate = QDateTime();
-  if ( data == "immediately" ) {
-    d->mMode = Automatic;
-  } else if ( data == "never" ) {
-    d->mMode = Manual;
-  } else if ( data.startsWith( QByteArray( "after" ) ) ) {
-    d->mMode = Automatic;
-    d->mDueDate = QDateTime::fromString( QString::fromLatin1( data.mid( 5 ) ), Qt::ISODate );
-    // NOTE: 5 is the strlen of "after".
-  } else {
-    qWarning() << "Failed to deserialize data [" << data << "]";
-  }
+    d->mDueDate = QDateTime();
+    if (data == "immediately") {
+        d->mMode = Automatic;
+    } else if (data == "never") {
+        d->mMode = Manual;
+    } else if (data.startsWith(QByteArray("after"))) {
+        d->mMode = Automatic;
+        d->mDueDate = QDateTime::fromString(QString::fromLatin1(data.mid(5)), Qt::ISODate);
+        // NOTE: 5 is the strlen of "after".
+    } else {
+        qWarning() << "Failed to deserialize data [" << data << "]";
+    }
 }
 
 DispatchModeAttribute::DispatchMode DispatchModeAttribute::dispatchMode() const
 {
-  return d->mMode;
+    return d->mMode;
 }
 
-void DispatchModeAttribute::setDispatchMode( DispatchMode mode )
+void DispatchModeAttribute::setDispatchMode(DispatchMode mode)
 {
-  d->mMode = mode;
+    d->mMode = mode;
 }
 
 QDateTime DispatchModeAttribute::sendAfter() const
 {
-  return d->mDueDate;
+    return d->mDueDate;
 }
 
-void DispatchModeAttribute::setSendAfter( const QDateTime &date )
+void DispatchModeAttribute::setSendAfter(const QDateTime &date)
 {
-  d->mDueDate = date;
+    d->mDueDate = date;
 }
 

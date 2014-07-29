@@ -22,7 +22,8 @@
 
 #include <QDialog>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   @internal
@@ -38,13 +39,13 @@ namespace MailTransport {
 */
 class AddTransportDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new AddTransportDialog.
     */
-    explicit AddTransportDialog( QWidget *parent = 0 );
+    explicit AddTransportDialog(QWidget *parent = 0);
 
     /**
       Destroys the AddTransportDialog.
@@ -54,12 +55,12 @@ class AddTransportDialog : public QDialog
     /* reimpl */
     virtual void accept();
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void updateOkButton() )
-    Q_PRIVATE_SLOT( d, void doubleClicked() )
+    Q_PRIVATE_SLOT(d, void updateOkButton())
+    Q_PRIVATE_SLOT(d, void doubleClicked())
 };
 
 } // namespace MailTransport

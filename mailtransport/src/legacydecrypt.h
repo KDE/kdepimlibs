@@ -25,23 +25,24 @@
 
 #include <QtCore/QString>
 
-namespace MailTransport {
+namespace MailTransport
+{
 
 /**
   Methods to read passwords from config files still using legacy encryption.
 */
 class Legacy
 {
-  public:
+public:
     /**
       Read data encrypted using KMail's legacy encryption.
     */
-    static QString decryptKMail( const QString &data );
+    static QString decryptKMail(const QString &data);
 
     /**
       Read data encrypted using KNode's legacy encryption.
     */
-    static QString decryptKNode( const QString &data );
+    static QString decryptKNode(const QString &data);
 };
 
 } // namespace MailTransport

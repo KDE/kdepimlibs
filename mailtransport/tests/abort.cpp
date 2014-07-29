@@ -35,31 +35,31 @@ using namespace MailTransport;
 
 Runner::Runner()
 {
-  Control::start();
+    Control::start();
 
-  QTimer::singleShot( 0, this, SLOT(sendAbort()) );
+    QTimer::singleShot(0, this, SLOT(sendAbort()));
 }
 
 void Runner::sendAbort()
 {
-  const AgentInstance mda = DispatcherInterface().dispatcherInstance();
-  if ( !mda.isValid() ) {
-    qDebug() << "Invalid instance; waiting.";
-    QTimer::singleShot( 1000, this, SLOT(sendAbort()) );
-    return;
-  }
+    const AgentInstance mda = DispatcherInterface().dispatcherInstance();
+    if (!mda.isValid()) {
+        qDebug() << "Invalid instance; waiting.";
+        QTimer::singleShot(1000, this, SLOT(sendAbort()));
+        return;
+    }
 
-  mda.abortCurrentTask();
-  qDebug() << "Told the MDA to abort.";
-  QApplication::exit( 0 );
+    mda.abortCurrentTask();
+    qDebug() << "Told the MDA to abort.";
+    QApplication::exit(0);
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication::setApplicationName(QLatin1String("Abort"));
-  QApplication app(argc, argv);
+    QApplication::setApplicationName(QLatin1String("Abort"));
+    QApplication app(argc, argv);
 
-  new Runner();
-  return app.exec();
+    new Runner();
+    return app.exec();
 }
 
