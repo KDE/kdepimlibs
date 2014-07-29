@@ -20,12 +20,12 @@
 
 #include "maildir.h"
 
-#include <AkonadiCore/collectiondeletejob.h>
-#include <AkonadiCore/collectionfetchjob.h>
-#include <AkonadiCore/itemdeletejob.h>
-#include <AkonadiCore/itemfetchjob.h>
-#include <AkonadiCore/itemfetchscope.h>
-#include <AkonadiCore/itemmodifyjob.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
+#include <itemfetchscope.h>
+#include <itemmodifyjob.h>
 
 #include <kmime/kmime_message.h>
 #include "akonadi/kmime/messageparts.h"

@@ -23,10 +23,10 @@
 
 #include <QDebug>
 
-#include <AkonadiCore/collectionfetchjob.h>
-#include <AkonadiCore/collectionfetchscope.h>
-#include <AkonadiCore/itemfetchjob.h>
-#include <AkonadiCore/itemmodifyjob.h>
+#include <collectionfetchjob.h>
+#include <collectionfetchscope.h>
+#include <itemfetchjob.h>
+#include <itemmodifyjob.h>
 
 using namespace Akonadi;
 

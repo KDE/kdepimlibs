@@ -22,10 +22,10 @@
 #include "maildir.h"
 #include <QDebug>
 
-#include <AkonadiCore/collectionfetchjob.h>
-#include <AkonadiCore/collectionfetchscope.h>
-#include <AkonadiCore/itemdeletejob.h>
-#include <AkonadiCore/itemfetchjob.h>
+#include <collectionfetchjob.h>
+#include <collectionfetchscope.h>
+#include <itemdeletejob.h>
+#include <itemfetchjob.h>
 
 using namespace Akonadi;
 

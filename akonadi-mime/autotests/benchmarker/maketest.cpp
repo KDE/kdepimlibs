@@ -20,12 +20,12 @@
 
 #include "test.h"
 
-#include "AkonadiCore/dbusconnectionpool.h"
+#include "dbusconnectionpool.h"
 
-#include <AkonadiCore/agentinstancecreatejob.h>
-#include <AkonadiCore/collectiondeletejob.h>
-#include <AkonadiCore/collectionfetchjob.h>
-#include <AkonadiCore/collectionfetchscope.h>
+#include <agentinstancecreatejob.h>
+#include <collectiondeletejob.h>
+#include <collectionfetchjob.h>
+#include <collectionfetchscope.h>
 
 #include <QDebug>
 #include <QTest>
