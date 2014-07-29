@@ -21,7 +21,7 @@ macro(add_akonadimime_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable(${_name} ${_test})
-  target_link_libraries(${_name}  KF5AkonadiMime KF5::Mime)
+  target_link_libraries(${_name}  KF5AkonadiMime KF5::Mime KF5::AkonadiCore)
 endmacro()
 
 # demo applications

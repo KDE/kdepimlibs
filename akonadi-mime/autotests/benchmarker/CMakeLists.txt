@@ -32,6 +32,7 @@ target_link_libraries(akonadi_benchmarker
   KF5::AkonadiMime
   KF5::Mime
   Qt5::Test
+  KF5::AkonadiCore
 )
 
 install(TARGETS akonadi_benchmarker ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
