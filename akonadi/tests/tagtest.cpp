@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testCreateMerge();
     void testAttributes();
     void testTagItem();
+    void testFetchTagIdWithItem();
     void testFetchFullTagWithItem();
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
@@ -349,9 +350,6 @@ void TagTest::testTagItem()
 
 void TagTest::testFetchTagIdWithItem()
 {
-    Akonadi::Monitor monitor;
-    monitor.itemFetchScope().setFetchTags(true);
-    monitor.setAllMonitored(true);
     const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
     Tag tag;
     {
@@ -366,14 +364,13 @@ void TagTest::testFetchTagIdWithItem()
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
+
+        // FIXME This should also be possible with create, but isn't
+        item1.setTag(tag);
+
+        ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+        AKVERIFYEXEC(modJob);
     }
-
-    //FIXME
-    //This should also be possible with create, but isn't
-    item1.setTag(tag);
-
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
-    AKVERIFYEXEC(modJob);
 
     ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
@@ -387,9 +384,6 @@ void TagTest::testFetchTagIdWithItem()
 
 void TagTest::testFetchFullTagWithItem()
 {
-    Akonadi::Monitor monitor;
-    monitor.itemFetchScope().setFetchTags(true);
-    monitor.setAllMonitored(true);
     const Collection res3 = Collection( collectionIdFromPath( "res3" ) );
     Tag tag;
     {
@@ -404,11 +398,9 @@ void TagTest::testFetchFullTagWithItem()
         ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
+        //FIXME This should also be possible with create, but isn't
+        item1.setTag(tag);
     }
-
-    //FIXME
-    //This should also be possible with create, but isn't
-    item1.setTag(tag);
 
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
@@ -420,6 +412,7 @@ void TagTest::testFetchFullTagWithItem()
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
     Tag t = fetchJob->items().first().tags().first();
     QCOMPARE(t, tag);
+    QVERIFY(!t.gid().isEmpty());
 }
 
 void TagTest::testModifyItemWithTagByGID()

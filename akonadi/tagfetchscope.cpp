@@ -52,6 +52,7 @@ TagFetchScope::TagFetchScope(const TagFetchScope &other)
 TagFetchScope &TagFetchScope::operator=(const TagFetchScope &other)
 {
     d->mAttributes = other.d->mAttributes;
+    d->mFetchIdOnly = other.d->mFetchIdOnly;
     return *this;
 }
 
