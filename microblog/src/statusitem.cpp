@@ -33,7 +33,8 @@ class StatusItem::Private : public QSharedData
 {
 public:
     Private() {}
-    Private( const Private& other ) : QSharedData( other ) {
+    Private(const Private &other) : QSharedData(other)
+    {
         data = other.data;
         status = other.status;
         dateTime = other.dateTime;
@@ -49,14 +50,14 @@ public:
 void StatusItem::Private::init()
 {
     QDomDocument document;
-    document.setContent( data );
+    document.setContent(data);
     QDomElement root = document.documentElement();
     QDomNode node = root.firstChild();
-    while ( !node.isNull() ) {
+    while (!node.isNull()) {
         const QString key = node.toElement().tagName();
-        if ( key == QLatin1String("user") || key == QLatin1String("sender") || key == QLatin1String("recipient") ) {
+        if (key == QLatin1String("user") || key == QLatin1String("sender") || key == QLatin1String("recipient")) {
             QDomNode node2 = node.firstChild();
-            while ( !node2.isNull() ) {
+            while (!node2.isNull()) {
                 const QString key2 = node2.toElement().tagName();
                 const QString val2 = node2.toElement().text();
                 status[ key + QLatin1String("_-_") + key2 ] = val2;
@@ -70,28 +71,28 @@ void StatusItem::Private::init()
     }
     //qDebug() << status;
 
-    dateTime = QDateTime::fromString( status.value( QLatin1String("created_at") ).toLower().mid( 4 ),
-                                      QLatin1String("MMM dd H:mm:ss +0000 yyyy") );
-    dateTime.setTimeSpec( Qt::UTC );
+    dateTime = QDateTime::fromString(status.value(QLatin1String("created_at")).toLower().mid(4),
+                                     QLatin1String("MMM dd H:mm:ss +0000 yyyy"));
+    dateTime.setTimeSpec(Qt::UTC);
     dateTime = dateTime.toLocalTime();
 
-    if ( !dateTime.isValid() ) {
-        qDebug() << "Unable to parse" << status.value( QLatin1String("created_at") ).toLower().mid( 4 );
+    if (!dateTime.isValid()) {
+        qDebug() << "Unable to parse" << status.value(QLatin1String("created_at")).toLower().mid(4);
     }
     //qDebug() << dateTime;
 }
 
-StatusItem::StatusItem()  :  d( new Private )
+StatusItem::StatusItem()  :  d(new Private)
 {
 }
 
-StatusItem::StatusItem( const QByteArray &data ) : d( new Private )
+StatusItem::StatusItem(const QByteArray &data) : d(new Private)
 {
     d->data = data;
     d->init();
 }
 
-StatusItem::StatusItem( const StatusItem& other ) : d( other.d )
+StatusItem::StatusItem(const StatusItem &other) : d(other.d)
 {
 }
 
@@ -99,25 +100,24 @@ StatusItem::~StatusItem()
 {
 }
 
-StatusItem StatusItem::operator=( const StatusItem &other )
+StatusItem StatusItem::operator=(const StatusItem &other)
 {
-    if ( &other != this ) {
+    if (&other != this) {
         d = other.d;
     }
 
     return *this;
 }
 
-void StatusItem::setData( const QByteArray &data )
+void StatusItem::setData(const QByteArray &data)
 {
     d->data = data;
     d->init();
 }
 
-
 qlonglong StatusItem::id() const
 {
-    return d->status.value( QLatin1String("id") ).toLongLong();
+    return d->status.value(QLatin1String("id")).toLongLong();
 }
 
 QByteArray StatusItem::data() const
@@ -125,9 +125,9 @@ QByteArray StatusItem::data() const
     return d->data;
 }
 
-QString StatusItem::value( const QString& value ) const
+QString StatusItem::value(const QString &value) const
 {
-    return d->status.value( value );
+    return d->status.value(value);
 }
 
 QStringList StatusItem::keys() const
@@ -139,7 +139,7 @@ QString StatusItem::text() const
 {
     using KPIMUtils::LinkLocator;
     int flags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText | LinkLocator::ReplaceSmileys;
-    return KPIMUtils::LinkLocator::convertToHtml( d->status.value( QLatin1String("text") ), flags );
+    return KPIMUtils::LinkLocator::convertToHtml(d->status.value(QLatin1String("text")), flags);
 }
 
 QDateTime StatusItem::date() const

@@ -57,28 +57,28 @@ public:
     /** Constructor which takes the XML as argument. The data is parsed
       * instantly, so the other methods of the class are instantly usable.
       */
-    explicit StatusItem( const QByteArray& );
+    explicit StatusItem(const QByteArray &);
 
     /** Copy constructor */
-    StatusItem( const StatusItem& );
+    StatusItem(const StatusItem &);
 
     /** Destructor */
     ~StatusItem();
 
     /** Coparisation operator */
-    StatusItem operator=( const StatusItem& );
+    StatusItem operator=(const StatusItem &);
 
     /** The call to set the XML data. After this, the data is parsed
       * instantly, so the other methods of the class are instantly usable.
       */
-    void setData( const QByteArray& );
+    void setData(const QByteArray &);
 
     /** Returns the unique id as given by the service */
     qlonglong id() const;
 
     /** Returns the value of a certain key. The keys can be obtained via keys().
      */
-    QString value( const QString& ) const;
+    QString value(const QString &) const;
 
     /** Gives the text of the tweet or dent. The result is HTML where links
      *  are hrefs and smileys are images.
@@ -102,6 +102,6 @@ private:
 }
 
 #define MICROBLOG_STATUSITEM_METATYPE_DEFINED 1
-Q_DECLARE_METATYPE( Microblog::StatusItem )
+Q_DECLARE_METATYPE(Microblog::StatusItem)
 
 #endif
