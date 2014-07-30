@@ -46,22 +46,25 @@
 
 using namespace GpgME;
 
-class InteractiveEditInteractor : public QDialog, public EditInteractor {
+class InteractiveEditInteractor : public QDialog, public EditInteractor
+{
     Q_OBJECT
 public:
-    explicit InteractiveEditInteractor( QWidget * parent=0 );
+    explicit InteractiveEditInteractor(QWidget *parent = 0);
     ~InteractiveEditInteractor();
 
-    const char * action( Error & err ) const;
-    unsigned int nextState( unsigned int status, const char * args, Error & err ) const;
+    const char *action(Error &err) const;
+    unsigned int nextState(unsigned int status, const char *args, Error &err) const;
 
 private Q_SLOTS:
-    void slotAckButtonClicked() {
+    void slotAckButtonClicked()
+    {
         lastAction = 0;
     }
 
-    void slotSendButtonClicked() {
-        lastAction = qstrdup( lineEdit.text().toUtf8().constData() );
+    void slotSendButtonClicked()
+    {
+        lastAction = qstrdup(lineEdit.text().toUtf8().constData());
     }
 
 private:
@@ -72,51 +75,53 @@ private:
     mutable QPushButton sendButton;
     mutable QPushButton ackButton;
     mutable QEventLoop loop;
-    mutable char * lastAction;
+    mutable char *lastAction;
 };
 
-InteractiveEditInteractor::InteractiveEditInteractor( QWidget * p )
-    : QDialog( p ),
-      vlay( this ),
-      textEdit( this ),
+InteractiveEditInteractor::InteractiveEditInteractor(QWidget *p)
+    : QDialog(p),
+      vlay(this),
+      textEdit(this),
       hlay(),
-      lineEdit( this ),
-      sendButton( tr( "&Send" ), this ),
-      ackButton( tr( "&ACK" ), this ),
+      lineEdit(this),
+      sendButton(tr("&Send"), this),
+      ackButton(tr("&ACK"), this),
       loop(),
-      lastAction( 0 )
+      lastAction(0)
 {
-    vlay.addWidget( &textEdit );
-    vlay.addLayout( &hlay );
-    hlay.addWidget( &lineEdit );
-    hlay.addWidget( &sendButton );
-    hlay.addWidget( &ackButton );
+    vlay.addWidget(&textEdit);
+    vlay.addLayout(&hlay);
+    hlay.addWidget(&lineEdit);
+    hlay.addWidget(&sendButton);
+    hlay.addWidget(&ackButton);
 
-    setEnabled( false );
+    setEnabled(false);
 
-    connect( &sendButton, SIGNAL(clicked()), this, SLOT(slotSendButtonClicked()) );
-    connect( &sendButton, SIGNAL(clicked()), &loop, SLOT(quit()) );
+    connect(&sendButton, SIGNAL(clicked()), this, SLOT(slotSendButtonClicked()));
+    connect(&sendButton, SIGNAL(clicked()), &loop, SLOT(quit()));
 
-    connect( &lineEdit, SIGNAL(returnPressed()), this, SLOT(slotSendButtonClicked()) );
-    connect( &lineEdit, SIGNAL(returnPressed()), &loop, SLOT(quit()) );
+    connect(&lineEdit, SIGNAL(returnPressed()), this, SLOT(slotSendButtonClicked()));
+    connect(&lineEdit, SIGNAL(returnPressed()), &loop, SLOT(quit()));
 
-    connect( &ackButton, SIGNAL(clicked()), this, SLOT(slotAckButtonClicked()) );
-    connect( &ackButton, SIGNAL(clicked()), &loop, SLOT(quit()) );
+    connect(&ackButton, SIGNAL(clicked()), this, SLOT(slotAckButtonClicked()));
+    connect(&ackButton, SIGNAL(clicked()), &loop, SLOT(quit()));
 }
 
-InteractiveEditInteractor::~InteractiveEditInteractor() {
-    if ( lastAction ) {
-        std::free( lastAction );
+InteractiveEditInteractor::~InteractiveEditInteractor()
+{
+    if (lastAction) {
+        std::free(lastAction);
     }
 }
 
-const char * InteractiveEditInteractor::action( Error & ) const {
-    const_cast<InteractiveEditInteractor*>( this )->setEnabled( true );
+const char *InteractiveEditInteractor::action(Error &) const
+{
+    const_cast<InteractiveEditInteractor *>(this)->setEnabled(true);
 
     lineEdit.setFocus();
 
-    if ( lastAction ) {
-        std::free( lastAction );
+    if (lastAction) {
+        std::free(lastAction);
     }
     lastAction = 0;
 
@@ -124,11 +129,11 @@ const char * InteractiveEditInteractor::action( Error & ) const {
 
     lineEdit.clear();
 
-    const_cast<InteractiveEditInteractor*>( this )->setEnabled( false );
+    const_cast<InteractiveEditInteractor *>(this)->setEnabled(false);
     return lastAction;
 }
 
-static const char * status_strings[] = {
+static const char *status_strings[] = {
     "EOF",
     /* mkstatus processing starts here */
     "ENTER",
@@ -222,37 +227,39 @@ static const char * status_strings[] = {
 
     "PLAINTEXT",
 };
-static const unsigned int num_status_strings = sizeof status_strings / sizeof *status_strings ;
+static const unsigned int num_status_strings = sizeof status_strings / sizeof * status_strings ;
 
-unsigned int InteractiveEditInteractor::nextState( unsigned int s, const char * args, Error & ) const {
-    const char * const state_string = s < num_status_strings ? status_strings[s] : "<unknown state>" ;
-    if ( needsNoResponse( s ) ) {
-        textEdit.append( tr( "%1: %2 (auto-ack'ed)" ).arg( state_string, QString::fromUtf8( args ) ) );
+unsigned int InteractiveEditInteractor::nextState(unsigned int s, const char *args, Error &) const
+{
+    const char *const state_string = s < num_status_strings ? status_strings[s] : "<unknown state>" ;
+    if (needsNoResponse(s)) {
+        textEdit.append(tr("%1: %2 (auto-ack'ed)").arg(state_string, QString::fromUtf8(args)));
         return state();
     } else {
-        textEdit.append( tr( "%1: %2" ).arg( state_string, QString::fromUtf8( args ) ) );
+        textEdit.append(tr("%1: %2").arg(state_string, QString::fromUtf8(args)));
         return state() + 1; // fake state change
     }
 }
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    QApplication app( argc, argv );
+    QApplication app(argc, argv);
 
     (void)QGpgME::EventLoopInteractor::instance();
 
     Protocol proto = OpenPGP;
-    const char * keyid = 0;
-    if ( argc < 1 || argc > 3 ) {
+    const char *keyid = 0;
+    if (argc < 1 || argc > 3) {
         return 1;
     }
-    if ( argc == 2 ) {
+    if (argc == 2) {
         keyid = argv[1];
     }
-    if ( argc == 3 ) {
-        if ( qstrcmp( argv[1], "--openpgp" ) == 0 ) {
+    if (argc == 3) {
+        if (qstrcmp(argv[1], "--openpgp") == 0) {
             proto = OpenPGP;
-        } else if ( argc == 2 && qstrcmp( argv[1], "--smime" ) == 0 ) {
+        } else if (argc == 2 && qstrcmp(argv[1], "--smime") == 0) {
             proto = CMS;
         } else {
             return 1;
@@ -263,44 +270,44 @@ int main( int argc, char * argv[] ) {
     try {
         Key key;
         {
-            const std::auto_ptr<Context> kl( Context::createForProtocol( proto ) );
+            const std::auto_ptr<Context> kl(Context::createForProtocol(proto));
 
-            if ( !kl.get() ) {
+            if (!kl.get()) {
                 return 1;
             }
 
-            if ( Error err = kl->startKeyListing( keyid ) ) {
-                throw std::runtime_error( std::string( "startKeyListing: " ) + err.asString() );
+            if (Error err = kl->startKeyListing(keyid)) {
+                throw std::runtime_error(std::string("startKeyListing: ") + err.asString());
             }
 
             Error err;
-            key = kl->nextKey( err );
-            if ( err ) {
-                throw std::runtime_error( std::string( "nextKey: " ) + err.asString() );
+            key = kl->nextKey(err);
+            if (err) {
+                throw std::runtime_error(std::string("nextKey: ") + err.asString());
             }
 
             (void)kl->endKeyListing();
         }
 
-        const std::auto_ptr<Context> ctx( Context::createForProtocol( proto ) );
+        const std::auto_ptr<Context> ctx(Context::createForProtocol(proto));
 
-        ctx->setManagedByEventLoopInteractor( true );
+        ctx->setManagedByEventLoopInteractor(true);
 
         Data data;
         {
-            InteractiveEditInteractor * iei = new InteractiveEditInteractor;
+            InteractiveEditInteractor *iei = new InteractiveEditInteractor;
             iei->show();
-            QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
-                              iei, SLOT(close()) );
-            std::auto_ptr<EditInteractor> ei( iei );
-            ei->setDebugChannel( stderr );
-            if ( Error err = ctx->startEditing( key, ei, data ) ) {
-                throw std::runtime_error( std::string( "startEditing: " ) + err.asString() );
+            QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context *, GpgME::Error)),
+                             iei, SLOT(close()));
+            std::auto_ptr<EditInteractor> ei(iei);
+            ei->setDebugChannel(stderr);
+            if (Error err = ctx->startEditing(key, ei, data)) {
+                throw std::runtime_error(std::string("startEditing: ") + err.asString());
             }
             // ei released in passing to startEditing
         }
         return app.exec();
-    } catch ( const std::exception & e ) {
+    } catch (const std::exception &e) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;
     }

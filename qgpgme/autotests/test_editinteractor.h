@@ -41,30 +41,33 @@
 #include <cassert>
 #include <string>
 
-class KeyResolveJob : QObject {
+class KeyResolveJob : QObject
+{
     Q_OBJECT
 public:
-    explicit KeyResolveJob( GpgME::Protocol proto=GpgME::OpenPGP, QObject * p=0 )
-        : QObject( p ),
-          m_ctx( GpgME::Context::createForProtocol( proto ) ),
-          m_done( false ),
-          m_loop( 0 )
+    explicit KeyResolveJob(GpgME::Protocol proto = GpgME::OpenPGP, QObject *p = 0)
+        : QObject(p),
+          m_ctx(GpgME::Context::createForProtocol(proto)),
+          m_done(false),
+          m_loop(0)
     {
-        assert( m_ctx.get() );
-        connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
-                 this, SLOT(slotNextKey(GpgME::Context*,GpgME::Key)) );
-        connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
-                 this, SLOT(slotDone(GpgME::Context*,GpgME::Error)) );
+        assert(m_ctx.get());
+        connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context *, GpgME::Key)),
+                this, SLOT(slotNextKey(GpgME::Context *, GpgME::Key)));
+        connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context *, GpgME::Error)),
+                this, SLOT(slotDone(GpgME::Context *, GpgME::Error)));
 
-        m_ctx->setManagedByEventLoopInteractor( true );
+        m_ctx->setManagedByEventLoopInteractor(true);
     }
 
-    GpgME::Error start( const char * pattern, bool secretOnly=false ) {
-        return m_ctx->startKeyListing( pattern, secretOnly );
+    GpgME::Error start(const char *pattern, bool secretOnly = false)
+    {
+        return m_ctx->startKeyListing(pattern, secretOnly);
     }
 
-    GpgME::Error waitForDone() {
-        if ( m_done ) {
+    GpgME::Error waitForDone()
+    {
+        if (m_done) {
             return m_error;
         }
         QEventLoop loop;
@@ -74,24 +77,27 @@ public:
         return m_error;
     }
 
-    std::vector<GpgME::Key> keys() const {
+    std::vector<GpgME::Key> keys() const
+    {
         return m_keys;
     }
 
 private Q_SLOTS:
-    void slotNextKey( GpgME::Context * ctx, const GpgME::Key & key ) {
-        if ( ctx != m_ctx.get() ) {
+    void slotNextKey(GpgME::Context *ctx, const GpgME::Key &key)
+    {
+        if (ctx != m_ctx.get()) {
             return;
         }
-        m_keys.push_back( key );
+        m_keys.push_back(key);
     }
-    void slotDone( GpgME::Context * ctx, const GpgME::Error & err ) {
-        if ( ctx != m_ctx.get() ) {
+    void slotDone(GpgME::Context *ctx, const GpgME::Error &err)
+    {
+        if (ctx != m_ctx.get()) {
             return;
         }
         m_error = err;
         m_done = true;
-        if ( m_loop ) {
+        if (m_loop) {
             m_loop->quit();
         }
     }
@@ -101,36 +107,37 @@ private:
     GpgME::Error m_error;
     bool m_done;
     std::vector<GpgME::Key> m_keys;
-    QEventLoop * m_loop;
+    QEventLoop *m_loop;
 };
 
-static int test_editinteractor( std::auto_ptr<GpgME::EditInteractor> ei, const char * keyid, GpgME::Protocol proto=GpgME::OpenPGP ) {
+static int test_editinteractor(std::auto_ptr<GpgME::EditInteractor> ei, const char *keyid, GpgME::Protocol proto = GpgME::OpenPGP)
+{
 
     using namespace GpgME;
 
-    KeyResolveJob job( proto );
-    if ( const GpgME::Error err = job.start( keyid ) ) {
-        throw std::runtime_error( std::string( "startKeyListing: " ) + err.asString() );
+    KeyResolveJob job(proto);
+    if (const GpgME::Error err = job.start(keyid)) {
+        throw std::runtime_error(std::string("startKeyListing: ") + err.asString());
     }
 
-    if ( const GpgME::Error err = job.waitForDone() ) {
-        throw std::runtime_error( std::string( "nextKey: " ) + err.asString() );
+    if (const GpgME::Error err = job.waitForDone()) {
+        throw std::runtime_error(std::string("nextKey: ") + err.asString());
     }
 
     const Key key = job.keys().front();
 
-    const std::auto_ptr<Context> ctx( Context::createForProtocol( proto ) );
+    const std::auto_ptr<Context> ctx(Context::createForProtocol(proto));
 
-    ctx->setManagedByEventLoopInteractor( true );
+    ctx->setManagedByEventLoopInteractor(true);
 
     Data data;
-    ei->setDebugChannel( stderr );
+    ei->setDebugChannel(stderr);
 
-    QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
-                      QCoreApplication::instance(), SLOT(quit()) );
+    QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context *, GpgME::Error)),
+                     QCoreApplication::instance(), SLOT(quit()));
 
-    if ( Error err = ctx->startEditing( key, ei, data ) ) {
-        throw std::runtime_error( std::string( "startEditing: " ) + err.asString() );
+    if (Error err = ctx->startEditing(key, ei, data)) {
+        throw std::runtime_error(std::string("startEditing: ") + err.asString());
     }
     // ei released in passing to startEditing
 

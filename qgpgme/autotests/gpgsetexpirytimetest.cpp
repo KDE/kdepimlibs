@@ -34,24 +34,25 @@
 
 using namespace GpgME;
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    QCoreApplication app( argc, argv );
+    QCoreApplication app(argc, argv);
 
-    if ( argc != 3 ) {
+    if (argc != 3) {
         return 1;
     }
 
-    const char * const keyid = argv[1];
-    const char * const date = argv[2];
+    const char *const keyid = argv[1];
+    const char *const date = argv[2];
 
     try {
 
-        std::auto_ptr<EditInteractor> ei( new GpgSetExpiryTimeEditInteractor( date ) );
+        std::auto_ptr<EditInteractor> ei(new GpgSetExpiryTimeEditInteractor(date));
 
-        return test_editinteractor( ei, keyid );
+        return test_editinteractor(ei, keyid);
 
-    } catch ( const std::exception & e ) {
+    } catch (const std::exception &e) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;
     }

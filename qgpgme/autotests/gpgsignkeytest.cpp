@@ -29,7 +29,6 @@
 
 #include <gpgsignkeyeditinteractor.h>
 
-
 #include <QByteArray>
 
 #include <memory>
@@ -39,36 +38,37 @@
 using namespace GpgME;
 using namespace boost;
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    QCoreApplication app( argc, argv );
+    QCoreApplication app(argc, argv);
 
-    if ( argc != 3 ) {
+    if (argc != 3) {
         return 1;
     }
 
-    const char * const keyid = argv[1];
-     QByteArray signing_mode_string = argv[2];
-    if ( !signing_mode_string.endsWith( "sign" ) ) {
-        throw std::runtime_error( std::string( "Not a valid signing mode: " ) + argv[2] );
+    const char *const keyid = argv[1];
+    QByteArray signing_mode_string = argv[2];
+    if (!signing_mode_string.endsWith("sign")) {
+        throw std::runtime_error(std::string("Not a valid signing mode: ") + argv[2]);
     }
-    signing_mode_string.chop( 4 );
+    signing_mode_string.chop(4);
     int options = 0;
-    if ( !signing_mode_string.contains( 'l' ) ) {
+    if (!signing_mode_string.contains('l')) {
         options |= GpgSignKeyEditInteractor::Exportable;
     }
-    if ( signing_mode_string.contains( "nr" ) ) {
+    if (signing_mode_string.contains("nr")) {
         options |= GpgSignKeyEditInteractor::NonRevocable;
     }
-    if ( signing_mode_string.contains( 't' ) ) {
+    if (signing_mode_string.contains('t')) {
         options |= GpgSignKeyEditInteractor::Trust;
     }
     try {
-        GpgSignKeyEditInteractor * const skei = new GpgSignKeyEditInteractor;
-        skei->setSigningOptions( options );
-        std::auto_ptr<EditInteractor> ei( skei );
-        return test_editinteractor( ei, keyid );
-    } catch ( const std::exception & e ) {
+        GpgSignKeyEditInteractor *const skei = new GpgSignKeyEditInteractor;
+        skei->setSigningOptions(options);
+        std::auto_ptr<EditInteractor> ei(skei);
+        return test_editinteractor(ei, keyid);
+    } catch (const std::exception &e) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;
     }

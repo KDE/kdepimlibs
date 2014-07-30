@@ -34,31 +34,32 @@
 
 using namespace GpgME;
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    QCoreApplication app( argc, argv );
+    QCoreApplication app(argc, argv);
 
-    if ( argc != 4 && argc != 5 ) {
+    if (argc != 4 && argc != 5) {
         return 1;
     }
 
-    const char * const keyid = argv[1];
-    const std::string name =    QString::fromLocal8Bit( argv[2] ).toUtf8().constData();
-    const std::string email =   QString::fromLocal8Bit( argv[3] ).toUtf8().constData();
-    const std::string comment = argc > 4 ? QString::fromLocal8Bit( argv[4] ).toUtf8().constData() : "" ;
+    const char *const keyid = argv[1];
+    const std::string name =    QString::fromLocal8Bit(argv[2]).toUtf8().constData();
+    const std::string email =   QString::fromLocal8Bit(argv[3]).toUtf8().constData();
+    const std::string comment = argc > 4 ? QString::fromLocal8Bit(argv[4]).toUtf8().constData() : "" ;
 
     try {
 
-        std::auto_ptr<GpgAddUserIDEditInteractor> ei( new GpgAddUserIDEditInteractor );
+        std::auto_ptr<GpgAddUserIDEditInteractor> ei(new GpgAddUserIDEditInteractor);
 
-        ei->setNameUtf8( name );
-        ei->setEmailUtf8( email );
-        ei->setCommentUtf8( comment );
+        ei->setNameUtf8(name);
+        ei->setEmailUtf8(email);
+        ei->setCommentUtf8(comment);
 
-        std::auto_ptr<EditInteractor> eii( ei );
-        return test_editinteractor( eii, keyid );
+        std::auto_ptr<EditInteractor> eii(ei);
+        return test_editinteractor(eii, keyid);
 
-    } catch ( const std::exception & e ) {
+    } catch (const std::exception &e) {
         std::cerr << "Caught error: " << e.what() << std::endl;
         return 1;
     }
