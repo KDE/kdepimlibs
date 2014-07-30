@@ -77,7 +77,7 @@ public:
     }
     bool haveCapability(const char *cap) const
     {
-        return caps.contains(cap);
+        return caps.contains(QLatin1String(cap));
     }
     void error(int id, const QString &msg)
     {

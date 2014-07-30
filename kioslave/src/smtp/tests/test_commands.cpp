@@ -8,7 +8,7 @@
 #include "response.h"
 #include "transactionstate.h"
 #include "common.h"
-
+#include "smtp_debug.h"
 #include <assert.h>
 
 using namespace KioSMTP;
@@ -43,7 +43,7 @@ int main(int, char **)
     //
 
     smtp.clear();
-    EHLOCommand ehlo(&smtp, "mail.example.com");
+    EHLOCommand ehlo(&smtp, QLatin1String("mail.example.com"));
     // flags
     assert(ehlo.closeConnectionOnError());
     assert(ehlo.mustBeLastInPipeline());
@@ -70,7 +70,7 @@ int main(int, char **)
 
     // dynamics 2: EHLO fails with "unknown command"
     smtp.clear();
-    EHLOCommand ehlo2(&smtp, "mail.example.com");
+    EHLOCommand ehlo2(&smtp, QLatin1String("mail.example.com"));
     ehlo2.nextCommandLine(0);
     r.clear();
     r.parseLine("500 unknown command\r\n");
@@ -89,7 +89,7 @@ int main(int, char **)
 
     // dynamics 3: EHLO fails with unknown response code
     smtp.clear();
-    EHLOCommand ehlo3(&smtp, "mail.example.com");
+    EHLOCommand ehlo3(&smtp, QLatin1String("mail.example.com"));
     ehlo3.nextCommandLine(0);
     r.clear();
     r.parseLine("545 you don't know me\r\n");
@@ -100,7 +100,7 @@ int main(int, char **)
 
     // dynamics 4: EHLO _and_ HELO fail with "command unknown"
     smtp.clear();
-    EHLOCommand ehlo4(&smtp, "mail.example.com");
+    EHLOCommand ehlo4(&smtp, QLatin1String("mail.example.com"));
     ehlo4.nextCommandLine(0);
     r.clear();
     r.parseLine("500 unknown command\r\n");
@@ -172,12 +172,12 @@ int main(int, char **)
 
     smtp.clear();
     QStringList mechs;
-    mechs.append("PLAIN");
-    smtp.saslMethod = "PLAIN";
+    mechs.append(QLatin1String("PLAIN"));
+    smtp.saslMethod = QLatin1String("PLAIN");
     KIO::AuthInfo authInfo;
-    authInfo.username = "user";
-    authInfo.password = "pass";
-    AuthCommand auth(&smtp, "PLAIN", "mail.example.com", authInfo);
+    authInfo.username = QLatin1String("user");
+    authInfo.password = QLatin1String("pass");
+    AuthCommand auth(&smtp, "PLAIN", QLatin1String("mail.example.com"), authInfo);
     // flags
     assert(auth.closeConnectionOnError());
     assert(auth.mustBeLastInPipeline());
@@ -221,13 +221,13 @@ int main(int, char **)
 
     // dynamics 3: LOGIN
     smtp.clear();
-    smtp.saslMethod = "LOGIN";
+    smtp.saslMethod = QLatin1String("LOGIN");
     mechs.clear();
-    mechs.append("LOGIN");
+    mechs.append(QLatin1String("LOGIN"));
     authInfo = KIO::AuthInfo();
-    authInfo.username = "user";
-    authInfo.password = "pass";
-    AuthCommand auth3(&smtp, "LOGIN", "mail.example.com", authInfo);
+    authInfo.username = QLatin1String("user");
+    authInfo.password = QLatin1String("pass");
+    AuthCommand auth3(&smtp, "LOGIN", QLatin1String("mail.example.com"), authInfo);
     ts.clear();
     ts2 = ts;
     assert(auth3.nextCommandLine(&ts) == "AUTH LOGIN\r\n");
@@ -297,7 +297,7 @@ int main(int, char **)
     MailFromCommand mail3(&smtp, "joe@user.org", true, 500);
     ts.clear();
     ts2 = ts;
-    smtp.caps << "SIZE" << "8BITMIME" ;
+    smtp.caps << QLatin1String("SIZE") << QLatin1String("8BITMIME") ;
     assert(mail3.nextCommandLine(&ts) == "MAIL FROM:<joe@user.org> BODY=8BITMIME SIZE=500\r\n");
     assert(ts == ts2);
 
@@ -361,7 +361,7 @@ int main(int, char **)
     assert(!ts.atLeastOneRecipientWasAccepted());
     assert(ts.haveRejectedRecipients());
     assert(ts.rejectedRecipients().count() == 1);
-    assert(ts.rejectedRecipients().front().recipient == "joe@user.org");
+    assert(ts.rejectedRecipients().front().recipient == QLatin1String("joe@user.org"));
     assert(ts.failed());
     assert(!ts.failedFatally());
     assert(smtp.lastErrorCode == 0);
@@ -462,7 +462,7 @@ int main(int, char **)
     TransferCommand xfer2(&smtp, 0);
     ts.clear();
     ts.setRecipientAccepted();
-    ts.addRejectedRecipient("joe@user.org", "No relaying allowed");
+    ts.addRejectedRecipient(QLatin1String("joe@user.org"), QLatin1String("No relaying allowed"));
     ts.setDataCommandIssued(true);
     r.clear();
     r.parseLine("354 go on");

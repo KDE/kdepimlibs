@@ -61,21 +61,21 @@ int main(int , char **)
     QByteArray result;
 
     request.setEmitHeaders(true);
-    request.setFromAddress("mutz@kde.org");
-    request.addTo("joe@user.org");
-    request.addTo("valentine@14th.february.org");
-    request.addCc("boss@example.com");
+    request.setFromAddress(QLatin1String("mutz@kde.org"));
+    request.addTo(QLatin1String("joe@user.org"));
+    request.addTo(QLatin1String("valentine@14th.february.org"));
+    request.addCc(QLatin1String("boss@example.com"));
 
     result += request.headerFields() + '\n';
-    result += request.headerFields("Marc Mutz") + '\n';
-    result += request.headerFields("Mutz, Marc") + '\n';
+    result += request.headerFields(QLatin1String("Marc Mutz")) + '\n';
+    result += request.headerFields(QLatin1String("Mutz, Marc")) + '\n';
     result += request.headerFields(QString::fromUtf8("Marc Mötz")) + '\n';
 
     request.setSubject(QString::fromUtf8("Blödes Subject"));
 
     result += request.headerFields() + '\n';
-    result += request.headerFields("Marc Mutz") + '\n';
-    result += request.headerFields("Mutz, Marc") + '\n';
+    result += request.headerFields(QLatin1String("Marc Mutz")) + '\n';
+    result += request.headerFields(QLatin1String("Mutz, Marc")) + '\n';
     result += request.headerFields(QString::fromUtf8("Marc Mötz")) + '\n';
 
     if (result != expected) {
