@@ -28,7 +28,8 @@
 
 class KDateTime;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SocialFeedItemPrivate;
 
@@ -37,9 +38,9 @@ class SocialFeedItemPrivate;
  */
 class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
 {
-  public:
+public:
     SocialFeedItem();
-    SocialFeedItem( const SocialFeedItem &other );
+    SocialFeedItem(const SocialFeedItem &other);
     ~SocialFeedItem();
     SocialFeedItem &operator=(const SocialFeedItem &other);
 
@@ -57,7 +58,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param networkString The network string
      */
-    void setNetworkString( const QString &networkString );
+    void setNetworkString(const QString &networkString);
 
     /**
      * @return Original post id (eg. Facebook post id, Twitter post id etc).
@@ -69,7 +70,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param postId Post id from the network (eg. Facebook post id, Twitter post id etc).
      */
-    void setPostId( const QString &postId );
+    void setPostId(const QString &postId);
 
     /**
      * @return The text of the post that is displayed in the feed
@@ -81,7 +82,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param text The post text in the feed
      */
-    void setPostText( const QString &text );
+    void setPostText(const QString &text);
 
     /**
      * @return Link from the post
@@ -93,7 +94,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param link URL of the link
      */
-    void setPostLink( const QUrl &link );
+    void setPostLink(const QUrl &link);
 
     /**
      * @return Link title from the post
@@ -105,7 +106,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param linkTitle Title of the link
      */
-    void setPostLinkTitle( const QString &linkTitle );
+    void setPostLinkTitle(const QString &linkTitle);
 
     /**
      * @return URL of an image associated with this post
@@ -118,7 +119,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param imageUrl The URL of the image
      */
-    void setPostImageUrl( const QUrl &imageUrl );
+    void setPostImageUrl(const QUrl &imageUrl);
 
     /**
      * @return Post user name
@@ -130,7 +131,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param userName Network user name
      */
-    void setUserName( const QString &userName );
+    void setUserName(const QString &userName);
 
     /**
      * @return Name that is displayed to the user
@@ -142,7 +143,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param userDisplayName Display name
      */
-    void setUserDisplayName( const QString &userDisplayName );
+    void setUserDisplayName(const QString &userDisplayName);
 
     /**
      * @return Network user id
@@ -154,7 +155,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param userId Network user id
      */
-    void setUserId( const QString &userId );
+    void setUserId(const QString &userId);
 
     /**
      * @return Time of the post
@@ -168,7 +169,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      * @param postTimeString The time string
      * @param postTimeFormat The time format of the string
      */
-    void setPostTime( const QString &postTimeString, const QString &postTimeFormat );
+    void setPostTime(const QString &postTimeString, const QString &postTimeFormat);
 
     /**
      * @return The time format of the time string for this post
@@ -191,7 +192,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      * For now all just in one string
      * @param postInfo The string with the info
      */
-    void setPostInfo( const QString &postInfo );
+    void setPostInfo(const QString &postInfo);
 
     /**
      * @return True if this post was shared from other user
@@ -203,7 +204,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param shared True if shared, false if not
      */
-    void setShared( bool shared );
+    void setShared(bool shared);
 
     /**
      * @return Display name of the user which was this post shared from
@@ -215,7 +216,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param sharedFrom User which was this post shared from
      */
-    void setSharedFrom( const QString &sharedFrom );
+    void setSharedFrom(const QString &sharedFrom);
 
     /**
      * @return User id of the user this was shared from
@@ -227,14 +228,14 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param sharedFromId User id of the original author
      */
-    void setSharedFromId( const QString &sharedFromId );
+    void setSharedFromId(const QString &sharedFromId);
 
     /**
      * Sets if the user has liked/favorited the post or not
      *
      * @param liked True if the post was liked/favorited, false otherwise
      */
-    void setLiked( bool liked );
+    void setLiked(bool liked);
 
     /**
      * @return True if the post was liked/favorited by the signed-in user, false otherwise
@@ -254,7 +255,7 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      * @param itemSourceMap The original data in a QVariantMap
      *
      */
-    void setItemSourceMap( const QVariantMap &itemSourceMap );
+    void setItemSourceMap(const QVariantMap &itemSourceMap);
 
     /**
      * @return Url of the avatar picture
@@ -266,25 +267,25 @@ class AKONADI_SOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param url Avatar url
      */
-    void setAvatarUrl( const QUrl &url );
+    void setAvatarUrl(const QUrl &url);
 
     /**
      * Sets replies/comments for this post
      * @param replies List of replies
      */
-    void setPostReplies( const QList<SocialFeedItem> &replies );
+    void setPostReplies(const QList<SocialFeedItem> &replies);
 
     /**
      * @return List of replies/comments to this post
      */
     QList<SocialFeedItem> postReplies() const;
 
-  private:
+private:
     QSharedDataPointer<SocialFeedItemPrivate> d;
 };
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::SocialFeedItem )
+Q_DECLARE_METATYPE(Akonadi::SocialFeedItem)
 
 #endif // SOCIALFEEDITEM_H

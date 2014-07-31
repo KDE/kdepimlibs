@@ -29,11 +29,13 @@
 class KJob;
 class QImage;
 
-namespace KIO {
-  class Job;
+namespace KIO
+{
+class Job;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ImageProviderPrivate;
 
@@ -42,9 +44,9 @@ class ImageProviderPrivate;
  */
 class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit ImageProvider( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit ImageProvider(QObject *parent = 0);
     ~ImageProvider();
     /**
      * Starts fetching the avatar/image from network
@@ -54,14 +56,14 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
      * @param polishImage set to true if you want the image to have rounded corners,
      *        used for avatars mainly
      */
-    QImage loadImage( const QString &who, const QUrl &url,
-                      bool polishImage = false, KImageCache *cache = 0 );
+    QImage loadImage(const QString &who, const QUrl &url,
+                     bool polishImage = false, KImageCache *cache = 0);
     /**
      * Aborts all running jobs
      */
     void abortAllJobs();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Signals image loading has finished
      *
@@ -69,13 +71,13 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
      * @param url URL of the image
      * @param image The image itself
      */
-    void imageLoaded( const QString &who, const QUrl &url, const QImage &image );
+    void imageLoaded(const QString &who, const QUrl &url, const QImage &image);
 
-  private:
-    ImageProviderPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( ImageProvider )
-    Q_PRIVATE_SLOT( d_func(), void result( KJob *job ) )
-    Q_PRIVATE_SLOT( d_func(), void recv( KIO::Job *job, const QByteArray &data ) )
+private:
+    ImageProviderPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(ImageProvider)
+    Q_PRIVATE_SLOT(d_func(), void result(KJob *job))
+    Q_PRIVATE_SLOT(d_func(), void recv(KIO::Job *job, const QByteArray &data))
 };
 
 }

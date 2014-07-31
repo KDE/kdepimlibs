@@ -26,13 +26,14 @@
 #include <QString>
 #include <QVariantMap>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SocialNetworkAttributesPrivate;
 
 class AKONADI_SOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attribute
 {
-  public:
+public:
     SocialNetworkAttributes();
 
     /**
@@ -42,11 +43,11 @@ class AKONADI_SOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attri
      * @param canPublish True if we can publish stuff through this resource
      * @param maxPostLength Max length of the post that can be published (eg. 140 for Twitter)
      */
-    SocialNetworkAttributes( const QString &userName, const QString &networkName,
-                             bool canPublish, uint maxPostLength );
+    SocialNetworkAttributes(const QString &userName, const QString &networkName,
+                            bool canPublish, uint maxPostLength);
     ~SocialNetworkAttributes();
 
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
     QByteArray serialized() const;
     Akonadi::Attribute *clone() const;
     QByteArray type() const;
@@ -71,8 +72,8 @@ class AKONADI_SOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attri
      */
     uint maxPostLength() const;
 
-  private:
-    SocialNetworkAttributesPrivate * const d;
+private:
+    SocialNetworkAttributesPrivate *const d;
 };
 
 }

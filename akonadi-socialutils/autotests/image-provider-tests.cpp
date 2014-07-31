@@ -29,20 +29,20 @@
 void ImageProviderTests::setup()
 {
     //use special cache
-    KImageCache *cache = new KImageCache( QLatin1String( "asu_tests_cache" ), 10485760 );
+    KImageCache *cache = new KImageCache(QLatin1String("asu_tests_cache"), 10485760);
     cache->clear();
 
     QEventLoop e;
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                QUrl( IMAGE_URL ),
-                                true,
-                                cache );
+    QImage image = i.loadImage(QLatin1String("mck182"),
+                               QUrl(IMAGE_URL),
+                               true,
+                               cache);
 
-    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
-            this, SLOT(onImageFetched(QString,QUrl,QImage)));
-    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
+    connect(&i, SIGNAL(imageLoaded(QString, QUrl, QImage)),
+            this, SLOT(onImageFetched(QString, QUrl, QImage)));
+    connect(&i, SIGNAL(imageLoaded(QString, QUrl, QImage)),
             &e, SLOT(quit()));
 
     //wait for the fetcher to finish
@@ -51,26 +51,26 @@ void ImageProviderTests::setup()
 
 void ImageProviderTests::testImageNoCache()
 {
-    KImageCache *cache = new KImageCache( QLatin1String( "asu_tests_cache" ), 10485760 );
+    KImageCache *cache = new KImageCache(QLatin1String("asu_tests_cache"), 10485760);
     cache->clear();
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                QUrl( IMAGE_URL ),
-                                true,
-                                cache);
+    QImage image = i.loadImage(QLatin1String("mck182"),
+                               QUrl(IMAGE_URL),
+                               true,
+                               cache);
 
-    QVERIFY( image.isNull() );
+    QVERIFY(image.isNull());
 }
 
 void ImageProviderTests::testImageInCache()
 {
     setup();
 
-    QVERIFY( !m_image.isNull() );
+    QVERIFY(!m_image.isNull());
 }
 
-void ImageProviderTests::onImageFetched( const QString &who, const QUrl &url, QImage image )
+void ImageProviderTests::onImageFetched(const QString &who, const QUrl &url, QImage image)
 {
     m_image = image;
     m_name = who;
@@ -81,22 +81,22 @@ void ImageProviderTests::testImageFetchingImage()
 {
     setup();
 
-    QVERIFY( !m_image.isNull() );
+    QVERIFY(!m_image.isNull());
 }
 
 void ImageProviderTests::testImageFetchingName()
 {
     setup();
 
-    QCOMPARE( m_name, QLatin1String( "mck182" ) );
+    QCOMPARE(m_name, QLatin1String("mck182"));
 }
 
 void ImageProviderTests::testImageFetchingUrl()
 {
     setup();
 
-    QCOMPARE( m_url, QUrl( IMAGE_URL ) );
+    QCOMPARE(m_url, QUrl(IMAGE_URL));
 }
 
-QTEST_MAIN( ImageProviderTests );
+QTEST_MAIN(ImageProviderTests);
 

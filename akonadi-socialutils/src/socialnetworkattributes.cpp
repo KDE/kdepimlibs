@@ -18,7 +18,6 @@
 
 #include "socialnetworkattributes.h"
 
-
 #include <QString>
 
 #if 0
@@ -28,81 +27,81 @@
 
 class Akonadi::SocialNetworkAttributesPrivate
 {
-  public:
+public:
     QVariantMap attributes;
 };
 
 Akonadi::SocialNetworkAttributes::SocialNetworkAttributes()
-  : d( new SocialNetworkAttributesPrivate() )
+    : d(new SocialNetworkAttributesPrivate())
 {
 }
 
-Akonadi::SocialNetworkAttributes::SocialNetworkAttributes( const QString &userName,
-                                                           const QString &networkName,
-                                                           bool canPublish,
-                                                           uint maxPostLength )
-  : d( new SocialNetworkAttributesPrivate() )
+Akonadi::SocialNetworkAttributes::SocialNetworkAttributes(const QString &userName,
+        const QString &networkName,
+        bool canPublish,
+        uint maxPostLength)
+    : d(new SocialNetworkAttributesPrivate())
 {
-  d->attributes[QLatin1String( "userName" )] = userName;
-  d->attributes[QLatin1String( "networkName" )] = networkName;
-  d->attributes[QLatin1String( "canPublish" )] = canPublish;
-  d->attributes[QLatin1String( "maxPostLength" )] = maxPostLength;
+    d->attributes[QLatin1String("userName")] = userName;
+    d->attributes[QLatin1String("networkName")] = networkName;
+    d->attributes[QLatin1String("canPublish")] = canPublish;
+    d->attributes[QLatin1String("maxPostLength")] = maxPostLength;
 }
 
 Akonadi::SocialNetworkAttributes::~SocialNetworkAttributes()
 {
-  delete d;
+    delete d;
 }
 
-void Akonadi::SocialNetworkAttributes::deserialize( const QByteArray &data )
+void Akonadi::SocialNetworkAttributes::deserialize(const QByteArray &data)
 {
 #if 0
-  QJson::Parser parser;
-  d->attributes = parser.parse(data).toMap();
+    QJson::Parser parser;
+    d->attributes = parser.parse(data).toMap();
 #endif
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
 #if 0
-  QJson::Serializer serializer;
-  return serializer.serialize( d->attributes );
+    QJson::Serializer serializer;
+    return serializer.serialize(d->attributes);
 #else
-  return QByteArray();
+    return QByteArray();
 #endif
 }
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 {
-  return
-    new SocialNetworkAttributes(
-      d->attributes[QLatin1String( "userName" )].toString(),
-      d->attributes[QLatin1String( "networkName" )].toString(),
-      d->attributes[QLatin1String( "canPublish" )].toBool(),
-      d->attributes[QLatin1String( "maxPostLength" )].toUInt() );
+    return
+        new SocialNetworkAttributes(
+            d->attributes[QLatin1String("userName")].toString(),
+            d->attributes[QLatin1String("networkName")].toString(),
+            d->attributes[QLatin1String("canPublish")].toBool(),
+            d->attributes[QLatin1String("maxPostLength")].toUInt());
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::type() const
 {
-  return QByteArray( "socialattributes" );
+    return QByteArray("socialattributes");
 }
 
 QString Akonadi::SocialNetworkAttributes::userName() const
 {
-  return d->attributes[QLatin1String( "userName" )].toString();
+    return d->attributes[QLatin1String("userName")].toString();
 }
 
 QString Akonadi::SocialNetworkAttributes::networkName() const
 {
-  return d->attributes[QLatin1String( "networkName" )].toString();
+    return d->attributes[QLatin1String("networkName")].toString();
 }
 
 bool Akonadi::SocialNetworkAttributes::canPublish() const
 {
-  return d->attributes[QLatin1String( "canPublish" )].toBool();
+    return d->attributes[QLatin1String("canPublish")].toBool();
 }
 
 uint Akonadi::SocialNetworkAttributes::maxPostLength() const
 {
-  return d->attributes[QLatin1String( "maxPostLength" )].toUInt();
+    return d->attributes[QLatin1String("maxPostLength")].toUInt();
 }

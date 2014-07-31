@@ -29,7 +29,7 @@
 
 class ImageProviderTests : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public Q_SLOTS:
     void onImageFetched(const QString &who, const QUrl &url, QImage image);

@@ -25,18 +25,19 @@
 
 #include "itemserializerplugin.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SocialFeedItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 {
-  Q_OBJECT
-  Q_INTERFACES( Akonadi::ItemSerializerPlugin )
-  Q_PLUGIN_METADATA( IID "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0" )
+    Q_OBJECT
+    Q_INTERFACES(Akonadi::ItemSerializerPlugin)
+    Q_PLUGIN_METADATA(IID "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0")
 
-  public:
-    bool deserialize( Item &item, const QByteArray &label, QIODevice &data, int version );
-    void serialize( const Item &item, const QByteArray &label, QIODevice &data, int &version );
-    QSet<QByteArray> parts( const Item &item ) const;
+public:
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
+    QSet<QByteArray> parts(const Item &item) const;
 };
 
 }

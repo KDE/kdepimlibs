@@ -27,217 +27,217 @@
 #endif
 
 Akonadi::SocialFeedItem::SocialFeedItem()
-  : d( new SocialFeedItemPrivate )
+    : d(new SocialFeedItemPrivate)
 {
 }
 
-Akonadi::SocialFeedItem::SocialFeedItem( const Akonadi::SocialFeedItem &other )
+Akonadi::SocialFeedItem::SocialFeedItem(const Akonadi::SocialFeedItem &other)
 {
-  d = other.d;
+    d = other.d;
 }
 
 Akonadi::SocialFeedItem::~SocialFeedItem()
 {
 }
 
-Akonadi::SocialFeedItem& Akonadi::SocialFeedItem::operator=(const Akonadi::SocialFeedItem& other)
+Akonadi::SocialFeedItem &Akonadi::SocialFeedItem::operator=(const Akonadi::SocialFeedItem &other)
 {
-  if ( this == &other ) {
-    return *this; //Protect against self-assignment
-  }
-  d = other.d;
-  return *this;
+    if (this == &other) {
+        return *this; //Protect against self-assignment
+    }
+    d = other.d;
+    return *this;
 }
 
 QString Akonadi::SocialFeedItem::networkString() const
 {
-  return d->networkString;
+    return d->networkString;
 }
 
-void Akonadi::SocialFeedItem::setNetworkString( const QString &networkString )
+void Akonadi::SocialFeedItem::setNetworkString(const QString &networkString)
 {
-  d->networkString = networkString;
+    d->networkString = networkString;
 }
 
 QString Akonadi::SocialFeedItem::postId() const
 {
-  return d->postId;
+    return d->postId;
 }
 
-void Akonadi::SocialFeedItem::setPostId( const QString &postId )
+void Akonadi::SocialFeedItem::setPostId(const QString &postId)
 {
-  d->postId = postId;
+    d->postId = postId;
 }
 
 QString Akonadi::SocialFeedItem::postText() const
 {
-  return d->postText;
+    return d->postText;
 }
 
-void Akonadi::SocialFeedItem::setPostText( const QString &postText )
+void Akonadi::SocialFeedItem::setPostText(const QString &postText)
 {
-  d->postText = postText;
+    d->postText = postText;
 }
 
 QUrl Akonadi::SocialFeedItem::postLink() const
 {
-  return d->postLink;
+    return d->postLink;
 }
 
-void Akonadi::SocialFeedItem::setPostLink( const QUrl &link )
+void Akonadi::SocialFeedItem::setPostLink(const QUrl &link)
 {
-  d->postLink = link;
+    d->postLink = link;
 }
 
 QString Akonadi::SocialFeedItem::postLinkTitle() const
 {
-  return d->postLinkTitle;
+    return d->postLinkTitle;
 }
 
-void Akonadi::SocialFeedItem::setPostLinkTitle( const QString &linkTitle )
+void Akonadi::SocialFeedItem::setPostLinkTitle(const QString &linkTitle)
 {
-  d->postLinkTitle = linkTitle;
+    d->postLinkTitle = linkTitle;
 }
 
 QUrl Akonadi::SocialFeedItem::postImageUrl() const
 {
-  return d->postImageUrl;
+    return d->postImageUrl;
 }
 
-void Akonadi::SocialFeedItem::setPostImageUrl( const QUrl &imageUrl )
+void Akonadi::SocialFeedItem::setPostImageUrl(const QUrl &imageUrl)
 {
-  d->postImageUrl = imageUrl;
+    d->postImageUrl = imageUrl;
 }
 
 KDateTime Akonadi::SocialFeedItem::postTime() const
 {
-  return d->postTime;
+    return d->postTime;
 }
 
 QString Akonadi::SocialFeedItem::postTimeString() const
 {
-  return d->postTimeString;
+    return d->postTimeString;
 }
 
 QString Akonadi::SocialFeedItem::postInfo() const
 {
-  return d->postInfo;
+    return d->postInfo;
 }
 
-void Akonadi::SocialFeedItem::setPostInfo( const QString &postInfo )
+void Akonadi::SocialFeedItem::setPostInfo(const QString &postInfo)
 {
-  d->postInfo = postInfo;
+    d->postInfo = postInfo;
 }
 
-void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString,
-                                           const QString &postTimeFormat )
+void Akonadi::SocialFeedItem::setPostTime(const QString &postTimeString,
+        const QString &postTimeFormat)
 {
-  d->postTimeString = postTimeString;
-  d->postTimeFormat = postTimeFormat;
-  d->postTime = KDateTime::fromString( d->postTimeString, d->postTimeFormat );
+    d->postTimeString = postTimeString;
+    d->postTimeFormat = postTimeFormat;
+    d->postTime = KDateTime::fromString(d->postTimeString, d->postTimeFormat);
 }
 
 QString Akonadi::SocialFeedItem::postTimeFormat() const
 {
-  return d->postTimeFormat;
+    return d->postTimeFormat;
 }
 
 QString Akonadi::SocialFeedItem::userId() const
 {
-  return d->userId;
+    return d->userId;
 }
 
-void Akonadi::SocialFeedItem::setUserId( const QString &userId )
+void Akonadi::SocialFeedItem::setUserId(const QString &userId)
 {
-  d->userId = userId;
+    d->userId = userId;
 }
 
 QString Akonadi::SocialFeedItem::userName() const
 {
-  return d->userName;
+    return d->userName;
 }
 
-void Akonadi::SocialFeedItem::setUserName( const QString &userName )
+void Akonadi::SocialFeedItem::setUserName(const QString &userName)
 {
-  d->userName = userName;
+    d->userName = userName;
 }
 
 QString Akonadi::SocialFeedItem::userDisplayName() const
 {
-  return d->userDisplayName;
+    return d->userDisplayName;
 }
 
-void Akonadi::SocialFeedItem::setUserDisplayName ( const QString &userDisplayName )
+void Akonadi::SocialFeedItem::setUserDisplayName(const QString &userDisplayName)
 {
-  d->userDisplayName = userDisplayName;
+    d->userDisplayName = userDisplayName;
 }
 
 bool Akonadi::SocialFeedItem::isShared() const
 {
-  return d->shared;
+    return d->shared;
 }
 
-void Akonadi::SocialFeedItem::setShared( bool shared )
+void Akonadi::SocialFeedItem::setShared(bool shared)
 {
-  d->shared = shared;
+    d->shared = shared;
 }
 
 QString Akonadi::SocialFeedItem::sharedFrom() const
 {
-  return d->sharedFrom;
+    return d->sharedFrom;
 }
 
-void Akonadi::SocialFeedItem::setSharedFrom( const QString &sharedFrom )
+void Akonadi::SocialFeedItem::setSharedFrom(const QString &sharedFrom)
 {
-  d->sharedFrom = sharedFrom;
+    d->sharedFrom = sharedFrom;
 }
 
 QString Akonadi::SocialFeedItem::sharedFromId() const
 {
-  return d->sharedFromId;
+    return d->sharedFromId;
 }
 
-void Akonadi::SocialFeedItem::setSharedFromId( const QString &sharedFromId )
+void Akonadi::SocialFeedItem::setSharedFromId(const QString &sharedFromId)
 {
-  d->sharedFromId = sharedFromId;
+    d->sharedFromId = sharedFromId;
 }
 
 QVariantMap Akonadi::SocialFeedItem::itemSourceMap() const
 {
-  return d->itemSourceMap;
+    return d->itemSourceMap;
 }
 
-void Akonadi::SocialFeedItem::setItemSourceMap( const QVariantMap &itemSourceMap )
+void Akonadi::SocialFeedItem::setItemSourceMap(const QVariantMap &itemSourceMap)
 {
-  d->itemSourceMap = itemSourceMap;
+    d->itemSourceMap = itemSourceMap;
 }
 
 QUrl Akonadi::SocialFeedItem::avatarUrl() const
 {
-  return d->avatarUrl;
+    return d->avatarUrl;
 }
 
-void Akonadi::SocialFeedItem::setAvatarUrl( const QUrl &url )
+void Akonadi::SocialFeedItem::setAvatarUrl(const QUrl &url)
 {
-  d->avatarUrl = url;
+    d->avatarUrl = url;
 }
 
 bool Akonadi::SocialFeedItem::isLiked() const
 {
-  return d->liked;
+    return d->liked;
 }
 
-void Akonadi::SocialFeedItem::setLiked( bool liked )
+void Akonadi::SocialFeedItem::setLiked(bool liked)
 {
-  d->liked = liked;
+    d->liked = liked;
 }
 
 QList<Akonadi::SocialFeedItem> Akonadi::SocialFeedItem::postReplies() const
 {
-  return d->replies;
+    return d->replies;
 }
 
-void Akonadi::SocialFeedItem::setPostReplies( const QList<Akonadi::SocialFeedItem> &replies )
+void Akonadi::SocialFeedItem::setPostReplies(const QList<Akonadi::SocialFeedItem> &replies)
 {
-  d->replies = replies;
+    d->replies = replies;
 }
