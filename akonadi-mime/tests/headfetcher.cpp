@@ -31,12 +31,16 @@
 
 #include <kmime/kmime_message.h>
 
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+
+
 #include <kurl.h>
 #include <klocale.h>
 
 #include <boost/shared_ptr.hpp>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 using namespace Akonadi;
 
@@ -73,15 +77,22 @@ void HeadFetcher::stop()
 
 int main( int argc, char* argv[] )
 {
-  KCmdLineArgs::init( argc, argv, "headfetcher", 0, ki18n("Headfetcher") ,"1.0" ,ki18n("header fetching application") );
+  KAboutData aboutData( QLatin1String("headfetcher"), i18n("Headfetcher") , QLatin1String("1.0" ));
+  aboutData.setShortDescription(i18n("header fetching application") );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("multipart"), i18n("Run test on multipart data (default is singlepart).")));
 
-  KCmdLineOptions options;
-  options.add("multipart", ki18n("Run test on multipart data (default is singlepart)."));
-  KCmdLineArgs::addCmdLineOptions( options );
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  bool multipart = args->isSet( "multipart" );
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  KApplication app( false );
+  bool multipart = parser.isSet( QLatin1String("multipart") );
+
 
   HeadFetcher d( multipart );
 
