@@ -20,7 +20,7 @@ include(KDEFrameworkCompilerSettings)
 
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
-set(KF5_VERSION "5.0.0")
+set(KF5_VERSION "5.1.0")
 set(KDEPIMLIBS_VERSION "4.70.0")
 
 find_package(Sasl2)
