@@ -25,14 +25,14 @@
 // DO NOT change include guards or namespace.
 
 //@cond PRIVATE
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 /**
   @internal
   @see super_class
 */
 template <typename Super>
-struct SuperClassTrait
-{
+struct SuperClassTrait {
     typedef Super Type;
 };
 

@@ -24,7 +24,8 @@
 
 /* Internal helper functions. Not part of the public API. */
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   Finds the header end in @p src. Aligns the @p dataBegin if needed.
@@ -32,7 +33,7 @@ namespace KMime {
   @param folded true if the headder is folded into multiple lines
   @returns the end index of the header, -1 if the @p dataBegin was -1.
 */
-extern int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folded = 0 );
+extern int findHeaderLineEnd(const QByteArray &src, int &dataBegin, bool *folded = 0);
 
 /**
   Finds the first header of type @p name in @p src.
@@ -41,20 +42,20 @@ extern int findHeaderLineEnd( const QByteArray &src, int &dataBegin, bool *folde
   @param folded true if the headder is folded into multiple lines
   @returns the begin index of the header, -1 if not found.
 */
-extern int indexOfHeader( const QByteArray &src, const QByteArray &name, int &end, int &dataBegin, bool *folded = 0 );
+extern int indexOfHeader(const QByteArray &src, const QByteArray &name, int &end, int &dataBegin, bool *folded = 0);
 
 /**
   Removes the first occurrence of the @p name from @p head.
 */
 // This is used in zero places at the moment.
-extern void removeHeader( QByteArray &head, const QByteArray &name );
+extern void removeHeader(QByteArray &head, const QByteArray &name);
 
 /**
  * Same as encodeRFC2047String(), but with a crucial difference: Instead of encoding the complete
  * string as a single encoded word, the string will be split up at control characters, and only parts of
  * the sentence that really need to be encoded will be encoded.
  */
-extern QByteArray encodeRFC2047Sentence( const QString &src, const QByteArray &charset );
+extern QByteArray encodeRFC2047Sentence(const QString &src, const QByteArray &charset);
 
 }
 

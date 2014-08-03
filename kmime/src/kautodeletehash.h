@@ -24,7 +24,8 @@
 
 #include <QtCore/QHash>
 
-namespace KMime {
+namespace KMime
+{
 
 /**
  * The KAutoDeleteHash class is a convenience QHash subclass that provides
@@ -49,25 +50,27 @@ template <class Key, class T>
 class KAutoDeleteHash : public QHash<Key, T *>
 {
 public:
-  /**
-   * Constructs an empty hash.
-   */
-  KAutoDeleteHash() {}
-  /**
-   * Constructs a copy of @p other (which can be a QHash or a KAutoDeleteHash).
-   */
-  KAutoDeleteHash( const QHash<Key, T *> &other ) : QHash<Key, T *>( other ) {}
+    /**
+     * Constructs an empty hash.
+     */
+    KAutoDeleteHash() {}
+    /**
+     * Constructs a copy of @p other (which can be a QHash or a KAutoDeleteHash).
+     */
+    KAutoDeleteHash(const QHash<Key, T *> &other) : QHash<Key, T *>(other) {}
 
-  /**
-   * Destroys the hash and deletes all values. References to the values in the
-   * hash and all iterators of this hash become invalid.
-   */
-  ~KAutoDeleteHash() { while ( ! QHash<Key, T *>::isEmpty() ) {
-                         T *value = *QHash<Key, T *>::begin();
-                         this->erase( QHash<Key, T *>::begin() );
-                         delete value;
-                       }
-                     }
+    /**
+     * Destroys the hash and deletes all values. References to the values in the
+     * hash and all iterators of this hash become invalid.
+     */
+    ~KAutoDeleteHash()
+    {
+        while (! QHash<Key, T *>::isEmpty()) {
+            T *value = *QHash<Key, T *>::begin();
+            this->erase(QHash<Key, T *>::begin());
+            delete value;
+        }
+    }
 };
 
 } // namespace KMime

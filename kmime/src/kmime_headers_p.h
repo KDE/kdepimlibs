@@ -23,16 +23,18 @@
 //@cond PRIVATE
 
 #define kmime_mk_empty_private( subclass, base ) \
-class subclass##Private : public base##Private {};
+    class subclass##Private : public base##Private {};
 
-namespace KMime {
+namespace KMime
+{
 
-namespace Headers {
+namespace Headers
+{
 
 class BasePrivate
 {
-  public:
-    BasePrivate() : parent( 0 ) {}
+public:
+    BasePrivate() : parent(0) {}
 
     virtual ~BasePrivate() {}
 
@@ -40,61 +42,62 @@ class BasePrivate
     QByteArray encCS;
 };
 
-namespace Generics {
+namespace Generics
+{
 
 class UnstructuredPrivate : public BasePrivate
 {
-  public:
+public:
     QString decoded;
 };
 
-kmime_mk_empty_private( Structured, Base )
-kmime_mk_empty_private( Address, Structured )
+kmime_mk_empty_private(Structured, Base)
+kmime_mk_empty_private(Address, Structured)
 
 class MailboxListPrivate : public AddressPrivate
 {
-  public:
+public:
     QList<Types::Mailbox> mailboxList;
 };
 
-kmime_mk_empty_private( SingleMailbox, MailboxList )
+kmime_mk_empty_private(SingleMailbox, MailboxList)
 
 class AddressListPrivate : public AddressPrivate
 {
-  public:
+public:
     QList<Types::Address> addressList;
 };
 
 class IdentPrivate : public AddressPrivate
 {
-  public:
+public:
     QList<Types::AddrSpec> msgIdList;
     mutable QByteArray cachedIdentifier;
 };
 
-kmime_mk_empty_private( SingleIdent, Ident )
+kmime_mk_empty_private(SingleIdent, Ident)
 
 class TokenPrivate : public StructuredPrivate
 {
-  public:
+public:
     QByteArray token;
 };
 
 class PhraseListPrivate : public StructuredPrivate
 {
-  public:
+public:
     QStringList phraseList;
 };
 
 class DotAtomPrivate : public StructuredPrivate
 {
-  public:
+public:
     QString dotAtom;
 };
 
 class ParametrizedPrivate : public StructuredPrivate
 {
-  public:
+public:
     QMap<QString, QString> parameterHash;
 };
 
@@ -102,44 +105,44 @@ class ParametrizedPrivate : public StructuredPrivate
 
 class ReturnPathPrivate : public Generics::AddressPrivate
 {
-  public:
+public:
     Types::Mailbox mailbox;
 };
 
 class MailCopiesToPrivate : public Generics::AddressListPrivate
 {
-  public:
+public:
     bool alwaysCopy;
     bool neverCopy;
 };
 
 class ContentTransferEncodingPrivate : public Generics::TokenPrivate
 {
-  public:
+public:
     contentEncoding cte;
     bool decoded;
 };
 
 class ContentTypePrivate : public Generics::ParametrizedPrivate
 {
-  public:
+public:
     QByteArray mimeType;
     contentCategory category;
 };
 
 class ContentDispositionPrivate : public Generics::ParametrizedPrivate
 {
-  public:
+public:
     contentDisposition disposition;
 };
 
 class GenericPrivate : public Generics::UnstructuredPrivate
 {
-  public:
-    GenericPrivate() : type( 0 ) {}
+public:
+    GenericPrivate() : type(0) {}
     ~GenericPrivate()
     {
-      delete[] type;
+        delete[] type;
     }
 
     char *type;
@@ -147,30 +150,30 @@ class GenericPrivate : public Generics::UnstructuredPrivate
 
 class ControlPrivate : public Generics::StructuredPrivate
 {
-  public:
+public:
     QByteArray name;
     QByteArray parameter;
 };
 
 class DatePrivate : public Generics::StructuredPrivate
 {
-  public:
+public:
     QDateTime dateTime;
 };
 
 class NewsgroupsPrivate : public Generics::StructuredPrivate
 {
-  public:
+public:
     QList<QByteArray> groups;
 };
 
 class LinesPrivate : public Generics::StructuredPrivate
 {
-  public:
+public:
     int lines;
 };
 
-kmime_mk_empty_private( ContentID, Generics::SingleIdent )
+kmime_mk_empty_private(ContentID, Generics::SingleIdent)
 }
 
 }

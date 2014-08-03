@@ -46,49 +46,47 @@ using namespace KMime;
  */
 class KMime::HeaderFactoryPrivate
 {
-  public:
+public:
     HeaderFactoryPrivate();
     ~HeaderFactoryPrivate();
 
     HeaderFactory *const instance;
-    QHash<QByteArray, HeaderMakerBase*> headerMakers; // Type->obj mapping; with lower-case type.
+    QHash<QByteArray, HeaderMakerBase *> headerMakers; // Type->obj mapping; with lower-case type.
 };
 
-Q_GLOBAL_STATIC( HeaderFactoryPrivate, sInstance )
+Q_GLOBAL_STATIC(HeaderFactoryPrivate, sInstance)
 
 HeaderFactoryPrivate::HeaderFactoryPrivate()
-  : instance( new HeaderFactory( this ) )
+    : instance(new HeaderFactory(this))
 {
 }
 
 HeaderFactoryPrivate::~HeaderFactoryPrivate()
 {
-  qDeleteAll( headerMakers );
-  delete instance;
+    qDeleteAll(headerMakers);
+    delete instance;
 }
 
-
-
-HeaderFactory* HeaderFactory::self()
+HeaderFactory *HeaderFactory::self()
 {
-  return sInstance->instance;
+    return sInstance->instance;
 }
 
-Headers::Base *HeaderFactory::createHeader( const QByteArray &type )
+Headers::Base *HeaderFactory::createHeader(const QByteArray &type)
 {
-  Q_ASSERT( !type.isEmpty() );
-  const HeaderMakerBase *maker = d->headerMakers.value( type.toLower() );
-  if ( maker ) {
-    return maker->create();
-  } else {
-    //qCritical() << "Unknown header type" << type;
-    //return new Headers::Generic;
-    return 0;
-  }
+    Q_ASSERT(!type.isEmpty());
+    const HeaderMakerBase *maker = d->headerMakers.value(type.toLower());
+    if (maker) {
+        return maker->create();
+    } else {
+        //qCritical() << "Unknown header type" << type;
+        //return new Headers::Generic;
+        return 0;
+    }
 }
 
-HeaderFactory::HeaderFactory( HeaderFactoryPrivate *dd )
-  : d( dd )
+HeaderFactory::HeaderFactory(HeaderFactoryPrivate *dd)
+    : d(dd)
 {
 }
 
@@ -96,20 +94,20 @@ HeaderFactory::~HeaderFactory()
 {
 }
 
-bool HeaderFactory::registerHeaderMaker( const QByteArray &type, HeaderMakerBase *maker )
+bool HeaderFactory::registerHeaderMaker(const QByteArray &type, HeaderMakerBase *maker)
 {
-  if ( type.isEmpty() ) {
-    // This is probably a generic (but not abstract) header,
-    // like Address or MailboxList.  We cannot register those.
-    qWarning() << "Tried to register header with empty type.";
-    return false;
-  }
-  const QByteArray ltype = type.toLower();
-  if ( d->headerMakers.contains( ltype ) ) {
-    qWarning() << "Header of type" << type << "already registered.";
-    // TODO should we make this an error?
-    return false;
-  }
-  d->headerMakers.insert( ltype, maker );
-  return true;
+    if (type.isEmpty()) {
+        // This is probably a generic (but not abstract) header,
+        // like Address or MailboxList.  We cannot register those.
+        qWarning() << "Tried to register header with empty type.";
+        return false;
+    }
+    const QByteArray ltype = type.toLower();
+    if (d->headerMakers.contains(ltype)) {
+        qWarning() << "Header of type" << type << "already registered.";
+        // TODO should we make this an error?
+        return false;
+    }
+    d->headerMakers.insert(ltype, maker);
+    return true;
 }

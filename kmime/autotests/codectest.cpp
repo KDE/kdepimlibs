@@ -26,77 +26,77 @@
 #include <QDir>
 using namespace KMime;
 
-QTEST_MAIN( CodecTest )
+QTEST_MAIN(CodecTest)
 
 enum Mode { Decode, Encode };
-Q_DECLARE_METATYPE( Mode )
+Q_DECLARE_METATYPE(Mode)
 
 void CodecTest::testCodecs_data()
 {
-  QTest::addColumn<QByteArray>( "input" );
-  QTest::addColumn<QByteArray>( "expResult" );
-  QTest::addColumn<QByteArray>( "codecName" );
-  QTest::addColumn<QString>( "tag" );
-  QTest::addColumn<Mode>( "mode" );
+    QTest::addColumn<QByteArray>("input");
+    QTest::addColumn<QByteArray>("expResult");
+    QTest::addColumn<QByteArray>("codecName");
+    QTest::addColumn<QString>("tag");
+    QTest::addColumn<Mode>("mode");
 
-  QDir codecBaseDir( QLatin1String(TEST_DATA_DIR) );
-  foreach ( const QString &dir, codecBaseDir.entryList( QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
-                                                        QDir::NoSort ) ) {
-    if ( dir.toLower().startsWith( QLatin1String("codec_") ) ) {
-      const QString codecName = dir.right( dir.size() - 6 );
-      QDir codecDir( QLatin1String(TEST_DATA_DIR) + QLatin1String("/") + dir );
-      foreach ( const QString &file, codecDir.entryList( QStringList(), QDir::Files, QDir::NoSort ) ) {
-        if ( file.toLower().endsWith( QLatin1String(".expected") ) ) {
-          const QString dataFileNameBase = file.left( file.size() - 9 );
-          QFile dataFile( codecDir.path() + QLatin1Char('/') + dataFileNameBase );
-          QFile expectedFile( codecDir.path() + QLatin1Char('/') + file );
-          QVERIFY( dataFile.open( QIODevice::ReadOnly ) );
-          QVERIFY( expectedFile.open( QIODevice::ReadOnly ) );
+    QDir codecBaseDir(QLatin1String(TEST_DATA_DIR));
+    foreach (const QString &dir, codecBaseDir.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot,
+             QDir::NoSort)) {
+        if (dir.toLower().startsWith(QLatin1String("codec_"))) {
+            const QString codecName = dir.right(dir.size() - 6);
+            QDir codecDir(QLatin1String(TEST_DATA_DIR) + QLatin1String("/") + dir);
+            foreach (const QString &file, codecDir.entryList(QStringList(), QDir::Files, QDir::NoSort)) {
+                if (file.toLower().endsWith(QLatin1String(".expected"))) {
+                    const QString dataFileNameBase = file.left(file.size() - 9);
+                    QFile dataFile(codecDir.path() + QLatin1Char('/') + dataFileNameBase);
+                    QFile expectedFile(codecDir.path() + QLatin1Char('/') + file);
+                    QVERIFY(dataFile.open(QIODevice::ReadOnly));
+                    QVERIFY(expectedFile.open(QIODevice::ReadOnly));
 
-          Mode mode = Decode;
-          if ( file.contains( QLatin1String("-decode") ) ) {
-            mode = Decode;
-          } else if ( file.contains( QLatin1String("-encode") ) ) {
-            mode = Encode;
-          }
+                    Mode mode = Decode;
+                    if (file.contains(QLatin1String("-decode"))) {
+                        mode = Decode;
+                    } else if (file.contains(QLatin1String("-encode"))) {
+                        mode = Encode;
+                    }
 
-          const QByteArray data = dataFile.readAll();
-          const QByteArray expected = expectedFile.readAll();
+                    const QByteArray data = dataFile.readAll();
+                    const QByteArray expected = expectedFile.readAll();
 
-          const QString tag = codecName + QLatin1Char('/') + dataFileNameBase;
-          QTest::newRow( tag.toLatin1().constData() ) << data << expected << codecName.toAscii() << tag  << mode;
+                    const QString tag = codecName + QLatin1Char('/') + dataFileNameBase;
+                    QTest::newRow(tag.toLatin1().constData()) << data << expected << codecName.toAscii() << tag  << mode;
 
-          dataFile.close();
-          expectedFile.close();
+                    dataFile.close();
+                    expectedFile.close();
+                }
+            }
         }
-      }
     }
-  }
 }
 
 void CodecTest::testCodecs()
 {
-  QFETCH( QByteArray, input );
-  QFETCH( QByteArray, expResult );
-  QFETCH( QByteArray, codecName );
-  QFETCH( QString, tag );
-  QFETCH( Mode, mode );
+    QFETCH(QByteArray, input);
+    QFETCH(QByteArray, expResult);
+    QFETCH(QByteArray, codecName);
+    QFETCH(QString, tag);
+    QFETCH(Mode, mode);
 
-  Codec * codec = Codec::codecForName( codecName );
-  QVERIFY( codec );
+    Codec *codec = Codec::codecForName(codecName);
+    QVERIFY(codec);
 
-  QStringList blacklistedTags;
-  if ( blacklistedTags.contains( tag ) ) {
-    QEXPECT_FAIL( tag.toLatin1().constData(), "Codec broken", Continue );
-  }
+    QStringList blacklistedTags;
+    if (blacklistedTags.contains(tag)) {
+        QEXPECT_FAIL(tag.toLatin1().constData(), "Codec broken", Continue);
+    }
 
-  QByteArray result;
-  if ( mode == Decode ) {
-    result = codec->decode( input, false );
-  }
-  else
-    result = codec->encode( input, false );
+    QByteArray result;
+    if (mode == Decode) {
+        result = codec->decode(input, false);
+    } else {
+        result = codec->encode(input, false);
+    }
 
-  QCOMPARE( result, expResult );
+    QCOMPARE(result, expResult);
 }
 

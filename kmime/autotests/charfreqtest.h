@@ -23,8 +23,8 @@
 
 class CharFreqTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void test8bitData();
     void test8bitText();
     void test7bitData();

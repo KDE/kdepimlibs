@@ -52,7 +52,8 @@
 #include <QtCore/QString>
 #include "kmime_export.h"
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -69,17 +70,17 @@ namespace KMime {
 */
 class KMIME_EXPORT DateFormatter
 {
-  public:
+public:
     /**
       The different types of date formats.
     */
     enum FormatType {
-      CTime,      /**< ctime "Sun Mar 31 02:08:35 2002" */
-      Localized,  /**< localized "2002-03-31 02:08" */
-      Fancy,      /**< fancy "Today 02:08:35" */
-      Iso,        /**< iso  "2002-03-31 02:08:35" */
-      Rfc,        /**< rfc  "Sun, 31 Mar 2002 02:08:35 -0500" */
-      Custom      /**< custom "whatever you like" */
+        CTime,      /**< ctime "Sun Mar 31 02:08:35 2002" */
+        Localized,  /**< localized "2002-03-31 02:08" */
+        Fancy,      /**< fancy "Today 02:08:35" */
+        Iso,        /**< iso  "2002-03-31 02:08:35" */
+        Rfc,        /**< rfc  "Sun, 31 Mar 2002 02:08:35 -0500" */
+        Custom      /**< custom "whatever you like" */
     };
 
     /**
@@ -87,7 +88,7 @@ class KMIME_EXPORT DateFormatter
 
       @param ftype is the default #FormatType to use.
     */
-    explicit DateFormatter( FormatType ftype=DateFormatter::Fancy );
+    explicit DateFormatter(FormatType ftype = DateFormatter::Fancy);
 
     /**
       Destroys the date formatter.
@@ -108,7 +109,7 @@ class KMIME_EXPORT DateFormatter
 
       @see format().
     */
-    void setFormat( FormatType ftype );
+    void setFormat(FormatType ftype);
 
     /**
       Constructs a formatted date string from time_t @p t.
@@ -122,8 +123,8 @@ class KMIME_EXPORT DateFormatter
 
       @return a QString containing the formatted date.
     */
-    QString dateString( time_t t, const QString &lang=QString(),
-                        bool shortFormat=true, bool includeSecs=false ) const;
+    QString dateString(time_t t, const QString &lang = QString(),
+                       bool shortFormat = true, bool includeSecs = false) const;
 
     /**
       Constructs a formatted date string from QDateTime @p dtime.
@@ -137,8 +138,8 @@ class KMIME_EXPORT DateFormatter
 
       @return a QString containing the formatted date.
     */
-    QString dateString( const QDateTime &dtime, const QString &lang=QString(),
-                        bool shortFormat=true, bool includeSecs=false ) const;
+    QString dateString(const QDateTime &dtime, const QString &lang = QString(),
+                       bool shortFormat = true, bool includeSecs = false) const;
 
     /**
       Sets the custom format for date to string conversions to @p format.
@@ -150,7 +151,7 @@ class KMIME_EXPORT DateFormatter
 
       @see QDateTime::toString(), customFormat().
     */
-    void setCustomFormat( const QString &format );
+    void setCustomFormat(const QString &format);
 
     /**
       Returns the custom format string.
@@ -181,10 +182,10 @@ class KMIME_EXPORT DateFormatter
 
       @return a QString containing the formatted date.
     */
-    static QString formatDate( DateFormatter::FormatType ftype, time_t t,
-                               const QString &data=QString(),
-                               bool shortFormat=true,
-                               bool includeSecs=false );
+    static QString formatDate(DateFormatter::FormatType ftype, time_t t,
+                              const QString &data = QString(),
+                              bool shortFormat = true,
+                              bool includeSecs = false);
 
     /**
       Convenience function, same as formatDate() but returns the current time
@@ -200,24 +201,24 @@ class KMIME_EXPORT DateFormatter
 
       @return a QString containing the formatted date.
     */
-    static QString formatCurrentDate( DateFormatter::FormatType ftype,
-                                      const QString &data=QString(),
-                                      bool shortFormat=true,
-                                      bool includeSecs=false );
+    static QString formatCurrentDate(DateFormatter::FormatType ftype,
+                                     const QString &data = QString(),
+                                     bool shortFormat = true,
+                                     bool includeSecs = false);
 
     /**
       Returns true if the current time is on daylight savings time; else false.
     */
     static bool isDaylight();
 
-  protected:
+protected:
     /**
       Returns a QString containing the specified time_t @p t formatted
       using the #Fancy #FormatType.
 
       @param t is the time_t to use for formatting.
     */
-    QString fancy( time_t t ) const ;
+    QString fancy(time_t t) const ;
 
     /**
       Returns a QString containing the specified time_t @p t formatted
@@ -228,9 +229,9 @@ class KMIME_EXPORT DateFormatter
       @param includeSecs if true, include the seconds field in the date string.
       @param lang is a QString containing the language to use.
     */
-    QString localized( time_t t, bool shortFormat=true,
-                       bool includeSecs=false,
-                       const QString &lang=QString() ) const;
+    QString localized(time_t t, bool shortFormat = true,
+                      bool includeSecs = false,
+                      const QString &lang = QString()) const;
 
     /**
       Returns a QString containing the specified time_t @p t formatted
@@ -238,7 +239,7 @@ class KMIME_EXPORT DateFormatter
 
       @param t is the time_t to use for formatting.
     */
-    QString cTime( time_t t ) const;
+    QString cTime(time_t t) const;
 
     /**
       Returns a QString containing the specified time_t @p t in the
@@ -246,7 +247,7 @@ class KMIME_EXPORT DateFormatter
 
       @param t is the time_t to use for formatting.
     */
-    QString isoDate( time_t t ) const;
+    QString isoDate(time_t t) const;
 
     /**
       Returns a QString containing the specified time_t @p t in the
@@ -254,7 +255,7 @@ class KMIME_EXPORT DateFormatter
 
       @param t is the time_t to use for formatting.
     */
-    QString rfc2822( time_t t ) const;
+    QString rfc2822(time_t t) const;
 
     /**
       Returns a QString containing the specified time_t @p t formatted
@@ -262,7 +263,7 @@ class KMIME_EXPORT DateFormatter
 
       @param t time used for formatting
     */
-    QString custom( time_t t ) const;
+    QString custom(time_t t) const;
 
     /**
       Returns a QString that identifies the timezone (eg."-0500")
@@ -270,7 +271,7 @@ class KMIME_EXPORT DateFormatter
 
       @param t time to compute timezone from.
     */
-    QByteArray zone( time_t t ) const;
+    QByteArray zone(time_t t) const;
 
     /**
       Converts QDateTime @p dt to a time_t value.
@@ -278,9 +279,9 @@ class KMIME_EXPORT DateFormatter
       @param dt is the QDateTime to be converted.
       @return the time_t equivalent of the specified QDateTime.
     */
-    time_t qdateToTimeT( const QDateTime &dt ) const;
+    time_t qdateToTimeT(const QDateTime &dt) const;
 
-  private:
+private:
     //@cond PRIVATE
     FormatType          mFormat;
     mutable time_t      mTodayOneSecondBeforeMidnight;

@@ -40,8 +40,8 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
 
-
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -53,7 +53,7 @@ namespace KMime {
 */
 class KMIME_EXPORT ContentIndex
 {
-  public:
+public:
     /**
       Creates an empty content index.
     */
@@ -65,12 +65,12 @@ class KMIME_EXPORT ContentIndex
       @param index is a string representation of a message part index according
       to @ref RFC3501 section 6.4.5.
     */
-    explicit ContentIndex( const QString &index );
+    explicit ContentIndex(const QString &index);
 
     /**
       Copy constructor.
     */
-    ContentIndex( const ContentIndex &other );
+    ContentIndex(const ContentIndex &other);
 
     /**
       Destructor.
@@ -98,7 +98,7 @@ class KMIME_EXPORT ContentIndex
 
       @see pop().
     */
-    void push( unsigned int index );
+    void push(unsigned int index);
 
     /**
       Returns a string representation of this content index according
@@ -111,21 +111,21 @@ class KMIME_EXPORT ContentIndex
 
       @param index is the content index to compare.
     */
-    bool operator==( const ContentIndex &index ) const;
+    bool operator==(const ContentIndex &index) const;
 
     /**
       Compares this with @p index for inequality.
 
       @param index is the content index to compare.
     */
-    bool operator!=( const ContentIndex &index ) const;
+    bool operator!=(const ContentIndex &index) const;
 
     /**
       Assignment operator.
     */
-    ContentIndex& operator=( const ContentIndex &other );
+    ContentIndex &operator=(const ContentIndex &other);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
@@ -134,6 +134,6 @@ class KMIME_EXPORT ContentIndex
 
 }  //namespace KMime
 
-KMIME_EXPORT uint qHash( const KMime::ContentIndex& );
+KMIME_EXPORT uint qHash(const KMime::ContentIndex &);
 
 #endif

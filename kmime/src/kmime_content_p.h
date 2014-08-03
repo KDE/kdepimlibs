@@ -24,35 +24,37 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace KMime {
-  class Message;
-  typedef boost::shared_ptr<Message> MessagePtr;
+namespace KMime
+{
+class Message;
+typedef boost::shared_ptr<Message> MessagePtr;
 }
 
-namespace KMime {
+namespace KMime
+{
 
 class ContentPrivate
 {
-  public:
-    explicit ContentPrivate( Content *q ) :
-      parent( 0 ),
-      q_ptr( q ),
-      forceDefaultCS( false ),
-      frozen( false )
+public:
+    explicit ContentPrivate(Content *q) :
+        parent(0),
+        q_ptr(q),
+        forceDefaultCS(false),
+        frozen(false)
     {
-      defaultCS = KMime::cachedCharset( "ISO-8859-1" );
+        defaultCS = KMime::cachedCharset("ISO-8859-1");
     }
 
     virtual ~ContentPrivate()
     {
-      qDeleteAll( multipartContents );
-      multipartContents.clear();
+        qDeleteAll(multipartContents);
+        multipartContents.clear();
     }
 
     bool parseUuencoded();
     bool parseYenc();
     bool parseMultipart();
-    Headers::Generic *nextHeader( QByteArray &head );
+    Headers::Generic *nextHeader(QByteArray &head);
     void clearBodyMessage();
 
     // This one returns the normal multipartContents for multipart contents, but returns
@@ -71,8 +73,8 @@ class ContentPrivate
     Content::List multipartContents;
     MessagePtr bodyAsMessage;
 
-    Content* q_ptr;
-    Q_DECLARE_PUBLIC( Content )
+    Content *q_ptr;
+    Q_DECLARE_PUBLIC(Content)
 
     bool forceDefaultCS : 1;
     bool frozen : 1;

@@ -48,7 +48,8 @@
 
 #include "kmime_codecs.h"
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -57,14 +58,14 @@ namespace KMime {
 */
 class KMIME_EXPORT QuotedPrintableCodec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a QuotedPrintable codec.
     */
     QuotedPrintableCodec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -75,38 +76,41 @@ class KMIME_EXPORT QuotedPrintableCodec : public Codec
       Codec::name()
     */
     const char *name() const
-      { return "quoted-printable"; }
+    {
+        return "quoted-printable";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      { // all chars encoded:
-        int result = 3*insize;
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        // all chars encoded:
+        int result = 3 * insize;
         // then after 25 hexchars comes a soft linebreak: =(\r)\n
-        result += ( withCRLF ? 3 : 2 ) * ( insize / 25 );
+        result += (withCRLF ? 3 : 2) * (insize / 25);
 
         return result;
-      }
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const;
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeDecoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 /**
@@ -116,14 +120,14 @@ class KMIME_EXPORT QuotedPrintableCodec : public Codec
 */
 class KMIME_EXPORT Rfc2047QEncodingCodec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a RFC2047Q codec.
     */
     Rfc2047QEncodingCodec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -134,37 +138,39 @@ class KMIME_EXPORT Rfc2047QEncodingCodec : public Codec
       Codec::name()
     */
     const char *name() const
-      { return "q"; }
+    {
+        return "q";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      {
-        Q_UNUSED( withCRLF );
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
         // this one is simple: We don't do linebreaking, so all that can
         // happen is that every char needs encoding, so:
         return 3 * insize;
-      }
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const;
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeDecoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 /**
@@ -173,14 +179,14 @@ class KMIME_EXPORT Rfc2047QEncodingCodec : public Codec
 */
 class KMIME_EXPORT Rfc2231EncodingCodec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a RFC2231 codec.
     */
     Rfc2231EncodingCodec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -191,36 +197,38 @@ class KMIME_EXPORT Rfc2231EncodingCodec : public Codec
       Codec::name()
     */
     const char *name() const
-      { return "x-kmime-rfc2231"; }
+    {
+        return "x-kmime-rfc2231";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      {
-        Q_UNUSED( withCRLF );
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
         // same as for "q" encoding:
         return 3 * insize;
-      }
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const;
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeDecoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 } // namespace KMime

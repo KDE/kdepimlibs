@@ -62,10 +62,10 @@
 
 #include <QtCore/QByteArray>
 
-
 #include "kmime_export.h"
 #include <QDebug>
-namespace KMime {
+namespace KMime
+{
 
 template <class Key, class T> class KAutoDeleteHash;
 
@@ -81,7 +81,7 @@ class Decoder;
 */
 class KMIME_EXPORT Codec
 {
-  protected:
+protected:
     //@cond PRIVATE
     static KAutoDeleteHash<QByteArray, Codec> *all;
     static void cleanupCodec();
@@ -91,20 +91,20 @@ class KMIME_EXPORT Codec
     */
     Codec() {}
 
-  public:
+public:
     /**
       Returns a codec associated with the specified @p name.
 
       @param name points to a character string containing a valid codec name.
     */
-    static Codec *codecForName( const char *name );
+    static Codec *codecForName(const char *name);
 
     /**
       Returns a codec associated with the specified @p name.
 
       @param name is a QByteArray containing a valid codec name.
     */
-    static Codec *codecForName( const QByteArray &name );
+    static Codec *codecForName(const QByteArray &name);
 
     /**
       Computes the maximum size, in characters, needed for the encoding.
@@ -114,7 +114,7 @@ class KMIME_EXPORT Codec
 
       @return the maximum number of characters in the encoding.
     */
-    virtual int maxEncodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+    virtual int maxEncodedSizeFor(int insize, bool withCRLF = false) const = 0;
 
     /**
       Computes the maximum size, in characters, needed for the deccoding.
@@ -124,7 +124,7 @@ class KMIME_EXPORT Codec
 
       @return the maximum number of characters in the decoding.
     */
-    virtual int maxDecodedSizeFor( int insize, bool withCRLF=false ) const = 0;
+    virtual int maxDecodedSizeFor(int insize, bool withCRLF = false) const = 0;
 
     /**
       Creates the encoder for the codec.
@@ -133,7 +133,7 @@ class KMIME_EXPORT Codec
 
       @return a pointer to an instance of the codec's encoder.
     */
-    virtual Encoder *makeEncoder( bool withCRLF=false ) const = 0;
+    virtual Encoder *makeEncoder(bool withCRLF = false) const = 0;
 
     /**
       Creates the decoder for the codec.
@@ -142,7 +142,7 @@ class KMIME_EXPORT Codec
 
       @return a pointer to an instance of the codec's decoder.
     */
-    virtual Decoder *makeDecoder( bool withCRLF=false ) const = 0;
+    virtual Decoder *makeDecoder(bool withCRLF = false) const = 0;
 
     /**
       Convenience wrapper that can be used for small chunks of data
@@ -178,9 +178,9 @@ class KMIME_EXPORT Codec
       @return false if the encoded data didn't fit into the output buffer;
       true otherwise.
     */
-    virtual bool encode( const char* &scursor, const char * const send,
-                         char* &dcursor, const char * const dend,
-                         bool withCRLF=false ) const;
+    virtual bool encode(const char *&scursor, const char *const send,
+                        char *&dcursor, const char *const dend,
+                        bool withCRLF = false) const;
 
     /**
       Convenience wrapper that can be used for small chunks of data
@@ -216,9 +216,9 @@ class KMIME_EXPORT Codec
       @return false if the decoded data didn't fit into the output buffer;
       true otherwise.
     */
-    virtual bool decode( const char* &scursor, const char * const send,
-                         char* &dcursor, const char * const dend,
-                         bool withCRLF=false ) const;
+    virtual bool decode(const char *&scursor, const char *const send,
+                        char *&dcursor, const char *const dend,
+                        bool withCRLF = false) const;
 
     /**
       Even more convenient, but also a bit slower and more memory
@@ -230,7 +230,7 @@ class KMIME_EXPORT Codec
       @param src is a QByteArray containing the data to encode.
       @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
     */
-    virtual QByteArray encode( const QByteArray &src, bool withCRLF=false ) const;
+    virtual QByteArray encode(const QByteArray &src, bool withCRLF = false) const;
 
     /**
       Even more convenient, but also a bit slower and more memory
@@ -242,7 +242,7 @@ class KMIME_EXPORT Codec
       @param src is a QByteArray containing the data to decode.
       @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
     */
-    virtual QByteArray decode( const QByteArray &src, bool withCRLF=false ) const;
+    virtual QByteArray decode(const QByteArray &src, bool withCRLF = false) const;
 
     /**
       Returns the name of the encoding. Guaranteed to be lowercase.
@@ -254,7 +254,7 @@ class KMIME_EXPORT Codec
     */
     virtual ~Codec() {}
 
-  private:
+private:
     /**
       Fills the KAutoDeleteHash with all the supported codecs.
     */
@@ -339,7 +339,7 @@ class KMIME_EXPORT Codec
 */
 class Decoder
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Protected constructor. Use KMime::Codec::makeDecoder to create an
@@ -347,10 +347,10 @@ class Decoder
 
       @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
     */
-    Decoder( bool withCRLF=false )
-      : mWithCRLF( withCRLF ) {}
+    Decoder(bool withCRLF = false)
+        : mWithCRLF(withCRLF) {}
 
-  public:
+public:
     /**
       Destroys the decoder.
     */
@@ -365,8 +365,8 @@ class Decoder
       @param dcursor is a pointer to the start of the output buffer.
       @param dend is a pointer to the end of the output buffer.
     */
-    virtual bool decode( const char* &scursor, const char * const send,
-                         char* &dcursor, const char * const dend ) = 0;
+    virtual bool decode(const char *&scursor, const char *const send,
+                        char *&dcursor, const char *const dend) = 0;
 
     /**
       Call this method to finalize the output stream. Writes all
@@ -376,9 +376,9 @@ class Decoder
       @param dcursor is a pointer to the start of the output buffer.
       @param dend is a pointer to the end of the output buffer.
     */
-    virtual bool finish( char* &dcursor, const char * const dend ) = 0;
+    virtual bool finish(char *&dcursor, const char *const dend) = 0;
 
-  protected:
+protected:
     //@cond PRIVATE
     const bool mWithCRLF;
     //@endcond
@@ -392,17 +392,17 @@ class Decoder
 */
 class Encoder
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Protected constructor. Use KMime::Codec::makeEncoder if you want one.
 
       @param withCRLF if true, make the newlines @ref CRLF; else use @ref LF.
     */
-    explicit Encoder( bool withCRLF=false )
-      : mOutputBufferCursor( 0 ), mWithCRLF( withCRLF ) {}
+    explicit Encoder(bool withCRLF = false)
+        : mOutputBufferCursor(0), mWithCRLF(withCRLF) {}
 
-  public:
+public:
     /**
       Destroys the encoder.
     */
@@ -417,8 +417,8 @@ class Encoder
       @param dcursor is a pointer to the start of the output buffer.
       @param dend is a pointer to the end of the output buffer.
     */
-    virtual bool encode( const char* &scursor, const char * const send,
-                         char* &dcursor, const char * const dend ) = 0;
+    virtual bool encode(const char *&scursor, const char *const send,
+                        char *&dcursor, const char *const dend) = 0;
 
     /**
       Call this method to finalize the output stream. Writes all remaining
@@ -427,14 +427,14 @@ class Encoder
       @param dcursor is a pointer to the start of the output buffer.
       @param dend is a pointer to the end of the output buffer.
     */
-    virtual bool finish( char* &dcursor, const char * const dend ) = 0;
+    virtual bool finish(char *&dcursor, const char *const dend) = 0;
 
-  protected:
+protected:
     /**
       The maximum number of characters permitted in the output buffer.
     */
     enum {
-      maxBufferedChars = 8  /**< Eight */
+        maxBufferedChars = 8  /**< Eight */
     };
 
     /**
@@ -447,22 +447,22 @@ class Encoder
 
       @return true if written to the output stream; else false if buffered.
     */
-    bool write( char ch, char* &dcursor, const char * const dend )
-      {
-        if ( dcursor != dend ) {
-          // if there's space in the output stream, write there:
-          *dcursor++ = ch;
-          return true;
+    bool write(char ch, char *&dcursor, const char *const dend)
+    {
+        if (dcursor != dend) {
+            // if there's space in the output stream, write there:
+            *dcursor++ = ch;
+            return true;
         } else {
-          // else buffer the output:
-          if ( mOutputBufferCursor >= maxBufferedChars ) {
-             qCritical()
-               << "KMime::Encoder: internal buffer overflow!";
-          }
-          mOutputBuffer[ mOutputBufferCursor++ ] = ch;
-          return false;
+            // else buffer the output:
+            if (mOutputBufferCursor >= maxBufferedChars) {
+                qCritical()
+                        << "KMime::Encoder: internal buffer overflow!";
+            }
+            mOutputBuffer[ mOutputBufferCursor++ ] = ch;
+            return false;
         }
-      }
+    }
 
     /**
       Writes characters from the output buffer to the output stream.
@@ -474,7 +474,7 @@ class Encoder
 
       @return true if all chars could be written, false otherwise
     */
-    bool flushOutputBuffer( char* &dcursor, const char * const dend );
+    bool flushOutputBuffer(char *&dcursor, const char *const dend);
 
     /**
       Convenience function. Outputs @ref LF or @ref CRLF, based on the
@@ -483,15 +483,15 @@ class Encoder
       @param dcursor is a pointer to the start of the output buffer.
       @param dend is a pointer to the end of the output buffer.
     */
-    bool writeCRLF( char* &dcursor, const char * const dend )
-      {
-        if ( mWithCRLF ) {
-          write( '\r', dcursor, dend );
+    bool writeCRLF(char *&dcursor, const char *const dend)
+    {
+        if (mWithCRLF) {
+            write('\r', dcursor, dend);
         }
-        return write( '\n', dcursor, dend );
-      }
+        return write('\n', dcursor, dend);
+    }
 
-  private:
+private:
     /**
       An output buffer to simplify some codecs.
       Used with write() and flushOutputBuffer().
@@ -500,7 +500,7 @@ class Encoder
     char mOutputBuffer[ maxBufferedChars ];
     //@endcond
 
-  protected:
+protected:
     //@cond PRIVATE
     uchar mOutputBufferCursor;
     const bool mWithCRLF;

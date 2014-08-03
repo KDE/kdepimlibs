@@ -39,7 +39,8 @@
 
 #include "kmime_codecs.h"
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -47,14 +48,14 @@ namespace KMime {
 */
 class KMIME_EXPORT UUCodec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a UUEncode codec.
     */
     UUCodec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -65,48 +66,50 @@ class KMIME_EXPORT UUCodec : public Codec
       Codec::name()
     */
     const char *name() const
-      { return "x-uuencode"; }
+    {
+        return "x-uuencode";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      {
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
         (void)withCRLF;
         return insize; // we have no encoder!
-      }
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
-      {
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const
+    {
         // assuming all characters are part of the uuencode stream (which
         // does almost never hold due to required linebreaking; but
         // additional non-uu chars don't affect the output size), each
         // 4-tupel of them becomes a 3-tupel in the decoded octet
         // stream. So:
-        int result = ( ( insize + 3 ) / 4 ) * 3;
+        int result = ((insize + 3) / 4) * 3;
         // but all of them may be \n, so
-        if ( withCRLF ) {
-          result *= 2; // :-o
+        if (withCRLF) {
+            result *= 2; // :-o
         }
         return result;
-      }
+    }
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 } // namespace KMime

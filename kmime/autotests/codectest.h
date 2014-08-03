@@ -23,11 +23,10 @@
 
 class CodecTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testCodecs();
     void testCodecs_data();
 };
-
 
 #endif

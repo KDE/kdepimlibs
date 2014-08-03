@@ -61,7 +61,8 @@
 #include "kmime_export.h"
 #undef None
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -77,14 +78,14 @@ namespace KMime {
 */
 class KMIME_EXPORT CharFreq
 {
-  public:
+public:
     /**
       Constructs a Character Frequency instance for a buffer @p buf of
       QByteArray data.
 
       @param buf is a QByteArray containing the data.
     */
-    explicit CharFreq( const QByteArray &buf );
+    explicit CharFreq(const QByteArray &buf);
 
     /**
       Constructs a Character Frequency instance for a buffer @p buf of
@@ -93,18 +94,18 @@ class KMIME_EXPORT CharFreq
       @param buf is a pointer to a character string containing the data.
       @param len is the length of @p buf, in characters.
     */
-    CharFreq( const char *buf, size_t len );
+    CharFreq(const char *buf, size_t len);
 
     /**
       The different types of data.
     */
     enum Type {
-      None = 0,              /**< Unknown */
-      EightBitData,          /**< 8bit binary */
-      Binary = EightBitData, /**< 8bit binary */
-      SevenBitData,          /**< 7bit binary */
-      EightBitText,          /**< 8bit text */
-      SevenBitText           /**< 7bit text */
+        None = 0,              /**< Unknown */
+        EightBitData,          /**< 8bit binary */
+        Binary = EightBitData, /**< 8bit binary */
+        SevenBitData,          /**< 7bit binary */
+        EightBitText,          /**< 8bit text */
+        SevenBitText           /**< 7bit text */
     };
 
     /**
@@ -155,7 +156,7 @@ class KMIME_EXPORT CharFreq
     */
     float controlCodesRatio() const;
 
-  private:
+private:
     //@cond PRIVATE
     uint mNUL;         // count of NUL chars
     uint mCTL;         // count of CTLs (incl. DEL, excl. CR, LF, HT)
@@ -177,7 +178,7 @@ class KMIME_EXPORT CharFreq
       @param buf is a pointer to a character string containing the data.
       @param len is the length of @p buf, in characters.
     */
-    void count( const char *buf, size_t len );
+    void count(const char *buf, size_t len);
 };
 
 } // namespace KMime

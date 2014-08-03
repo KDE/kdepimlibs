@@ -29,11 +29,13 @@
 
 #include <QtCore/QMetaType>
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace KMime {
+namespace KMime
+{
 
 class MessagePrivate;
 
@@ -79,11 +81,11 @@ class MessagePrivate;
  */
 class KMIME_EXPORT Message : public Content
 {
-  public:
+public:
     /**
       A list of messages.
     */
-    typedef QList<KMime::Message*> List;
+    typedef QList<KMime::Message *> List;
 
     /**
       A shared pointer to a message object.
@@ -105,79 +107,79 @@ class KMIME_EXPORT Message : public Content
       Returns the Message-ID header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::MessageID *messageID( bool create = true );
+    virtual KMime::Headers::MessageID *messageID(bool create = true);
 
     /**
       Returns the Subject header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Subject *subject( bool create = true );
+    virtual KMime::Headers::Subject *subject(bool create = true);
 
     /**
       Returns the Date header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Date *date( bool create = true );
+    virtual KMime::Headers::Date *date(bool create = true);
 
     /**
       Returns the From header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::From *from( bool create = true );
+    virtual KMime::Headers::From *from(bool create = true);
 
     /**
       Returns the Organization header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Organization *organization( bool create = true );
+    virtual KMime::Headers::Organization *organization(bool create = true);
 
     /**
       Returns the Reply-To header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::ReplyTo *replyTo( bool create = true );
+    virtual KMime::Headers::ReplyTo *replyTo(bool create = true);
 
     /**
       Returns the To header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::To *to( bool create = true );
+    virtual KMime::Headers::To *to(bool create = true);
 
     /**
       Returns the Cc header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Cc *cc( bool create = true );
+    virtual KMime::Headers::Cc *cc(bool create = true);
 
     /**
       Returns the Bcc header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Bcc *bcc( bool create = true );
+    virtual KMime::Headers::Bcc *bcc(bool create = true);
 
     /**
       Returns the References header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::References *references( bool create = true );
+    virtual KMime::Headers::References *references(bool create = true);
 
     /**
       Returns the User-Agent header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::UserAgent *userAgent( bool create = true );
+    virtual KMime::Headers::UserAgent *userAgent(bool create = true);
 
     /**
       Returns the In-Reply-To header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::InReplyTo *inReplyTo( bool create = true );
+    virtual KMime::Headers::InReplyTo *inReplyTo(bool create = true);
 
     /**
       Returns the Sender header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Sender *sender( bool create = true );
+    virtual KMime::Headers::Sender *sender(bool create = true);
 
     /* reimpl */
     virtual bool isTopLevel() const;
@@ -191,29 +193,29 @@ class KMIME_EXPORT Message : public Content
       @param type The mimetype of the body part, if not given, the first
       body part will be returned, regardless of it's type.
     */
-    Content* mainBodyPart( const QByteArray &type = QByteArray() );
+    Content *mainBodyPart(const QByteArray &type = QByteArray());
 
     /**
       Returns the MIME type used for Messages
     */
     static QString mimeType();
 
-  protected:
+protected:
     /* reimpl */
     virtual QByteArray assembleHeaders();
 
     // @cond PRIVATE
-    explicit Message( MessagePrivate *d );
+    explicit Message(MessagePrivate *d);
     // @endcond
 
-  private:
-    Q_DECLARE_PRIVATE( Message )
+private:
+    Q_DECLARE_PRIVATE(Message)
 
 }; // class Message
 
 } // namespace KMime
 
 #define KMIME_MESSAGE_METATYPE_DEFINED 1
-Q_DECLARE_METATYPE( KMime::Message* )
+Q_DECLARE_METATYPE(KMime::Message *)
 
 #endif // __KMIME_MESSAGE_H__

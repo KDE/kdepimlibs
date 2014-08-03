@@ -24,8 +24,8 @@
 
 class HeaderTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testIdentHeader();
     void testAddressListHeader();
     void testMailboxListHeader();
@@ -53,6 +53,5 @@ class HeaderTest : public QObject
     // meant to be abstract
     void noAbstractHeaders();
 };
-
 
 #endif

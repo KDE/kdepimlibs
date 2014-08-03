@@ -26,65 +26,65 @@ using namespace KMime;
 
 #include <qtest.h>
 
-QTEST_MAIN( ContentIndexTest )
+QTEST_MAIN(ContentIndexTest)
 
 void ContentIndexTest::testToString()
 {
-  KMime::ContentIndex ci;
-  QCOMPARE( ci.toString(), QString() );
-  ci.push( 1 );
-  QCOMPARE( ci.toString(), QLatin1String( "1" ) );
-  ci.push( 2 );
-  QCOMPARE( ci.toString(), QLatin1String( "2.1" ) );
+    KMime::ContentIndex ci;
+    QCOMPARE(ci.toString(), QString());
+    ci.push(1);
+    QCOMPARE(ci.toString(), QLatin1String("1"));
+    ci.push(2);
+    QCOMPARE(ci.toString(), QLatin1String("2.1"));
 }
 
-void ContentIndexTest::testFromString( )
+void ContentIndexTest::testFromString()
 {
-  ContentIndex ci1;
-  QVERIFY( !ci1.isValid() );
+    ContentIndex ci1;
+    QVERIFY(!ci1.isValid());
 
-  ContentIndex ci2( QLatin1String("1.2.bla") );
-  QVERIFY( !ci2.isValid() );
+    ContentIndex ci2(QLatin1String("1.2.bla"));
+    QVERIFY(!ci2.isValid());
 
-  ContentIndex ci3( QLatin1String("1") );
-  QVERIFY( ci3.isValid() );
-  QCOMPARE( ci3.pop(), 1u );
-  QVERIFY( !ci3.isValid() );
+    ContentIndex ci3(QLatin1String("1"));
+    QVERIFY(ci3.isValid());
+    QCOMPARE(ci3.pop(), 1u);
+    QVERIFY(!ci3.isValid());
 
-  ContentIndex ci4( QLatin1String("3.2") );
-  QVERIFY( ci4.isValid() );
-  QCOMPARE( ci4.pop(), 3u );
-  QCOMPARE( ci4.pop(), 2u );
-  QVERIFY( !ci4.isValid() );
+    ContentIndex ci4(QLatin1String("3.2"));
+    QVERIFY(ci4.isValid());
+    QCOMPARE(ci4.pop(), 3u);
+    QCOMPARE(ci4.pop(), 2u);
+    QVERIFY(!ci4.isValid());
 }
 
-void ContentIndexTest::testContent( )
+void ContentIndexTest::testContent()
 {
-  Content *c1 = new Content();
-  QCOMPARE( c1->content( ContentIndex() ), c1 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("1") ) ), (Content*)0 );
-  QCOMPARE( c1->indexForContent( c1 ), ContentIndex() );
+    Content *c1 = new Content();
+    QCOMPARE(c1->content(ContentIndex()), c1);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("1"))), (Content *)0);
+    QCOMPARE(c1->indexForContent(c1), ContentIndex());
 
-  Content *c11 = new Content();
-  // this makes c1 multipart/mixed, ie. c11 will be the second child!
-  c1->addContent( c11 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("2") ) ), c11 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("3") ) ), (Content*)0 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("2.1") ) ), (Content*)0 );
-  QCOMPARE( c1->indexForContent( c1 ), ContentIndex() );
-  QCOMPARE( c1->indexForContent( c11 ), ContentIndex( QLatin1String("2") ) );
-  QCOMPARE( c1->indexForContent( c1->contents().first() ), ContentIndex( QLatin1String("1") ) );
+    Content *c11 = new Content();
+    // this makes c1 multipart/mixed, ie. c11 will be the second child!
+    c1->addContent(c11);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("2"))), c11);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("3"))), (Content *)0);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("2.1"))), (Content *)0);
+    QCOMPARE(c1->indexForContent(c1), ContentIndex());
+    QCOMPARE(c1->indexForContent(c11), ContentIndex(QLatin1String("2")));
+    QCOMPARE(c1->indexForContent(c1->contents().first()), ContentIndex(QLatin1String("1")));
 
-  Content *c12 = new Content();
-  c1->addContent( c12 );
-  // c12 becomes multipart/mixed, ie. c12 will be the second child!
-  Content *c121 = new Content();
-  c12->addContent( c121 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("3") ) ), c12 );
-  QCOMPARE( c1->content( ContentIndex( QLatin1String("3.2") ) ), c121 );
-  QCOMPARE( c1->indexForContent( c121 ), ContentIndex( QLatin1String("3.2") ) );
-  QCOMPARE( c121->index(), ContentIndex( QLatin1String("3.2" )) );
+    Content *c12 = new Content();
+    c1->addContent(c12);
+    // c12 becomes multipart/mixed, ie. c12 will be the second child!
+    Content *c121 = new Content();
+    c12->addContent(c121);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("3"))), c12);
+    QCOMPARE(c1->content(ContentIndex(QLatin1String("3.2"))), c121);
+    QCOMPARE(c1->indexForContent(c121), ContentIndex(QLatin1String("3.2")));
+    QCOMPARE(c121->index(), ContentIndex(QLatin1String("3.2")));
 
-  QCOMPARE( c1->indexForContent( (Content*)0 ), ContentIndex() );
+    QCOMPARE(c1->indexForContent((Content *)0), ContentIndex());
 }
 

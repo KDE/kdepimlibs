@@ -23,14 +23,17 @@
 
 class QByteArray;
 
-namespace KMime {
+namespace KMime
+{
 
-namespace Headers {
-  class Base;
+namespace Headers
+{
+class Base;
 }
-namespace HeaderParsing {
+namespace HeaderParsing
+{
 
-QList<KMime::Headers::Base*> parseHeaders( const QByteArray &head );
+QList<KMime::Headers::Base *> parseHeaders(const QByteArray &head);
 
 }
 

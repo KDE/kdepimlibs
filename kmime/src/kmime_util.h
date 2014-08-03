@@ -28,7 +28,8 @@
 #include "kmime_headers.h"
 #include "kmime_content.h"
 
-namespace KMime {
+namespace KMime
+{
 
 class Message;
 
@@ -37,20 +38,20 @@ class Message;
   keeping strings in a common repository.
   @param name
 */
-KMIME_EXPORT extern QByteArray cachedCharset( const QByteArray &name );
+KMIME_EXPORT extern QByteArray cachedCharset(const QByteArray &name);
 
 /**
   Consult the language cache. Only used for reducing mem usage by
   keeping strings in a common repository.
   @param name
 */
-KMIME_EXPORT extern QByteArray cachedLanguage( const QByteArray &name );
+KMIME_EXPORT extern QByteArray cachedLanguage(const QByteArray &name);
 
 /**
   Checks whether @p s contains any non-us-ascii characters.
   @param s
 */
-KMIME_EXPORT extern bool isUsAscii( const QString &s );
+KMIME_EXPORT extern bool isUsAscii(const QString &s);
 
 /**
   Returns a user-visible string for a contentEncoding, for example
@@ -59,7 +60,7 @@ KMIME_EXPORT extern bool isUsAscii( const QString &s );
   @ since 4.4
   TODO should they be i18n'ed?
 */
-KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc );
+KMIME_EXPORT extern QString nameForEncoding(KMime::Headers::contentEncoding enc);
 
 /**
   Returns a list of encodings that can correctly encode the @p data.
@@ -67,7 +68,7 @@ KMIME_EXPORT extern QString nameForEncoding( KMime::Headers::contentEncoding enc
   @ since 4.4
 */
 KMIME_EXPORT QList<KMime::Headers::contentEncoding> encodingsForData(
-                                                       const QByteArray &data );
+    const QByteArray &data);
 //@cond PRIVATE
 extern const uchar specialsMap[16];
 extern const uchar tSpecialsMap[16];
@@ -75,29 +76,29 @@ extern const uchar aTextMap[16];
 extern const uchar tTextMap[16];
 extern const uchar eTextMap[16];
 
-inline bool isOfSet( const uchar map[16], unsigned char ch )
+inline bool isOfSet(const uchar map[16], unsigned char ch)
 {
-  return ( ch < 128 ) && ( map[ ch/8 ] & 0x80 >> ch%8 );
+    return (ch < 128) && (map[ ch / 8 ] & 0x80 >> ch % 8);
 }
-inline bool isSpecial( char ch )
+inline bool isSpecial(char ch)
 {
-  return isOfSet( specialsMap, ch );
+    return isOfSet(specialsMap, ch);
 }
-inline bool isTSpecial( char ch )
+inline bool isTSpecial(char ch)
 {
-  return isOfSet( tSpecialsMap, ch );
+    return isOfSet(tSpecialsMap, ch);
 }
-inline bool isAText( char ch )
+inline bool isAText(char ch)
 {
-  return isOfSet( aTextMap, ch );
+    return isOfSet(aTextMap, ch);
 }
-inline bool isTText( char ch )
+inline bool isTText(char ch)
 {
-  return isOfSet( tTextMap, ch );
+    return isOfSet(tTextMap, ch);
 }
-inline bool isEText( char ch )
+inline bool isEText(char ch)
 {
-  return isOfSet( eTextMap, ch );
+    return isOfSet(eTextMap, ch);
 }
 //@endcond
 
@@ -110,7 +111,7 @@ inline bool isEText( char ch )
   *
   * @since 4.5
   */
-KMIME_EXPORT extern void setFallbackCharEncoding( const QString& fallbackCharEnc );
+KMIME_EXPORT extern void setFallbackCharEncoding(const QString &fallbackCharEnc);
 
 /**
   * Retrieve the set fallback charset if there is one set.
@@ -133,7 +134,7 @@ KMIME_EXPORT extern QString fallbackCharEncoding();
   *
   * @since 4.5
   */
-KMIME_EXPORT extern void setUseOutlookAttachmentEncoding( bool violateStandard );
+KMIME_EXPORT extern void setUseOutlookAttachmentEncoding(bool violateStandard);
 
 /**
  * Retrieve whether or not to use outlook compatible encodings for attachments.
@@ -152,8 +153,8 @@ KMIME_EXPORT extern bool useOutlookAttachmentEncoding();
   @return the decoded string.
 */
 KMIME_EXPORT extern QString decodeRFC2047String(
-  const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
-  bool forceCS = false );
+    const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
+    bool forceCS = false);
 
 /** Decode string @p src according to RFC2047 (ie. the
     =?charset?[qb]?encoded?= construct).
@@ -161,7 +162,7 @@ KMIME_EXPORT extern QString decodeRFC2047String(
     @param src       source string.
     @return the decoded string.
 */
-KMIME_EXPORT extern QString decodeRFC2047String( const QByteArray &src );
+KMIME_EXPORT extern QString decodeRFC2047String(const QByteArray &src);
 
 /**
   Encodes string @p src according to RFC2047 using charset @p charset.
@@ -181,9 +182,8 @@ KMIME_EXPORT extern QString decodeRFC2047String( const QByteArray &src );
   @return the encoded string.
 */
 KMIME_EXPORT extern QByteArray encodeRFC2047String(
-  const QString &src, const QByteArray &charset, bool addressHeader=false,
-  bool allow8bitHeaders=false );
-
+    const QString &src, const QByteArray &charset, bool addressHeader = false,
+    bool allow8bitHeaders = false);
 
 /**
   Decodes string @p src according to RFC2231
@@ -197,8 +197,8 @@ KMIME_EXPORT extern QByteArray encodeRFC2047String(
   @return the decoded string.
 */
 KMIME_EXPORT extern QString decodeRFC2231String(
-  const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
-  bool forceCS = false );
+    const QByteArray &src, QByteArray &usedCS, const QByteArray &defaultCS = QByteArray(),
+    bool forceCS = false);
 
 /** Decode string @p src according to RFC2231 (ie. the
     charset'lang'encoded construct).
@@ -206,8 +206,7 @@ KMIME_EXPORT extern QString decodeRFC2231String(
     @param src       source string.
     @return the decoded string.
 */
-KMIME_EXPORT extern QString decodeRFC2231String( const QByteArray &src );
-
+KMIME_EXPORT extern QString decodeRFC2231String(const QByteArray &src);
 
 /**
   Encodes string @p src according to RFC2231 using charset @p charset.
@@ -216,7 +215,7 @@ KMIME_EXPORT extern QString decodeRFC2231String( const QByteArray &src );
   @param charset       charset to use.
   @return the encoded string.
 */
-KMIME_EXPORT extern QByteArray encodeRFC2231String( const QString &src, const QByteArray &charset );
+KMIME_EXPORT extern QByteArray encodeRFC2231String(const QString &src, const QByteArray &charset);
 
 /**
   Uses current time, pid and random numbers to construct a string
@@ -242,7 +241,7 @@ KMIME_EXPORT extern QByteArray multiPartBoundary();
   Unfolds the given header if necessary.
   @param header The header to unfold.
 */
-KMIME_EXPORT extern QByteArray unfoldHeader( const QByteArray &header );
+KMIME_EXPORT extern QByteArray unfoldHeader(const QByteArray &header);
 
 /**
   Tries to extract the header with name @p name from the string
@@ -254,8 +253,8 @@ KMIME_EXPORT extern QByteArray unfoldHeader( const QByteArray &header );
   @return the first instance of the header @p name in @p src
           or a null QCString if no such header was found.
 */
-KMIME_EXPORT extern QByteArray extractHeader( const QByteArray &src,
-                                 const QByteArray &name );
+KMIME_EXPORT extern QByteArray extractHeader(const QByteArray &src,
+        const QByteArray &name);
 
 /**
   Tries to extract the headers with name @p name from the string
@@ -268,8 +267,8 @@ KMIME_EXPORT extern QByteArray extractHeader( const QByteArray &src,
 
   @since 4.2
 */
-KMIME_EXPORT extern QList<QByteArray> extractHeaders( const QByteArray &src,
-                                 const QByteArray &name );
+KMIME_EXPORT extern QList<QByteArray> extractHeaders(const QByteArray &src,
+        const QByteArray &name);
 
 /**
   Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -283,7 +282,7 @@ KMIME_EXPORT extern QList<QByteArray> extractHeaders( const QByteArray &src,
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const char*) LFtoCRLF
 */
-KMIME_EXPORT extern QByteArray CRLFtoLF( const QByteArray &s );
+KMIME_EXPORT extern QByteArray CRLFtoLF(const QByteArray &s);
 
 /**
   Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
@@ -297,7 +296,7 @@ KMIME_EXPORT extern QByteArray CRLFtoLF( const QByteArray &s );
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const QCString&) LFtoCRLF
 */
-KMIME_EXPORT extern QByteArray CRLFtoLF( const char *s );
+KMIME_EXPORT extern QByteArray CRLFtoLF(const char *s);
 
 /**
   Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
@@ -312,7 +311,7 @@ KMIME_EXPORT extern QByteArray CRLFtoLF( const char *s );
   @return the string with CRLF's substitued for LF's
   @see CRLFtoLF(const QCString&) LFtoCRLF
 */
-KMIME_EXPORT extern QByteArray LFtoCRLF( const QByteArray &s );
+KMIME_EXPORT extern QByteArray LFtoCRLF(const QByteArray &s);
 
 /**
   Removes quote (DQUOTE) characters and decodes "quoted-pairs"
@@ -323,7 +322,7 @@ KMIME_EXPORT extern QByteArray LFtoCRLF( const QByteArray &s );
 */
 //AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
 // TODO: KDE5: BIC: rename to "removeQuotes"
-KMIME_EXPORT extern void removeQuots( QByteArray &str );
+KMIME_EXPORT extern void removeQuots(QByteArray &str);
 
 /**
   Removes quote (DQUOTE) characters and decodes "quoted-pairs"
@@ -334,7 +333,7 @@ KMIME_EXPORT extern void removeQuots( QByteArray &str );
 */
 //AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
 // TODO: KDE5: BIC: rename to "removeQuotes"
-KMIME_EXPORT extern void removeQuots( QString &str );
+KMIME_EXPORT extern void removeQuots(QString &str);
 
 /**
   Converts the given string into a quoted-string if the string contains
@@ -343,7 +342,7 @@ KMIME_EXPORT extern void removeQuots( QString &str );
   @param str us-ascii string to work on.
   @param forceQuotes if @c true, always add quote characters.
 */
-KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
+KMIME_EXPORT extern void addQuotes(QByteArray &str, bool forceQuotes);
 
 /**
  * Overloaded method, behaves same as the above.
@@ -351,7 +350,7 @@ KMIME_EXPORT extern void addQuotes( QByteArray &str, bool forceQuotes );
  * @param forceQuotes if @c true, always add quote characters.
  * @since 4.5
  */
-KMIME_EXPORT extern void addQuotes( QString &str, bool forceQuotes );
+KMIME_EXPORT extern void addQuotes(QString &str, bool forceQuotes);
 
 /**
  * Makes sure that the bidirectional state at the end of the string is the
@@ -394,7 +393,7 @@ KMIME_EXPORT extern void addQuotes( QString &str, bool forceQuotes );
  *
  * @since 4.5
  */
-KMIME_EXPORT QString balanceBidiState( const QString &input );
+KMIME_EXPORT QString balanceBidiState(const QString &input);
 
 /**
  * Similar to the above function. Instead of trying to balance the Bidi chars, it outright
@@ -404,14 +403,14 @@ KMIME_EXPORT QString balanceBidiState( const QString &input );
  * direction control characters
  * Reason: KHTML seems to ignore the PDF character, so adding them doesn't fix things :(
  */
-KMIME_EXPORT QString removeBidiControlChars( const QString &input );
+KMIME_EXPORT QString removeBidiControlChars(const QString &input);
 
 /**
  * Returns whether or not the given MIME node contains an attachment part. This function will
  *  recursively parse the MIME tree looking for a suitable attachment and return true if one is found.
  * @param content the MIME node to parse
  */
-KMIME_EXPORT bool hasAttachment( Content* content );
+KMIME_EXPORT bool hasAttachment(Content *content);
 
 /**
  * Returns whether or not the given @p message is partly or fully signed.
@@ -419,7 +418,7 @@ KMIME_EXPORT bool hasAttachment( Content* content );
  * @param message the message to check for being signed
  * @since 4.6
  */
-KMIME_EXPORT bool isSigned( Message* message );
+KMIME_EXPORT bool isSigned(Message *message);
 
 /**
  * Returns whether or not the given @p message is partly or fully encrypted.
@@ -427,7 +426,7 @@ KMIME_EXPORT bool isSigned( Message* message );
  * @param message the message to check for being encrypted
  * @since 4.6
  */
-KMIME_EXPORT bool isEncrypted( Message* message );
+KMIME_EXPORT bool isEncrypted(Message *message);
 
 /**
  * Returns whether or not the given MIME @p content is an invitation
@@ -435,7 +434,7 @@ KMIME_EXPORT bool isEncrypted( Message* message );
  *
  * @since 4.6
  */
-KMIME_EXPORT bool isInvitation( Content* content );
+KMIME_EXPORT bool isInvitation(Content *content);
 
 } // namespace KMime
 

@@ -10,31 +10,33 @@
 using namespace std;
 using namespace KMime;
 
-static const char * typeToString( int type ) {
-  switch ( type ) {
-  case CharFreq::EightBitData:
-    return "eight bit.value (binary)";
-  case CharFreq::EightBitText:
-    return "eight bit text";
-  case CharFreq::SevenBitData:
-    return "seven bit.value";
-  case CharFreq::SevenBitText:
-    return "seven bit text";
-  default:
-    return "unknown type";
-  }
+static const char *typeToString(int type)
+{
+    switch (type) {
+    case CharFreq::EightBitData:
+        return "eight bit.value (binary)";
+    case CharFreq::EightBitText:
+        return "eight bit text";
+    case CharFreq::SevenBitData:
+        return "seven bit.value";
+    case CharFreq::SevenBitText:
+        return "seven bit text";
+    default:
+        return "unknown type";
+    }
 }
 
-int main( int argc, char **argv ) {
-  for ( int i = 1 /*not program*/ ; i < argc ; i++ ) {
-    QFile in( QString::fromLatin1(argv[i]) );
-    if ( !in.open( QIODevice::ReadOnly ) ) {
-      cerr << argv[i] << ": does not exist!" << endl;
-      continue;
+int main(int argc, char **argv)
+{
+    for (int i = 1 /*not program*/ ; i < argc ; i++) {
+        QFile in(QString::fromLatin1(argv[i]));
+        if (!in.open(QIODevice::ReadOnly)) {
+            cerr << argv[i] << ": does not exist!" << endl;
+            continue;
+        }
+        QByteArray ba = in.readAll();
+        CharFreq cf(ba);
+        cout << argv[i] << ": " << typeToString(cf.type()) << endl;
     }
-    QByteArray ba = in.readAll();
-    CharFreq cf( ba );
-    cout << argv[i] << ": " << typeToString( cf.type() ) << endl;
-  }
-  return 0;
+    return 0;
 }

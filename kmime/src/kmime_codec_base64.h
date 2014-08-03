@@ -54,7 +54,8 @@
 
 #include "kmime_codecs.h"
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -63,14 +64,14 @@ namespace KMime {
 */
 class KMIME_EXPORT Base64Codec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a Base64 codec.
     */
     Base64Codec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -81,55 +82,57 @@ class KMIME_EXPORT Base64Codec : public Codec
       Codec::name()
     */
     const char *name() const
-      { return "base64"; }
+    {
+        return "base64";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      {
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
         // first, the total number of 4-char packets will be:
-        int totalNumPackets = ( insize + 2 ) / 3;
+        int totalNumPackets = (insize + 2) / 3;
         // now, after every 76/4'th packet there needs to be a linebreak:
-        int numLineBreaks = totalNumPackets / ( 76 / 4 );
+        int numLineBreaks = totalNumPackets / (76 / 4);
         // and at the very end, too:
         ++numLineBreaks;
         // putting it all together, we have:
-        return 4 * totalNumPackets + ( withCRLF ? 2 : 1 ) * numLineBreaks;
-      }
+        return 4 * totalNumPackets + (withCRLF ? 2 : 1) * numLineBreaks;
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
-      {
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const
+    {
         // assuming all characters are part of the base64 stream (which
         // does almost never hold due to required linebreaking; but
         // additional non-base64 chars don't affect the output size), each
         // 4-tupel of them becomes a 3-tupel in the decoded octet
         // stream. So:
-        int result = ( ( insize + 3 ) / 4 ) * 3;
+        int result = ((insize + 3) / 4) * 3;
         // but all of them may be \n, so
-        if ( withCRLF ) {
-          result *= 2; // :-o
+        if (withCRLF) {
+            result *= 2; // :-o
         }
 
         return result;
-      }
+    }
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeDecoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 /**
@@ -139,14 +142,14 @@ class KMIME_EXPORT Base64Codec : public Codec
 */
 class KMIME_EXPORT Rfc2047BEncodingCodec : public Base64Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs a RFC2047B codec.
     */
     Rfc2047BEncodingCodec() : Base64Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -157,36 +160,38 @@ class KMIME_EXPORT Rfc2047BEncodingCodec : public Base64Codec
       Codec::name()
     */
     const char *name() const
-      { return "b"; }
+    {
+        return "b";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-      {
-        Q_UNUSED( withCRLF );
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
         // Each (begun) 3-octet triple becomes a 4 char quartet, so:
-        return ( ( insize + 2 ) / 3 ) * 4;
-      }
+        return ((insize + 2) / 3) * 4;
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
-      {
-        Q_UNUSED( withCRLF );
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
         // Each 4-char quartet becomes a 3-octet triple, the last one
         // possibly even less. So:
-        return ( ( insize + 3 ) / 4 ) * 3;
-      }
+        return ((insize + 3) / 4) * 3;
+    }
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 };
 
 } // namespace KMime

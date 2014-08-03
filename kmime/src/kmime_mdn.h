@@ -52,9 +52,11 @@
 
 class QByteArray;
 
-namespace KMime {
+namespace KMime
+{
 
-namespace MDN {
+namespace MDN
+{
 
 /**
   The following disposition-types are defined:
@@ -99,12 +101,12 @@ namespace MDN {
   @p Failed needs a description in the @p special parameter.
 */
 enum DispositionType {
-  Displayed, Read = Displayed,
-  Deleted,
-  Dispatched, Forwarded = Dispatched,
-  Processed,
-  Denied,
-  Failed
+    Displayed, Read = Displayed,
+    Deleted,
+    Dispatched, Forwarded = Dispatched,
+    Processed,
+    Denied,
+    Failed
 };
 
 /**
@@ -129,11 +131,11 @@ enum DispositionType {
   message in it automatically removed.
 */
 enum DispositionModifier {
-  Error,
-  Warning,
-  Superseded,
-  Expired,
-  MailboxTerminated
+    Error,
+    Warning,
+    Superseded,
+    Expired,
+    MailboxTerminated
 };
 
 /**
@@ -152,8 +154,8 @@ enum DispositionModifier {
   @p AutomanticAction for filtering.
 */
 enum ActionMode {
-  ManualAction,
-  AutomaticAction
+    ManualAction,
+    AutomaticAction
 };
 
 /**
@@ -168,26 +170,26 @@ enum ActionMode {
   @p SentAutomatically when we use the default specified by the user
 */
 enum SendingMode {
-  SentManually,
-  SentAutomatically
+    SentManually,
+    SentAutomatically
 };
 
 /**
   Generates the content of the message/disposition-notification body part.
 */
 KMIME_EXPORT extern QByteArray dispositionNotificationBodyContent(
-  const QString &finalRecipient,
-  const QByteArray &originalRecipient,
-  const QByteArray &originalMsgID,
-  DispositionType disposition,
-  ActionMode actionMode,
-  SendingMode sendingMode,
-  const QList<DispositionModifier> &dispositionModifers=QList<DispositionModifier>(),
-  const QString &special=QString() );
+    const QString &finalRecipient,
+    const QByteArray &originalRecipient,
+    const QByteArray &originalMsgID,
+    DispositionType disposition,
+    ActionMode actionMode,
+    SendingMode sendingMode,
+    const QList<DispositionModifier> &dispositionModifers = QList<DispositionModifier>(),
+    const QString &special = QString());
 
 KMIME_EXPORT extern QString descriptionFor(
-  DispositionType d,
-  const QList<DispositionModifier> &m=QList<DispositionModifier>() );
+    DispositionType d,
+    const QList<DispositionModifier> &m = QList<DispositionModifier>());
 
 } // namespace MDN
 

@@ -27,20 +27,21 @@
 
 using namespace KMime;
 
-namespace KMime {
+namespace KMime
+{
 
 class NewsArticlePrivate : public MessagePrivate
 {
-  public:
-    NewsArticlePrivate( NewsArticle *q ) : MessagePrivate( q )
+public:
+    NewsArticlePrivate(NewsArticle *q) : MessagePrivate(q)
     {
     }
 
-    Q_DECLARE_PUBLIC( NewsArticle )
+    Q_DECLARE_PUBLIC(NewsArticle)
 };
 
 NewsArticle::NewsArticle()
-  : Message( new NewsArticlePrivate( this ) )
+    : Message(new NewsArticlePrivate(this))
 {
 }
 
@@ -50,61 +51,61 @@ NewsArticle::~NewsArticle()
 
 void NewsArticle::parse()
 {
-  // KDE5: remove this virtual reimplementation.
-  Message::parse();
+    // KDE5: remove this virtual reimplementation.
+    Message::parse();
 }
 
 QByteArray NewsArticle::assembleHeaders()
 {
-  // Create the mandatory Lines: field.
-  lines( true );
+    // Create the mandatory Lines: field.
+    lines(true);
 
-  // Assemble all header fields.
-  return Message::assembleHeaders();
+    // Assemble all header fields.
+    return Message::assembleHeaders();
 }
 
 void NewsArticle::clear()
 {
-  // KDE5: remove this virtual reimplementation.
-  Message::clear();
+    // KDE5: remove this virtual reimplementation.
+    Message::clear();
 }
 
-Headers::Base * NewsArticle::getHeaderByType( const char *type )
+Headers::Base *NewsArticle::getHeaderByType(const char *type)
 {
-  // KDE5: remove this virtual reimplementation.
-  return headerByType( type );
+    // KDE5: remove this virtual reimplementation.
+    return headerByType(type);
 }
 
-Headers::Base * NewsArticle::headerByType( const char *type )
+Headers::Base *NewsArticle::headerByType(const char *type)
 {
-  // KDE5: remove this virtual reimplementation.
-  return Message::headerByType( type );
+    // KDE5: remove this virtual reimplementation.
+    return Message::headerByType(type);
 }
 
-void NewsArticle::setHeader( Headers::Base *h )
+void NewsArticle::setHeader(Headers::Base *h)
 {
-  // KDE5: remove this virtual reimplementation.
-  Message::setHeader( h );
+    // KDE5: remove this virtual reimplementation.
+    Message::setHeader(h);
 }
 
-bool NewsArticle::removeHeader( const char *type )
+bool NewsArticle::removeHeader(const char *type)
 {
-  // KDE5: remove this virtual reimplementation.
-  return Message::removeHeader( type );
+    // KDE5: remove this virtual reimplementation.
+    return Message::removeHeader(type);
 }
 
 // @cond PRIVATE
 #define kmime_mk_header_accessor( type, method ) \
-Headers::type* NewsArticle::method( bool create ) { \
-  return header<Headers::type>( create ); \
-}
+    Headers::type* NewsArticle::method( bool create ) { \
+        return header<Headers::type>( create ); \
+    }
 
-kmime_mk_header_accessor( Control, control )
-kmime_mk_header_accessor( Lines, lines )
-kmime_mk_header_accessor( Supersedes, supersedes )
-kmime_mk_header_accessor( MailCopiesTo, mailCopiesTo )
-kmime_mk_header_accessor( Newsgroups, newsgroups )
-kmime_mk_header_accessor( FollowUpTo, followUpTo )
+kmime_mk_header_accessor(Control, control)
+kmime_mk_header_accessor(Lines, lines)
+kmime_mk_header_accessor(Supersedes, supersedes)
+kmime_mk_header_accessor(MailCopiesTo, mailCopiesTo)
+kmime_mk_header_accessor(Newsgroups, newsgroups)
+kmime_mk_header_accessor(FollowUpTo, followUpTo)
 
 #undef kmime_mk_header_accessor
 // @endcond

@@ -37,35 +37,35 @@ using namespace KMime;
 
 class ContentIndex::Private : public QSharedData
 {
-  public:
+public:
     Private() {}
-    Private( const Private &other ) : QSharedData( other )
+    Private(const Private &other) : QSharedData(other)
     {
-      index = other.index;
+        index = other.index;
     }
 
     QList<unsigned int> index;
 };
 
-KMime::ContentIndex::ContentIndex() : d( new Private )
+KMime::ContentIndex::ContentIndex() : d(new Private)
 {
 }
 
-KMime::ContentIndex::ContentIndex( const QString &index ) : d( new Private )
+KMime::ContentIndex::ContentIndex(const QString &index) : d(new Private)
 {
-  const QStringList l = index.split( QLatin1Char( '.' ) );
-  foreach ( const QString &s, l ) {
-    bool ok;
-    unsigned int i = s.toUInt( &ok );
-    if ( !ok ) {
-      d->index.clear();
-      break;
+    const QStringList l = index.split(QLatin1Char('.'));
+    foreach (const QString &s, l) {
+        bool ok;
+        unsigned int i = s.toUInt(&ok);
+        if (!ok) {
+            d->index.clear();
+            break;
+        }
+        d->index.append(i);
     }
-    d->index.append( i );
-  }
 }
 
-ContentIndex::ContentIndex(const ContentIndex & other) : d( other.d )
+ContentIndex::ContentIndex(const ContentIndex &other) : d(other.d)
 {
 }
 
@@ -75,47 +75,47 @@ ContentIndex::~ContentIndex()
 
 bool KMime::ContentIndex::isValid() const
 {
-  return !d->index.isEmpty();
+    return !d->index.isEmpty();
 }
 
 unsigned int KMime::ContentIndex::pop()
 {
-  return d->index.takeFirst();
+    return d->index.takeFirst();
 }
 
-void KMime::ContentIndex::push( unsigned int index )
+void KMime::ContentIndex::push(unsigned int index)
 {
-  d->index.prepend( index );
+    d->index.prepend(index);
 }
 
 QString KMime::ContentIndex::toString() const
 {
-  QStringList l;
-  foreach ( unsigned int i, d->index ) {
-    l.append( QString::number( i ) );
-  }
-  return l.join( QLatin1String( "." ) );
+    QStringList l;
+    foreach (unsigned int i, d->index) {
+        l.append(QString::number(i));
+    }
+    return l.join(QLatin1String("."));
 }
 
-bool KMime::ContentIndex::operator ==( const ContentIndex &index ) const
+bool KMime::ContentIndex::operator ==(const ContentIndex &index) const
 {
-  return d->index == index.d->index;
+    return d->index == index.d->index;
 }
 
-bool KMime::ContentIndex::operator !=( const ContentIndex &index ) const
+bool KMime::ContentIndex::operator !=(const ContentIndex &index) const
 {
-  return d->index != index.d->index;
+    return d->index != index.d->index;
 }
 
-ContentIndex& ContentIndex::operator =(const ContentIndex & other)
+ContentIndex &ContentIndex::operator =(const ContentIndex &other)
 {
-  if ( this != &other ) {
-    d = other.d;
-  }
-  return *this;
+    if (this != &other) {
+        d = other.d;
+    }
+    return *this;
 }
 
-uint qHash( const KMime::ContentIndex &index )
+uint qHash(const KMime::ContentIndex &index)
 {
-  return qHash( index.toString() );
+    return qHash(index.toString());
 }

@@ -26,8 +26,8 @@
 
 class MessageTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testMainBodyPart();
     void testBrunosMultiAssembleBug();
     void testWillsAndTillsCrash();
@@ -46,9 +46,8 @@ class MessageTest : public QObject
     void testEncapsulatedMessages();
     void testOutlookAttachmentNaming();
 
-  private:
-    KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;
+private:
+    KMime::Message::Ptr readAndParseMail(const QString &mailFile) const;
 };
-
 
 #endif

@@ -37,15 +37,17 @@
 
 #include <QtCore/QByteArray>
 
-namespace KMime {
+namespace KMime
+{
 
-namespace Headers {
-  class Base;
+namespace Headers
+{
+class Base;
 }
 
 class HeaderMakerBase
 {
-  public:
+public:
     virtual ~HeaderMakerBase() {}
     virtual Headers::Base *create() const = 0;
 };
@@ -53,10 +55,10 @@ class HeaderMakerBase
 template <typename T>
 class HeaderMaker : public HeaderMakerBase
 {
-  public:
+public:
     virtual Headers::Base *create() const
     {
-      return new T;
+        return new T;
     }
 };
 
@@ -67,24 +69,24 @@ class HeaderFactoryPrivate;
 */
 class HeaderFactory
 {
-  public:
-    static HeaderFactory* self();
+public:
+    static HeaderFactory *self();
 
     template<typename T> inline bool registerHeader()
     {
-      T dummy;
-      return registerHeaderMaker( QByteArray( dummy.type() ), new HeaderMaker<T>() );
+        T dummy;
+        return registerHeaderMaker(QByteArray(dummy.type()), new HeaderMaker<T>());
     }
 
-    Headers::Base *createHeader( const QByteArray &type );
+    Headers::Base *createHeader(const QByteArray &type);
 
-  private:
-    explicit HeaderFactory( HeaderFactoryPrivate *dd );
-    HeaderFactory( const HeaderFactory &other ); // undefined
-    HeaderFactory& operator=( const HeaderFactory &other ); // undefined
+private:
+    explicit HeaderFactory(HeaderFactoryPrivate *dd);
+    HeaderFactory(const HeaderFactory &other);   // undefined
+    HeaderFactory &operator=(const HeaderFactory &other);   // undefined
     ~HeaderFactory();
 
-    bool registerHeaderMaker( const QByteArray &type, HeaderMakerBase *maker );
+    bool registerHeaderMaker(const QByteArray &type, HeaderMakerBase *maker);
 
     friend class HeaderFactoryPrivate;
     HeaderFactoryPrivate *const d;

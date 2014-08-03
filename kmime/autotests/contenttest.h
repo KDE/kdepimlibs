@@ -23,8 +23,8 @@
 
 class ContentTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testGetHeaderInstance();
     void testHeaderAddRemove();
     void testHeaderAppendPrepend();

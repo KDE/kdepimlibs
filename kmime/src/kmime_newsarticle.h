@@ -27,13 +27,14 @@
 #include "kmime_message.h"
 #include <supertrait.h>
 
-namespace KMime {
+namespace KMime
+{
 
 class NewsArticlePrivate;
 
 class KMIME_EXPORT NewsArticle : public Message
 {
-  public:
+public:
     /**
       A shared pointer to a news article.
     */
@@ -56,69 +57,69 @@ class KMIME_EXPORT NewsArticle : public Message
     virtual void clear();
 
     /* reimpl */
-    virtual KMIME_DEPRECATED KMime::Headers::Base * getHeaderByType( const char *type );
+    virtual KMIME_DEPRECATED KMime::Headers::Base *getHeaderByType(const char *type);
 
     /* reimpl */
-    virtual KMime::Headers::Base * headerByType( const char *type );
+    virtual KMime::Headers::Base *headerByType(const char *type);
 
     /* reimpl */
-    virtual void setHeader( KMime::Headers::Base *h );
+    virtual void setHeader(KMime::Headers::Base *h);
 
     /* reimpl */
-    virtual bool removeHeader( const char *type );
+    virtual bool removeHeader(const char *type);
 
     /**
       Returns the Control header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Control *control( bool create = true );
+    virtual KMime::Headers::Control *control(bool create = true);
 
     /**
       Returns the Supersedes header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Supersedes *supersedes( bool create = true );
+    virtual KMime::Headers::Supersedes *supersedes(bool create = true);
 
     /**
       Returns the Mail-Copies-To header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::MailCopiesTo *mailCopiesTo( bool create = true );
+    virtual KMime::Headers::MailCopiesTo *mailCopiesTo(bool create = true);
 
     /**
       Returns the Newsgroups header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Newsgroups *newsgroups( bool create = true );
+    virtual KMime::Headers::Newsgroups *newsgroups(bool create = true);
 
     /**
       Returns the Follow-Up-To header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::FollowUpTo *followUpTo( bool create = true );
+    virtual KMime::Headers::FollowUpTo *followUpTo(bool create = true);
 
     /**
       Returns the Lines header.
       @param create If true, create the header if it doesn't exist yet.
     */
-    virtual KMime::Headers::Lines *lines( bool create = true );
+    virtual KMime::Headers::Lines *lines(bool create = true);
 
-  protected:
+protected:
     /* reimpl */
     virtual QByteArray assembleHeaders();
 
-  private:
-    Q_DECLARE_PRIVATE( NewsArticle )
+private:
+    Q_DECLARE_PRIVATE(NewsArticle)
 
 }; // class NewsArticle
 
 } // namespace KMime
 
-
 //@cond PRIVATE
 // super class trait specialization
-namespace KPIMUtils {
-  template <> struct SuperClass<KMime::NewsArticle> : public SuperClassTrait<KMime::Message>{};
+namespace KPIMUtils
+{
+template <> struct SuperClass<KMime::NewsArticle> : public SuperClassTrait<KMime::Message> {};
 }
 //@endcond
 

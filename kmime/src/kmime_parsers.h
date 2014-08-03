@@ -26,9 +26,11 @@
 #include<QByteArray>
 #include<QList>
 
-namespace KMime {
+namespace KMime
+{
 
-namespace Parser {
+namespace Parser
+{
 
 /** Helper-class: splits a multipart-message into single
     parts as described in RFC 2046
@@ -36,19 +38,25 @@ namespace Parser {
 */
 class MultiPart
 {
-  public:
-    MultiPart( const QByteArray &src, const QByteArray &boundary );
+public:
+    MultiPart(const QByteArray &src, const QByteArray &boundary);
     ~MultiPart() {}
 
     bool parse();
     QList<QByteArray> parts()
-      { return p_arts; }
+    {
+        return p_arts;
+    }
     QByteArray preamble()
-      { return p_reamble; }
+    {
+        return p_reamble;
+    }
     QByteArray epilouge()
-      { return e_pilouge; }
+    {
+        return e_pilouge;
+    }
 
-  protected:
+protected:
     QByteArray s_rc, b_oundary, p_reamble, e_pilouge;
     QList<QByteArray> p_arts;
 };
@@ -59,31 +67,45 @@ class MultiPart
 */
 class NonMimeParser
 {
-  public:
-    explicit NonMimeParser( const QByteArray &src );
+public:
+    explicit NonMimeParser(const QByteArray &src);
     virtual ~NonMimeParser() {}
     virtual bool parse() = 0;
     bool isPartial()
     {
-      return ( p_artNr > -1 && t_otalNr > -1 && t_otalNr != 1 );
+        return (p_artNr > -1 && t_otalNr > -1 && t_otalNr != 1);
     }
     int partialNumber()
-      { return p_artNr; }
+    {
+        return p_artNr;
+    }
     int partialCount()
-      { return t_otalNr; }
+    {
+        return t_otalNr;
+    }
     bool hasTextPart()
-      { return ( t_ext.length() > 1 ); }
+    {
+        return (t_ext.length() > 1);
+    }
     QByteArray textPart()
-      { return t_ext; }
+    {
+        return t_ext;
+    }
     QList<QByteArray> binaryParts()
-      { return b_ins; }
+    {
+        return b_ins;
+    }
     QList<QByteArray> filenames()
-      { return f_ilenames; }
+    {
+        return f_ilenames;
+    }
     QList<QByteArray> mimeTypes()
-      { return m_imeTypes; }
+    {
+        return m_imeTypes;
+    }
 
-  protected:
-    static QByteArray guessMimeType( const QByteArray &fileName );
+protected:
+    static QByteArray guessMimeType(const QByteArray &fileName);
 
     QByteArray s_rc, t_ext;
     QList<QByteArray> b_ins, f_ilenames, m_imeTypes;
@@ -96,12 +118,12 @@ class NonMimeParser
 */
 class UUEncoded : public NonMimeParser
 {
-  public:
-    UUEncoded( const QByteArray &src, const QByteArray &subject );
+public:
+    UUEncoded(const QByteArray &src, const QByteArray &subject);
 
     virtual bool parse();
 
-  protected:
+protected:
     QByteArray s_ubject;
 };
 
@@ -111,16 +133,18 @@ class UUEncoded : public NonMimeParser
 */
 class YENCEncoded : public NonMimeParser
 {
-  public:
-    explicit YENCEncoded( const QByteArray &src );
+public:
+    explicit YENCEncoded(const QByteArray &src);
 
     virtual bool parse();
     QList<QByteArray> binaryParts()
-      { return b_ins; }
+    {
+        return b_ins;
+    }
 
-  protected:
+protected:
     QList<QByteArray> b_ins;
-    static bool yencMeta( QByteArray &src, const QByteArray &name, int *value );
+    static bool yencMeta(QByteArray &src, const QByteArray &name, int *value);
 };
 
 } // namespace Parser

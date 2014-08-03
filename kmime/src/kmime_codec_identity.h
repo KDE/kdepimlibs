@@ -39,7 +39,8 @@
 
 class QByteArray;
 
-namespace KMime {
+namespace KMime
+{
 
 /**
   @brief
@@ -47,14 +48,14 @@ namespace KMime {
 */
 class KMIME_EXPORT IdentityCodec : public Codec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs the Identity codec.
     */
     IdentityCodec() : Codec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -67,51 +68,51 @@ class KMIME_EXPORT IdentityCodec : public Codec
       @copydoc
       QByteArray Codec::encode()
     */
-    QByteArray encode( const QByteArray &src, bool withCRLF=false ) const;
+    QByteArray encode(const QByteArray &src, bool withCRLF = false) const;
 
     /**
       @copydoc
       QByteArray Codec::decode()
     */
-    QByteArray decode( const QByteArray &src, bool withCRLF=false ) const;
+    QByteArray decode(const QByteArray &src, bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF ) const
+    int maxEncodedSizeFor(int insize, bool withCRLF) const
     {
-      if ( withCRLF ) {
-        return 2 * insize;
-      } else {
-        return insize;
-      }
+        if (withCRLF) {
+            return 2 * insize;
+        } else {
+            return insize;
+        }
     }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF ) const
+    int maxDecodedSizeFor(int insize, bool withCRLF) const
     {
-      if ( withCRLF ) {
-        return 2 * insize;
-      } else {
-        return insize;
-      }
+        if (withCRLF) {
+            return 2 * insize;
+        } else {
+            return insize;
+        }
     }
 
     /**
       @copydoc
       Codec::makeEncoder()
     */
-    Encoder *makeEncoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
 
     /**
       @copydoc
       Codec::makeDecoder()
     */
-    Decoder *makeDecoder( bool withCRLF=false ) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 /**
@@ -120,14 +121,14 @@ class KMIME_EXPORT IdentityCodec : public Codec
 */
 class KMIME_EXPORT SevenBitCodec : public IdentityCodec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs the 7-bit codec.
     */
     SevenBitCodec() : IdentityCodec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -138,7 +139,9 @@ class KMIME_EXPORT SevenBitCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-    { return "7bit"; }
+    {
+        return "7bit";
+    }
 };
 
 /**
@@ -147,14 +150,14 @@ class KMIME_EXPORT SevenBitCodec : public IdentityCodec
 */
 class KMIME_EXPORT EightBitCodec : public IdentityCodec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs the 8-bit codec.
     */
     EightBitCodec() : IdentityCodec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -165,7 +168,9 @@ class KMIME_EXPORT EightBitCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-    { return "8bit"; }
+    {
+        return "8bit";
+    }
 };
 
 /**
@@ -174,14 +179,14 @@ class KMIME_EXPORT EightBitCodec : public IdentityCodec
 */
 class KMIME_EXPORT BinaryCodec : public IdentityCodec
 {
-  protected:
+protected:
     friend class Codec;
     /**
       Constructs the 8-bit-binary codec.
     */
     BinaryCodec() : IdentityCodec() {}
 
-  public:
+public:
     /**
       Destroys the codec.
     */
@@ -192,21 +197,29 @@ class KMIME_EXPORT BinaryCodec : public IdentityCodec
       Codec::name()
     */
     const char *name() const
-    { return "binary"; }
+    {
+        return "binary";
+    }
 
     /**
       @copydoc
       Codec::maxEncodedSizeFor()
     */
-    int maxEncodedSizeFor( int insize, bool withCRLF=false ) const
-    { Q_UNUSED( withCRLF ); return insize; }
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
+        return insize;
+    }
 
     /**
       @copydoc
       Codec::maxDecodedSizeFor()
     */
-    int maxDecodedSizeFor( int insize, bool withCRLF=false ) const
-    { Q_UNUSED( withCRLF ); return insize; }
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        Q_UNUSED(withCRLF);
+        return insize;
+    }
 };
 
 } // namespace KMime

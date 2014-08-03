@@ -24,8 +24,8 @@
 
 class HeaderFactoryTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void initTestCase();
     void testBuiltInHeaders();
     void testCustomHeaders();
