@@ -1,12 +1,3 @@
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/akonadi
-    ${CMAKE_BINARY_DIR}/akonadi
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${Boost_INCLUDE_DIR}
-    ${AKONADI_INCLUDE_DIR}
-)
-
 kde_enable_exceptions()
 
 set(benchmarker_SRCS

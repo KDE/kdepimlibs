@@ -3,8 +3,6 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED COMPONENTS Test Widgets)
 
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-include_directories(${CMAKE_BINARY_DIR}/akonadi/kmime)
-
 # TODO apparently QTEST_AKONADIMAIN doesn't like NO_CASTs...
 remove_definitions( -DQT_NO_CAST_FROM_ASCII )
 remove_definitions( -DQT_NO_CAST_TO_ASCII )
