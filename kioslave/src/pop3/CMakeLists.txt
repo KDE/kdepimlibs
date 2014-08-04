@@ -12,8 +12,6 @@ else()
 endif()
 
 
-include_directories(${kio_INCLUDE_DIR}/kio)
-
 configure_file(pop3-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pop3-config.h )
 
 include_directories(  ${pop3_optional_includes}  )
