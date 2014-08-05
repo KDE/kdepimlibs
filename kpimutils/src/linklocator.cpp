@@ -378,7 +378,7 @@ QString LinkLocator::convertToHtml(const QString &plainText, int flags,
                         hyperlink = str;
                     }
 
-                    result += QLatin1String("<a href=\"") + hyperlink + QLatin1String("\">") + Qt::escape(str) + QLatin1String("</a>");
+                    result += QLatin1String("<a href=\"") + hyperlink + QLatin1String("\">") + str.toHtmlEscaped() + QLatin1String("</a>");
                     x += locator.mPos - start;
                     continue;
                 }
