@@ -37,7 +37,7 @@ Requester::Requester()
 
     SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
     rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
-    connect(rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)));
+    connect(rjob, &SpecialMailCollectionsRequestJob::result, this, &Requester::requestResult);
     rjob->start();
 }
 

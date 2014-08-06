@@ -39,7 +39,7 @@ Runner::Runner()
 
     SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
     rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
-    connect(rjob, SIGNAL(result(KJob *)), this, SLOT(checkFolders()));
+    connect(rjob, &SpecialMailCollectionsRequestJob::result, this, &Runner::checkFolders);
     rjob->start();
 }
 

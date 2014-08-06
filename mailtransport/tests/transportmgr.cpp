@@ -50,10 +50,10 @@ TransportMgr::TransportMgr() :
     vbox->addWidget(mComboBox);
     QPushButton *b = new QPushButton(QLatin1String("&Edit"), this);
     vbox->addWidget(b);
-    connect(b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()));
+    connect(b, &QPushButton::clicked, this, &TransportMgr::editBtnClicked);
     b = new QPushButton(QLatin1String("&Remove all transports"), this);
     vbox->addWidget(b);
-    connect(b, SIGNAL(clicked(bool)), SLOT(removeAllBtnClicked()));
+    connect(b, &QPushButton::clicked, this, &TransportMgr::removeAllBtnClicked);
     mSenderEdit = new QLineEdit(this);
     mSenderEdit->setPlaceholderText(QLatin1String("Sender"));
     vbox->addWidget(mSenderEdit);
@@ -71,10 +71,10 @@ TransportMgr::TransportMgr() :
     mMailEdit->setLineWrapMode(QTextEdit::NoWrap);
     vbox->addWidget(mMailEdit);
     b = new QPushButton(QLatin1String("&Send"), this);
-    connect(b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()));
+    connect(b, &QPushButton::clicked, this, &TransportMgr::sendBtnClicked);
     vbox->addWidget(b);
     b = new QPushButton(QLatin1String("&Cancel"), this);
-    connect(b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()));
+    connect(b, &QPushButton::clicked, this, &TransportMgr::cancelBtnClicked);
     vbox->addWidget(b);
 }
 

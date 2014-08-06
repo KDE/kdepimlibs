@@ -77,13 +77,13 @@ MessageQueuer::MessageQueuer()
     vbox->addWidget(mMailEdit);
     QPushButton *b = new QPushButton(QLatin1String("&Send Now"), this);
     vbox->addWidget(b);
-    connect(b, SIGNAL(clicked(bool)), SLOT(sendNowClicked()));
+    connect(b, &QPushButton::clicked, this, &MessageQueuer::sendNowClicked);
     b = new QPushButton(QLatin1String("Send &Queued"), this);
     vbox->addWidget(b);
-    connect(b, SIGNAL(clicked(bool)), SLOT(sendQueuedClicked()));
+    connect(b, &QPushButton::clicked, this, &MessageQueuer::sendQueuedClicked);
     b = new QPushButton(QLatin1String("Send on &Date..."), this);
     vbox->addWidget(b);
-    connect(b, SIGNAL(clicked(bool)), SLOT(sendOnDateClicked()));
+    connect(b, &QPushButton::clicked, this, &MessageQueuer::sendOnDateClicked);
 }
 
 void MessageQueuer::sendNowClicked()
