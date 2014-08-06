@@ -120,8 +120,8 @@ TransportConfigDialog::TransportConfigDialog(Transport *transport, QWidget *pare
     mainLayout->addWidget(buttonBox);
 
     connect(d->okButton, SIGNAL(clicked()), this, SLOT(okClicked()));
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TransportConfigDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &TransportConfigDialog::reject);
 
     d->okButton->setEnabled(!pathIsEmpty);
 }
