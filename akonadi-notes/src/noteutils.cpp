@@ -191,7 +191,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
         from = msg->from(false)->asUnicodeString();
     }
     creationDate = msg->date(true)->dateTime();
-    if (msg->contentType(false) && msg->contentType(false)->asUnicodeString() == QLatin1String("text/html")) {
+    if ( msg->mainBodyPart()->contentType( false ) && msg->mainBodyPart()->contentType()->mimeType() == "text/html" ) {
         textFormat = Qt::RichText;
     }
 
@@ -381,10 +381,10 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     }
 
     msg->subject(true)->fromUnicodeString(title, ENCODING);
-    msg->contentType(true)->setMimeType(d->textFormat == Qt::RichText ? "text/html" : "text/plain");
     msg->date(true)->setDateTime(creationDate);
     msg->from(true)->fromUnicodeString(d->from, ENCODING);
     msg->mainBodyPart()->fromUnicodeString(text);
+    msg->mainBodyPart()->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
     //QT5 port to QDateTime
     //TODO use Locale ('C');
     QString formatDate = lastModifiedDate.toString(QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
