@@ -123,7 +123,7 @@ private Q_SLOTS:
 
         Attachment a(QByteArray("testfile2"), QLatin1String("mimetype/mime3"));
         a.setLabel(QLatin1String("label"));
-        note.attachments() << Attachment(QUrl("file://url/to/file"), QLatin1String("mimetype/mime")) << a;
+        note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << a;
 
         KMime::Message::Ptr msg = note.message();
         NoteMessageWrapper result(msg);
