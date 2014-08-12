@@ -732,7 +732,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->mActions.insert(MarkMailAsRead, action);
         d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_read"), action);
         action->setData(QByteArray("R"));
-        action->setShortcut(Qt::CTRL + Qt::Key_R);
+        d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_R));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
         break;
     case MarkMailAsUnread:
@@ -744,7 +744,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setWhatsThis(i18n("Mark selected messages as unread."));
         d->mActions.insert(MarkMailAsUnread, action);
         d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_unread"), action);
-        action->setShortcut(Qt::CTRL + Qt::Key_U);
+        d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_U));
         action->setData(QByteArray("U"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
         break;
@@ -824,7 +824,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action = new QAction(d->mParentWidget);
         action->setIcon(QIcon::fromTheme(QLatin1String("user-trash")));
         action->setText(i18n("Move to &Trash"));
-        action->setShortcut(QKeySequence(Qt::Key_Delete));
+        d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::Key_Delete));
         d->setHelpText(action, i18n("Move selected messages to the trash folder."));
         action->setWhatsThis(i18n("Move selected messages to the trash folder."));
         d->mActions.insert(MoveToTrash, action);
@@ -846,7 +846,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setText(i18n("Remove &Duplicate Messages"));
         d->setHelpText(action, i18n("Remove duplicate messages."));
         action->setWhatsThis(i18n("Remove duplicate messages."));
-        action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Asterisk));
+        d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_Asterisk));
         d->mActions.insert(RemoveDuplicates, action);
         d->mActionCollection->addAction(QString::fromLatin1("akonadi_remove_duplicates"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotRemoveDuplicates()));
