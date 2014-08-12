@@ -316,8 +316,8 @@ void LinkLocatorTest::testHtmlConvert_data()
     //                       " utiliser des lettres accentuées dans du texte mis en forme</b>.";
 
     // Bug reported by dfaure, the <hostname> would get lost
-    QTest::newRow("") << "KUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
-                      << "KUrl url(&quot;<a href=\"http://strange<hostname>/\">"
+    QTest::newRow("") << "QUrl url(\"http://strange<hostname>/\");" << (0x08 | 0x02)
+                      << "QUrl url(&quot;<a href=\"http://strange<hostname>/\">"
                       "http://strange&lt;hostname&gt;/</a>&quot;);";
 
     // Bug: 211128 - plain text emails should not replace ampersand & with &amp;
