@@ -43,7 +43,7 @@
 #include <messagestatus.h>
 #include <kmime/kmime_message.h>
 
-#include <kaction.h>
+#include <qaction.h>
 #include <kactioncollection.h>
 
 #include <klocalizedstring.h>

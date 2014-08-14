@@ -29,7 +29,6 @@
 #include <KDateTimeWidget>
 #include <KDialog>
 #include <QLineEdit>
-#include <KLocale>
 #include <KLocalizedString>
 #include <KTextEdit>
 #include <QVBoxLayout>

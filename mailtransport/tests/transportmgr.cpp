@@ -28,7 +28,6 @@
 
 #include <QApplication>
 #include <QLineEdit>
-#include <KLocale>
 #include <KLocalizedString>
 #include <QDebug>
 #include <KTextEdit>

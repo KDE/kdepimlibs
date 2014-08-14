@@ -20,7 +20,6 @@
 #include "sendqueued.h"
 
 #include <QApplication>
-#include <KLocale>
 #include <KJob>
 
 #include <collection.h>

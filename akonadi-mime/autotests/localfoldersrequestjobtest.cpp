@@ -24,7 +24,6 @@
 #include <QSignalSpy>
 
 #include <QDebug>
-#include <KStandardDirs>
 
 #include <agentinstance.h>
 #include <agentmanager.h>
