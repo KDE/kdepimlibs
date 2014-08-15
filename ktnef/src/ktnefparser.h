@@ -38,9 +38,7 @@
 
 namespace KTnef
 {
-class KTNEFAttach;
 class KTNEFMessage;
-class KTNEFProperty;
 }
 
 namespace KTnef
