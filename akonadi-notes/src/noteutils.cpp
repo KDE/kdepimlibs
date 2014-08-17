@@ -375,20 +375,15 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     if (!d->uid.isEmpty()) {
         uid = d->uid;
     } else {
-        // Qt5: Port
-//     uid = QUuid::createUuid();
+	uid = QUuid::createUuid().toString().mid(1, 36);
     }
 
     msg->subject(true)->fromUnicodeString(title, ENCODING);
     msg->date(true)->setDateTime(creationDate);
     msg->from(true)->fromUnicodeString(d->from, ENCODING);
-    msg->mainBodyPart()->fromUnicodeString(text);
-    msg->mainBodyPart()->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
-    //QT5 port to QDateTime
-    //TODO use Locale ('C');
-    QString formatDate = lastModifiedDate.toString(QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
+    const QString formatDate = QLocale::c().toString(lastModifiedDate, QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
 
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate /*lastModifiedDate.toString( QDateTime::RFCDateDay )*/, ENCODING));
+    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate, ENCODING));
     msg->appendHeader(new KMime::Headers::Generic(X_NOTES_UID_HEADER, msg.get(), uid, ENCODING));
 
     QString classification = CLASSIFICATION_PUBLIC;
@@ -412,6 +407,9 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     if (!d->custom.isEmpty()) {
         msg->addContent(d->createCustomPart());
     }
+
+    msg->mainBodyPart()->fromUnicodeString(text);
+    msg->mainBodyPart()->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
 
     msg->assemble();
     return msg;

@@ -72,7 +72,6 @@ private Q_SLOTS:
     {
         NoteMessageWrapper note;
         NoteMessageWrapper result(note.message());
-//       qDebug() << result.uid();
         QVERIFY(!result.uid().isEmpty());
         QVERIFY(result.creationDate().isValid());
         QVERIFY(result.lastModifiedDate().isValid());
