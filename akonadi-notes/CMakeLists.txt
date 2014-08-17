@@ -28,7 +28,6 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 ########### Find packages ###########
 #kdelibs4support is needed by kmime
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
