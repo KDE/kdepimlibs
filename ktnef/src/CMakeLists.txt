@@ -26,7 +26,6 @@ PUBLIC
   KF5::CalendarCore
 PRIVATE
   KF5::KDELibs4Support
-  KF5::KIOCore
   KF5::CalendarUtils
   KF5::Abc
   KF5::PimUtils
