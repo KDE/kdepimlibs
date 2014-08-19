@@ -1,13 +1,11 @@
 #include "kmime_dateformatter.h"
 #include "kmime_header_parsing.h"
 #include <qdebug.h>
-//#include <kcomponentdata.h>
 using namespace KMime;
 
 int
 main()
 {
-    //KComponentData app( "# " );
     DateFormatter t;
 
     time_t ntime = time(0);

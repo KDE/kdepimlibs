@@ -46,7 +46,6 @@
 #include <kcharsets.h>
 #include <kcodecs.h>
 
-#include <klocale.h>
 #include <klocalizedstring.h>
 #include <qdebug.h>
 
