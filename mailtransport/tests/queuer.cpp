@@ -26,7 +26,7 @@
 #include <QPushButton>
 
 #include <QApplication>
-#include <KDateTimeWidget>
+#include <QDateTimeEdit>
 #include <KDialog>
 #include <QLineEdit>
 #include <KLocalizedString>
@@ -103,12 +103,9 @@ void MessageQueuer::sendQueuedClicked()
 void MessageQueuer::sendOnDateClicked()
 {
     QPointer<KDialog> dialog = new KDialog(this);
-    KDateTimeWidget *dt = new KDateTimeWidget(dialog);
+    QDateTimeEdit *dt = new QDateTimeEdit(dialog);
     dt->setDateTime(QDateTime::currentDateTime());
-    // HACK:
-    QTimeEdit *te = dt->findChild<QTimeEdit *>();
-    Q_ASSERT(te);
-    te->setDisplayFormat(QLatin1String("hh:mm:ss"));
+    dt->setDisplayFormat(QLatin1String("hh:mm:ss"));
     dialog->setMainWidget(dt);
     dialog->enableButtonCancel(false);
     dialog->exec();
