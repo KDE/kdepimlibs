@@ -20,11 +20,7 @@
 #include "socialfeeditem.h"
 #include "socialfeeditem_p.h"
 
-#include <KDateTime>
-
-#if 0
-#include <qjson/qobjecthelper.h>
-#endif
+#include <QDateTime>
 
 Akonadi::SocialFeedItem::SocialFeedItem()
     : d(new SocialFeedItemPrivate)
@@ -109,7 +105,7 @@ void Akonadi::SocialFeedItem::setPostImageUrl(const QUrl &imageUrl)
     d->postImageUrl = imageUrl;
 }
 
-KDateTime Akonadi::SocialFeedItem::postTime() const
+QDateTime Akonadi::SocialFeedItem::postTime() const
 {
     return d->postTime;
 }
@@ -134,7 +130,7 @@ void Akonadi::SocialFeedItem::setPostTime(const QString &postTimeString,
 {
     d->postTimeString = postTimeString;
     d->postTimeFormat = postTimeFormat;
-    d->postTime = KDateTime::fromString(d->postTimeString, d->postTimeFormat);
+    d->postTime = QDateTime::fromString(d->postTimeString, d->postTimeFormat);
 }
 
 QString Akonadi::SocialFeedItem::postTimeFormat() const

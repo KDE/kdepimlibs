@@ -23,7 +23,7 @@
 #include <QSharedData>
 #include <QString>
 
-#include <KDateTime>
+#include <QDateTime>
 
 #include "socialfeeditem.h"
 
@@ -45,7 +45,7 @@ public:
     QString userId;
     QString postTimeString;
     QString postTimeFormat;
-    KDateTime postTime;
+    QDateTime postTime;
     QString postInfo;
     bool shared;
     QString sharedFrom;

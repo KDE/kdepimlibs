@@ -26,7 +26,7 @@
 #include <QVariant>
 #include <QUrl>
 
-class KDateTime;
+class QDateTime;
 
 namespace Akonadi
 {
@@ -160,7 +160,7 @@ public:
     /**
      * @return Time of the post
      */
-    KDateTime postTime() const;
+    QDateTime postTime() const;
 
     /**
      * Sets the time string which was received from the network together with the format
