@@ -264,13 +264,13 @@ void BlogPost::setTags(const QStringList &tags)
     d_ptr->mTags = tags;
 }
 
-// QList<KUrl> BlogPost::trackBackUrls() const
+// QList<QUrl> BlogPost::trackBackUrls() const
 // {
 //   //TODO
-//   return QList<KUrl>();
+//   return QList<QUrl>();
 // }
 //
-// void BlogPost::setTrackBackUrls( const QList<KUrl> &trackBackUrls )
+// void BlogPost::setTrackBackUrls( const QList<QUrl> &trackBackUrls )
 // {
 //   Q_UNUSED( trackBackUrls );
 //   //TODO

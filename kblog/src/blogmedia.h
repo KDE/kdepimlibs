@@ -87,7 +87,7 @@ public:
       Returns the server side url.
 
       @return The url on the server.
-      @see setUrl( const KUrl& )
+      @see setUrl( const QUrl& )
     */
     QUrl url() const;
 

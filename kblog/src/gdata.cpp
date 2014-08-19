@@ -33,7 +33,7 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <KDateTime>
-#include <KUrl>
+#include <QUrl>
 
 #include <QByteArray>
 #include <QRegExp>
@@ -118,7 +118,7 @@ void GData::listRecentPosts(const QStringList &labels, int number,
         urlString += QStringLiteral("/-/") + labels.join(QStringLiteral("/"));
     }
     qDebug() << "listRecentPosts()";
-    KUrl url(urlString);
+    QUrl url(urlString);
 
     if (!upMinTime.isNull()) {
         url.addQueryItem(QStringLiteral("updated-min"), upMinTime.toString());
@@ -245,7 +245,7 @@ void GData::modifyPost(KBlog::BlogPost *post)
     stream.writeRawData(atomMarkup.toUtf8(), atomMarkup.toUtf8().length());
 
     KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-                                  KUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId()),
+                                  QUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId()),
                                   KIO::HideProgressInfo);
 
     Q_ASSERT(job);
@@ -307,7 +307,7 @@ void GData::createPost(KBlog::BlogPost *post)
     stream.writeRawData(atomMarkup.toUtf8(), atomMarkup.toUtf8().length());
 
     KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-                                  KUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default")),
+                                  QUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default")),
                                   KIO::HideProgressInfo);
 
     Q_ASSERT(job);
@@ -342,7 +342,7 @@ void GData::removePost(KBlog::BlogPost *post)
     QByteArray postData;
 
     KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-                                  KUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId()),
+                                  QUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/posts/default/") + post->postId()),
                                   KIO::HideProgressInfo);
 
     d->mRemovePostMap[ job ] = post;
@@ -396,7 +396,7 @@ void GData::createComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
     stream.writeRawData(atomMarkup.toUtf8(), atomMarkup.toUtf8().length());
 
     KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-                                  KUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() + QStringLiteral("/comments/default")),
+                                  QUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() + QStringLiteral("/comments/default")),
                                   KIO::HideProgressInfo);
 
     d->mCreateCommentMap[ job ][post] = comment;
@@ -441,7 +441,7 @@ void GData::removeComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
     QByteArray postData;
 
     KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,
-                                  KUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() +
+                                  QUrl(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QStringLiteral("/") + post->postId() +
                                        QStringLiteral("/comments/default/") + comment->commentId()), KIO::HideProgressInfo);
     d->mRemoveCommentMap[ job ][ post ] = comment;
 
@@ -476,7 +476,7 @@ bool GDataPrivate::authenticate()
     qDebug();
     Q_Q(GData);
     QByteArray data;
-    KUrl authGateway(QStringLiteral("https://www.google.com/accounts/ClientLogin"));
+    QUrl authGateway(QStringLiteral("https://www.google.com/accounts/ClientLogin"));
     authGateway.addQueryItem(QStringLiteral("Email"), q->username());
     authGateway.addQueryItem(QStringLiteral("Passwd"), q->password());
     authGateway.addQueryItem(QStringLiteral("source"), q->userAgent());

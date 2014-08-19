@@ -298,8 +298,8 @@ public:
     */
     void setTags(const QStringList &tags);
 
-//     QList<KUrl> trackBackUrls() const; // TODO check if necessary
-//     void setTrackBackUrls( const QList<KUrl> &trackBackUrls );
+//     QList<QUrl> trackBackUrls() const; // TODO check if necessary
+//     void setTrackBackUrls( const QList<QUrl> &trackBackUrls );
 
     /**
       Returns the mood.

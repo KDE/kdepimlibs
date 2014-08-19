@@ -154,7 +154,7 @@ Q_SIGNALS:
     void listedFriendsOf(const QMap<QString,
                          QMap<QString, QString> > &friendsOf);
     void listedMoods(const QMap<int, QString> &moods);
-    void listedPictureKeywords(const QMap<QString, KUrl> &pictureKeywords);
+    void listedPictureKeywords(const QMap<QString, QUrl> &pictureKeywords);
     void fetchedUserInfo();
 
 protected:
