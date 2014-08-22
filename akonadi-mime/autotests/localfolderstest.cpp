@@ -24,11 +24,9 @@
 #include "../specialmailcollectionssettings.h"
 
 #include <QDBusConnectionInterface>
-#include <QDBusInterface>
 #include <QFile>
 #include <QSignalSpy>
 
-#include <QDebug>
 
 #include <agentinstance.h>
 #include <agentmanager.h>

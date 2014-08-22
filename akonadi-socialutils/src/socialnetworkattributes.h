@@ -24,7 +24,6 @@
 #include "attribute.h"
 
 #include <QString>
-#include <QVariantMap>
 
 namespace Akonadi
 {

@@ -21,7 +21,6 @@
 #include "queuer.h"
 
 #include <QDateTime>
-#include <QTimeEdit>
 #include <QPointer>
 #include <QPushButton>
 
@@ -29,7 +28,6 @@
 #include <QDateTimeEdit>
 #include <KDialog>
 #include <QLineEdit>
-#include <KLocalizedString>
 #include <KTextEdit>
 #include <QVBoxLayout>
 #include <control.h>

@@ -23,7 +23,6 @@
 
 #include <QApplication>
 #include <QDebug>
-#include <KLocalizedString>
 
 #include <control.h>
 
