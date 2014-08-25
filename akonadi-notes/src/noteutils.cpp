@@ -27,7 +27,6 @@
 #include <qstring.h>
 #include <quuid.h>
 #include <qdom.h>
-#include <QTextDocument>
 
 namespace Akonadi
 {
