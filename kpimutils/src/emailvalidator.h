@@ -35,7 +35,7 @@ namespace KPIMUtils
 class KPIMUTILS_EXPORT EmailValidator : public QValidator //krazy:exclude=dpointer
 {
 public:
-    EmailValidator(QObject *parent);
+    explicit EmailValidator(QObject *parent);
 
     virtual State validate(QString &str, int &pos) const;
 
