@@ -296,30 +296,4 @@ QString checkAndCorrectPermissionsIfPossible(const QString &toCheck,
     return error;
 }
 
-bool removeDirAndContentsRecursively(const QString &path)
-{
-    bool success = true;
-
-    QDir d;
-    d.setPath(path);
-    d.setFilter(QDir::Files | QDir::Dirs | QDir::Hidden | QDir::NoSymLinks);
-
-    QFileInfoList list = d.entryInfoList();
-
-    Q_FOREACH (const QFileInfo &fi, list) {
-        if (fi.isDir()) {
-            if (fi.fileName() != QLatin1String(".") && fi.fileName() != QLatin1String("..")) {
-                success = success && removeDirAndContentsRecursively(fi.absoluteFilePath());
-            }
-        } else {
-            success = success && d.remove(fi.absoluteFilePath());
-        }
-    }
-
-    if (success) {
-        success = success && d.rmdir(path);   // nuke ourselves, we should be empty now
-    }
-    return success;
-}
-
 }
