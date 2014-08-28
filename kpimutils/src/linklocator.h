@@ -177,7 +177,6 @@ protected:
     QString highlightedText();
 
 private:
-private:
     //@cond PRIVATE
     class Private;
     Private *const d;
