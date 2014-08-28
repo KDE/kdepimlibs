@@ -28,6 +28,7 @@
 
 
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 
 using namespace Akonadi;
 
@@ -85,6 +86,10 @@ SpecialMailCollectionsPrivate::~SpecialMailCollectionsPrivate()
 
 static KCoreConfigSkeleton *getConfig(const QString &filename)
 {
+    Kdelibs4ConfigMigrator migrate(QLatin1String("specialmailcollection"));
+    migrate.setConfigFiles(QStringList() << filename);
+    migrate.migrate();
+
     Settings::instance(ServerManager::addNamespace(filename));
     return Settings::self();
 }
