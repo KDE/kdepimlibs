@@ -282,7 +282,7 @@ void SMTPConfigWidget::passwordsLoaded()
 }
 
 // TODO rename
-void SMTPConfigWidget::slotFinished(QList<int> results)
+void SMTPConfigWidget::slotFinished(const QList<int> &results)
 {
     Q_D(SMTPConfigWidget);
 
