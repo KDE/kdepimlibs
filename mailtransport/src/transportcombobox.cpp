@@ -70,11 +70,6 @@ TransportBase::EnumType::type TransportComboBox::transportType() const
 
 void TransportComboBox::updateComboboxList()
 {
-    fillComboBox();
-}
-
-void TransportComboBox::fillComboBox()
-{
     const int oldTransport = currentTransportId();
     clear();
 

@@ -332,14 +332,14 @@ void SMTPConfigWidget::hostNameChanged(const QString &text)
     Q_D(SMTPConfigWidget);
 
     // sanitize hostname...
-    int pos = d->ui.kcfg_host->cursorPosition();
+    const int pos = d->ui.kcfg_host->cursorPosition();
     d->ui.kcfg_host->blockSignals(true);
     d->ui.kcfg_host->setText(text.trimmed());
     d->ui.kcfg_host->blockSignals(false);
     d->ui.kcfg_host->setCursorPosition(pos);
 
     d->resetAuthCapabilities();
-    for (int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++) {
+    for (int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); ++i) {
         d->encryptionGroup->buttons().at(i)->setEnabled(true);
     }
 }

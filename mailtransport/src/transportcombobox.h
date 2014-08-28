@@ -69,13 +69,8 @@ protected:
 public Q_SLOTS:
     /**
      * @since 4.11
-     * Because of binary compatibility constraints, fillComboBox()
-     * is private. Therefore it must dynamically detect and call this slot.
      */
     void updateComboboxList();
-
-private Q_SLOTS:
-    void fillComboBox();
 
 private:
     TransportComboBoxPrivate *const d;
