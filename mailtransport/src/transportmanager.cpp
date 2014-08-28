@@ -48,6 +48,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
+#include <Kdelibs4ConfigMigrator>
 
 #include <KWallet/Wallet>
 
@@ -125,6 +126,10 @@ static void destroyStaticTransportManager()
 TransportManager::TransportManager()
     : QObject(), d(new TransportManagerPrivate(this))
 {
+    Kdelibs4ConfigMigrator migrate(QLatin1String("transportmanager"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("mailtransports"));
+    migrate.migrate();
+
     qAddPostRoutine(destroyStaticTransportManager);
     d->myOwnChange = false;
     d->appliedChange = false;
