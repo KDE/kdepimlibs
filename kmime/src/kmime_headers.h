@@ -909,8 +909,7 @@ public:
     /**
       Returns whether the Content containing this header is already decoded.
     */
-    // KDE5: rename to isDecoded().
-    bool decoded() const;
+    bool isDecoded() const;
 
     /**
       Set whether the Content containing this header is already decoded.
@@ -918,7 +917,7 @@ public:
       you will want to setDecoded( false ).
       @param decoded if @c true the content is already decoded
     */
-    void setDecoded(bool decoded = true);
+    void setDecoded(bool isDecoded = true);
 
     /**
       Returns whether the Content containing this header needs to be encoded

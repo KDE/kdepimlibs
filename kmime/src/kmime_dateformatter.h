@@ -285,7 +285,6 @@ private:
     //@cond PRIVATE
     FormatType          mFormat;
     mutable time_t      mTodayOneSecondBeforeMidnight;
-    mutable QDateTime   mUnused; // KDE5: remove
     QString             mCustomFormat;
     static int          mDaylight;
     //@endcond

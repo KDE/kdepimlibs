@@ -2064,7 +2064,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
         }
     }
 
-    bool ContentTransferEncoding::decoded() const {
+    bool ContentTransferEncoding::isDecoded() const {
         return d_func()->decoded;
     }
 

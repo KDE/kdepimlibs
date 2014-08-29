@@ -382,7 +382,7 @@ QByteArray Content::decodedContent()
         return ret;
     }
 
-    if (ec->decoded()) {
+    if (ec->isDecoded()) {
         ret = d_ptr->body;
         //Laurent Fix bug #311267
         //removeTrailingNewline = true;
@@ -636,7 +636,7 @@ void Content::changeEncoding(Headers::contentEncoding e)
 
     if (decodeText()) {
         // This is textual content.  Textual content is stored decoded.
-        Q_ASSERT(enc->decoded());
+        Q_ASSERT(enc->isDecoded());
         enc->setEncoding(e);
     } else {
         // This is non-textual content.  Re-encode it.
@@ -826,7 +826,7 @@ bool Content::decodeText()
     if (!contentType()->isText()) {
         return false; //non textual data cannot be decoded here => use decodedContent() instead
     }
-    if (enc->decoded()) {
+    if (enc->isDecoded()) {
         return true; //nothing to do
     }
 
