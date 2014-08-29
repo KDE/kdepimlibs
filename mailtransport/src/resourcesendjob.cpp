@@ -84,7 +84,7 @@ void ResourceSendJob::doStart()
     job->addressAttribute().setBcc(bcc());
     addSubjob(job);
     // Once the item is in the outbox, there is nothing more we can do.
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(slotEmitResult()));
+    connect(job, SIGNAL(result(KJob*)), this, SLOT(slotEmitResult()));
     job->start();
 }
 

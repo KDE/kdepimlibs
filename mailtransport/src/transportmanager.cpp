@@ -233,7 +233,7 @@ void TransportManager::addTransport(Transport *transport)
 
 void TransportManager::schedule(TransportJob *job)
 {
-    connect(job, SIGNAL(result(KJob *)), SLOT(jobResult(KJob *)));
+    connect(job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)));
 
     // check if the job is waiting for the wallet
     if (!job->transport()->isComplete()) {

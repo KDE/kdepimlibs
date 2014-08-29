@@ -100,8 +100,8 @@ SmtpJob::SmtpJob(Transport *transport, QObject *parent)
     if (!s_slavePool.isDestroyed()) {
         s_slavePool->ref++;
     }
-    KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave *, int, QString)),
-                            this, SLOT(slaveError(KIO::Slave *, int, QString)));
+    KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave*,int,QString)),
+                            this, SLOT(slaveError(KIO::Slave*,int,QString)));
 }
 
 SmtpJob::~SmtpJob()
@@ -243,15 +243,15 @@ void SmtpJob::startSmtpJob()
     }
 
     job->addMetaData(QLatin1String("lf2crlf+dotstuff"), QLatin1String("slave"));
-    connect(job, SIGNAL(dataReq(KIO::Job *, QByteArray &)),
-            SLOT(dataRequest(KIO::Job *, QByteArray &)));
+    connect(job, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
+            SLOT(dataRequest(KIO::Job*,QByteArray&)));
 
     addSubjob(job);
     KIO::Scheduler::assignJobToSlave(d->slave, job);
 #else
     SmtpSession *session = new SmtpSession(this);
-    connect(session, SIGNAL(result(MailTransport::SmtpSession *)),
-            SLOT(smtpSessionResult(MailTransport::SmtpSession *)));
+    connect(session, SIGNAL(result(MailTransport::SmtpSession*)),
+            SLOT(smtpSessionResult(MailTransport::SmtpSession*)));
     session->setUseTLS(transport()->encryption() == Transport::EnumEncryption::TLS);
     if (transport()->requiresAuthentication()) {
         session->setSaslMethod(transport()->authenticationTypeString());

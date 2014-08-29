@@ -297,7 +297,7 @@ int main(int argc, char *argv[])
         {
             InteractiveEditInteractor *iei = new InteractiveEditInteractor;
             iei->show();
-            QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context *, GpgME::Error)),
+            QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
                              iei, SLOT(close()));
             std::auto_ptr<EditInteractor> ei(iei);
             ei->setDebugChannel(stderr);

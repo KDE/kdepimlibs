@@ -68,8 +68,8 @@ void MetaWeblog::listCategories()
     QList<QVariant> args(d->defaultArgs(blogId()));
     d->mXmlRpcClient->call(
         QStringLiteral("metaWeblog.getCategories"), args,
-        this, SLOT(slotListCategories(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)));
+        this, SLOT(slotListCategories(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)));
 }
 
 void MetaWeblog::createMedia(KBlog::BlogMedia *media)
@@ -91,8 +91,8 @@ void MetaWeblog::createMedia(KBlog::BlogMedia *media)
     args << map;
     d->mXmlRpcClient->call(
         QStringLiteral("metaWeblog.newMediaObject"), args,
-        this, SLOT(slotCreateMedia(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotCreateMedia(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 
 }

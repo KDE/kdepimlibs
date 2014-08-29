@@ -65,9 +65,9 @@ void LiveJournal::addFriend(const QString &username, int group,
     d->mXmlRpcClient->call("LJ.XMLRPC.editfriends",  // The XML-RPC procedure to call.
                            args, // A list containing all the arguments to pass to the procedure.
                            this, // The object containing the slot to use on success.
-                           SLOT(slotAddFriend(QList<QVariant>, QVariant)), // The slot to call on success.
+                           SLOT(slotAddFriend(QList<QVariant>,QVariant)), // The slot to call on success.
                            this, // The object containing the slot to call on failure.
-                           SLOT(slotError(int, QString, QVariant)), // The slot to call on failure
+                           SLOT(slotError(int,QString,QVariant)), // The slot to call on failure
                            QVariant(i));    // The ID, as we haven't created a post, the location in the map.
 }
 
@@ -110,9 +110,9 @@ void LiveJournal::createPost(KBlog::BlogPost *post)
     d->mXmlRpcClient->call("LJ.XMLRPC.postevent",  // The XML-RPC procedure to call.
                            args, // A list containing all the arguments to pass to the procedure.
                            this, // The object containing the slot to use on success.
-                           SLOT(slotCreatePost(QList<QVariant>, QVariant)), // The slot to call on success.
+                           SLOT(slotCreatePost(QList<QVariant>,QVariant)), // The slot to call on success.
                            this, // The object containing the slot to call on failure.
-                           SLOT(slotError(int, QString, QVariant)), // The slot to call on failure
+                           SLOT(slotError(int,QString,QVariant)), // The slot to call on failure
                            QVariant(i));    // The ID, as we haven't created a post, the location in the map.
 }
 
@@ -214,9 +214,9 @@ void LiveJournal::modifyPost(KBlog::BlogPost *post)
     d->mXmlRpcClient->call("LJ.XMLRPC.editevent",  // The XML-RPC procedure to call.
                            args, // A list containing all the arguments to pass to the procedure.
                            this, // The object containing the slot to use on success.
-                           SLOT(slotCreatePost(QList<QVariant>, QVariant)), // The slot to call on success.
+                           SLOT(slotCreatePost(QList<QVariant>,QVariant)), // The slot to call on success.
                            this, // The object containing the slot to call on failure.
-                           SLOT(slotError(int, QString, QVariant)), // The slot to call on failure
+                           SLOT(slotError(int,QString,QVariant)), // The slot to call on failure
                            QVariant(i));    // The ID, as we haven't created a post, the location in the map.
 }
 
@@ -245,9 +245,9 @@ void LiveJournal::removePost(KBlog::BlogPost *post)
     d->mXmlRpcClient->call("LJ.XMLRPC.editevent",  // The XML-RPC procedure to call.
                            args, // A list containing all the arguments to pass to the procedure.
                            this, // The object containing the slot to use on success.
-                           SLOT(slotRemovePost(QList<QVariant>, QVariant)), // The slot to call on success.
+                           SLOT(slotRemovePost(QList<QVariant>,QVariant)), // The slot to call on success.
                            this, // The object containing the slot to call on failure.
-                           SLOT(slotError(int, QString, QVariant))); // The slot to call on failure.
+                           SLOT(slotError(int,QString,QVariant))); // The slot to call on failure.
 }
 
 void LiveJournal::setUrl(const QUrl &server)

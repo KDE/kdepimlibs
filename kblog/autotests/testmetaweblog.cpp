@@ -141,8 +141,8 @@ void TestMetaWeblog::fetchUserInfo(const QMap<QString, QString> &userInfo)
     qDebug() << "# firstname: " <<  userInfo[QLatin1String("firstname")];
     qDebug() << "##############################\n";
 
-    connect(b, SIGNAL(listedBlogs(QList<QMap<QString, QString> >)),
-            this, SLOT(listBlogs(QList<QMap<QString, QString> >)));
+    connect(b, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+            this, SLOT(listBlogs(QList<QMap<QString,QString> >)));
     b->listBlogs();
     listBlogsTimer->start(TIMEOUT);
 }
@@ -176,8 +176,8 @@ void TestMetaWeblog::listRecentPosts(
     }
     qDebug() << "#################################\n";
 
-    connect(b, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
-            this, SLOT(listCategories(QList<QMap<QString, QString> >)));
+    connect(b, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
+            this, SLOT(listCategories(QList<QMap<QString,QString> >)));
     b->listCategories(); // start chain
     listCategoriesTimer->start(TIMEOUT);
 }
@@ -194,8 +194,8 @@ void TestMetaWeblog::listCategories(
     }
     qDebug() << "###############################\n";
 
-    connect(b, SIGNAL(createdPost(KBlog::BlogPost *)),
-            this, SLOT(createPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(createdPost(KBlog::BlogPost*)),
+            this, SLOT(createPost(KBlog::BlogPost*)));
     b->createPost(p);   // start chain
     createPostTimer->start(TIMEOUT);
 }
@@ -208,8 +208,8 @@ void TestMetaWeblog::createPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Created);
 
-    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost *)),
-            this, SLOT(modifyPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost*)),
+            this, SLOT(modifyPost(KBlog::BlogPost*)));
     p->setContent(mModifiedContent);
     b->modifyPost(p);
     modifyPostTimer->start(TIMEOUT);
@@ -223,8 +223,8 @@ void TestMetaWeblog::modifyPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Modified);
 
-    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost *)),
-            this, SLOT(fetchPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
+            this, SLOT(fetchPost(KBlog::BlogPost*)));
     p->setContent(QLatin1String("TestMetaWeblog: created content."));
     b->fetchPost(p);
     fetchPostTimer->start(TIMEOUT);
@@ -239,8 +239,8 @@ void TestMetaWeblog::fetchPost(KBlog::BlogPost *post)
     QVERIFY(post->status() == BlogPost::Fetched);
 //   QVERIFY( post->content() == mModifiedContent );
 
-    connect(b, SIGNAL(removedPost(KBlog::BlogPost *)),
-            this, SLOT(removePost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(removedPost(KBlog::BlogPost*)),
+            this, SLOT(removePost(KBlog::BlogPost*)));
     b->removePost(p);
     removePostTimer->start(TIMEOUT);
 }
@@ -369,8 +369,8 @@ void TestMetaWeblog::testNetwork()
     QVERIFY(m->data() == "YTM0NZomIzI2OTsmIzM0NTueYQ==");
     QVERIFY(m->name() == QLatin1String("testmetaweblog.txt"));
 
-    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)),
-            this, SLOT(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)));
+    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
+            this, SLOT(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)));
 
     TestMetaWeblogWarnings *warnings = new TestMetaWeblogWarnings();
 
@@ -415,8 +415,8 @@ void TestMetaWeblog::testNetwork()
             warnings, SLOT(removePostTimeoutWarning()));
 
     // start the chain
-    connect(b, SIGNAL(fetchedUserInfo(QMap<QString, QString>)),
-            this, SLOT(fetchUserInfo(QMap<QString, QString>)));
+    connect(b, SIGNAL(fetchedUserInfo(QMap<QString,QString>)),
+            this, SLOT(fetchUserInfo(QMap<QString,QString>)));
     b->fetchUserInfo();
     fetchUserInfoTimer->start(TIMEOUT);
 

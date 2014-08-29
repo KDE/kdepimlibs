@@ -138,11 +138,11 @@ AddTransportDialog::AddTransportDialog(QWidget *parent)
     d->ui.typeListView->setFocus();
 
     // Connect user input.
-    connect(d->ui.typeListView, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+    connect(d->ui.typeListView, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(updateOkButton()));
     connect(d->ui.typeListView, SIGNAL(itemSelectionChanged()),
             this, SLOT(updateOkButton()));
-    connect(d->ui.typeListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+    connect(d->ui.typeListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
             this, SLOT(doubleClicked()));
     connect(d->ui.name, SIGNAL(textChanged(QString)),
             this, SLOT(updateOkButton()));

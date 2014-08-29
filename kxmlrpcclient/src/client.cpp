@@ -126,9 +126,9 @@ void Client::call(const QString &method, const QList<QVariant> &args,
     }
 
     Query *query = Query::create(id, this);
-    connect(query, SIGNAL(message(QList<QVariant>, QVariant)), msgObj, messageSlot);
-    connect(query, SIGNAL(fault(int, QString, QVariant)), faultObj, faultSlot);
-    connect(query, SIGNAL(finished(Query *)), this, SLOT(queryFinished(Query *)));
+    connect(query, SIGNAL(message(QList<QVariant>,QVariant)), msgObj, messageSlot);
+    connect(query, SIGNAL(fault(int,QString,QVariant)), faultObj, faultSlot);
+    connect(query, SIGNAL(finished(Query*)), this, SLOT(queryFinished(Query*)));
     d->mPendingQueries.append(query);
 
     query->call(d->mUrl.url(), method, args, metaData);

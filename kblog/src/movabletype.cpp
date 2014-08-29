@@ -67,8 +67,8 @@ void MovableType::listRecentPosts(int number)
     args << QVariant(number);
     d->mXmlRpcClient->call(
         QStringLiteral("metaWeblog.getRecentPosts"), args,
-        this, SLOT(slotListRecentPosts(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotListRecentPosts(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(number));
 }
 
@@ -82,8 +82,8 @@ void MovableType::listTrackBackPings(KBlog::BlogPost *post)
     d->mCallMap[ i ] = post;
     d->mXmlRpcClient->call(
         QStringLiteral("mt.getTrackbackPings"), args,
-        this, SLOT(slotListTrackbackPings(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotListTrackbackPings(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 
@@ -101,7 +101,7 @@ void MovableType::fetchPost(BlogPost *post)
             return;
         }
 
-        connect(this, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+        connect(this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                 this, SLOT(slotTriggerFetchPost()));
         listCategories();
     } else {
@@ -123,7 +123,7 @@ void MovableType::createPost(BlogPost *post)
             !post->categories().isEmpty()) {
         qDebug() << "No categories in the cache yet. Have to fetch them first.";
         d->mCreatePostCache << post;
-        connect(this, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+        connect(this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                 this, SLOT(slotTriggerCreatePost()));
         listCategories();
     } else {
@@ -158,7 +158,7 @@ void MovableType::modifyPost(BlogPost *post)
             !post->categories().isEmpty()) {
         qDebug() << "No categories in the cache yet. Have to fetch them first.";
         d->mModifyPostCache << post;
-        connect(this, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+        connect(this, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                 this, SLOT(slotTriggerModifyPost()));
         listCategories();
     } else {
@@ -171,7 +171,7 @@ void MovableTypePrivate::slotTriggerCreatePost()
     qDebug();
     Q_Q(MovableType);
 
-    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                   q, SLOT(slotTriggerCreatePost()));
     // now we can recall createPost with the posts from the cache
     QList<BlogPost *>::Iterator it = mCreatePostCache.begin();
@@ -187,7 +187,7 @@ void MovableTypePrivate::slotTriggerModifyPost()
     qDebug();
     Q_Q(MovableType);
 
-    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                   q, SLOT(slotTriggerModifyPost()));
     // now we can recall createPost with the posts from the cache
     QList<BlogPost *>::Iterator it = mModifyPostCache.begin();
@@ -203,7 +203,7 @@ void MovableTypePrivate::slotTriggerFetchPost()
     qDebug();
     Q_Q(MovableType);
 
-    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString, QString> >)),
+    q->disconnect(q, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                   q, SLOT(slotTriggerFetchPost()));
     QList<BlogPost *>::Iterator it = mFetchPostCache.begin();
     QList<BlogPost *>::Iterator end = mFetchPostCache.end();
@@ -289,8 +289,8 @@ void MovableTypePrivate::slotFetchPost(const QList<QVariant> &result, const QVar
         mCallMap[ i ] = post;
         mXmlRpcClient->call(
             QStringLiteral("mt.getPostCategories"), args,
-            q, SLOT(slotGetPostCategories(QList<QVariant>, QVariant)),
-            q, SLOT(slotError(int, QString, QVariant)),
+            q, SLOT(slotGetPostCategories(QList<QVariant>,QVariant)),
+            q, SLOT(slotError(int,QString,QVariant)),
             QVariant(i));
     } else {
         qDebug() << "Emitting fetchedPost()";
@@ -362,8 +362,8 @@ void MovableTypePrivate::setPostCategories(BlogPost *post, bool publishAfterCate
 
     mXmlRpcClient->call(
         QStringLiteral("mt.setPostCategories"), args,
-        q, SLOT(slotSetPostCategories(QList<QVariant>, QVariant)),
-        q, SLOT(slotError(int, QString, QVariant)),
+        q, SLOT(slotSetPostCategories(QList<QVariant>,QVariant)),
+        q, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 

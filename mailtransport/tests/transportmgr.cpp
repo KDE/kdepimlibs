@@ -115,12 +115,12 @@ void TransportMgr::sendBtnClicked()
     job->setCc(mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split(QLatin1Char(',')));
     job->setBcc(mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split(QLatin1Char(',')));
     job->setData(mMailEdit->document()->toPlainText().toLatin1());
-    connect(job, SIGNAL(result(KJob *)),
-            SLOT(jobResult(KJob *)));
-    connect(job, SIGNAL(percent(KJob *, ulong)),
-            SLOT(jobPercent(KJob *, ulong)));
-    connect(job, SIGNAL(infoMessage(KJob *, QString, QString)),
-            SLOT(jobInfoMessage(KJob *, QString, QString)));
+    connect(job, SIGNAL(result(KJob*)),
+            SLOT(jobResult(KJob*)));
+    connect(job, SIGNAL(percent(KJob*,ulong)),
+            SLOT(jobPercent(KJob*,ulong)));
+    connect(job, SIGNAL(infoMessage(KJob*,QString,QString)),
+            SLOT(jobInfoMessage(KJob*,QString,QString)));
     mCurrentJob = job;
     TransportManager::self()->schedule(job);
 }

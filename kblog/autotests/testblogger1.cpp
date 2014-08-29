@@ -136,8 +136,8 @@ void TestBlogger1::fetchUserInfo(const QMap<QString, QString> &userInfo)
     qDebug() << "# firstname: " <<  userInfo[QLatin1String("firstname")];
     qDebug() << "##############################\n";
 
-    connect(b, SIGNAL(listedBlogs(QList<QMap<QString, QString> >)),
-            this, SLOT(listBlogs(QList<QMap<QString, QString> >)));
+    connect(b, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+            this, SLOT(listBlogs(QList<QMap<QString,QString> >)));
     b->listBlogs();
     listBlogsTimer->start(TIMEOUT);
 }
@@ -171,8 +171,8 @@ void TestBlogger1::listRecentPosts(
     }
     qDebug() << "#################################\n";
 
-    connect(b, SIGNAL(createdPost(KBlog::BlogPost *)),
-            this, SLOT(createPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(createdPost(KBlog::BlogPost*)),
+            this, SLOT(createPost(KBlog::BlogPost*)));
     b->createPost(p);   // start chain
     createPostTimer->start(TIMEOUT);
 }
@@ -185,8 +185,8 @@ void TestBlogger1::createPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Created);
 
-    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost *)),
-            this, SLOT(modifyPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost*)),
+            this, SLOT(modifyPost(KBlog::BlogPost*)));
     p->setContent(mModifiedContent);
     b->modifyPost(p);
     modifyPostTimer->start(TIMEOUT);
@@ -200,8 +200,8 @@ void TestBlogger1::modifyPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Modified);
 
-    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost *)),
-            this, SLOT(fetchPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
+            this, SLOT(fetchPost(KBlog::BlogPost*)));
     p->setContent(QLatin1String("TestBlogger1: created content."));
     b->fetchPost(p);
     fetchPostTimer->start(TIMEOUT);
@@ -216,8 +216,8 @@ void TestBlogger1::fetchPost(KBlog::BlogPost *post)
     QVERIFY(post->status() == BlogPost::Fetched);
 //   QVERIFY( post->content() == mModifiedContent );
 
-    connect(b, SIGNAL(removedPost(KBlog::BlogPost *)),
-            this, SLOT(removePost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(removedPost(KBlog::BlogPost*)),
+            this, SLOT(removePost(KBlog::BlogPost*)));
     b->removePost(p);
     removePostTimer->start(TIMEOUT);
 }
@@ -333,8 +333,8 @@ void TestBlogger1::testNetwork()
     p->setCreationDateTime(mCDateTime);
     p->setModificationDateTime(mMDateTime);
 
-    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)),
-            this, SLOT(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)));
+    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
+            this, SLOT(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)));
 
     TestBlogger1Warnings *warnings = new TestBlogger1Warnings();
 
@@ -374,8 +374,8 @@ void TestBlogger1::testNetwork()
             warnings, SLOT(removePostTimeoutWarning()));
 
     // start the chain
-    connect(b, SIGNAL(fetchedUserInfo(QMap<QString, QString>)),
-            this, SLOT(fetchUserInfo(QMap<QString, QString>)));
+    connect(b, SIGNAL(fetchedUserInfo(QMap<QString,QString>)),
+            this, SLOT(fetchUserInfo(QMap<QString,QString>)));
     b->fetchUserInfo();
     fetchUserInfoTimer->start(TIMEOUT);
 

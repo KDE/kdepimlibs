@@ -214,10 +214,10 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
         KIO::Job *job = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
         job->setAutoDelete(true);
         d->jobs[job] = who;
-        connect(job, SIGNAL(data(KIO::Job *, QByteArray)),
-                this, SLOT(recv(KIO::Job *, QByteArray)));
-        connect(job, SIGNAL(result(KJob *)),
-                this, SLOT(result(KJob *)));
+        connect(job, SIGNAL(data(KIO::Job*,QByteArray)),
+                this, SLOT(recv(KIO::Job*,QByteArray)));
+        connect(job, SIGNAL(result(KJob*)),
+                this, SLOT(result(KJob*)));
         // The url needs to be stored explicitly because, for example, facebook redirects
         // randomly between its servers causing the url to be different every time, which
         // makes storing the job's url in cache impossible therefore we set it here and

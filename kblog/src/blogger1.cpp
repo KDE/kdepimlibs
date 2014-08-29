@@ -77,8 +77,8 @@ void Blogger1::fetchUserInfo()
     QList<QVariant> args(d->blogger1Args());
     d->mXmlRpcClient->call(
         QStringLiteral("blogger.getUserInfo"), args,
-        this, SLOT(slotFetchUserInfo(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)));
+        this, SLOT(slotFetchUserInfo(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)));
 }
 
 void Blogger1::listBlogs()
@@ -88,8 +88,8 @@ void Blogger1::listBlogs()
     QList<QVariant> args(d->blogger1Args());
     d->mXmlRpcClient->call(
         QStringLiteral("blogger.getUsersBlogs"), args,
-        this, SLOT(slotListBlogs(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)));
+        this, SLOT(slotListBlogs(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)));
 }
 
 void Blogger1::listRecentPosts(int number)
@@ -100,8 +100,8 @@ void Blogger1::listRecentPosts(int number)
     args << QVariant(number);
     d->mXmlRpcClient->call(
         d->getCallFromFunction(Blogger1Private::GetRecentPosts), args,
-        this, SLOT(slotListRecentPosts(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotListRecentPosts(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(number));
 }
 
@@ -119,8 +119,8 @@ void Blogger1::fetchPost(KBlog::BlogPost *post)
     d->mCallMap[ i ] = post;
     d->mXmlRpcClient->call(
         d->getCallFromFunction(Blogger1Private::FetchPost), args,
-        this, SLOT(slotFetchPost(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotFetchPost(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 
@@ -140,8 +140,8 @@ void Blogger1::modifyPost(KBlog::BlogPost *post)
     d->readArgsFromPost(&args, *post);
     d->mXmlRpcClient->call(
         d->getCallFromFunction(Blogger1Private::ModifyPost), args,
-        this, SLOT(slotModifyPost(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotModifyPost(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 
@@ -161,8 +161,8 @@ void Blogger1::createPost(KBlog::BlogPost *post)
     d->readArgsFromPost(&args, *post);
     d->mXmlRpcClient->call(
         d->getCallFromFunction(Blogger1Private::CreatePost), args,
-        this, SLOT(slotCreatePost(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotCreatePost(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 
@@ -182,8 +182,8 @@ void Blogger1::removePost(KBlog::BlogPost *post)
     args << QVariant(true);   // Publish must be set to remove post.
     d->mXmlRpcClient->call(
         QStringLiteral("blogger.deletePost"), args,
-        this, SLOT(slotRemovePost(QList<QVariant>, QVariant)),
-        this, SLOT(slotError(int, QString, QVariant)),
+        this, SLOT(slotRemovePost(QList<QVariant>,QVariant)),
+        this, SLOT(slotError(int,QString,QVariant)),
         QVariant(i));
 }
 

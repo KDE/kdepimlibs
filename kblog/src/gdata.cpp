@@ -92,8 +92,8 @@ void GData::fetchProfileId()
     QByteArray data;
     KIO::StoredTransferJob *job = KIO::storedGet(url(), KIO::NoReload, KIO::HideProgressInfo);
     QUrl blogUrl = url();
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotFetchProfileId(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotFetchProfileId(KJob*)));
 }
 
 void GData::listBlogs()
@@ -101,9 +101,9 @@ void GData::listBlogs()
     qDebug();
     Syndication::Loader *loader = Syndication::Loader::create();
     connect(loader,
-            SIGNAL(loadingComplete(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)),
+            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
             this,
-            SLOT(slotListBlogs(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)));
+            SLOT(slotListBlogs(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)));
     loader->loadFrom(QUrl(QString::fromLatin1("http://www.blogger.com/feeds/%1/blogs").arg(profileId())));
 }
 
@@ -141,9 +141,9 @@ void GData::listRecentPosts(const QStringList &labels, int number,
         d->mListRecentPostsMap[ loader ] = number;
     }
     connect(loader,
-            SIGNAL(loadingComplete(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)),
+            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
             this,
-            SLOT(slotListRecentPosts(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)));
+            SLOT(slotListRecentPosts(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)));
     loader->loadFrom(url);
 }
 
@@ -160,9 +160,9 @@ void GData::listComments(KBlog::BlogPost *post)
     Syndication::Loader *loader = Syndication::Loader::create();
     d->mListCommentsMap[ loader ] = post;
     connect(loader,
-            SIGNAL(loadingComplete(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)),
+            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
             this,
-            SLOT(slotListComments(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)));
+            SLOT(slotListComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)));
     loader->loadFrom(QUrl(QString(QStringLiteral("http://www.blogger.com/feeds/") + blogId() + QLatin1Char('/') +
                                   post->postId() + QStringLiteral("/comments/default"))));
 }
@@ -172,9 +172,9 @@ void GData::listAllComments()
     qDebug();
     Syndication::Loader *loader = Syndication::Loader::create();
     connect(loader,
-            SIGNAL(loadingComplete(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)),
+            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
             this,
-            SLOT(slotListAllComments(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)));
+            SLOT(slotListAllComments(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)));
     loader->loadFrom(QUrl(QString::fromLatin1("http://www.blogger.com/feeds/%1/comments/default").arg(blogId())));
 }
 
@@ -192,9 +192,9 @@ void GData::fetchPost(KBlog::BlogPost *post)
     Syndication::Loader *loader = Syndication::Loader::create();
     d->mFetchPostMap[ loader ] = post;
     connect(loader,
-            SIGNAL(loadingComplete(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)),
+            SIGNAL(loadingComplete(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)),
             this,
-            SLOT(slotFetchPost(Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode)));
+            SLOT(slotFetchPost(Syndication::Loader*,Syndication::FeedPtr,Syndication::ErrorCode)));
     loader->loadFrom(QUrl(QString::fromLatin1("http://www.blogger.com/feeds/%1/posts/default").arg(blogId())));
 }
 
@@ -259,8 +259,8 @@ void GData::modifyPost(KBlog::BlogPost *post)
                      QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
                      QStringLiteral("\r\nX-HTTP-Method-Override: PUT"));
 
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotModifyPost(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotModifyPost(KJob*)));
 }
 
 void GData::createPost(KBlog::BlogPost *post)
@@ -319,8 +319,8 @@ void GData::createPost(KBlog::BlogPost *post)
     job->addMetaData(QStringLiteral("customHTTPHeader"),
                      QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString);
 
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotCreatePost(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotCreatePost(KJob*)));
 }
 
 void GData::removePost(KBlog::BlogPost *post)
@@ -358,8 +358,8 @@ void GData::removePost(KBlog::BlogPost *post)
                      QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString +
                      QStringLiteral("\r\nX-HTTP-Method-Override: DELETE"));
 
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotRemovePost(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotRemovePost(KJob*)));
 }
 
 void GData::createComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
@@ -412,8 +412,8 @@ void GData::createComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
                      QStringLiteral("Authorization: GoogleLogin auth=") + d->mAuthenticationString);
     job->addMetaData(QStringLiteral("UserAgent"), userAgent());
 
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotCreateComment(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotCreateComment(KJob*)));
 }
 
 void GData::removeComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
@@ -457,8 +457,8 @@ void GData::removeComment(KBlog::BlogPost *post, KBlog::BlogComment *comment)
                      QStringLiteral("Authorization: GoogleLogin auth=") +
                      d->mAuthenticationString + QStringLiteral("\r\nX-HTTP-Method-Override: DELETE"));
 
-    connect(job, SIGNAL(result(KJob *)),
-            this, SLOT(slotRemoveComment(KJob *)));
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotRemoveComment(KJob*)));
 }
 
 GDataPrivate::GDataPrivate(): mAuthenticationString(), mAuthenticationTime()

@@ -40,9 +40,9 @@ void ImageProviderTests::setup()
                                true,
                                cache);
 
-    connect(&i, SIGNAL(imageLoaded(QString, QUrl, QImage)),
-            this, SLOT(onImageFetched(QString, QUrl, QImage)));
-    connect(&i, SIGNAL(imageLoaded(QString, QUrl, QImage)),
+    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
+            this, SLOT(onImageFetched(QString,QUrl,QImage)));
+    connect(&i, SIGNAL(imageLoaded(QString,QUrl,QImage)),
             &e, SLOT(quit()));
 
     //wait for the fetcher to finish

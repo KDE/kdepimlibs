@@ -221,7 +221,7 @@ void MessageQueueJob::start()
 {
     SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob(this);
     rjob->requestDefaultCollection(SpecialMailCollections::Outbox);
-    connect(rjob, SIGNAL(result(KJob *)), this, SLOT(outboxRequestResult(KJob *)));
+    connect(rjob, SIGNAL(result(KJob*)), this, SLOT(outboxRequestResult(KJob*)));
     rjob->start();
 }
 

@@ -60,8 +60,8 @@ PrecommandJob::PrecommandJob(const QString &precommand, QObject *parent)
     connect(d->process, SIGNAL(started()), SLOT(slotStarted()));
     connect(d->process, SIGNAL(error(QProcess::ProcessError)),
             SLOT(slotError(QProcess::ProcessError)));
-    connect(d->process, SIGNAL(finished(int, QProcess::ExitStatus)),
-            SLOT(slotFinished(int, QProcess::ExitStatus)));
+    connect(d->process, SIGNAL(finished(int,QProcess::ExitStatus)),
+            SLOT(slotFinished(int,QProcess::ExitStatus)));
 }
 
 PrecommandJob::~ PrecommandJob()

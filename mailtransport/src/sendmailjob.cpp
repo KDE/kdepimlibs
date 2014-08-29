@@ -47,8 +47,8 @@ SendmailJob::SendmailJob(Transport *transport, QObject *parent)
 {
     d->process = new QProcess(this);
     connect(d->process,
-            SIGNAL(finished(int, QProcess::ExitStatus)),
-            SLOT(sendmailExited(int, QProcess::ExitStatus)));
+            SIGNAL(finished(int,QProcess::ExitStatus)),
+            SLOT(sendmailExited(int,QProcess::ExitStatus)));
     connect(d->process, SIGNAL(error(QProcess::ProcessError)),
             SLOT(receivedError()));
     connect(d->process, SIGNAL(readyReadStandardError()),

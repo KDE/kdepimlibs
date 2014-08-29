@@ -152,8 +152,8 @@ void TestLiveJournal::listRecentPosts(
     }
     qDebug() << "#################################\n";
 
-    connect(b, SIGNAL(createdPost(KBlog::BlogPost *)),
-            this, SLOT(createPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(createdPost(KBlog::BlogPost*)),
+            this, SLOT(createPost(KBlog::BlogPost*)));
     b->createPost(p);   // start chain
     createPostTimer->start(TIMEOUT);
 }
@@ -166,8 +166,8 @@ void TestLiveJournal::createPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Created);
 
-    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost *)),
-            this, SLOT(modifyPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(modifiedPost(KBlog::BlogPost*)),
+            this, SLOT(modifyPost(KBlog::BlogPost*)));
     p->setContent(mModifiedContent);
     b->modifyPost(p);
     modifyPostTimer->start(TIMEOUT);
@@ -181,8 +181,8 @@ void TestLiveJournal::modifyPost(KBlog::BlogPost *post)
     qDebug() << "################################\n";
     QVERIFY(post->status() == BlogPost::Modified);
 
-    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost *)),
-            this, SLOT(fetchPost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(fetchedPost(KBlog::BlogPost*)),
+            this, SLOT(fetchPost(KBlog::BlogPost*)));
     p->setContent("TestLiveJournal: created content.");
     b->fetchPost(p);
     fetchPostTimer->start(TIMEOUT);
@@ -197,8 +197,8 @@ void TestLiveJournal::fetchPost(KBlog::BlogPost *post)
     QVERIFY(post->status() == BlogPost::Fetched);
 //   QVERIFY( post->content() == mModifiedContent );
 
-    connect(b, SIGNAL(removedPost(KBlog::BlogPost *)),
-            this, SLOT(removePost(KBlog::BlogPost *)));
+    connect(b, SIGNAL(removedPost(KBlog::BlogPost*)),
+            this, SLOT(removePost(KBlog::BlogPost*)));
     b->removePost(p);
     removePostTimer->start(TIMEOUT);
 }
@@ -314,8 +314,8 @@ void TestLiveJournal::testNetwork()
     p->setCreationDateTime(mCDateTime);
     p->setModificationDateTime(mMDateTime);
 
-    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)),
-            this, SLOT(errorPost(KBlog::Blog::ErrorType, QString, KBlog::BlogPost *)));
+    connect(b, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
+            this, SLOT(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)));
 
     TestLiveJournalWarnings *warnings = new TestLiveJournalWarnings();
 
@@ -355,8 +355,8 @@ void TestLiveJournal::testNetwork()
             warnings, SLOT(removePostTimeoutWarning()));
 
     // start the chain
-    connect(b, SIGNAL(fetchedUserInfo(QMap<QString, QString>)),
-            this, SLOT(fetchUserInfo(QMap<QString, QString>)));
+    connect(b, SIGNAL(fetchedUserInfo(QMap<QString,QString>)),
+            this, SLOT(fetchUserInfo(QMap<QString,QString>)));
     b->fetchUserInfo();
     fetchUserInfoTimer->start(TIMEOUT);
 
