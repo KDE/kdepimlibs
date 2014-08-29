@@ -320,9 +320,7 @@ KMIME_EXPORT extern QByteArray LFtoCRLF(const QByteArray &s);
   @param str the string to work on.
   @see addQuotes
 */
-//AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
-// TODO: KDE5: BIC: rename to "removeQuotes"
-KMIME_EXPORT extern void removeQuots(QByteArray &str);
+KMIME_EXPORT extern void removeQuotes(QByteArray &str);
 
 /**
   Removes quote (DQUOTE) characters and decodes "quoted-pairs"
@@ -331,9 +329,7 @@ KMIME_EXPORT extern void removeQuots(QByteArray &str);
   @param str the string to work on.
   @see addQuotes
 */
-//AK_REVIEW: add correctly spelled methods and deprecated the wrongly spelled
-// TODO: KDE5: BIC: rename to "removeQuotes"
-KMIME_EXPORT extern void removeQuots(QString &str);
+KMIME_EXPORT extern void removeQuotes(QString &str);
 
 /**
   Converts the given string into a quoted-string if the string contains

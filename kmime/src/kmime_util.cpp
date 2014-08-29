@@ -809,12 +809,12 @@ template < typename StringType, typename CharType > void removeQuotesGeneric(Str
 }
 }
 
-void removeQuots(QByteArray &str)
+void removeQuotes(QByteArray &str)
 {
     removeQuotesGeneric<QByteArray, char>(str);
 }
 
-void removeQuots(QString &str)
+void removeQuotes(QString &str)
 {
     removeQuotesGeneric<QString, QLatin1Char>(str);
 }
