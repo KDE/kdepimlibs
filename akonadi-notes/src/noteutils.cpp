@@ -195,9 +195,8 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
     }
 
     if (KMime::Headers::Base *lastmod = msg->headerByType(X_NOTES_LASTMODIFIED_HEADER)) {
-        const QByteArray &s = lastmod->asUnicodeString().toLatin1();
-        const char *cursor = s.constData();
-        if (!KMime::HeaderParsing::parseDateTime(cursor, cursor + s.length(), lastModifiedDate)) {
+        lastModifiedDate = QDateTime::fromString(lastmod->asUnicodeString(), Qt::RFC2822Date);
+        if (!lastModifiedDate.isValid()) {
             qWarning() << "failed to parse lastModifiedDate";
         }
     }
