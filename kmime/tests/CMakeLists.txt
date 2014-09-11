@@ -6,7 +6,6 @@ if(HAVE_GETOPT_H)
 ########### next target ###############
 
   add_executable(test_kmime_header_parsing test_kmime_header_parsing.cpp)
-  add_test(test_kmime_header_parsing test_kmime_header_parsing)
   target_link_libraries(test_kmime_header_parsing KF5Mime)
 
 ########### next target ###############
