@@ -732,7 +732,7 @@ void HeaderTest::testDateHeader()
     QCOMPARE(h->dateTime().date(), QDate(1969, 2, 13));
     QCOMPARE(h->dateTime().time(), QTime(23, 32));
     QCOMPARE(h->dateTime().utcOffset(), -12600);
-    QCOMPARE(h->as7BitString(false), QByteArray("Thu, 13 Feb 1969 23:32 -0330"));
+    QCOMPARE(h->as7BitString(false), QByteArray("Thu, 13 Feb 1969 23:32:00 -0330"));
     delete h;
 
     // obsolete date format (from RFC 2822, Appendix A.6.2)
