@@ -7,4 +7,4 @@ find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 ########### next target ###############
 
-ecm_add_tests( testemail.cpp testlinklocator.cpp NAME_PREFIX "kpimutils-" LINK_LIBRARIES KF5PimUtils Qt5::Test)
+ecm_add_tests( testemail.cpp testlinklocator.cpp NAME_PREFIX "kpimutils-" LINK_LIBRARIES KF5PimUtils Qt5::Test Qt5::Gui)
