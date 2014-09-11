@@ -1144,7 +1144,7 @@ bool SingleIdent::parse(const char *&scursor, const char *const send,
 //-----<ReturnPath>-------------------------
 
 //@cond PRIVATE
-kmime_mk_trivial_ctor_with_name_and_dptr(ReturnPath, Generics::Address, Return - Path)
+kmime_mk_trivial_ctor_with_name_and_dptr(ReturnPath, Generics::Address, Return-Path)
 //@endcond
 
 QByteArray ReturnPath::as7BitString(bool withHeaderType) const
@@ -1297,7 +1297,7 @@ void Generic::setType(const char *type)
 //-----<MessageID>-----------------------------
 
 //@cond PRIVATE
-kmime_mk_trivial_ctor_with_name(MessageID, Generics::SingleIdent, Message - ID)
+kmime_mk_trivial_ctor_with_name(MessageID, Generics::SingleIdent, Message-ID)
 //@endcond
 
 void MessageID::generate(const QByteArray &fqdn)
@@ -1390,7 +1390,7 @@ bool Control::parse(const char *&scursor, const char *const send, bool isCRLF)
 
 //@cond PRIVATE
 kmime_mk_trivial_ctor_with_name_and_dptr(MailCopiesTo,
-        Generics::AddressList, Mail - Copies - To)
+        Generics::AddressList, Mail-Copies-To)
 //@endcond
 
 QByteArray MailCopiesTo::as7BitString(bool withHeaderType) const
@@ -1555,7 +1555,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //@cond PRIVATE
     kmime_mk_trivial_ctor_with_name_and_dptr(Newsgroups, Generics::Structured, Newsgroups)
-    kmime_mk_trivial_ctor_with_name(FollowUpTo, Newsgroups, Followup - To)
+    kmime_mk_trivial_ctor_with_name(FollowUpTo, Newsgroups, Followup-To)
 //@endcond
 
     QByteArray Newsgroups::as7BitString(bool withHeaderType) const {
@@ -1699,7 +1699,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //@cond PRIVATE
     kmime_mk_trivial_ctor_with_name_and_dptr(ContentType, Generics::Parametrized,
-            Content - Type)
+            Content-Type)
 //@endcond
 
     bool ContentType::isEmpty() const {
@@ -1947,7 +1947,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //-----<ContentID>----------------------
 
-    kmime_mk_trivial_ctor_with_name_and_dptr(ContentID, SingleIdent, Content - ID)
+    kmime_mk_trivial_ctor_with_name_and_dptr(ContentID, SingleIdent, Content-ID)
     kmime_mk_dptr_ctor(ContentID, SingleIdent)
 
     bool ContentID::parse(const char *&scursor, const char *const send, bool isCRLF) {
@@ -2023,7 +2023,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //@cond PRIVATE
     kmime_mk_trivial_ctor_with_name_and_dptr(ContentTransferEncoding,
-            Generics::Token, Content - Transfer - Encoding)
+            Generics::Token, Content-Transfer-Encoding)
 //@endcond
 
     typedef struct {
@@ -2103,7 +2103,7 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //@cond PRIVATE
     kmime_mk_trivial_ctor_with_name_and_dptr(ContentDisposition,
-            Generics::Parametrized, Content - Disposition)
+            Generics::Parametrized, Content-Disposition)
 //@endcond
 
     QByteArray ContentDisposition::as7BitString(bool withHeaderType) const {
@@ -2214,22 +2214,22 @@ QByteArray Date::as7BitString(bool withHeaderType) const
 
 //@cond PRIVATE
     kmime_mk_trivial_ctor_with_name(ContentDescription,
-                                    Generics::Unstructured, Content - Description)
+                                    Generics::Unstructured, Content-Description)
     kmime_mk_trivial_ctor_with_name(ContentLocation,
-                                    Generics::Unstructured, Content - Location)
+                                    Generics::Unstructured, Content-Location)
     kmime_mk_trivial_ctor_with_name(From, Generics::MailboxList, From)
     kmime_mk_trivial_ctor_with_name(Sender, Generics::SingleMailbox, Sender)
     kmime_mk_trivial_ctor_with_name(To, Generics::AddressList, To)
     kmime_mk_trivial_ctor_with_name(Cc, Generics::AddressList, Cc)
     kmime_mk_trivial_ctor_with_name(Bcc, Generics::AddressList, Bcc)
-    kmime_mk_trivial_ctor_with_name(ReplyTo, Generics::AddressList, Reply - To)
+    kmime_mk_trivial_ctor_with_name(ReplyTo, Generics::AddressList, Reply-To)
     kmime_mk_trivial_ctor_with_name(Keywords, Generics::PhraseList, Keywords)
-    kmime_mk_trivial_ctor_with_name(MIMEVersion, Generics::DotAtom, MIME - Version)
+    kmime_mk_trivial_ctor_with_name(MIMEVersion, Generics::DotAtom, MIME-Version)
     kmime_mk_trivial_ctor_with_name(Supersedes, Generics::SingleIdent, Supersedes)
-    kmime_mk_trivial_ctor_with_name(InReplyTo, Generics::Ident, In - Reply - To)
+    kmime_mk_trivial_ctor_with_name(InReplyTo, Generics::Ident, In-Reply-To)
     kmime_mk_trivial_ctor_with_name(References, Generics::Ident, References)
     kmime_mk_trivial_ctor_with_name(Organization, Generics::Unstructured, Organization)
-    kmime_mk_trivial_ctor_with_name(UserAgent, Generics::Unstructured, User - Agent)
+    kmime_mk_trivial_ctor_with_name(UserAgent, Generics::Unstructured, User-Agent)
 //@endcond
 
 } // namespace Headers
