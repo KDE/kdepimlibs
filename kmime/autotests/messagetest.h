@@ -22,7 +22,6 @@
 
 #include "kmime_message.h"
 #include <QtCore/QObject>
-#include <boost/shared_ptr.hpp>
 
 class MessageTest : public QObject
 {

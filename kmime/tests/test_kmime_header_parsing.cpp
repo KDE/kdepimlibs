@@ -2,8 +2,6 @@
 #include "kmime_headers.h"
 #include "kmime_header_parsing.h"
 
-//#include <kcomponentdata.h>
-
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
