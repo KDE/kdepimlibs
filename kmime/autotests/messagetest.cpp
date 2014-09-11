@@ -87,7 +87,7 @@ void MessageTest::testBrunosMultiAssembleBug()
         "From: Sender <sender@test.org>\n"
         "Subject: Sample message\n"
         "To: Receiver <receiver@test.org>\n"
-        "Date: Sat, 04 Aug 2007 12:44 +0200\n"
+        "Date: Sat, 04 Aug 2007 12:44:00 +0200\n"
         "MIME-Version: 1.0\n"
         "Content-Type: text/plain\n"
         "X-Foo: bla\n"
@@ -311,6 +311,7 @@ void MessageTest::testUtf16()
     address.setAddress("test@test.de");
     address.setName(QLatin1String("Fränz Töster"));
     to->addAddress(address);
+    to->setRFC2047Charset("ISO-8859-1"); // default changed to UTF-8 in KF5, which is fine, but breaks the test
     msg.appendHeader(to);
     msg.assemble();
 
@@ -580,6 +581,7 @@ void MessageTest::testOutlookAttachmentNaming()
     attachment->clear();// = new Content();
     attachment->contentDisposition()->setDisposition(Headers::CDattachment);
     attachment->contentDisposition()->setFilename(QString::fromUtf8("å.diff"));
+    attachment->contentDisposition()->setRFC2047Charset("ISO-8859-1"); // default changed to UTF-8 in KF5, which is fine, but breaks the test
     attachment->assemble();
     qDebug() << "got:" << attachment->contentDisposition()->as7BitString(false);
     QCOMPARE(attachment->contentDisposition()->as7BitString(false), QByteArray("attachment; filename=\"=?ISO-8859-1?Q?=E5=2Ediff?=\""));
