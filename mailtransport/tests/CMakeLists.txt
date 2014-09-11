@@ -5,13 +5,11 @@ find_package(Qt5Test CONFIG REQUIRED)
 
 set(tm_srcs transportmgr.cpp)
 add_executable(transportmgr ${tm_srcs})
-add_test(transportmgr transportmgr)
 ecm_mark_as_test(transportmgr)
 target_link_libraries(transportmgr KF5MailTransport)
 
 set(queuer_srcs queuer.cpp)
 add_executable(queuer ${queuer_srcs})
-add_test(queuer queuer)
 ecm_mark_as_test(queuer)
 target_link_libraries(queuer KF5MailTransport)
 
