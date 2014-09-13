@@ -40,7 +40,6 @@ target_link_libraries(test_commands   KF5::KIOCore ${Sasl2_LIBRARIES} Qt5::Test 
 set(interactivesmtpserver_SRCS interactivesmtpserver.cpp )
 
 add_executable( interactivesmtpserver ${interactivesmtpserver_SRCS} )
-add_test( interactivesmtpserver interactivesmtpserver )
 ecm_mark_as_test(smtp-interactivesmtpserver)
 target_link_libraries(interactivesmtpserver    Qt5::Test Qt5::Widgets Qt5::Network)
 
