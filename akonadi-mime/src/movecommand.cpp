@@ -40,10 +40,10 @@ void MoveCommand::execute()
     }
     if (mDestFolder.isValid()) {
         Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mMessages, mDestFolder, this);
-        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)));
+        connect(job, &Akonadi::ItemMoveJob::result, this, &MoveCommand::slotMoveResult);
     } else {
         Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mMessages, this);
-        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)));
+        connect(job, &Akonadi::ItemDeleteJob::result, this, &MoveCommand::slotMoveResult);
     }
 }
 

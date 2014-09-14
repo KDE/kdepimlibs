@@ -184,8 +184,8 @@ void CollectionJobTest::testSignalOrder()
   toFetch << Collection( res2ColId );
   CollectionFetchJob *job = new CollectionFetchJob( toFetch, CollectionFetchJob::Recursive );
   ResultSignalTester spy;
-  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), &spy, SLOT(onCollectionsReceived(Akonadi::Collection::List)) );
-  connect( job, SIGNAL(result(KJob*)), &spy, SLOT(onCollectionRetrievalDone(KJob*)) );
+  connect(job, &CollectionFetchJob::collectionsReceived, &spy, &ResultSignalTester::onCollectionsReceived);
+  connect(job, &CollectionFetchJob::result, &spy, &ResultSignalTester::onCollectionRetrievalDone);
   AKVERIFYEXEC( job );
 
   QCOMPARE( spy.receivedSignals.size(), 2 );

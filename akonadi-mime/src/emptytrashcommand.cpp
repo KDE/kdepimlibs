@@ -106,7 +106,7 @@ void EmptyTrashCommand::expunge(const Akonadi::Collection &col)
 {
     if (col.isValid()) {
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(col, this);
-        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)));
+        connect(job, &Akonadi::ItemFetchJob::result, this, &EmptyTrashCommand::slotExpungeJob);
     } else {
         qDebug() << " Try to expunge an invalid collection :" << col;
         emitResult(Failed);
@@ -131,7 +131,7 @@ void EmptyTrashCommand::slotExpungeJob(KJob *job)
         return;
     }
     Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem, this);
-    connect(jobDelete, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)));
+    connect(jobDelete, &Akonadi::ItemDeleteJob::result, this, &EmptyTrashCommand::slotDeleteJob);
 
 }
 

@@ -169,7 +169,7 @@ void Socket::reconnect()
             SLOT(slotModeChanged(QSslSocket::SslMode)));
     connect(d->socket, SIGNAL(connected()), SLOT(slotConnected()));
     connect(d->socket, SIGNAL(readyRead()), SLOT(slotSocketRead()));
-    connect(d->socket, SIGNAL(encrypted()), SIGNAL(connected()));
+    connect(d->socket, &QSslSocket::encrypted, this, &Socket::connected);
     connect(d->socket, SIGNAL(sslErrors(QList<QSslError>)),
             SLOT(slotSslErrors(QList<QSslError>)));
 }
