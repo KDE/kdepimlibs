@@ -66,9 +66,9 @@ static QString addr_spec_as_string(const AddrSpec &as, bool pretty)
         return QString();
     }
 
-    static QChar dotChar = QLatin1Char('.');
-    static QChar backslashChar = QLatin1Char('\\');
-    static QChar quoteChar = QLatin1Char('"');
+    static const QChar dotChar = QLatin1Char('.');
+    static const QChar backslashChar = QLatin1Char('\\');
+    static const QChar quoteChar = QLatin1Char('"');
 
     bool needsQuotes = false;
     QString result;

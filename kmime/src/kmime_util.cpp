@@ -262,7 +262,7 @@ QString decodeRFC2047String(const QByteArray &src)
     return decodeRFC2047String(src, usedCS, "utf-8", false);
 }
 
-static const char *reservedCharacters = "\"()<>@,.;:\\[]=";
+static const char reservedCharacters[] = "\"()<>@,.;:\\[]=";
 
 QByteArray encodeRFC2047String(const QString &src, const QByteArray &charset,
                                bool addressHeader, bool allow8BitHeaders)
@@ -535,7 +535,7 @@ QString decodeRFC2231String(const QByteArray &src)
 
 QByteArray uniqueString()
 {
-    static char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static const char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     time_t now;
     char p[11];
     int pos, ran;
