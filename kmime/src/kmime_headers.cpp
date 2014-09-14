@@ -195,7 +195,7 @@ bool Base::forceDefaultCharset() const
 
 QByteArray Base::defaultCharset() const
 {
-    return (parent() != 0 ? parent()->defaultCharset() : Latin1);
+    return (parent() != 0 ? parent()->defaultCharset() : "ISO-8859-1");
 }
 
 const char *Base::type() const

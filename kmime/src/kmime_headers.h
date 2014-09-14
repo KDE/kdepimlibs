@@ -92,10 +92,6 @@ enum contentDisposition {
     CDparallel           ///< parallel (invalid, do not use)
 };
 
-//often used charset
-// TODO: get rid of this!
-static const QByteArray Latin1("ISO-8859-1");
-
 //@cond PRIVATE
 // internal macro to generate default constructors
 #define kmime_mk_trivial_ctor( subclass )                               \
