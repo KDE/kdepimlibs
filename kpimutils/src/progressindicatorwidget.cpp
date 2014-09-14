@@ -33,7 +33,7 @@ IndicatorProgress::IndicatorProgress(ProgressIndicatorWidget *widget, QObject *p
 {
     mProgressPix =  KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
-    connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
+    connect(mProgressTimer, &QTimer::timeout, this, &IndicatorProgress::slotTimerDone);
 }
 
 IndicatorProgress::~IndicatorProgress()
