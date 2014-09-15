@@ -65,9 +65,6 @@
  * - <a href="mailtransport/html/index.html"><b>mailtransport</b></a>.
  *   <i>An API and support code for managing mail transport.</i>
  *
- * - <a href="microblog/html/index.html"><b>microblog</b></a>.
- *   <i>A library for microblogging.</i>
- *
  * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>.
  *   <i>A C++ wrapper for gpgme.</i>
  *
