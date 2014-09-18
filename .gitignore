@@ -14,3 +14,5 @@ Makefile.in
 Doxyfile
 *.user
 *.orig
+/build/
+CMakeLists.txt.user*
