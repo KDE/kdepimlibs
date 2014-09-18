@@ -117,7 +117,7 @@ private:
 
 //@cond PRIVATE
 // super class trait specialization
-namespace KPIMUtils
+namespace Akonadi
 {
 template <> struct SuperClass<KMime::NewsArticle> : public SuperClassTrait<KMime::Message> {};
 }
