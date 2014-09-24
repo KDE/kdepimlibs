@@ -2,7 +2,7 @@
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp signature.cpp signatureconfigurator.cpp identitycombo.cpp)
+set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp signature.cpp signatureconfigurator.cpp identitycombo.cpp utils.cpp)
 
 add_subdirectory( tests )
 
@@ -28,6 +28,7 @@ install(FILES
         signatureconfigurator.h
         identitymanager.h
         identitycombo.h
+        utils.h
         ${CMAKE_CURRENT_BINARY_DIR}/kpimidentities_export.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/kpimidentities COMPONENT Devel)
 
