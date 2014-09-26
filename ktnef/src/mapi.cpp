@@ -32,7 +32,7 @@
 #include <QtCore/QMap>
 #include <klocalizedstring.h>
 //@cond IGNORE
-static struct {
+static const struct {
     int tag;
     const char *str;
 } MAPI_TagStrings[] = {

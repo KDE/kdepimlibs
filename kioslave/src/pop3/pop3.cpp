@@ -53,7 +53,7 @@ extern "C" {
 
 using namespace KIO;
 
-static sasl_callback_t callbacks[] = {
+static const sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
     { SASL_CB_GETREALM, NULL, NULL },
