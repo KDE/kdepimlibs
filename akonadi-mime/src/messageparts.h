@@ -36,17 +36,17 @@ namespace MessagePart
 /**
  * The part identifier for envelope parts.
  */
-AKONADI_MIME_EXPORT extern const char *Envelope;
+AKONADI_MIME_EXPORT extern const char *const Envelope;
 
 /**
  * The part identifier for the main body part.
  */
-AKONADI_MIME_EXPORT extern const char *Body;
+AKONADI_MIME_EXPORT extern const char *const Body;
 
 /**
  * The part identifier for the header part.
  */
-AKONADI_MIME_EXPORT extern const char *Header;
+AKONADI_MIME_EXPORT extern const char *const Header;
 }
 }
 

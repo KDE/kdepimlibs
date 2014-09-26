@@ -20,21 +20,21 @@
 
 #include "messageflags.h"
 
-const char *Akonadi::MessageFlags::Seen = "\\SEEN";
-const char *Akonadi::MessageFlags::Deleted = "\\DELETED";
-const char *Akonadi::MessageFlags::Answered = "\\ANSWERED";
-const char *Akonadi::MessageFlags::Flagged = "\\FLAGGED";
-const char *Akonadi::MessageFlags::HasError = "$ERROR";
-const char *Akonadi::MessageFlags::HasAttachment = "$ATTACHMENT";
-const char *Akonadi::MessageFlags::HasInvitation = "$INVITATION";
-const char *Akonadi::MessageFlags::Sent = "$SENT";
-const char *Akonadi::MessageFlags::Queued = "$QUEUED";
-const char *Akonadi::MessageFlags::Replied = "$REPLIED";
-const char *Akonadi::MessageFlags::Forwarded = "$FORWARDED";
-const char *Akonadi::MessageFlags::ToAct = "$TODO";
-const char *Akonadi::MessageFlags::Watched = "$WATCHED";
-const char *Akonadi::MessageFlags::Ignored = "$IGNORED";
-const char *Akonadi::MessageFlags::Signed = "$SIGNED";
-const char *Akonadi::MessageFlags::Encrypted = "$ENCRYPTED";
-const char *Akonadi::MessageFlags::Spam = "$JUNK";
-const char *Akonadi::MessageFlags::Ham = "$NOTJUNK";
+const char *const Akonadi::MessageFlags::Seen = "\\SEEN";
+const char *const Akonadi::MessageFlags::Deleted = "\\DELETED";
+const char *const Akonadi::MessageFlags::Answered = "\\ANSWERED";
+const char *const Akonadi::MessageFlags::Flagged = "\\FLAGGED";
+const char *const Akonadi::MessageFlags::HasError = "$ERROR";
+const char *const Akonadi::MessageFlags::HasAttachment = "$ATTACHMENT";
+const char *const Akonadi::MessageFlags::HasInvitation = "$INVITATION";
+const char *const Akonadi::MessageFlags::Sent = "$SENT";
+const char *const Akonadi::MessageFlags::Queued = "$QUEUED";
+const char *const Akonadi::MessageFlags::Replied = "$REPLIED";
+const char *const Akonadi::MessageFlags::Forwarded = "$FORWARDED";
+const char *const Akonadi::MessageFlags::ToAct = "$TODO";
+const char *const Akonadi::MessageFlags::Watched = "$WATCHED";
+const char *const Akonadi::MessageFlags::Ignored = "$IGNORED";
+const char *const Akonadi::MessageFlags::Signed = "$SIGNED";
+const char *const Akonadi::MessageFlags::Encrypted = "$ENCRYPTED";
+const char *const Akonadi::MessageFlags::Spam = "$JUNK";
+const char *const Akonadi::MessageFlags::Ham = "$NOTJUNK";
