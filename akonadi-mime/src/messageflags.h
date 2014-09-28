@@ -36,107 +36,107 @@ namespace MessageFlags
 /**
  * The flag for a message being seen (i.e. opened by user).
  */
-AKONADI_MIME_EXPORT extern const char *const Seen;
+AKONADI_MIME_EXPORT extern const char Seen[];
 
 /**
  * The flag for a message being deleted by the user.
  */
-AKONADI_MIME_EXPORT extern const char *const Deleted;
+AKONADI_MIME_EXPORT extern const char Deleted[];
 
 /**
  * The flag for a message being replied to by the user.
  * @deprecated use Replied instead.
  */
-AKONADI_MIME_EXPORT extern const char *const Answered;
+AKONADI_MIME_EXPORT extern const char Answered[];
 
 /**
  * The flag for a message being marked as flagged.
  */
-AKONADI_MIME_EXPORT extern const char *const Flagged;
+AKONADI_MIME_EXPORT extern const char Flagged[];
 
 /**
  * The flag for a message being marked with an error.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const HasError;
+AKONADI_MIME_EXPORT extern const char HasError[];
 
 /**
  * The flag for a message being marked as having an attachment.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const HasAttachment;
+AKONADI_MIME_EXPORT extern const char HasAttachment[];
 
 /**
  * The flag for a message being marked as having an invitation.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const HasInvitation;
+AKONADI_MIME_EXPORT extern const char HasInvitation[];
 
 /**
  * The flag for a message being marked as sent.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Sent;
+AKONADI_MIME_EXPORT extern const char Sent[];
 
 /**
  * The flag for a message being marked as queued.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Queued;
+AKONADI_MIME_EXPORT extern const char Queued[];
 
 /**
  * The flag for a message being marked as replied.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Replied;
+AKONADI_MIME_EXPORT extern const char Replied[];
 
 /**
  * The flag for a message being marked as forwarded.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Forwarded;
+AKONADI_MIME_EXPORT extern const char Forwarded[];
 
 /**
  * The flag for a message being marked as action item to act on.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const ToAct;
+AKONADI_MIME_EXPORT extern const char ToAct[];
 
 /**
  * The flag for a message being marked as watched.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Watched;
+AKONADI_MIME_EXPORT extern const char Watched[];
 
 /**
  * The flag for a message being marked as ignored.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Ignored;
+AKONADI_MIME_EXPORT extern const char Ignored[];
 
 /**
  * The flag for a message being marked as signed.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Signed;
+AKONADI_MIME_EXPORT extern const char Signed[];
 
 /**
  * The flag for a message being marked as encrypted.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Encrypted;
+AKONADI_MIME_EXPORT extern const char Encrypted[];
 
 /**
  * The flag for a message being marked as spam.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Spam;
+AKONADI_MIME_EXPORT extern const char Spam[];
 
 /**
  * The flag for a message being marked as ham.
  * @since 4.6
  */
-AKONADI_MIME_EXPORT extern const char *const Ham;
+AKONADI_MIME_EXPORT extern const char Ham[];
 }
 }
 

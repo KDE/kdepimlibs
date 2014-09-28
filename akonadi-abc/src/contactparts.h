@@ -35,7 +35,7 @@ namespace ContactPart {
  * that contains only name and email addresses.
  * @since 4.2
  */
-AKONADI_ABC_EXPORT extern const char *const Lookup;
+AKONADI_ABC_EXPORT extern const char Lookup[];
 
 /**
  * The part identifier for all the contact data except
@@ -45,7 +45,7 @@ AKONADI_ABC_EXPORT extern const char *const Lookup;
  *       full contact including images and sounds.
  * @since 4.2
  */
-AKONADI_ABC_EXPORT extern const char *const Standard;
+AKONADI_ABC_EXPORT extern const char Standard[];
 }
 }
 
