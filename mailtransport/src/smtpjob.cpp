@@ -100,8 +100,7 @@ SmtpJob::SmtpJob(Transport *transport, QObject *parent)
     if (!s_slavePool.isDestroyed()) {
         s_slavePool->ref++;
     }
-    KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave*,int,QString)),
-                            this, SLOT(slaveError(KIO::Slave*,int,QString)));
+    KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave*,int,QString)), this, SLOT(slaveError(KIO::Slave*,int,QString)));
 }
 
 SmtpJob::~SmtpJob()
@@ -243,8 +242,7 @@ void SmtpJob::startSmtpJob()
     }
 
     job->addMetaData(QLatin1String("lf2crlf+dotstuff"), QLatin1String("slave"));
-    connect(job, SIGNAL(dataReq(KIO::Job*,QByteArray&)),
-            SLOT(dataRequest(KIO::Job*,QByteArray&)));
+    connect(job, &KIO::TransferJob::dataReq, this, &SmtpJob::dataRequest);
 
     addSubjob(job);
     KIO::Scheduler::assignJobToSlave(d->slave, job);

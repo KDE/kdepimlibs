@@ -171,8 +171,7 @@ void SMTPConfigWidget::init()
     Q_D(SMTPConfigWidget);
     d->serverTest = 0;
 
-    connect(TransportManager::self(), SIGNAL(passwordsChanged()),
-            SLOT(passwordsLoaded()));
+    connect(TransportManager::self(), &TransportManager::passwordsChanged, this, &SMTPConfigWidget::passwordsLoaded);
 
     d->serverTestFailed = false;
 
@@ -194,14 +193,10 @@ void SMTPConfigWidget::init()
                                         Transport::EnumAuthenticationType::GSSAPI));
     }
 
-    connect(d->ui.checkCapabilities, SIGNAL(clicked()),
-            SLOT(checkSmtpCapabilities()));
-    connect(d->ui.kcfg_host, SIGNAL(textChanged(QString)),
-            SLOT(hostNameChanged(QString)));
-    connect(d->encryptionGroup, SIGNAL(buttonClicked(int)),
-            SLOT(encryptionChanged(int)));
-    connect(d->ui.kcfg_requiresAuthentication, SIGNAL(toggled(bool)),
-            SLOT(ensureValidAuthSelection()));
+    connect(d->ui.checkCapabilities, &QPushButton::clicked, this, &SMTPConfigWidget::checkSmtpCapabilities);
+    connect(d->ui.kcfg_host, &QLineEdit::textChanged, this, &SMTPConfigWidget::hostNameChanged);
+    connect(d->encryptionGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &SMTPConfigWidget::encryptionChanged);
+    connect(d->ui.kcfg_requiresAuthentication, &QCheckBox::toggled, this, &SMTPConfigWidget::ensureValidAuthSelection);
 
     if (!d->transport->isValid()) {
         checkHighestEnabledButton(d->encryptionGroup);
@@ -244,8 +239,7 @@ void SMTPConfigWidget::checkSmtpCapabilities()
     d->ui.checkCapabilitiesStack->setCurrentIndex(1);
     BusyCursorHelper *busyCursorHelper = new BusyCursorHelper(d->serverTest);
 
-    connect(d->serverTest, SIGNAL(finished(QList<int>)),
-            SLOT(slotFinished(QList<int>)));
+    connect(d->serverTest, &ServerTest::finished, this, &SMTPConfigWidget::slotFinished);
     connect(d->serverTest, SIGNAL(finished(QList<int>)),
             busyCursorHelper, SLOT(deleteLater()));
     d->ui.checkCapabilities->setEnabled(false);

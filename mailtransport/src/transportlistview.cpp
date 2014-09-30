@@ -50,8 +50,7 @@ TransportListView::TransportListView(QWidget *parent)
     setSelectionMode(SingleSelection);
 
     fillTransportList();
-    connect(TransportManager::self(), SIGNAL(transportsChanged()),
-            this, SLOT(fillTransportList()));
+    connect(TransportManager::self(), &TransportManager::transportsChanged, this, &TransportListView::fillTransportList);
 }
 
 void TransportListView::editItem(QTreeWidgetItem *item, int column)
