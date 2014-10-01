@@ -46,6 +46,14 @@ namespace KCalCore {
 class KCALCORE_EXPORT FreeBusyPeriod : public Period
 {
 public:
+    enum FreeBusyType {
+        Free,
+        Busy,
+        BusyUnavailable,
+        BusyTentative,
+        Unknown
+    };
+
     /**
        List of periods.
      */
@@ -125,6 +133,21 @@ public:
       @see setLocation()
     */
     QString location() const;
+
+    /**
+      Sets the free/busy type.
+      @param type is the type of free/busy period
+      @see type().
+      @since 4.15
+    */
+    void setType(FreeBusyType type);
+
+    /**
+      Returns free/busy type
+      @see setType().
+      @since 4.15
+    */
+    FreeBusyType type() const;
 
 private:
     //@cond PRIVATE
