@@ -319,7 +319,7 @@ void ContentTest::testEncodedContent()
 void ContentTest::testDecodedContent()
 {
     Content *c = new Content();
-    c->setBody('\0');
+    c->setBody("\0");
     QVERIFY(c->decodedContent() == QByteArray());
     c->setBody(QByteArray());
     QVERIFY(c->decodedContent() == QByteArray());
