@@ -23,9 +23,10 @@
 
 #include "maildir.h"
 
-class MailDirFetchAllHeaders: public MailDir {
+class MailDirFetchAllHeaders : public MailDir
+{
 
-  public:
+public:
     MailDirFetchAllHeaders();
     void runTest();
 };

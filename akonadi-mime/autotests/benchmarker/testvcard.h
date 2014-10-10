@@ -22,8 +22,9 @@
 
 #include "test.h"
 
-class TestVCard:public Test {
-  public:
+class TestVCard : public Test
+{
+public:
     TestVCard(const QString &dir);
 };
 #endif

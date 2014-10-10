@@ -23,9 +23,10 @@
 
 #include "maildir.h"
 
-class MailDirRemoveReadMessages: public MailDir {
+class MailDirRemoveReadMessages : public MailDir
+{
 
-  public:
+public:
     MailDirRemoveReadMessages();
     void runTest();
 };

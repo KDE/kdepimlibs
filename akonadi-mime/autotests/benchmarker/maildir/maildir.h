@@ -23,9 +23,10 @@
 
 #include "../maketest.h"
 
-class MailDir: public MakeTest {
+class MailDir : public MakeTest
+{
 
-  public:
+public:
     MailDir(const QString &dir);
     MailDir();
 };

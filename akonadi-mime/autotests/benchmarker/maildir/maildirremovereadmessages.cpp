@@ -29,26 +29,30 @@
 
 using namespace Akonadi;
 
-MailDirRemoveReadMessages::MailDirRemoveReadMessages():MailDir(){}
+MailDirRemoveReadMessages::MailDirRemoveReadMessages()
+    : MailDir()
+{
+}
 
-void MailDirRemoveReadMessages::runTest() {
-  timer.start();
-  qDebug() << "  Removing read messages from every folder.";
-  CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj4->fetchScope().setResource( currentInstance.identifier() );
-  clj4->exec();
-  Collection::List list4 = clj4->collections();
-  foreach ( const Collection &collection, list4 ) {
-    ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->exec();
-    foreach ( const Item &item, ifj->items() ) {
-      // delete read messages
-      if ( item.hasFlag( "\\SEEN" ) ) {
-        ItemDeleteJob *idj = new ItemDeleteJob( item, this);
-        idj->exec();
-      }
+void MailDirRemoveReadMessages::runTest()
+{
+    timer.start();
+    qDebug() << "  Removing read messages from every folder.";
+    CollectionFetchJob *clj4 = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    clj4->fetchScope().setResource(currentInstance.identifier());
+    clj4->exec();
+    Collection::List list4 = clj4->collections();
+    foreach (const Collection &collection, list4) {
+        ItemFetchJob *ifj = new ItemFetchJob(collection, this);
+        ifj->exec();
+        foreach (const Item &item, ifj->items()) {
+            // delete read messages
+            if (item.hasFlag("\\SEEN")) {
+                ItemDeleteJob *idj = new ItemDeleteJob(item, this);
+                idj->exec();
+            }
+        }
     }
-  }
-  outputStats( QLatin1String("removereaditems") );
+    outputStats(QLatin1String("removereaditems"));
 
 }

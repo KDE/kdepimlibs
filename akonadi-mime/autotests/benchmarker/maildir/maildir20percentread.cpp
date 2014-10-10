@@ -30,25 +30,29 @@
 
 using namespace Akonadi;
 
-MailDir20PercentAsRead::MailDir20PercentAsRead():MailDir(){}
+MailDir20PercentAsRead::MailDir20PercentAsRead()
+    : MailDir()
+{
+}
 
-void MailDir20PercentAsRead::runTest() {
-  timer.start();
-  qDebug() << "  Marking 20% of messages as read.";
-  CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj2->fetchScope().setResource( currentInstance.identifier() );
-  clj2->exec();
-  Collection::List list2 = clj2->collections();
-  foreach ( const Collection &collection, list2 ) {
-    ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->exec();
-    Item::List itemlist = ifj->items();
-    for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
-      Item item = itemlist[i];
-      item.setFlag( "\\SEEN" );
-      ItemModifyJob *isj = new ItemModifyJob( item, this );
-      isj->exec();
+void MailDir20PercentAsRead::runTest()
+{
+    timer.start();
+    qDebug() << "  Marking 20% of messages as read.";
+    CollectionFetchJob *clj2 = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    clj2->fetchScope().setResource(currentInstance.identifier());
+    clj2->exec();
+    Collection::List list2 = clj2->collections();
+    foreach (const Collection &collection, list2) {
+        ItemFetchJob *ifj = new ItemFetchJob(collection, this);
+        ifj->exec();
+        Item::List itemlist = ifj->items();
+        for (int i = ifj->items().count() - 1; i >= 0; i -= 5) {
+            Item item = itemlist[i];
+            item.setFlag("\\SEEN");
+            ItemModifyJob *isj = new ItemModifyJob(item, this);
+            isj->exec();
+        }
     }
-  }
-  outputStats( QLatin1String("mark20percentread") );
+    outputStats(QLatin1String("mark20percentread"));
 }

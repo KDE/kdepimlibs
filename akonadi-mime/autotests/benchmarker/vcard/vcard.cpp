@@ -19,10 +19,14 @@
 
 #include "vcard.h"
 
-VCard::VCard(const QString &dir) : MakeTest()
+VCard::VCard(const QString &dir)
+    : MakeTest()
 {
-  createAgent(QLatin1String("akonadi_vcarddir_resource"));
-  configureDBusIface(QLatin1String("VCard"), dir);
+    createAgent(QLatin1String("akonadi_vcarddir_resource"));
+    configureDBusIface(QLatin1String("VCard"), dir);
 }
 
-VCard::VCard() : MakeTest(){}
+VCard::VCard()
+    : MakeTest()
+{
+}

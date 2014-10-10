@@ -22,9 +22,9 @@
 
 #include "test.h"
 
-class TestMailDir:public Test {
-  public:
+class TestMailDir : public Test
+{
+public:
     TestMailDir(const QString &dir);
 };
 #endif
-

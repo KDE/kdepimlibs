@@ -23,9 +23,10 @@
 
 #include "maildir.h"
 
-class MailDirImport: public MailDir {
+class MailDirImport : public MailDir
+{
 
-  public:
+public:
     MailDirImport(const QString &dir);
     void runTest();
 };

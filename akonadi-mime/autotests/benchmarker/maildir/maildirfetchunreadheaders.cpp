@@ -37,26 +37,30 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-MailDirFetchUnreadHeaders::MailDirFetchUnreadHeaders():MailDir(){}
+MailDirFetchUnreadHeaders::MailDirFetchUnreadHeaders()
+    : MailDir()
+{
+}
 
-void MailDirFetchUnreadHeaders::runTest() {
-  timer.start();
-  qDebug() << "  Listing headers of unread messages of every folder.";
-  CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj3->fetchScope().setResource( currentInstance.identifier() );
-  clj3->exec();
-  Collection::List list3 = clj3->collections();
-  foreach ( const Collection &collection, list3 ) {
-    ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
-    ifj->exec();
-    QString a;
-    foreach ( const Item &item, ifj->items() ) {
-      // filter read messages
-      if ( !item.hasFlag( "\\SEEN" ) ) {
-        a = item.payload<MessagePtr>()->subject()->asUnicodeString();
-      }
+void MailDirFetchUnreadHeaders::runTest()
+{
+    timer.start();
+    qDebug() << "  Listing headers of unread messages of every folder.";
+    CollectionFetchJob *clj3 = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    clj3->fetchScope().setResource(currentInstance.identifier());
+    clj3->exec();
+    Collection::List list3 = clj3->collections();
+    foreach (const Collection &collection, list3) {
+        ItemFetchJob *ifj = new ItemFetchJob(collection, this);
+        ifj->fetchScope().fetchPayloadPart(MessagePart::Envelope);
+        ifj->exec();
+        QString a;
+        foreach (const Item &item, ifj->items()) {
+            // filter read messages
+            if (!item.hasFlag("\\SEEN")) {
+                a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+            }
+        }
     }
-  }
-  outputStats( QLatin1String("unreadheaderlist") );
+    outputStats(QLatin1String("unreadheaderlist"));
 }

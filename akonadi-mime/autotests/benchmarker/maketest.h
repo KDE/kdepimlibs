@@ -26,26 +26,27 @@
 
 #include <QTime>
 
-class MakeTest: public QObject {
+class MakeTest : public QObject
+{
 
-  Q_OBJECT
-  protected Q_SLOTS:
-    void createAgent( const QString &name );
-    void configureDBusIface(const QString &name, const QString &dir );
-    void instanceRemoved( const Akonadi::AgentInstance &instance );
-    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
-    void outputStats( const QString &description );
-    void output( const QString &message );
+    Q_OBJECT
+protected Q_SLOTS:
+    void createAgent(const QString &name);
+    void configureDBusIface(const QString &name, const QString &dir);
+    void instanceRemoved(const Akonadi::AgentInstance &instance);
+    void instanceStatusChanged(const Akonadi::AgentInstance &instance);
+    void outputStats(const QString &description);
+    void output(const QString &message);
 
-  protected:
+protected:
     Akonadi::AgentInstance currentInstance;
     QString currentAccount;
     QTime timer;
     bool done;
     void removeCollections();
     void removeResource();
-    virtual void runTest()=0;
-  public:
+    virtual void runTest() = 0;
+public:
     MakeTest();
     void start();
 };

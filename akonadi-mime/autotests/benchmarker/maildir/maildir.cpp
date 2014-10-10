@@ -30,7 +30,6 @@
 #include <kmime/kmime_message.h>
 #include "akonadi/kmime/messageparts.h"
 
-
 #include <boost/shared_ptr.hpp>
 
 #define WAIT_TIME 100
@@ -39,10 +38,14 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-MailDir::MailDir(const QString &dir) : MakeTest()
+MailDir::MailDir(const QString &dir)
+    : MakeTest()
 {
-  createAgent(QLatin1String("akonadi_maildir_resource"));
-  configureDBusIface(QLatin1String("Maildir"),dir);
+    createAgent(QLatin1String("akonadi_maildir_resource"));
+    configureDBusIface(QLatin1String("Maildir"), dir);
 }
 
-MailDir::MailDir() : MakeTest(){}
+MailDir::MailDir()
+    : MakeTest()
+{
+}

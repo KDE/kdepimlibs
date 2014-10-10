@@ -37,23 +37,27 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-MailDirFetchAllHeaders::MailDirFetchAllHeaders():MailDir(){}
+MailDirFetchAllHeaders::MailDirFetchAllHeaders()
+    : MailDir()
+{
+}
 
-void MailDirFetchAllHeaders::runTest() {
-  timer.start();
-  qDebug() << "  Listing all headers of every folder.";
-  CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj->fetchScope().setResource( currentInstance.identifier() );
-  clj->exec();
-  Collection::List list = clj->collections();
-  foreach ( const Collection &collection, list ) {
-    ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
-    ifj->exec();
-    QString a;
-    foreach ( const Item &item, ifj->items() ) {
-      a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+void MailDirFetchAllHeaders::runTest()
+{
+    timer.start();
+    qDebug() << "  Listing all headers of every folder.";
+    CollectionFetchJob *clj = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    clj->fetchScope().setResource(currentInstance.identifier());
+    clj->exec();
+    Collection::List list = clj->collections();
+    foreach (const Collection &collection, list) {
+        ItemFetchJob *ifj = new ItemFetchJob(collection, this);
+        ifj->fetchScope().fetchPayloadPart(MessagePart::Envelope);
+        ifj->exec();
+        QString a;
+        foreach (const Item &item, ifj->items()) {
+            a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+        }
     }
-  }
-  outputStats( QLatin1String("fullheaderlist") );
+    outputStats(QLatin1String("fullheaderlist"));
 }

@@ -22,12 +22,12 @@
 
 void Test::addTest(MakeTest *test)
 {
-  mListTest.append(test);
+    mListTest.append(test);
 }
 
 void Test::runTests()
 {
-  for (int i = 0; i < mListTest.size(); ++i) {
-         mListTest.at(i)->start();
-  }
+    for (int i = 0; i < mListTest.size(); ++i) {
+        mListTest.at(i)->start();
+    }
 }

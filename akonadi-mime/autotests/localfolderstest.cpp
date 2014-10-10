@@ -27,7 +27,6 @@
 #include <QFile>
 #include <QSignalSpy>
 
-
 #include <agentinstance.h>
 #include <agentmanager.h>
 #include <collectioncreatejob.h>
@@ -88,9 +87,8 @@ void LocalFoldersTest::testLock()
 {
     QString dbusName = QString::fromLatin1("org.kde.pim.SpecialCollections");
     if (ServerManager::hasInstanceIdentifier()) {
-      dbusName += Akonadi::ServerManager::instanceIdentifier();
+        dbusName += Akonadi::ServerManager::instanceIdentifier();
     }
-
 
     // Initially not locked.
     QVERIFY(!DBusConnectionPool::threadConnection().interface()->isServiceRegistered(dbusName));

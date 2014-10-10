@@ -21,7 +21,6 @@
 #include "testmaildir.h"
 #include "testvcard.h"
 
-
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -30,28 +29,28 @@
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( QLatin1String("benchmarker"), i18n("Benchmarker") , QLatin1String("1.0" ));
-  aboutData.setShortDescription(i18n("benchmark application") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("maildir"), i18n("Path to maildir to be used as data source"), QLatin1String("argument")));
-  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("vcarddir"), i18n("Path to vvcarddir to be used as data source"), QLatin1String("argument")));
+    KAboutData aboutData(QLatin1String("benchmarker"), i18n("Benchmarker"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("benchmark application"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("maildir"), i18n("Path to maildir to be used as data source"), QLatin1String("argument")));
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("vcarddir"), i18n("Path to vvcarddir to be used as data source"), QLatin1String("argument")));
 
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  const QString maildir = parser.value( QLatin1String("maildir") );
-  const QString vcarddir = parser.value( QLatin1String("vcarddir") );
+    const QString maildir = parser.value(QLatin1String("maildir"));
+    const QString vcarddir = parser.value(QLatin1String("vcarddir"));
 
-  TestMailDir *mailDirTest = new TestMailDir(maildir);
-  TestVCard *vcardTest = new TestVCard(vcarddir);
+    TestMailDir *mailDirTest = new TestMailDir(maildir);
+    TestVCard *vcardTest = new TestVCard(vcarddir);
 
-  mailDirTest->runTests();
-  vcardTest->runTests();
+    mailDirTest->runTests();
+    vcardTest->runTests();
 
-  return app.exec();
+    return app.exec();
 }

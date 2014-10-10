@@ -22,8 +22,9 @@
 
 #include "vcard.h"
 
-class VCardImport : public VCard {
-  public:
+class VCardImport : public VCard
+{
+public:
     VCardImport(const QString &dir);
     void runTest();
 };

@@ -24,14 +24,19 @@
 
 #define WAIT_TIME 50
 
-VCardImport::VCardImport(const QString &dir) : VCard(dir) {}
+VCardImport::VCardImport(const QString &dir)
+    : VCard(dir)
+{
+}
 
-void VCardImport::runTest() {
-  done = false;
-  timer.start();
-  qDebug() << "Synchronising resource";
-  currentInstance.synchronize();
-  while(!done)
-     QTest::qWait( WAIT_TIME );
-  outputStats( QLatin1String("import"));
+void VCardImport::runTest()
+{
+    done = false;
+    timer.start();
+    qDebug() << "Synchronising resource";
+    currentInstance.synchronize();
+    while (!done) {
+        QTest::qWait(WAIT_TIME);
+    }
+    outputStats(QLatin1String("import"));
 }

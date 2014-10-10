@@ -22,5 +22,5 @@
 
 TestVCard::TestVCard(const QString &dir)
 {
-  addTest( new VCardImport(dir));
+    addTest(new VCardImport(dir));
 }

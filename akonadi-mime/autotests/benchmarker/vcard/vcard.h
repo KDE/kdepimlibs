@@ -20,12 +20,12 @@
 #ifndef VCARD_H
 #define VCARD_H
 
-
 #include "../maketest.h"
 
-class VCard : public MakeTest {
+class VCard : public MakeTest
+{
 
-  public:
+public:
     VCard(const QString &dir);
     VCard();
 };

@@ -23,9 +23,10 @@
 
 #include "maildir.h"
 
-class MailDir20PercentAsRead: public MailDir {
+class MailDir20PercentAsRead : public MailDir
+{
 
-  public:
+public:
     MailDir20PercentAsRead();
     void runTest();
 };

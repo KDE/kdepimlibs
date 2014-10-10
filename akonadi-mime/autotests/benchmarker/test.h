@@ -23,12 +23,13 @@
 
 #include "maketest.h"
 
-class Test {
+class Test
+{
 
-  protected:
+protected:
     QList<MakeTest *> mListTest;
 
-  public:
+public:
     void addTest(MakeTest *test);
     void runTests();
 };
