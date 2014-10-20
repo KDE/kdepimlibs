@@ -7,5 +7,5 @@ listing=Name,Type,Size
 reading=true
 writing=true
 deleting=false
-X-DocPath=kioslave/nntp/index.html
+X-DocPath=kioslave5/nntp/index.html
 Icon=message-news

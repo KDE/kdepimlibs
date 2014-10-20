@@ -12,5 +12,5 @@ source=true
 makedir=false
 linking=false
 moving=false
-X-DocPath=kioslave/pop3/index.html
+X-DocPath=kioslave5/pop3/index.html
 Icon=mail-folder-inbox

@@ -10,5 +10,5 @@ makedir=false
 deleting=false
 Icon=mail-folder-inbox
 maxInstances=2
-X-DocPath=kioslave/mbox/index.html
+X-DocPath=kioslave5/mbox/index.html
 Class=:local
