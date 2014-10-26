@@ -708,10 +708,10 @@ void GDataPrivate::slotListRecentPosts(Syndication::Loader *loader,
         int catCount = (*it)->categories().count();
         QList< Syndication::CategoryPtr > cats = (*it)->categories();
         for (int i = 0; i < catCount; ++i) {
-            if (cats[i].get()->label().isEmpty()) {
-                labels.append(cats[i].get()->term());
+            if (cats[i]->label().isEmpty()) {
+                labels.append(cats[i]->term());
             } else {
-                labels.append(cats[i].get()->label());
+                labels.append(cats[i]->label());
             }
         }
         post.setTags(labels);
