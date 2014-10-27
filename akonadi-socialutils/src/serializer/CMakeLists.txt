@@ -10,10 +10,6 @@ if(WIN32)
   )
 endif()
 
-include_directories(
-  ${CMAKE_BINARY_DIR}/akonadi/socialutils
-)
-
 ########### next target ###############
 
 set(akonadi_serializer_socialfeeditem_SRCS
