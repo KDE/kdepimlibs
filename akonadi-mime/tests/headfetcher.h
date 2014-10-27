@@ -25,12 +25,12 @@
 
 class HeadFetcher : public QObject
 {
-  Q_OBJECT
-  public:
-    HeadFetcher( bool multipart );
-  private Q_SLOTS:
+    Q_OBJECT
+public:
+    HeadFetcher(bool multipart);
+private Q_SLOTS:
     void stop();
-  private:
+private:
     QTime timer;
 };
 
