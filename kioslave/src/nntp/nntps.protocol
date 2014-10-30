@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_nntp
+exec=kf5/kio/nntp
 protocol=nntps
 input=none
 output=filesystem

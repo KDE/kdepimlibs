@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_pop3
+exec=kf5/kio/pop3
 protocol=pop3
 Capabilities=SASL
 input=none

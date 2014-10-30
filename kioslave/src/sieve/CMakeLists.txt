@@ -9,8 +9,9 @@ add_library(kio_sieve MODULE ${kio_sieve_PART_SRCS})
 
 
 target_link_libraries(kio_sieve KF5::KIOCore KF5::I18n Qt5::Network KF5::WidgetsAddons ${Sasl2_LIBRARIES})
+set_target_properties(kio_sieve PROPERTIES OUTPUT_NAME "sieve")
 
-install(TARGETS kio_sieve  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kio_sieve  DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/kio/)
 
 
 ########### install files ###############

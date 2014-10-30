@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_smtp
+exec=kf5/kio/smtp
 protocol=smtp
 Capabilities=SASL
 input=none

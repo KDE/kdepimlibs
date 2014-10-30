@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_mbox
+exec=kf5/kio/mbox
 protocol=mbox
 input=none
 output=filesystem

@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_sieve
+exec=kf5/kio/sieve
 protocol=sieve
 input=none
 output=filesystem
