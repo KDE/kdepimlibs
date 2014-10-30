@@ -33,9 +33,9 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes()
 }
 
 Akonadi::SocialNetworkAttributes::SocialNetworkAttributes(const QString &userName,
-        const QString &networkName,
-        bool canPublish,
-        uint maxPostLength)
+                                                          const QString &networkName,
+                                                          bool canPublish,
+                                                          uint maxPostLength)
     : d(new SocialNetworkAttributesPrivate())
 {
     d->attributes[QLatin1String("userName")] = userName;

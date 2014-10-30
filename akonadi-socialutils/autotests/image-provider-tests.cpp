@@ -98,5 +98,4 @@ void ImageProviderTests::testImageFetchingUrl()
     QCOMPARE(m_url, QUrl(IMAGE_URL));
 }
 
-QTEST_MAIN(ImageProviderTests);
-
+QTEST_MAIN(ImageProviderTests)

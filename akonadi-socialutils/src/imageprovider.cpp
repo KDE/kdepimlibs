@@ -32,7 +32,8 @@ class Akonadi::ImageProviderPrivate
 
 public:
 
-    struct QueuedJobHelper {
+    struct QueuedJobHelper
+    {
         QString who;
         QUrl url;
         bool polishImage;
@@ -158,7 +159,7 @@ Akonadi::ImageProvider::~ImageProvider()
 }
 
 QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
-        bool polishImage, KImageCache *cache)
+                                         bool polishImage, KImageCache *cache)
 {
     Q_D(ImageProvider);
 

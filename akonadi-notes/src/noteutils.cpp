@@ -28,10 +28,8 @@
 #include <quuid.h>
 #include <qdom.h>
 
-namespace Akonadi
-{
-namespace NoteUtils
-{
+namespace Akonadi {
+namespace NoteUtils {
 
 #define X_NOTES_UID_HEADER "X-Akonotes-UID"
 #define X_NOTES_LASTMODIFIED_HEADER "X-Akonotes-LastModified"
@@ -54,14 +52,16 @@ class Attachment::AttachmentPrivate
 {
 public:
     AttachmentPrivate(const QUrl &url, const QString &mimetype)
-        : mUrl(url),
-          mMimetype(mimetype)
-    {}
+        : mUrl(url)
+        , mMimetype(mimetype)
+    {
+    }
 
     AttachmentPrivate(const QByteArray &data, const QString &mimetype)
-        : mData(data),
-          mMimetype(mimetype)
-    {}
+        : mData(data)
+        , mMimetype(mimetype)
+    {
+    }
 
     AttachmentPrivate(const AttachmentPrivate &other)
     {
@@ -87,7 +87,6 @@ Attachment::Attachment(const QByteArray &data, const QString &mimetype)
 Attachment::Attachment(const Attachment &other)
     : d_ptr(new AttachmentPrivate(*other.d_func()))
 {
-
 }
 
 Attachment::~Attachment()
@@ -151,14 +150,14 @@ public:
     {
     }
 
-    NoteMessageWrapperPrivate(const KMime::Message::Ptr &msg)
-        : textFormat(Qt::PlainText),
-          classification(Public)
+    NoteMessageWrapperPrivate(const KMime::MessagePtr &msg)
+        : textFormat(Qt::PlainText)
+        , classification(Public)
     {
         readMimeMessage(msg);
     }
 
-    void readMimeMessage(const KMime::Message::Ptr &msg);
+    void readMimeMessage(const KMime::MessagePtr &msg);
 
     KMime::Content *createCustomPart() const;
     void parseCustomPart(KMime::Content *);
@@ -178,7 +177,7 @@ public:
     Classification classification;
 };
 
-void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime::Message::Ptr &msg)
+void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime::MessagePtr &msg)
 {
     if (!msg.get()) {
         qWarning() << "Empty message";
@@ -190,7 +189,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
         from = msg->from(false)->asUnicodeString();
     }
     creationDate = msg->date(true)->dateTime();
-    if ( msg->mainBodyPart()->contentType( false ) && msg->mainBodyPart()->contentType()->mimeType() == "text/html" ) {
+    if (msg->mainBodyPart()->contentType(false) && msg->mainBodyPart()->contentType()->mimeType() == "text/html") {
         textFormat = Qt::RichText;
     }
 
@@ -335,7 +334,7 @@ NoteMessageWrapper::NoteMessageWrapper()
 {
 }
 
-NoteMessageWrapper::NoteMessageWrapper(const KMime::Message::Ptr &msg)
+NoteMessageWrapper::NoteMessageWrapper(const KMime::MessagePtr &msg)
     :  d_ptr(new NoteMessageWrapperPrivate(msg))
 {
 }
@@ -345,10 +344,10 @@ NoteMessageWrapper::~NoteMessageWrapper()
     delete d_ptr;
 }
 
-KMime::Message::Ptr NoteMessageWrapper::message() const
+KMime::MessagePtr NoteMessageWrapper::message() const
 {
     const Q_D(NoteMessageWrapper);
-    KMime::Message::Ptr msg = KMime::Message::Ptr(new KMime::Message());
+    KMime::MessagePtr msg = KMime::MessagePtr(new KMime::Message());
 
     QString title = i18nc("The default name for new notes.", "New Note");
     if (!d->title.isEmpty()) {
@@ -374,7 +373,7 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     if (!d->uid.isEmpty()) {
         uid = d->uid;
     } else {
-	uid = QUuid::createUuid().toString().mid(1, 36);
+        uid = QUuid::createUuid().toString().mid(1, 36);
     }
 
     msg->subject(true)->fromUnicodeString(title, ENCODING);
@@ -408,7 +407,7 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     }
 
     msg->mainBodyPart()->fromUnicodeString(text);
-    msg->mainBodyPart()->contentType( true )->setMimeType( d->textFormat == Qt::RichText ? "text/html" : "text/plain" );
+    msg->mainBodyPart()->contentType(true)->setMimeType(d->textFormat == Qt::RichText ? "text/html" : "text/plain");
 
     msg->assemble();
     return msg;

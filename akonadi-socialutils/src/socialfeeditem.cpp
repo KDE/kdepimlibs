@@ -126,7 +126,7 @@ void Akonadi::SocialFeedItem::setPostInfo(const QString &postInfo)
 }
 
 void Akonadi::SocialFeedItem::setPostTime(const QString &postTimeString,
-        const QString &postTimeFormat)
+                                          const QString &postTimeFormat)
 {
     d->postTimeString = postTimeString;
     d->postTimeFormat = postTimeFormat;

@@ -27,20 +27,16 @@
 class QDateTime;
 class QString;
 
-namespace boost
-{
+namespace boost {
 template <typename T> class shared_ptr;
 }
 
-namespace KMime
-{
+namespace KMime {
 class Message;
 typedef boost::shared_ptr<Message> MessagePtr;
 }
-namespace Akonadi
-{
-namespace NoteUtils
-{
+namespace Akonadi {
+namespace NoteUtils {
 
 /**
 * @return mimetype for notes
@@ -69,11 +65,11 @@ public:
      * Create an attachment with the content stored inline
      */
     Attachment(const QByteArray &data, const QString &mimetype);
-    Attachment(const Attachment &);
+    Attachment(const Attachment &other);
     ~Attachment();
 
-    bool operator==(const Attachment &) const;
-    void operator=(const Attachment &);
+    bool operator==(const Attachment &a) const;
+    void operator=(const Attachment &a);
 
     /**
      * Returns the url for url-only attachments
@@ -108,7 +104,7 @@ private:
 };
 
 /**
-* A convenience wrapper around KMime::Message::Ptr for notes
+* A convenience wrapper around KMime::MessagePtr for notes
 *
 * This is the format used by the Akonotes Resource
 *
@@ -125,8 +121,8 @@ private:
 *
 * Reading a note from an Akonotes akonadi item:
 * @code
-* if ( item.hasPayload<KMime::Message::Ptr>() ) {
-*   NoteUtils::NoteMessageWrapper note(item.payload<KMime::Message::Ptr>());
+* if ( item.hasPayload<KMime::MessagePtr>() ) {
+*   NoteUtils::NoteMessageWrapper note(item.payload<KMime::MessagePtr>());
 *   qDebug() << note.text();
 *   textIsRich = messageWrapper.textFormat() == Qt::RichText;
 * }
@@ -149,7 +145,7 @@ class AKONADI_NOTES_EXPORT NoteMessageWrapper
 {
 public:
     NoteMessageWrapper();
-    explicit NoteMessageWrapper(const KMime::MessagePtr &);
+    explicit NoteMessageWrapper(const KMime::MessagePtr &msg);
     ~NoteMessageWrapper();
 
     /**

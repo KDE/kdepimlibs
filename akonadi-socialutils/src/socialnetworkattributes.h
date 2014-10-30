@@ -25,8 +25,7 @@
 
 #include <QString>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class SocialNetworkAttributesPrivate;
 
