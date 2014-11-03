@@ -413,6 +413,12 @@ void TransportManager::removeTransport(int id)
     d->transports.removeAll(t);
     d->validateDefault();
     QString group = t->currentGroup();
+    if (t->storePassword()) {
+        Wallet *currentWallet = wallet();
+        if ( currentWallet ) {
+            currentWallet->removeEntry( QString::number(t->id()) );
+        }
+    }
     delete t;
     d->config->deleteGroup(group);
     d->writeConfig();

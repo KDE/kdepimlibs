@@ -232,6 +232,7 @@ void Transport::usrRead()
 bool Transport::usrSave()
 {
     if (requiresAuthentication() && storePassword() && d->passwordDirty) {
+        const QString storePassword = d->password;
         Wallet *wallet = TransportManager::self()->wallet();
         if (!wallet || wallet->writePassword(QString::number(id()), d->password) != 0) {
             // wallet saving failed, ask if we should store in the config file instead
@@ -250,7 +251,7 @@ bool Transport::usrSave()
                         KGuiItem(i18n("Do Not Store Password"))) == KMessageBox::Yes) {
                 // write to config file
                 KConfigGroup group(config(), currentGroup());
-                group.writeEntry("password", KStringHandler::obscure(d->password));
+                group.writeEntry("password", KStringHandler::obscure(storePassword));
                 d->storePasswordInFile = true;
             }
         }
