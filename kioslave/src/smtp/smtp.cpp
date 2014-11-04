@@ -64,7 +64,7 @@ using KioSMTP::SMTPSessionInterface;
 #include <QHostInfo>
 
 #include <memory>
-using std::auto_ptr;
+using std::unique_ptr;
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -457,7 +457,7 @@ void SMTPProtocol::queueCommand(int type)
 
 bool SMTPProtocol::execute(int type, TransactionState *ts)
 {
-    auto_ptr<Command> cmd(Command::createSimpleCommand(type, m_sessionIface));
+    unique_ptr<Command> cmd(Command::createSimpleCommand(type, m_sessionIface));
     if (!cmd.get()) {
         qCritical() << "Command::createSimpleCommand( " << type << " ) returned null!" ;
     }
