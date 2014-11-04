@@ -15,4 +15,10 @@ int main() {
     const QString actual_response = c.createSpecialResponse(false);
     // SIZE actually handled
     assert(actual_response == expected_response);
+
+    const QString auth_cap = QObject::tr("AUTH GSSAPI");
+    c.add(auth_cap);
+    c.add(auth_cap);
+    // Duplicate methods was removed
+    assert(c.saslMethodsQSL().length() == 1);
 }

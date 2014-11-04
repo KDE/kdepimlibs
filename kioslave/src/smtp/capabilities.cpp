@@ -116,12 +116,7 @@ QStringList Capabilities::saslMethodsQSL() const
             result += it.value();
         }
     }
-    result.sort();
-    for (int i = 0, j = 1; j < result.count(); i = j++) {
-        if (result.at(i) == result.at(j)) {
-            result.removeAt(j--);
-        }
-    }
+    result.removeDuplicates();
     return result;
 }
 
