@@ -91,7 +91,7 @@ QString Capabilities::createSpecialResponse(bool tls) const
         bool ok = false;
         unsigned int size = 0;
         if (!mCapabilities[ QLatin1String("SIZE") ].isEmpty()) {
-            mCapabilities[ QLatin1String("SIZE") ].front().toUInt(&ok);
+            size = mCapabilities[ QLatin1String("SIZE") ].front().toUInt(&ok);
         }
         if (ok && !size) {
             result.push_back(QLatin1String("SIZE=*"));    // any size

@@ -44,3 +44,13 @@ ecm_mark_as_test(smtp-interactivesmtpserver)
 target_link_libraries(interactivesmtpserver    Qt5::Test Qt5::Widgets Qt5::Network)
 
 
+########### next target ###############
+set(test_capabilities_SRCS test_capabilities.cpp ../capabilities.cpp )
+
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${kioslave_SOURCE_DIR}/src/smtp)
+
+add_executable( test_capabilities ${test_capabilities_SRCS} )
+ecm_mark_as_test(test-capabilities)
+target_link_libraries(test_capabilities   KF5::KIOCore)
+
+
