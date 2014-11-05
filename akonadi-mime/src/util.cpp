@@ -21,7 +21,7 @@
 #include "imapsettings.h"
 
 #include <servermanager.h>
-#include <dbusconnectionpool.h>
+#include <KDBusConnectionPool>
 
 #include <assert.h>
 #include <QDebug>
@@ -49,7 +49,7 @@ OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(const QString &i
     //NOTE(Andras): from kmail/util.cpp
     return new OrgKdeAkonadiImapSettingsInterface(Akonadi::ServerManager::agentServiceName(Akonadi::ServerManager::Resource, ident),
                                                   QString::fromLatin1("/Settings"),
-                                                  Akonadi::DBusConnectionPool::threadConnection());
+                                                  KDBusConnectionPool::threadConnection());
 }
 
 }

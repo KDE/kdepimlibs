@@ -20,7 +20,7 @@
 
 #include "test.h"
 
-#include "dbusconnectionpool.h"
+#include "KDBusConnectionPool"
 
 #include <agentinstancecreatejob.h>
 #include <collectiondeletejob.h>
@@ -62,7 +62,7 @@ void MakeTest::createAgent(const QString &name)
 void MakeTest::configureDBusIface(const QString &name, const QString &dir)
 {
     QDBusInterface *configIface = new QDBusInterface(QLatin1String("org.freedesktop.Akonadi.Resource.") + currentInstance.identifier(),
-                                                     QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.") + name + QLatin1String(".Settings"), DBusConnectionPool::threadConnection(), this);
+                                                     QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.") + name + QLatin1String(".Settings"), KDBusConnectionPool::threadConnection(), this);
 
     configIface->call(QLatin1String("setPath"), dir);
     configIface->call(QLatin1String("setReadOnly"), true);
