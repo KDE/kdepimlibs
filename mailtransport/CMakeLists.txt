@@ -20,7 +20,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libmailtransport5\")
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.4.0")
-set(KDEPIMLIBS_VERSION "4.73.0")
+set(KDEPIMLIBS_VERSION "4.74.0")
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5MailTransport")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX MAILTRANSPORT
