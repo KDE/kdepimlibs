@@ -38,8 +38,8 @@
 #include "ktnefdefs.h"
 
 #include <kpimutils/email.h>
-#include <kabc/phonenumber.h>
-#include <kabc/vcardconverter.h>
+#include <kcontacts/phonenumber.h>
+#include <kcontacts/vcardconverter.h>
 
 #include <kcalcore/calendar.h>
 #include <kcalcore/icalformat.h>
@@ -196,7 +196,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
     QByteArray b(tnef);
     QBuffer buf(&b);
     MemoryCalendar::Ptr cal(new MemoryCalendar(KDateTime::UTC));
-    KABC::Addressee addressee;
+    KContacts::Addressee addressee;
     ICalFormat calFormat;
     Event::Ptr event(new Event());
 
@@ -450,14 +450,14 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                 vPart += stringProp(tnefMsg, "\n","NOTE", ... , "" );
                 */
 
-                KABC::Address adr;
+                KContacts::Address adr;
                 adr.setPostOfficeBox(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_PO_BOX));
                 adr.setStreet(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_STREET));
                 adr.setLocality(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_CITY));
                 adr.setRegion(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_STATE_OR_PROVINCE));
                 adr.setPostalCode(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_POSTAL_CODE));
                 adr.setCountry(stringProp(tnefMsg, MAPI_TAG_PR_HOME_ADDRESS_COUNTRY));
-                adr.setType(KABC::Address::Home);
+                adr.setType(KContacts::Address::Home);
                 addressee.insertAddress(adr);
 
                 adr.setPostOfficeBox(sNamedProp(tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSPOBOX)));
@@ -466,7 +466,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                 adr.setRegion(sNamedProp(tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSSTATE)));
                 adr.setPostalCode(sNamedProp(tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSPOSTALCODE)));
                 adr.setCountry(sNamedProp(tnefMsg, QLatin1String(MAPI_TAG_CONTACT_BUSINESSADDRESSCOUNTRY)));
-                adr.setType(KABC::Address::Work);
+                adr.setType(KContacts::Address::Work);
                 addressee.insertAddress(adr);
 
                 adr.setPostOfficeBox(stringProp(tnefMsg, MAPI_TAG_PR_OTHER_ADDRESS_PO_BOX));
@@ -475,7 +475,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                 adr.setRegion(stringProp(tnefMsg, MAPI_TAG_PR_OTHER_ADDRESS_STATE_OR_PROVINCE));
                 adr.setPostalCode(stringProp(tnefMsg, MAPI_TAG_PR_OTHER_ADDRESS_POSTAL_CODE));
                 adr.setCountry(stringProp(tnefMsg, MAPI_TAG_PR_OTHER_ADDRESS_COUNTRY));
-                adr.setType(KABC::Address::Dom);
+                adr.setType(KContacts::Address::Dom);
                 addressee.insertAddress(adr);
 
                 // problem: the 'other' address was stored by KOrganizer in
@@ -487,19 +487,19 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
                 QString nr;
                 nr = stringProp(tnefMsg, MAPI_TAG_PR_HOME_TELEPHONE_NUMBER);
                 addressee.insertPhoneNumber(
-                    KABC::PhoneNumber(nr, KABC::PhoneNumber::Home));
+                    KContacts::PhoneNumber(nr, KContacts::PhoneNumber::Home));
                 nr = stringProp(tnefMsg, MAPI_TAG_PR_BUSINESS_TELEPHONE_NUMBER);
                 addressee.insertPhoneNumber(
-                    KABC::PhoneNumber(nr, KABC::PhoneNumber::Work));
+                    KContacts::PhoneNumber(nr, KContacts::PhoneNumber::Work));
                 nr = stringProp(tnefMsg, MAPI_TAG_PR_MOBILE_TELEPHONE_NUMBER);
                 addressee.insertPhoneNumber(
-                    KABC::PhoneNumber(nr, KABC::PhoneNumber::Cell));
+                    KContacts::PhoneNumber(nr, KContacts::PhoneNumber::Cell));
                 nr = stringProp(tnefMsg, MAPI_TAG_PR_HOME_FAX_NUMBER);
                 addressee.insertPhoneNumber(
-                    KABC::PhoneNumber(nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home));
+                    KContacts::PhoneNumber(nr, KContacts::PhoneNumber::Fax | KContacts::PhoneNumber::Home));
                 nr = stringProp(tnefMsg, MAPI_TAG_PR_BUSINESS_FAX_NUMBER);
                 addressee.insertPhoneNumber(
-                    KABC::PhoneNumber(nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work));
+                    KContacts::PhoneNumber(nr, KContacts::PhoneNumber::Fax | KContacts::PhoneNumber::Work));
 
                 s = tnefMsg->findProp(MAPI_TAG_PR_BIRTHDAY).
                     remove(QLatin1Char('-')).remove(QLatin1Char(':'));
@@ -524,7 +524,7 @@ QString KTnef::msTNEFToVPart(const QByteArray &tnef)
     }
 
     // Not an iCal - try a vCard
-    KABC::VCardConverter converter;
+    KContacts::VCardConverter converter;
     return QString::fromUtf8(converter.createVCard(addressee));
 }
 

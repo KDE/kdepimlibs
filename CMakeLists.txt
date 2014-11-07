@@ -16,7 +16,7 @@ if (KDEPIMLIBS_SUPERBUILD)
 include(SuperBuild.cmake)
 
 sb_add_project(kmime)
-sb_add_project(kabc)
+sb_add_project(kcontacts)
 sb_add_project(kcalcore)
 sb_add_project(syndication)
 sb_add_project(kxmlrpcclient)
@@ -54,7 +54,7 @@ add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 # These subdirectories don't depend on anything from kdepimlibs.
 # They shall be built first
 add_subdirectory(kmime)
-add_subdirectory(kabc)
+add_subdirectory(kcontacts)
 add_subdirectory(kcalcore)
 add_subdirectory(syndication)
 add_subdirectory(kxmlrpcclient)
