@@ -29,9 +29,8 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX QGPGME
 
 find_package(Gpgme)
 set_package_properties(Gpgme PROPERTIES
-                       URL "http://www.gnupg.org/related_software/gpgme/"
-                       DESCRIPTION "The GnuPG Made Easy (GPGME) library)"
-                       TYPE REQUIRED
+    PURPOSE "Required to build QGpgme"
+    TYPE REQUIRED
 )
 
 
