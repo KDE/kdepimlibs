@@ -37,6 +37,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
   find_package(KF5Mime CONFIG REQUIRED)
   find_package(KF5PimUtils CONFIG REQUIRED)
+else()
+  # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
+  # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
+  find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
 find_package(LibXslt)

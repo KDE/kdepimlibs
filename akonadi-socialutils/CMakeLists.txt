@@ -31,6 +31,10 @@ find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-SocialUtils_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
+else()
+  # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
+  # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
+  find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
 ########### Targets ###########
