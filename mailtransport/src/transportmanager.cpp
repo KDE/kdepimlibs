@@ -736,7 +736,7 @@ void TransportManagerPrivate::migrateToWallet()
                           "Do you want to migrate your passwords to KWallet?"),
                      names, i18n("Question"),
                      KGuiItem(i18n("Migrate")), KGuiItem(i18n("Keep")),
-                     QString::fromLatin1("WalletMigrate"));
+                     QStringLiteral("WalletMigrate"));
     if (result != KMessageBox::Yes) {
         return;
     }

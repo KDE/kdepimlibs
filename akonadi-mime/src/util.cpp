@@ -48,7 +48,7 @@ OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(const QString &i
 {
     //NOTE(Andras): from kmail/util.cpp
     return new OrgKdeAkonadiImapSettingsInterface(Akonadi::ServerManager::agentServiceName(Akonadi::ServerManager::Resource, ident),
-                                                  QString::fromLatin1("/Settings"),
+                                                  QStringLiteral("/Settings"),
                                                   KDBusConnectionPool::threadConnection());
 }
 

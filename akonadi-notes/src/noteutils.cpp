@@ -533,12 +533,12 @@ QMap< QString, QString > &NoteMessageWrapper::custom()
 
 QString noteIconName()
 {
-    return QString::fromLatin1("text-plain");
+    return QStringLiteral("text-plain");
 }
 
 QString noteMimeType()
 {
-    return QString::fromLatin1("text/x-vnd.akonadi.note");
+    return QStringLiteral("text/x-vnd.akonadi.note");
 }
 
 } //End Namepsace

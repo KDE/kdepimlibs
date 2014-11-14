@@ -730,7 +730,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Mark selected messages as read."));
         action->setWhatsThis(i18n("Mark selected messages as read."));
         d->mActions.insert(MarkMailAsRead, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_read"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_read"), action);
         action->setData(QByteArray("R"));
         d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_R));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
@@ -743,7 +743,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Mark selected messages as unread."));
         action->setWhatsThis(i18n("Mark selected messages as unread."));
         d->mActions.insert(MarkMailAsUnread, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_unread"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_unread"), action);
         d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_U));
         action->setData(QByteArray("U"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
@@ -756,7 +756,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Mark selected messages as important."));
 
         d->mActions.insert(MarkMailAsImportant, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_important"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_important"), action);
         action->setData(QByteArray("G"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
         break;
@@ -768,7 +768,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action, i18n("Mark selected messages as action items."));
         action->setWhatsThis(i18n("Mark selected messages as action items."));
         d->mActions.insert(MarkMailAsActionItem, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_as_action_item"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_action_item"), action);
         action->setData(QByteArray("K"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()));
         break;
@@ -780,7 +780,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Mark all messages as read."));
         action->setWhatsThis(i18n("Mark all messages as read."));
         d->mActions.insert(MarkAllMailAsRead, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_all_as_read"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_read"), action);
         action->setData(QByteArray("R"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
         break;
@@ -792,7 +792,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action, i18n("Mark all messages as unread."));
         action->setWhatsThis(i18n("Mark all messages as unread."));
         d->mActions.insert(MarkAllMailAsUnread, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_all_as_unread"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_unread"), action);
         action->setData(QByteArray("U"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
         break;
@@ -804,7 +804,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Mark all messages as important."));
         action->setWhatsThis(i18n("Mark all messages as important."));
         d->mActions.insert(MarkAllMailAsImportant, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_all_as_important"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_important"), action);
         action->setData(QByteArray("G"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
         break;
@@ -816,7 +816,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action, i18n("Mark all messages as action items."));
         action->setWhatsThis(i18n("Mark all messages as action items."));
         d->mActions.insert(MarkAllMailAsActionItem, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_all_as_action_item"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_action_item"), action);
         action->setData(QByteArray("K"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
         break;
@@ -828,7 +828,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action, i18n("Move selected messages to the trash folder."));
         action->setWhatsThis(i18n("Move selected messages to the trash folder."));
         d->mActions.insert(MoveToTrash, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_move_to_trash"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_move_to_trash"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMoveToTrash()));
         break;
     case MoveAllToTrash:
@@ -838,7 +838,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Move all messages to the trash folder."));
         action->setWhatsThis(i18n("Move all messages to the trash folder."));
         d->mActions.insert(MoveAllToTrash, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_move_all_to_trash"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_move_all_to_trash"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMoveAllToTrash()));
         break;
     case RemoveDuplicates:
@@ -848,7 +848,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setWhatsThis(i18n("Remove duplicate messages."));
         d->mActionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_Asterisk));
         d->mActions.insert(RemoveDuplicates, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_remove_duplicates"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_remove_duplicates"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotRemoveDuplicates()));
         break;
     case EmptyAllTrash:
@@ -857,7 +857,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action, i18n("Permanently delete all messages from all trash folders."));
         action->setWhatsThis(i18n("Permanently delete all messages from all trash folders."));
         d->mActions.insert(EmptyAllTrash, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_empty_all_trash"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_empty_all_trash"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotEmptyAllTrash()));
         break;
     case EmptyTrash:
@@ -866,7 +866,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         d->setHelpText(action,i18n("Permanently delete all messages from the trash folder."));
         action->setWhatsThis(i18n("Permanently delete all messages from the trash folder."));
         d->mActions.insert(EmptyTrash, action);
-        d->mActionCollection->addAction(QString::fromLatin1("akonadi_empty_trash"), action);
+        d->mActionCollection->addAction(QStringLiteral("akonadi_empty_trash"), action);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotEmptyTrash()));
         break;
     default:
