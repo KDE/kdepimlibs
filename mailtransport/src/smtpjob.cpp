@@ -24,7 +24,6 @@
 #include "transport.h"
 #include "mailtransport_defs.h"
 #include "precommandjob.h"
-#include "smtp/smtpsession.h"
 
 #include <QBuffer>
 #include <QHash>
