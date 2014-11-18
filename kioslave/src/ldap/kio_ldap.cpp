@@ -240,7 +240,7 @@ void LDAPProtocol::LDAPEntry2UDSEntry(const LdapDN &dn, UDSEntry &entry,
     entry.insert(KIO::UDSEntry::UDS_URL, url.toDisplayString());
 }
 
-void LDAPProtocol::changeCheck(LdapUrl &url)
+void LDAPProtocol::changeCheck(const LdapUrl &url)
 {
     LdapServer server;
     server.setUrl(url);
@@ -557,7 +557,7 @@ void LDAPProtocol::del(const QUrl &_url, bool)
 
     qCDebug(KLDAP_LOG) << " del: " << usrc.dn().toString().toUtf8();
 
-    if ((id = mOp.del(usrc.dn()) == -1)) {
+    if ((id = mOp.del(usrc.dn())) == -1) {
         LDAPErr();
         return;
     }

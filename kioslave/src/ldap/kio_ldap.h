@@ -57,8 +57,6 @@ private:
     KLDAP::LdapServer mServer;
     bool mConnected;
 
-    bool mCancel, mFirstAuth;
-
     void controlsFromMetaData(KLDAP::LdapControls &serverctrls,
                               KLDAP::LdapControls &clientctrls);
     void LDAPEntry2UDSEntry(const KLDAP::LdapDN &dn, KIO::UDSEntry &entry,
@@ -66,7 +64,7 @@ private:
     int asyncSearch(KLDAP::LdapUrl &usrc, const QByteArray &cookie = "");
 
     void LDAPErr(int err = KLDAP_SUCCESS);
-    void changeCheck(KLDAP::LdapUrl &url);
+    void changeCheck(const KLDAP::LdapUrl &url);
 };
 
 #endif

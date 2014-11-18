@@ -323,7 +323,7 @@ void POP3Protocol::closeConnection()
     opened = false;
 }
 
-int POP3Protocol::loginAPOP(char *challenge, KIO::AuthInfo &ai)
+int POP3Protocol::loginAPOP(const char *challenge, KIO::AuthInfo &ai)
 {
     char buf[512];
 
