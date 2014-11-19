@@ -24,7 +24,8 @@
 
 #include <specialcollections.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SpecialMailCollectionsPrivate;
 

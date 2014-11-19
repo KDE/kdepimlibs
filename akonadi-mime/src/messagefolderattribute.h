@@ -26,7 +26,8 @@
 
 #include <QtCore/QByteArray>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   Message folder information. Used eg. by mail clients to decide how to display the content of such collections

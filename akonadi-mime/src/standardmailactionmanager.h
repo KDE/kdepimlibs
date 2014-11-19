@@ -34,7 +34,8 @@ class KJob;
 class QItemSelectionModel;
 class QWidget;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Item;
 

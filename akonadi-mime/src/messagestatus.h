@@ -50,7 +50,7 @@ namespace Akonadi {
 */
 class AKONADI_MIME_EXPORT MessageStatus
 {
-  public:
+public:
     /** Constructor - sets status initially to unknown. */
     MessageStatus();
 
@@ -59,26 +59,26 @@ class AKONADI_MIME_EXPORT MessageStatus
         by operator == will return true.
         @param other message status to copy from
     */
-    MessageStatus &operator = ( const MessageStatus &other );
+    MessageStatus &operator=(const MessageStatus &other);
 
     /** Compare the status with that from another instance.
         @return true if the stati are equal, false if different.
         @param other message status to compare with current object
     */
-    bool operator == ( const MessageStatus &other ) const;
+    bool operator==(const MessageStatus &other) const;
 
     /** Compare the status with that from another instance.
         @return true if the stati are equal, false if different.
         @param other message status to compare with current object
     */
-    bool operator != ( const MessageStatus &other ) const;
+    bool operator!=(const MessageStatus &other) const;
 
     /** Check, if some of the flags in the status match
         with those flags from another instance.
         @return true if at least one flag is set in both stati.
         @param other message status to compare objects' flags
     */
-    bool operator & ( const MessageStatus &other ) const;
+    bool operator&(const MessageStatus &other) const;
 
     /** Clear all status flags, this resets to unknown. */
     void clear();
@@ -90,14 +90,14 @@ class AKONADI_MIME_EXPORT MessageStatus
         integrity of the resulting status.
         @param other message status to set
     */
-    void set( const MessageStatus &other );
+    void set(const MessageStatus &other);
 
     /** Toggle one or more stati described by another MessageStatus object.
         Internally the setters are used to ensure the integrity of the
         resulting status.
         @param other message status to toggle
     */
-    void toggle( const MessageStatus &other );
+    void toggle(const MessageStatus &other);
 
     /* ----- getters ----------------------------------------------------- */
 
@@ -197,87 +197,87 @@ class AKONADI_MIME_EXPORT MessageStatus
       * Set the status to read
       * @param read new read status
     */
-    void setRead( bool read = true );
+    void setRead(bool read = true);
 
     /** Set the status for deleted.
         @param deleted Set (true) or unset (false) this status flag.
     */
-    void setDeleted( bool deleted = true );
+    void setDeleted(bool deleted = true);
 
     /** Set the status for replied.
         @param replied Set (true) or unset (false) this status flag.
     */
-    void setReplied( bool replied = true );
+    void setReplied(bool replied = true);
 
     /** Set the status for forwarded.
         @param forwarded Set (true) or unset (false) this status flag.
     */
-    void setForwarded( bool forwarded = true );
+    void setForwarded(bool forwarded = true);
 
     /** Set the status for queued.
         @param queued Set (true) or unset (false) this status flag.
     */
-    void setQueued( bool queued = true );
+    void setQueued(bool queued = true);
 
     /** Set the status for sent.
         @param sent Set (true) or unset (false) this status flag.
     */
-    void setSent( bool sent = true );
+    void setSent(bool sent = true);
 
     /** Set the status for important.
         @param important Set (true) or unset (false) this status flag.
     */
-    void setImportant( bool important = true );
+    void setImportant(bool important = true);
 
     /** Set the status to watched.
         @param watched Set (true) or unset (false) this status flag.
     */
-    void setWatched( bool watched = true );
+    void setWatched(bool watched = true);
 
     /** Set the status to ignored.
         @param ignored Set (true) or unset (false) this status flag.
     */
-    void setIgnored( bool ignored = true );
+    void setIgnored(bool ignored = true);
 
     /** Set the status to action item.
         @param toAct Set (true) or unset (false) this status flag.
     */
-    void setToAct( bool toAct = true );
+    void setToAct(bool toAct = true);
 
     /** Set the status to spam.
         @param spam Set (true) or unset (false) this status flag.
     */
-    void setSpam( bool spam = true );
+    void setSpam(bool spam = true);
 
     /** Set the status to not spam.
         @param ham Set (true) or unset (false) this status flag.
     */
-    void setHam( bool ham = true );
+    void setHam(bool ham = true);
 
     /** Set the status for an attachment.
         @param hasAttachment Set (true) or unset (false) this status flag.
     */
-    void setHasAttachment( bool hasAttachment = true );
+    void setHasAttachment(bool hasAttachment = true);
 
     /** Set the status for an invitation.
         @param hasInvitation Set (true) or unset (false) this status flag.
     */
-    void setHasInvitation( bool hasInvitation = true );
+    void setHasInvitation(bool hasInvitation = true);
 
     /** Set the status to signed.
         @param value Set (true) or unset (false) this status flag.
     */
-    void setSigned( bool value = true );
+    void setSigned(bool value = true);
 
     /** Set the status to encrypted.
         @param value Set (true) or unset (false) this status flag.
     */
-    void setEncrypted( bool value = true );
+    void setEncrypted(bool value = true);
 
     /** Set the status to error.
         @param value Set (true) or unset (false) this status flag.
     */
-    void setHasError( bool value = true );
+    void setHasError(bool value = true);
 
     /* ----- state representation  --------------------------------------- */
 
@@ -293,7 +293,7 @@ class AKONADI_MIME_EXPORT MessageStatus
         all integrity checks in the setter methods.
         @param status The status encoded in bits to be set in this instance.
     */
-    void fromQInt32( qint32 status );
+    void fromQInt32(qint32 status);
 
     /** Convert the status to a string representation.
         @return A string containing coded uppercase letters
@@ -310,7 +310,7 @@ class AKONADI_MIME_EXPORT MessageStatus
 
         @note This code is legacy for the KMail1 indexes
     */
-    void setStatusFromStr( const QString &aStr );
+    void setStatusFromStr(const QString &aStr);
 
     /** Get the status as a whole e.g. for storage as IMAP flags.
         @return The status encoded in flags.
@@ -320,7 +320,7 @@ class AKONADI_MIME_EXPORT MessageStatus
     /** Set the status as a whole e.g. for reading from IMAP flags.
         @param flags set of flags for status as a whole
     */
-    void setStatusFromFlags( const QSet<QByteArray> &flags );
+    void setStatusFromFlags(const QSet<QByteArray> &flags);
 
     /* ----- static accessors to simple states --------------------------- */
 
@@ -431,7 +431,7 @@ class AKONADI_MIME_EXPORT MessageStatus
     */
     static const MessageStatus statusHasError();
 
-  private:
+private:
     quint32 mStatus;
 };
 
