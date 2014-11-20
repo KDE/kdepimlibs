@@ -24,7 +24,6 @@
 
 #include <qtest.h>
 #include "kblog/blogpost.h"
-#include "kurl.h"
 #include "kdatetime.h"
 
 Q_DECLARE_METATYPE(KBlog::BlogPost::Status)
