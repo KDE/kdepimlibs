@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.4.0")
-set(KDEPIMLIBS_VERSION "4.75.0")
+set(KDEPIMLIBS_VERSION "4.76.0")
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libkxmlrpcclient5\")
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
