@@ -26,7 +26,7 @@ install(TARGETS akonadi_serializer_socialfeeditem DESTINATION ${PLUGIN_INSTALL_D
 
 install(FILES
   akonadi_serializer_socialfeeditem.desktop
-  DESTINATION ${KF5_DATA_INSTALL_DIR}/akonadi/plugins/serializer)
+  DESTINATION ${DATA_INSTALL_DIR}/akonadi/plugins/serializer)
 
 install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 
