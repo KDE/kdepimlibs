@@ -26,8 +26,7 @@
 
 class QModelIndex;
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class Collection;
 

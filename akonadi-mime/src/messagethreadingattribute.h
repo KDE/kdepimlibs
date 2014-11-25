@@ -25,8 +25,7 @@
 #include <attribute.h>
 #include <item.h>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
  * Message threading information. Used eg. by MessageThreaderProxyModel

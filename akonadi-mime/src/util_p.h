@@ -25,8 +25,7 @@ class KJob;
 class QString;
 #define IMAP_RESOURCE_IDENTIFIER QString::fromLatin1("akonadi_imap_resource")
 
-namespace Util
-{
+namespace Util {
 /// Helper to sanely show an error message for a job
 void showJobError(KJob *job);
 

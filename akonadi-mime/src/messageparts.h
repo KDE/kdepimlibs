@@ -23,16 +23,14 @@
 
 #include "akonadi-mime_export.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 /**
  * @short Contains predefined part identifiers.
  *
  * This namespace contains identifiers of item parts that are used for
  * handling email items.
  */
-namespace MessagePart
-{
+namespace MessagePart {
 /**
  * The part identifier for envelope parts.
  */

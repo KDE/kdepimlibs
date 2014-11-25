@@ -27,13 +27,11 @@
 
 #include <attribute.h>
 
-namespace MailTransport
-{
+namespace MailTransport {
 class Transport;
 }
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
   Attribute storing the From, To, Cc, Bcc addresses of a message.

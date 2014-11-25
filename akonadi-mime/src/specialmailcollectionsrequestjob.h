@@ -25,8 +25,7 @@
 
 #include <specialcollectionsrequestjob.h>
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 class SpecialMailCollectionsRequestJobPrivate;
 

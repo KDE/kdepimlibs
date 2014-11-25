@@ -23,16 +23,14 @@
 
 #include "akonadi-mime_export.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 /**
  * @short Contains predefined message flag identifiers.
  *
  * This namespace contains identifiers of message flags that
  *  are used internally in the Akonadi server.
  */
-namespace MessageFlags
-{
+namespace MessageFlags {
 /**
  * The flag for a message being seen (i.e. opened by user).
  */

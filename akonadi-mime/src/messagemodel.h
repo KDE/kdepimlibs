@@ -29,8 +29,7 @@
 #  define AKONADI_IGNORE_DEPRECATED_WARNINGS
 #endif
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
  * A flat self-updating message model.

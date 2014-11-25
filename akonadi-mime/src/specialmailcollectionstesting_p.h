@@ -23,8 +23,7 @@
 #include "akonadi-kmimeprivate_export.h"
 #include "specialmailcollections.h"
 
-namespace Akonadi
-{
+namespace Akonadi {
 
 /**
   @internal
