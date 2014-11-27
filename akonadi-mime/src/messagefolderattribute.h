@@ -65,10 +65,10 @@ public:
     void setOutboundFolder(bool outbound);
 
     // reimpl.
-    QByteArray type() const;
-    MessageFolderAttribute *clone() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    QByteArray type() const Q_DECL_OVERRIDE;
+    MessageFolderAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     class Private;

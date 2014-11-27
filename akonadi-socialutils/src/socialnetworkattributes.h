@@ -45,10 +45,10 @@ public:
                             bool canPublish, uint maxPostLength);
     ~SocialNetworkAttributes();
 
-    void deserialize(const QByteArray &data);
-    QByteArray serialized() const;
-    Akonadi::Attribute *clone() const;
-    QByteArray type() const;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    Akonadi::Attribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
 
     /**
      * Returns the userName of the user that is signed in with this resource

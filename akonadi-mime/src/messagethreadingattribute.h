@@ -81,10 +81,10 @@ public:
     void setSubjectParents(const QList<Item::Id> &parents);
 
     // reimpl.
-    QByteArray type() const;
-    MessageThreadingAttribute *clone() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    QByteArray type() const Q_DECL_OVERRIDE;
+    MessageThreadingAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
     class Private;

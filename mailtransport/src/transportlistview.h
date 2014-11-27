@@ -41,7 +41,7 @@ public:
     void editItem(QTreeWidgetItem *item, int column = 0);
 
 protected Q_SLOTS:
-    void commitData(QWidget *editor);
+    void commitData(QWidget *editor) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void fillTransportList();

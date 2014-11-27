@@ -60,10 +60,10 @@ public:
     virtual ~DispatchModeAttribute();
 
     /* reimpl */
-    virtual DispatchModeAttribute *clone() const;
-    virtual QByteArray type() const;
-    virtual QByteArray serialized() const;
-    virtual void deserialize(const QByteArray &data);
+    DispatchModeAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
     /**
       Returns the dispatch mode for the message.
