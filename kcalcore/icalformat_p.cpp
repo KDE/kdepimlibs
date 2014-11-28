@@ -1233,11 +1233,11 @@ Todo::Ptr ICalFormatImpl::readTodo(icalcomponent *vtodo, ICalTimeZones *tzlist)
             break;
         case ICAL_X_PROPERTY:
         {
+            //FIXME we should figure out which x-property we're trying to read here.
+            //Just setting any parsable date that happens to be stored in an x-property is clearly wrong.
             const KDateTime dateTime = readICalDateTimeProperty(p, tzlist);
             if (dateTime.isValid()) {
                 todo->setDtRecurrence(dateTime);
-            } else {
-                kDebug() << "Invalid dateTime";
             }
         }
         break;
