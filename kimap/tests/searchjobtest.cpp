@@ -72,7 +72,7 @@ void testSearch_data() {
   scenario.clear();
   criteria.clear();
   scenario << FakeServer::preauth()
-           << "C: A000001 SEARCH TO  {25}\r\n<testuser@kde.testserver>"
+           << "C: A000001 SEARCH TO {25}\r\n<testuser@kde.testserver>"
            << "S: * SEARCH 1"
            << "S: A000001 OK search done";
   criteria << searchPair( KIMAP::SearchJob::To, "<testuser@kde.testserver>" );
