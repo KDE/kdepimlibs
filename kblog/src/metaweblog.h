@@ -73,7 +73,7 @@ public:
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit MetaWeblog(const QUrl &server, QObject *parent = 0);
+    explicit MetaWeblog(const QUrl &server, QObject *parent = Q_NULLPTR);
 
     /**
       Destroy the object.
@@ -126,7 +126,7 @@ protected:
     /**
       Constructor needed for private inheritance.
     */
-    MetaWeblog(const QUrl &server, MetaWeblogPrivate &dd, QObject *parent = 0);
+    MetaWeblog(const QUrl &server, MetaWeblogPrivate &dd, QObject *parent = Q_NULLPTR);
 
 private:
     Q_DECLARE_PRIVATE(MetaWeblog)

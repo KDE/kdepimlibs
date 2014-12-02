@@ -77,7 +77,7 @@ public:
     /**
      * Creates a new special mail collections request job.
      */
-    explicit SpecialMailCollectionsRequestJob(QObject *parent = 0);
+    explicit SpecialMailCollectionsRequestJob(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the special mail collections request job.

@@ -44,7 +44,7 @@ class AKONADI_SOCIALUTILS_EXPORT ImageProvider : public QObject
 {
     Q_OBJECT
 public:
-    explicit ImageProvider(QObject *parent = 0);
+    explicit ImageProvider(QObject *parent = Q_NULLPTR);
     ~ImageProvider();
     /**
      * Starts fetching the avatar/image from network

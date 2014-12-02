@@ -57,7 +57,7 @@ public:
 
       @param parent The parent object.
     */
-    explicit MessageModel(QObject *parent = 0);
+    explicit MessageModel(QObject *parent = Q_NULLPTR);
 
     /**
       Deletes the message model.

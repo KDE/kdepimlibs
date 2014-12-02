@@ -71,7 +71,7 @@ class InteractiveSMTPServer : public QTcpServer
     Q_OBJECT
 
 public:
-    InteractiveSMTPServer(QObject *parent = 0);
+    InteractiveSMTPServer(QObject *parent = Q_NULLPTR);
     ~InteractiveSMTPServer() {}
 
 private Q_SLOTS:

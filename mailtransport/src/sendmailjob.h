@@ -47,7 +47,7 @@ public:
       @param transport The transport settings.
       @param parent The parent object.
     */
-    explicit SendmailJob(Transport *transport, QObject *parent = 0);
+    explicit SendmailJob(Transport *transport, QObject *parent = Q_NULLPTR);
 
     /**
       Destroys this job.

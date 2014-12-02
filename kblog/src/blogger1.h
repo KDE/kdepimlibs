@@ -73,7 +73,7 @@ public:
       @param server is the url for the xmlrpc gateway.
       @param parent the parent object.
     */
-    explicit Blogger1(const QUrl &server, QObject *parent = 0);
+    explicit Blogger1(const QUrl &server, QObject *parent = Q_NULLPTR);
 
     /**
        Destroy the object.
@@ -186,7 +186,7 @@ protected:
     /**
       Constructor needed for private inheritance.
     */
-    Blogger1(const QUrl &server, Blogger1Private &dd, QObject *parent = 0);
+    Blogger1(const QUrl &server, Blogger1Private &dd, QObject *parent = Q_NULLPTR);
 
 private:
     Q_DECLARE_PRIVATE(Blogger1)

@@ -77,7 +77,7 @@ public:
       @param server The server url for the xmlrpc gateway.
       @param parent The parent object, inherited from QObject.
     */
-    explicit GData(const QUrl &server, QObject *parent = 0);
+    explicit GData(const QUrl &server, QObject *parent = Q_NULLPTR);
 
     /**
       Destructor.
@@ -296,7 +296,7 @@ protected:
     /**
       Overloaded for private inheritance handling.
     */
-    GData(const QUrl &server, GDataPrivate &dd, QObject *parent = 0);
+    GData(const QUrl &server, GDataPrivate &dd, QObject *parent = Q_NULLPTR);
 
 private:
     Q_DECLARE_PRIVATE(GData)

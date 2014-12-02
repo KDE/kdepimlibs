@@ -94,7 +94,7 @@ public:
       @param parent the QObject parent
       This is not an autostarting job; you need to call start() yourself.
     */
-    explicit MessageQueueJob(QObject *parent = 0);
+    explicit MessageQueueJob(QObject *parent = Q_NULLPTR);
 
     /**
       Destroys the MessageQueueJob.

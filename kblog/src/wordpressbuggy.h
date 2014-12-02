@@ -75,7 +75,7 @@ public:
       @param server is the url for the xmlrpc gateway.
       @param parent is the parent object.
     */
-    explicit WordpressBuggy(const QUrl &server, QObject *parent = 0);
+    explicit WordpressBuggy(const QUrl &server, QObject *parent = Q_NULLPTR);
 
     /**
       Destroy the object.
@@ -107,7 +107,7 @@ protected:
     /**
       Constructor needed for private inheritance.
     */
-    WordpressBuggy(const QUrl &server, WordpressBuggyPrivate &dd, QObject *parent = 0);
+    WordpressBuggy(const QUrl &server, WordpressBuggyPrivate &dd, QObject *parent = Q_NULLPTR);
 
 private:
     Q_DECLARE_PRIVATE(WordpressBuggy)

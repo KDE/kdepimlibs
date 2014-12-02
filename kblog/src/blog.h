@@ -83,7 +83,7 @@ public:
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    explicit Blog(const QUrl &server, QObject *parent = 0,
+    explicit Blog(const QUrl &server, QObject *parent = Q_NULLPTR,
                   const QString &applicationName = QString(),
                   const QString &applicationVersion = QString());
 
@@ -365,7 +365,7 @@ protected:
       @param applicationVersion the client application's version to use in the
       HTTP user agent string, defaults to KBlog's own.
     */
-    Blog(const QUrl &server, BlogPrivate &dd, QObject *parent = 0,
+    Blog(const QUrl &server, BlogPrivate &dd, QObject *parent = Q_NULLPTR,
          const QString &applicationName = QString(),
          const QString &applicationVersion = QString());
 

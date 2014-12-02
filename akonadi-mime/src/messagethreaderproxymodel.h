@@ -44,7 +44,7 @@ public:
      * Create a new MessageThreaderProxyModel
      * @param parent The parent object
      */
-    MessageThreaderProxyModel(QObject *parent = 0);
+    MessageThreaderProxyModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroy the model
