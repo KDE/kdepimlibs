@@ -43,7 +43,7 @@ public:
       Creates a new mail transport selection combo box.
       @param parent The paren widget.
     */
-    TransportComboBox(QWidget *parent = 0);
+    TransportComboBox(QWidget *parent = Q_NULLPTR);
 
     ~TransportComboBox();
 

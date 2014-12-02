@@ -68,7 +68,7 @@ public:
       @param transport The Transport object to configure.
       @param parent The parent widget.
     */
-    explicit TransportConfigWidget(Transport *transport, QWidget *parent = 0);
+    explicit TransportConfigWidget(Transport *transport, QWidget *parent = Q_NULLPTR);
 
     /**
       Destroys the widget.

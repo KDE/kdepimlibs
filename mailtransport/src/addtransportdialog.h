@@ -45,7 +45,7 @@ public:
     /**
       Creates a new AddTransportDialog.
     */
-    explicit AddTransportDialog(QWidget *parent = 0);
+    explicit AddTransportDialog(QWidget *parent = Q_NULLPTR);
 
     /**
       Destroys the AddTransportDialog.

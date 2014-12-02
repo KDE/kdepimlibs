@@ -58,7 +58,7 @@ class KPIMUTILS_EXPORT ProgressIndicatorWidget : public QLabel
 {
     Q_OBJECT
 public:
-    explicit ProgressIndicatorWidget(QWidget *parent = 0);
+    explicit ProgressIndicatorWidget(QWidget *parent = Q_NULLPTR);
     ~ProgressIndicatorWidget();
 
 public:

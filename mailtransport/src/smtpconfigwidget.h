@@ -47,7 +47,7 @@ class SMTPConfigWidget : public TransportConfigWidget
     Q_OBJECT
 
 public:
-    explicit SMTPConfigWidget(Transport *transport, QWidget *parent = 0);
+    explicit SMTPConfigWidget(Transport *transport, QWidget *parent = Q_NULLPTR);
     //virtual ~SMTPConfigWidget();
 
 public Q_SLOTS:

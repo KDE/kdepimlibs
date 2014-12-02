@@ -64,7 +64,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    ServerTest(QWidget *parent = 0);
+    ServerTest(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the server test.
