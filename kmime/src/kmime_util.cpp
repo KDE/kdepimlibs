@@ -25,7 +25,6 @@
 #include "kmime_util_p.h"
 
 #include "kmime_charfreq.h"
-#include "kmime_codecs.h"
 #include "kmime_header_parsing.h"
 #include "kmime_message.h"
 #include "kmime_warning.h"

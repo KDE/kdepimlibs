@@ -22,7 +22,6 @@
 
 #include "kmime_header_parsing.h"
 
-#include "kmime_codecs.h"
 #include "kmime_headerfactory_p.h"
 #include "kmime_headers.h"
 #include "kmime_util.h"
@@ -31,6 +30,8 @@
 #include "kmime_warning.h"
 
 #include <kcharsets.h>
+
+#include <KCodecs/KCodecs>
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QMap>
@@ -354,14 +355,14 @@ bool parseEncodedWord(const char *&scursor, const char *const send,
     //
 
     // try if there's a codec for the encoding found:
-    Codec *codec = Codec::codecForName(maybeEncoding);
+    KCodecs::Codec *codec = KCodecs::Codec::codecForName(maybeEncoding);
     if (!codec) {
         KMIME_WARN_UNKNOWN(Encoding, maybeEncoding);
         return false;
     }
 
     // get an instance of a corresponding decoder:
-    Decoder *dec = codec->makeDecoder();
+    KCodecs::Decoder *dec = codec->makeDecoder();
     assert(dec);
 
     // try if there's a (text)codec for the charset found:
@@ -1536,7 +1537,7 @@ bool parseRawParameterList(const char *&scursor, const char *const send,
     return true;
 }
 
-static void decodeRFC2231Value(Codec *&rfc2231Codec,
+static void decodeRFC2231Value(KCodecs::Codec *&rfc2231Codec,
                                QTextCodec *&textcodec,
                                bool isContinuation, QString &value,
                                QPair<const char *, int> &source, QByteArray &charset)
@@ -1603,7 +1604,7 @@ static void decodeRFC2231Value(Codec *&rfc2231Codec,
     }
 
     if (!rfc2231Codec) {
-        rfc2231Codec = Codec::codecForName("x-kmime-rfc2231");
+        rfc2231Codec = KCodecs::Codec::codecForName("x-kmime-rfc2231");
         assert(rfc2231Codec);
     }
 
@@ -1612,7 +1613,7 @@ static void decodeRFC2231Value(Codec *&rfc2231Codec,
         return;
     }
 
-    Decoder *dec = rfc2231Codec->makeDecoder();
+    KCodecs::Decoder *dec = rfc2231Codec->makeDecoder();
     assert(dec);
 
     //
@@ -1661,7 +1662,7 @@ bool parseParameterListWithCharset(const char *&scursor,
     // NOTE: this code assumes that what QMapIterator delivers is sorted
     // by the key!
 
-    Codec *rfc2231Codec = 0;
+    KCodecs::Codec *rfc2231Codec = 0;
     QTextCodec *textcodec = 0;
     QString attribute;
     QString value;

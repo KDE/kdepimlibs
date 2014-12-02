@@ -36,7 +36,6 @@
 
 #include "kmime_content.h"
 #include "kmime_content_p.h"
-#include "kmime_codecs.h"
 #include "kmime_message.h"
 #include "kmime_header_parsing.h"
 #include "kmime_header_parsing_p.h"
@@ -44,7 +43,7 @@
 #include "kmime_util_p.h"
 
 #include <kcharsets.h>
-#include <kcodecs.h>
+#include <KCodecs/KCodecs>
 
 #include <klocalizedstring.h>
 #include <qdebug.h>
@@ -389,10 +388,10 @@ QByteArray Content::decodedContent()
     } else {
         switch (ec->encoding()) {
         case Headers::CEbase64 : {
-            KMime::Codec *codec = KMime::Codec::codecForName("base64");
+            KCodecs::Codec *codec = KCodecs::Codec::codecForName("base64");
             Q_ASSERT(codec);
             ret.resize(codec->maxDecodedSizeFor(d_ptr->body.size()));
-            KMime::Decoder *decoder = codec->makeDecoder();
+            KCodecs::Decoder *decoder = codec->makeDecoder();
             QByteArray::const_iterator inputIt = d_ptr->body.constBegin();
             QByteArray::iterator resultIt = ret.begin();
             decoder->decode(inputIt, d_ptr->body.constEnd(), resultIt, ret.end());
@@ -762,7 +761,7 @@ int Content::size()
     int ret = d_ptr->body.length();
 
     if (contentTransferEncoding()->encoding() == Headers::CEbase64) {
-        KMime::Codec *codec = KMime::Codec::codecForName("base64");
+        KCodecs::Codec *codec = KCodecs::Codec::codecForName("base64");
         return codec->maxEncodedSizeFor(ret);
     }
 

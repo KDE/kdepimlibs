@@ -11,11 +11,6 @@ set(kmime_LIB_SRCS
    kmime_charfreq.cpp
    kmime_util.cpp
    kmime_mdn.cpp
-   kmime_codecs.cpp
-   kmime_codec_base64.cpp
-   kmime_codec_uuencode.cpp
-   kmime_codec_qp.cpp
-   kmime_codec_identity.cpp
    kmime_parsers.cpp
    kmime_header_parsing.cpp
    kmime_headerfactory.cpp
@@ -58,7 +53,6 @@ ecm_generate_headers(KMime_CamelCase_HEADERS
   HEADER_NAMES
   KMime_Content
   KMime_Message
-  KMime_Codecs
   KMime_Util
   KMime_Dateformatter
   KMime_Header_Parsing
@@ -71,7 +65,6 @@ ecm_generate_headers(KMime_CamelCase_HEADERS
 install(FILES
          ${KMime_BINARY_DIR}/src/kmime_export.h
          kmime_charfreq.h
-         kmime_codecs.h
          kmime_content.h
          kmime_contentindex.h
          kmime_header_parsing.h
