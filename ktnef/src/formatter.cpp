@@ -37,7 +37,6 @@
 #include "ktnefmessage.h"
 #include "ktnefdefs.h"
 
-#include <kpimutils/email.h>
 #include <kcontacts/phonenumber.h>
 #include <kcontacts/vcardconverter.h>
 

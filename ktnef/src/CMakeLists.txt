@@ -28,7 +28,6 @@ PRIVATE
   KF5::KDELibs4Support
   KF5::CalendarUtils
   KF5::Contacts
-  KF5::PimUtils
 )
 
 set_target_properties(KF5Tnef PROPERTIES
