@@ -54,7 +54,7 @@ public:
     /**
      * Reimplemented to actually do the threading.
      */
-    QModelIndex parent(const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
@@ -64,12 +64,12 @@ public:
     /**
      * Reimplemented
      */
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
      */
-    bool hasChildren(const QModelIndex &index) const;
+    bool hasChildren(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
@@ -79,34 +79,34 @@ public:
     /**
      * Reimplemented
      */
-    int columnCount(const QModelIndex &index) const;
+    int columnCount(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
      */
-    QStringList mimeTypes() const;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
      */
-    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
      */
-    QModelIndex mapFromSource(const QModelIndex &index) const;
+    QModelIndex mapFromSource(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * Reimplemented
      */
-    QModelIndex mapToSource(const QModelIndex &index) const;
+    QModelIndex mapToSource(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
      * Set the source model.
      * @param sourceMessageModel the source model.
      * Be careful, sourceMessageModel <b>has to be</b> a MessageModel.
      */
-    void setSourceModel(QAbstractItemModel *sourceMessageModel);
+    void setSourceModel(QAbstractItemModel *sourceMessageModel) Q_DECL_OVERRIDE;
 
 private:
     class Private;

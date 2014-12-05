@@ -65,8 +65,8 @@ public:
     virtual ~RemoveDuplicatesJob();
 
 protected:
-    virtual void doStart();
-    virtual bool doKill();
+    void doStart() Q_DECL_OVERRIDE;
+    virtual bool doKill() Q_DECL_OVERRIDE;
 
 private:
     class Private;

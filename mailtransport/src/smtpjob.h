@@ -67,8 +67,8 @@ public:
     virtual ~SmtpJob();
 
 protected:
-    virtual void doStart();
-    virtual bool doKill();
+    virtual void doStart() Q_DECL_OVERRIDE;
+    virtual bool doKill() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     virtual void slotResult(KJob *job);
