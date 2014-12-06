@@ -20,7 +20,6 @@
 
 #include "removeduplicatesjob.h"
 
-
 #include <itemfetchjob.h>
 #include <itemdeletejob.h>
 #include <itemfetchscope.h>
@@ -29,7 +28,8 @@
 
 #include <KLocalizedString>
 
-class Akonadi::RemoveDuplicatesJob::Private {
+class Akonadi::RemoveDuplicatesJob::Private
+{
 
 public:
     Private(RemoveDuplicatesJob *parent)
@@ -161,7 +161,7 @@ RemoveDuplicatesJob::RemoveDuplicatesJob(const Akonadi::Collection &folder, QObj
     : Job(parent)
     , d(new Private(this))
 {
-    d->mJobCount = 1;   
+    d->mJobCount = 1;
     d->mFolders << folder;
 }
 

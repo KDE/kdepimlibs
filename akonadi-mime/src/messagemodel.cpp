@@ -122,7 +122,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         case Receiver:
             return msg->to()->asUnicodeString();
         case Date:
-             //QT5 port to QDateTime
+            //QT5 port to QDateTime
             return KLocale::global()->formatDateTime(msg->date()->dateTime()/*.toLocalZone()*/, KLocale::FancyLongDate);
         case Size:
             if (item.size() == 0) {

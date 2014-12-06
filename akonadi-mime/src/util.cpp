@@ -28,8 +28,7 @@
 #include <KIO/JobUiDelegate>
 #include <KIO/Job>
 
-namespace Util
-{
+namespace Util {
 /// Helper to sanely show an error message for a job
 void showJobError(KJob *job)
 {

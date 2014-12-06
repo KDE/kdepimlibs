@@ -25,7 +25,9 @@ class Akonadi::MessageFolderAttribute::Private
 {
 public:
     Private()
-        : isOutboundFolder(false) { }
+        : isOutboundFolder(false)
+    {
+    }
 
     bool isOutboundFolder;
 };

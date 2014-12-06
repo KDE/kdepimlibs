@@ -26,7 +26,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-
 #include <entitytreemodel.h>
 #include <itemfetchjob.h>
 #include <itemdeletejob.h>
@@ -160,8 +159,7 @@ Akonadi::AgentInstance::List EmptyTrashCommand::agentInstances()
 Akonadi::Collection EmptyTrashCommand::collectionFromId(const Akonadi::Collection::Id &id) const
 {
     const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(
-                                mModel, Akonadi::Collection(id)
-                            );
+                                mModel, Akonadi::Collection(id));
     return idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 

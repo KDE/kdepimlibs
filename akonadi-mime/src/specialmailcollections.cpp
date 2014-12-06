@@ -26,7 +26,6 @@
 #include <agentinstance.h>
 #include <servermanager.h>
 
-
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
 

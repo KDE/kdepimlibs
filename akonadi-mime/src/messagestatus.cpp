@@ -24,7 +24,6 @@
 
 #include "messageflags.h"
 
-
 #include <QtCore/QString>
 
 /** The message status format. These can be or'd together.
@@ -60,23 +59,23 @@ Akonadi::MessageStatus::MessageStatus()
     mStatus = StatusUnknown;
 }
 
-Akonadi::MessageStatus &Akonadi::MessageStatus::operator = (const Akonadi::MessageStatus &other)
+Akonadi::MessageStatus &Akonadi::MessageStatus::operator=(const Akonadi::MessageStatus &other)
 {
     mStatus = other.mStatus;
     return *this;
 }
 
-bool Akonadi::MessageStatus::operator == (const Akonadi::MessageStatus &other) const
+bool Akonadi::MessageStatus::operator==(const Akonadi::MessageStatus &other) const
 {
     return (mStatus == other.mStatus);
 }
 
-bool Akonadi::MessageStatus::operator != (const Akonadi::MessageStatus &other) const
+bool Akonadi::MessageStatus::operator!=(const Akonadi::MessageStatus &other) const
 {
     return (mStatus != other.mStatus);
 }
 
-bool Akonadi::MessageStatus::operator &(const Akonadi::MessageStatus &other) const
+bool Akonadi::MessageStatus::operator&(const Akonadi::MessageStatus &other) const
 {
     if (mStatus == StatusUnread) {
         return !(other.mStatus & StatusRead);
@@ -96,7 +95,7 @@ void Akonadi::MessageStatus::clear()
 
 void Akonadi::MessageStatus::set(const Akonadi::MessageStatus &other)
 {
-    Q_ASSERT(!(other.mStatus &StatusUnread));
+    Q_ASSERT(!(other.mStatus & StatusUnread));
 
     // Those stati are exclusive, but we have to lock at the
     // internal representation because Ignored can manipulate

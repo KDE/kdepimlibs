@@ -107,8 +107,7 @@ void MoveToTrashCommand::slotMoveDone(const Result &result)
 Akonadi::Collection MoveToTrashCommand::collectionFromId(const Akonadi::Collection::Id &id) const
 {
     const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(
-                                mModel, Akonadi::Collection(id)
-                            );
+                                mModel, Akonadi::Collection(id));
     return idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 }
 

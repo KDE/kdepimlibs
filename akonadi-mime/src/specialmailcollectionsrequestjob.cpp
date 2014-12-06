@@ -24,7 +24,6 @@
 #include <klocalizedstring.h>
 #include <QStandardPaths>
 
-
 using namespace Akonadi;
 
 static inline QByteArray enumToType(SpecialMailCollections::Type type)

@@ -21,7 +21,6 @@
 
 #include <QDataStream>
 
-
 #include <attributefactory.h>
 
 using namespace Akonadi;

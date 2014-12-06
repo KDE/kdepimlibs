@@ -138,11 +138,11 @@ public:
             mGenericManager->setContextText(
                 StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
                 i18n("Folder creation failed"));
-        }
             break;
+        }
         case Akonadi::StandardActionManager::CopyCollections: {
             mGenericManager->setActionText(Akonadi::StandardActionManager::CopyCollections,
-                                           ki18np("Copy Folder", "Copy %1 Folders"));
+                ki18np("Copy Folder", "Copy %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::CopyCollections)->setWhatsThis(
                 i18n("Copy the selected folders to the clipboard."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CopyCollections),
@@ -150,11 +150,11 @@ public:
             mGenericManager->setContextText(
                 StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
                 ki18nc("@title:window", "Properties of Folder %1"));
-        }
             break;
+        }
         case Akonadi::StandardActionManager::DeleteCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteCollections,
-                                           ki18np("Delete Folder", "Delete %1 Folders"));
+                ki18np("Delete Folder", "Delete %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteCollections)->setWhatsThis(
                 i18n("Delete the selected folders from the account."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::DeleteCollections),
@@ -179,7 +179,7 @@ public:
             break;
         case Akonadi::StandardActionManager::SynchronizeCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeCollections,
-                                           ki18np("Update Folder", "Update Folders"));
+                ki18np("Update Folder", "Update Folders"));
 
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollections)->setWhatsThis(
                 i18n("Update the contents of the selected folders."));
@@ -188,7 +188,7 @@ public:
             break;
         case Akonadi::StandardActionManager::CutCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CutCollections,
-                                           ki18np("Cut Folder", "Cut %1 Folders"));
+                ki18np("Cut Folder", "Cut %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::CutCollections)->setWhatsThis(
                 i18n("Cut the selected folders from the account."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CutCollections),
@@ -204,7 +204,7 @@ public:
             break;
         case  Akonadi::StandardActionManager::CopyItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CopyItems,
-                                           ki18np("Copy Message", "Copy %1 Messages"));
+                ki18np("Copy Message", "Copy %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::CopyItems)->setWhatsThis(
                 i18n("Copy the selected messages to the clipboard."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CopyItems),
@@ -212,7 +212,7 @@ public:
             break;
         case Akonadi::StandardActionManager::DeleteItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteItems,
-                                           ki18np("Delete Message", "Delete %1 Messages"));
+                ki18np("Delete Message", "Delete %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteItems)->setWhatsThis(
                 i18n("Delete the selected messages from the folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::DeleteItems),
@@ -236,7 +236,7 @@ public:
             break;
         case Akonadi::StandardActionManager::CutItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CutItems,
-                                           ki18np("Cut Message", "Cut %1 Messages"));
+                ki18np("Cut Message", "Cut %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::CutItems)->setWhatsThis(
                 i18n("Cut the selected message from the folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CutItems),
@@ -263,7 +263,7 @@ public:
             break;
         case Akonadi::StandardActionManager::DeleteResources:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteResources,
-                                           ki18np("&Delete Account", "&Delete %1 Accounts"));
+                ki18np("&Delete Account", "&Delete %1 Accounts"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteResources)->setWhatsThis(
                 i18n("Delete the selected accounts<p>"
                      "The currently selected accounts will be deleted, "
@@ -285,16 +285,14 @@ public:
             break;
         case Akonadi::StandardActionManager::SynchronizeResources:
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeResources,
-                                           ki18np("Update Account", "Update %1 Accounts"));
+                ki18np("Update Account", "Update %1 Accounts"));
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeResources)->setWhatsThis(
                 i18n("Updates the content of all folders of the selected accounts."));
-
             break;
         case Akonadi::StandardActionManager::SynchronizeCollectionsRecursive:
-
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
-                                           ki18np("Update This Folder and All Its Subfolders",
-                                                  "Update These Folders and All Their Subfolders"));
+                ki18np("Update This Folder and All Its Subfolders",
+                       "Update These Folders and All Their Subfolders"));
 
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollectionsRecursive)->setWhatsThis(
                 i18n("Update the contents of the selected folders and all their subfolders."));
@@ -727,7 +725,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-read")));
         action->setText(i18n("&Mark Message as Read"));
         action->setIconText(i18n("Mark as Read"));
-        d->setHelpText(action,i18n("Mark selected messages as read."));
+        d->setHelpText(action, i18n("Mark selected messages as read."));
         action->setWhatsThis(i18n("Mark selected messages as read."));
         d->mActions.insert(MarkMailAsRead, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_read"), action);
@@ -740,7 +738,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-unread")));
         action->setText(i18n("&Mark Message as Unread"));
         action->setIconText(i18n("Mark as Unread"));
-        d->setHelpText(action,i18n("Mark selected messages as unread."));
+        d->setHelpText(action, i18n("Mark selected messages as unread."));
         action->setWhatsThis(i18n("Mark selected messages as unread."));
         d->mActions.insert(MarkMailAsUnread, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_unread"), action);
@@ -753,7 +751,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-important")));
         action->setText(i18n("&Mark Message as Important"));
         action->setIconText(i18n("Mark as Important"));
-        d->setHelpText(action,i18n("Mark selected messages as important."));
+        d->setHelpText(action, i18n("Mark selected messages as important."));
 
         d->mActions.insert(MarkMailAsImportant, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_mark_as_important"), action);
@@ -777,7 +775,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-read")));
         action->setText(i18n("Mark &All Messages as Read"));
         action->setIconText(i18n("Mark All as Read"));
-        d->setHelpText(action,i18n("Mark all messages as read."));
+        d->setHelpText(action, i18n("Mark all messages as read."));
         action->setWhatsThis(i18n("Mark all messages as read."));
         d->mActions.insert(MarkAllMailAsRead, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_read"), action);
@@ -801,7 +799,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action->setIcon(QIcon::fromTheme(QLatin1String("mail-mark-important")));
         action->setText(i18n("Mark &All Messages as Important"));
         action->setIconText(i18n("Mark All as Important"));
-        d->setHelpText(action,i18n("Mark all messages as important."));
+        d->setHelpText(action, i18n("Mark all messages as important."));
         action->setWhatsThis(i18n("Mark all messages as important."));
         d->mActions.insert(MarkAllMailAsImportant, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_mark_all_as_important"), action);
@@ -835,7 +833,7 @@ QAction *StandardMailActionManager::createAction(Type type)
         action = new QAction(d->mParentWidget);
         action->setIcon(QIcon::fromTheme(QLatin1String("user-trash")));
         action->setText(i18n("Move All to &Trash"));
-        d->setHelpText(action,i18n("Move all messages to the trash folder."));
+        d->setHelpText(action, i18n("Move all messages to the trash folder."));
         action->setWhatsThis(i18n("Move all messages to the trash folder."));
         d->mActions.insert(MoveAllToTrash, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_move_all_to_trash"), action);
@@ -863,7 +861,7 @@ QAction *StandardMailActionManager::createAction(Type type)
     case EmptyTrash:
         action = new QAction(d->mParentWidget);
         action->setText(i18n("E&mpty Trash"));
-        d->setHelpText(action,i18n("Permanently delete all messages from the trash folder."));
+        d->setHelpText(action, i18n("Permanently delete all messages from the trash folder."));
         action->setWhatsThis(i18n("Permanently delete all messages from the trash folder."));
         d->mActions.insert(EmptyTrash, action);
         d->mActionCollection->addAction(QStringLiteral("akonadi_empty_trash"), action);
