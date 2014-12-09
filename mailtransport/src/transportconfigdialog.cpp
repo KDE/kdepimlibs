@@ -114,7 +114,6 @@ TransportConfigDialog::TransportConfigDialog(Transport *transport, QWidget *pare
     mainLayout->addWidget(d->configWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     d->okButton = buttonBox->button(QDialogButtonBox::Ok);
-    d->okButton->setText(i18nc("create and configure a mail transport", "Create and Configure"));
     d->okButton->setEnabled(false);
     d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     mainLayout->addWidget(buttonBox);
