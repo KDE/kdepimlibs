@@ -29,4 +29,18 @@ RequestTest::~RequestTest()
 
 }
 
+void RequestTest::shouldHaveDefaultValue()
+{
+    KioSMTP::Request request;
+    QVERIFY(request.to().isEmpty());
+    QVERIFY(request.cc().isEmpty());
+    QVERIFY(request.bcc().isEmpty());
+    QVERIFY(request.emitHeaders());
+    QVERIFY(!request.is8BitBody());
+    QVERIFY(request.profileName().isEmpty());
+    QVERIFY(request.fromAddress().isEmpty());
+    QVERIFY(request.heloHostname().isEmpty());
+    QCOMPARE(request.size(), static_cast<unsigned int>(0));
+}
+
 QTEST_KDEMAIN(RequestTest, NoGUI)
