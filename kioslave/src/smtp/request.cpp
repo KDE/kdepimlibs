@@ -45,7 +45,7 @@ Request Request::fromURL(const QUrl &url)
 {
     Request request;
 
-    const QStringList query = url.query().mid(1).split(QLatin1Char('&'));
+    const QStringList query = url.query().split(QLatin1Char('&'));
 #ifndef NDEBUG
     qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join(QLatin1String("\n"));
 #endif
