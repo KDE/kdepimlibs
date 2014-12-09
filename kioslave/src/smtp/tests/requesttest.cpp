@@ -50,12 +50,14 @@ void RequestTest::shouldParseRequest_data()
     QTest::addColumn<QString>("from");
     QTest::addColumn<QString>("cc");
     QTest::addColumn<QString>("bcc");
+    QTest::addColumn<bool>("emitheaders");
     QTest::addColumn<unsigned int>("size");
     QTest::newRow("correct url") <<  QUrl(QLatin1String("smtps://smtp.kde.org:465/send?headers=0&from=foo%40kde.org&to=foo%40kde.org&size=617"))
                                  << QString(QLatin1String("foo@kde.org"))
                                  << QString(QLatin1String("foo@kde.org"))
                                  << QString()
                                  << QString()
+                                 << false
                                  << static_cast<unsigned int>(617);
 }
 
@@ -66,6 +68,7 @@ void RequestTest::shouldParseRequest()
     QFETCH(QString, from);
     QFETCH(QString, cc);
     QFETCH(QString, bcc);
+    QFETCH(bool, emitheaders);
     QFETCH(unsigned int, size);
 
     KioSMTP::Request request = KioSMTP::Request::fromURL(smtpurl);
@@ -74,6 +77,7 @@ void RequestTest::shouldParseRequest()
     QCOMPARE(request.fromAddress(), from);
     QCOMPARE(request.bcc().join(QLatin1String(",")), bcc);
     QCOMPARE(request.size(), size);
+    QCOMPARE(request.emitHeaders(), emitheaders);
 }
 
 QTEST_MAIN(RequestTest)
