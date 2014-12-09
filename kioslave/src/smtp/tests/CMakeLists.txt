@@ -54,3 +54,10 @@ ecm_mark_as_test(test-capabilities)
 target_link_libraries(test_capabilities   KF5::KIOCore)
 
 
+########### next target ###############
+set( test_request_source requesttest.cpp ../request.cpp ../smtp_debug.cpp)
+add_executable( requesttest ${test_request_source})
+add_test(requesttest requesttest)
+ecm_mark_as_test(requesttest)
+target_link_libraries( requesttest Qt5::Test Qt5::Gui)
+
