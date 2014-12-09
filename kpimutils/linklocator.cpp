@@ -177,7 +177,7 @@ bool LinkLocator::atUrl() const
 {
   // the following characters are allowed in a dot-atom (RFC 2822):
   // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-  const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
+  static const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
 
   // the character directly before the URL must not be a letter, a number or
   // any other character allowed in a dot-atom (RFC 2822).
@@ -229,7 +229,7 @@ QString LinkLocator::getEmailAddress()
   if ( mText[mPos] == QLatin1Char('@') ) {
     // the following characters are allowed in a dot-atom (RFC 2822):
     // a-z A-Z 0-9 . ! # $ % & ' * + - / = ? ^ _ ` { | } ~
-    const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
+    static const QString allowedSpecialChars = QLatin1String( ".!#$%&'*+-/=?^_`{|}~" );
 
     // determine the local part of the email address
     int start = mPos - 1;
