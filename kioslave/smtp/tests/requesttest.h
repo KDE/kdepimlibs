@@ -28,6 +28,8 @@ public:
     ~RequestTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldParseRequest_data();
+    void shouldParseRequest();
 };
 
 #endif // REQUESTTEST_H

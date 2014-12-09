@@ -17,7 +17,7 @@
 #include "requesttest.h"
 #include "../request.h"
 #include <qtest_kde.h>
-
+#include <KUrl>
 RequestTest::RequestTest(QObject *parent)
     : QObject(parent)
 {
@@ -41,6 +41,39 @@ void RequestTest::shouldHaveDefaultValue()
     QVERIFY(request.fromAddress().isEmpty());
     QVERIFY(request.heloHostname().isEmpty());
     QCOMPARE(request.size(), static_cast<unsigned int>(0));
+}
+
+void RequestTest::shouldParseRequest_data()
+{
+    QTest::addColumn<KUrl>("smtpurl");
+    QTest::addColumn<QString>("to");
+    QTest::addColumn<QString>("from");
+    QTest::addColumn<QString>("cc");
+    QTest::addColumn<QString>("bcc");
+    QTest::addColumn<unsigned int>("size");
+    QTest::newRow("correct url") <<  KUrl(QLatin1String("smtps://smtp.kde.org:465/send?headers=0&from=foo%40kde.org&to=foo%40kde.org&size=617"))
+                                  << QString(QLatin1String("foo@kde.org"))
+                                  << QString(QLatin1String("foo@kde.org"))
+                                  << QString()
+                                  << QString()
+                                  << static_cast<unsigned int>(617);
+}
+
+void RequestTest::shouldParseRequest()
+{
+    QFETCH( KUrl, smtpurl );
+    QFETCH( QString, to );
+    QFETCH( QString, from );
+    QFETCH( QString, cc );
+    QFETCH( QString, bcc );
+    QFETCH( unsigned int, size );
+
+    KioSMTP::Request request = KioSMTP::Request::fromURL(smtpurl);
+    QCOMPARE(request.to().join(QLatin1String(",")), to);
+    QCOMPARE(request.cc().join(QLatin1String(",")), cc);
+    QCOMPARE(request.fromAddress(), from);
+    QCOMPARE(request.bcc().join(QLatin1String(",")), bcc);
+    QCOMPARE(request.size(), size);
 }
 
 QTEST_KDEMAIN(RequestTest, NoGUI)
