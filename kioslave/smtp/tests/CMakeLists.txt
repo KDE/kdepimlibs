@@ -37,3 +37,8 @@ kde4_add_executable(interactivesmtpserver TEST ${interactivesmtpserver_SRCS})
 target_link_libraries(interactivesmtpserver  ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} )
 
 
+########### next target ###############
+set( test_request_source requesttest.cpp ../request.cpp)
+kde4_add_unit_test( requesttest ${test_request_source})
+target_link_libraries( requesttest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
+
