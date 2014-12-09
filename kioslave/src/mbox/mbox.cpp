@@ -40,7 +40,7 @@ extern "C" {
 int kdemain(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    app.setApplicationName(QLatin1String("kio_mbox"));
+    app.setApplicationName(QStringLiteral("kio_mbox"));
 
     if (argc != 4) {
         fprintf(stderr, "Usage: kio_mbox protocol "

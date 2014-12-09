@@ -38,5 +38,5 @@ void VCardImport::runTest()
     while (!done) {
         QTest::qWait(WAIT_TIME);
     }
-    outputStats(QLatin1String("import"));
+    outputStats(QStringLiteral("import"));
 }

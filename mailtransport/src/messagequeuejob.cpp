@@ -135,7 +135,7 @@ void MessageQueueJob::Private::outboxRequestResult(KJob *job)
 
     // Create item.
     Item item;
-    item.setMimeType(QLatin1String("message/rfc822"));
+    item.setMimeType(QStringLiteral("message/rfc822"));
     item.setPayload<Message::Ptr>(message);
 
     // Set attributes.

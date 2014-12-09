@@ -54,5 +54,5 @@ void MailDir20PercentAsRead::runTest()
             isj->exec();
         }
     }
-    outputStats(QLatin1String("mark20percentread"));
+    outputStats(QStringLiteral("mark20percentread"));
 }

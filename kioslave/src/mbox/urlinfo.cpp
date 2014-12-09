@@ -42,12 +42,12 @@ QString UrlInfo::mimetype() const
 {
     switch (m_type) {
     case message:
-        return QLatin1String("message/rfc822");
+        return QStringLiteral("message/rfc822");
     case directory:
-        return QLatin1String("inode/directory");
+        return QStringLiteral("inode/directory");
     case invalid:
     default:
-        return QLatin1String("invalid");
+        return QStringLiteral("invalid");
     }
 }
 

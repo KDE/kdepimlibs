@@ -47,7 +47,7 @@ extern "C" {
 int kdemain(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);   // needed for QSocketNotifier
-    app.setApplicationName(QLatin1String("kio_ldap"));
+    app.setApplicationName(QStringLiteral("kio_ldap"));
 
     qCDebug(KLDAP_LOG) << "Starting kio_ldap instance";
 

@@ -53,6 +53,6 @@ void MailDirRemoveReadMessages::runTest()
             }
         }
     }
-    outputStats(QLatin1String("removereaditems"));
+    outputStats(QStringLiteral("removereaditems"));
 
 }

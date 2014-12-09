@@ -51,7 +51,7 @@ DispatcherInterface::DispatcherInterface()
 AgentInstance DispatcherInterface::dispatcherInstance() const
 {
     AgentInstance a =
-        AgentManager::self()->instance(QLatin1String("akonadi_maildispatcher_agent"));
+        AgentManager::self()->instance(QStringLiteral("akonadi_maildispatcher_agent"));
     if (!a.isValid()) {
         qWarning() << "Could not get MDA instance.";
     }

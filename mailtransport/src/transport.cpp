@@ -128,21 +128,21 @@ QString Transport::authenticationTypeString(int type)
 {
     switch (type) {
     case EnumAuthenticationType::LOGIN:
-        return QLatin1String("LOGIN");
+        return QStringLiteral("LOGIN");
     case EnumAuthenticationType::PLAIN:
-        return QLatin1String("PLAIN");
+        return QStringLiteral("PLAIN");
     case EnumAuthenticationType::CRAM_MD5:
-        return QLatin1String("CRAM-MD5");
+        return QStringLiteral("CRAM-MD5");
     case EnumAuthenticationType::DIGEST_MD5:
-        return QLatin1String("DIGEST-MD5");
+        return QStringLiteral("DIGEST-MD5");
     case EnumAuthenticationType::NTLM:
-        return QLatin1String("NTLM");
+        return QStringLiteral("NTLM");
     case EnumAuthenticationType::GSSAPI:
-        return QLatin1String("GSSAPI");
+        return QStringLiteral("GSSAPI");
     case EnumAuthenticationType::CLEAR:
         return i18nc("Authentication method", "Clear text");
     case EnumAuthenticationType::APOP:
-        return QLatin1String("APOP");
+        return QStringLiteral("APOP");
     case EnumAuthenticationType::ANONYMOUS:
         return i18nc("Authentication method", "Anonymous");
     }

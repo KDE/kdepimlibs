@@ -59,5 +59,5 @@ void MailDirFetchAllHeaders::runTest()
             a = item.payload<MessagePtr>()->subject()->asUnicodeString();
         }
     }
-    outputStats(QLatin1String("fullheaderlist"));
+    outputStats(QStringLiteral("fullheaderlist"));
 }
