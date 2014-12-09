@@ -52,21 +52,21 @@ void RequestTest::shouldParseRequest_data()
     QTest::addColumn<QString>("bcc");
     QTest::addColumn<unsigned int>("size");
     QTest::newRow("correct url") <<  QUrl(QLatin1String("smtps://smtp.kde.org:465/send?headers=0&from=foo%40kde.org&to=foo%40kde.org&size=617"))
-                                  << QString(QLatin1String("foo@kde.org"))
-                                  << QString(QLatin1String("foo@kde.org"))
-                                  << QString()
-                                  << QString()
-                                  << static_cast<unsigned int>(617);
+                                 << QString(QLatin1String("foo@kde.org"))
+                                 << QString(QLatin1String("foo@kde.org"))
+                                 << QString()
+                                 << QString()
+                                 << static_cast<unsigned int>(617);
 }
 
 void RequestTest::shouldParseRequest()
 {
-    QFETCH( QUrl, smtpurl );
-    QFETCH( QString, to );
-    QFETCH( QString, from );
-    QFETCH( QString, cc );
-    QFETCH( QString, bcc );
-    QFETCH( unsigned int, size );
+    QFETCH(QUrl, smtpurl);
+    QFETCH(QString, to);
+    QFETCH(QString, from);
+    QFETCH(QString, cc);
+    QFETCH(QString, bcc);
+    QFETCH(unsigned int, size);
 
     KioSMTP::Request request = KioSMTP::Request::fromURL(smtpurl);
     QCOMPARE(request.to().join(QLatin1String(",")), to);

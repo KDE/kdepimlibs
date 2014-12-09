@@ -3,7 +3,8 @@
 
 using namespace KioSMTP;
 
-int main() {
+int main()
+{
     Capabilities c;
 
     const QString size_cap = QObject::tr("SIZE 12");

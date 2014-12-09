@@ -46,7 +46,7 @@ public:
     FilterAction *functor;
     ItemFetchScope fetchScope;
 
-    // slots:
+    // Q_SLOTS:
     void fetchResult(KJob *job);
 
     void traverseItems();

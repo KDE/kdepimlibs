@@ -415,8 +415,8 @@ void TransportManager::removeTransport(int id)
     QString group = t->currentGroup();
     if (t->storePassword()) {
         Wallet *currentWallet = wallet();
-        if ( currentWallet ) {
-            currentWallet->removeEntry( QString::number(t->id()) );
+        if (currentWallet) {
+            currentWallet->removeEntry(QString::number(t->id()));
         }
     }
     delete t;
