@@ -28,15 +28,14 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
 ########### Find packages ###########
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Akonadi CONFIG REQUIRED)
+find_package(KF5Mime CONFIG REQUIRED)
 
 set( SHARED_MIME_INFO_MINIMUM_VERSION "0.40" )
 find_package( SharedMimeInfo REQUIRED )
 
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
-  find_package(KF5Akonadi CONFIG REQUIRED)
-  find_package(KF5Mime CONFIG REQUIRED)
-else()
+if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
   # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
   # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
   find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
