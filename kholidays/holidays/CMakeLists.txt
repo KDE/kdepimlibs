@@ -1,1 +1,0 @@
-install(DIRECTORY plan2 DESTINATION ${KF5_DATA_INSTALL_DIR}/libkholidays PATTERN "*~" EXCLUDE)

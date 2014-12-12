@@ -1,2 +1,0 @@
-EXTRA kdebug,null,defines,qenums
-SKIP /scanholiday|/parseholiday|/parsers/plan1|/parsers/plan2|/tests/
