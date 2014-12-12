@@ -203,7 +203,9 @@ QString decodeRFC2047String(const QByteArray &src, QByteArray &usedCS,
                             const QByteArray &defaultCS, bool forceCS)
 {
     QByteArray result;
+    result.reserve(64);
     QByteArray spaceBuffer;
+    spaceBuffer.reserve(64);
     const char *scursor = src.constData();
     const char *send = scursor + src.length();
     bool onlySpacesSinceLastWord = false;
