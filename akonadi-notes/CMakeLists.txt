@@ -29,10 +29,11 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 #kdelibs4support is needed by kmime
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5Mime CONFIG REQUIRED)
 
-if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
+if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
+  find_package(KF5Akonadi CONFIG REQUIRED)
+else()
   # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
   # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
   find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
