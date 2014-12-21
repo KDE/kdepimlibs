@@ -22,7 +22,8 @@ include(KDEFrameworkCompilerSettings)
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.5.0")
 set(KDEPIMLIBS_VERSION "4.79.0")
-
+set(MBOXLIB_VERSION "4.79.0")
+set(LDABLIB_VERSION "4.79.0")
 find_package(Sasl2)
 set_package_properties(Sasl2 PROPERTIES
                              DESCRIPTION "The Cyrus-sasl library"
@@ -32,8 +33,8 @@ set_package_properties(Sasl2 PROPERTIES
 
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DocTools ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Ldap ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
-find_package(KF5Mbox ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
+find_package(KF5Ldap ${LDABLIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Mbox ${MBOXLIB_VERSION} CONFIG REQUIRED)
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 
