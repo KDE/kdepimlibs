@@ -19,6 +19,9 @@ include(KDEFrameworkCompilerSettings)
 set(KF5_VERSION "5.5.0")
 set(KDEPIMLIBS_VERSION "4.79.0")
 
+set(KMIMELIB_VERSION "4.79.0")
+
+
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiNotesConfigVersion.cmake"
@@ -29,7 +32,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 #kdelibs4support is needed by kmime
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime CONFIG REQUIRED)
+find_package(KF5Mime ${KMIMELIB_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
