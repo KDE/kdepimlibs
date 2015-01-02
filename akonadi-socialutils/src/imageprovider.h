@@ -55,7 +55,7 @@ public:
      *        used for avatars mainly
      */
     QImage loadImage(const QString &who, const QUrl &url,
-                     bool polishImage = false, KImageCache *cache = 0);
+                     bool polishImage = false, KImageCache *cache = Q_NULLPTR);
     /**
      * Aborts all running jobs
      */

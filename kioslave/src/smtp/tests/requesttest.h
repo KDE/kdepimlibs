@@ -24,7 +24,7 @@ class RequestTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RequestTest(QObject *parent = 0);
+    explicit RequestTest(QObject *parent = Q_NULLPTR);
     ~RequestTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
