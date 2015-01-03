@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(kioslave)
 
 # ECM setup
-find_package(ECM 1.3.0 CONFIG REQUIRED)
+find_package(ECM 1.6.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 set(CMAKE_MODULE_PATH ${kioslave_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
@@ -20,7 +20,7 @@ include(KDEFrameworkCompilerSettings)
 
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
-set(KF5_VERSION "5.5.0")
+set(KF5_VERSION "5.6.0")
 set(KDEPIMLIBS_VERSION "4.79.0")
 set(MBOXLIB_VERSION "4.79.0")
 set(LDABLIB_VERSION "4.79.0")
