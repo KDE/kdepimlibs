@@ -6,7 +6,6 @@ option(KDEPIMLIBS_SUPERBUILD "Build standalone lib" FALSE)
 if (KDEPIMLIBS_SUPERBUILD)
 
 # Remove it when splitted
-
 # This CMakeLists.txt is a "superbuild" for the frameworks.
 # This means it can be used to build them all standalone one-by-one.
 # This is useful to compile all them with one command.
