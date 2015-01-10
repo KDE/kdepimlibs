@@ -517,16 +517,20 @@ void ServerTest::start()
   d->normalSocket->reconnect();
   d->normalSocketTimer->start( 10000 );
 
-  d->secureSocket->setObjectName( QLatin1String( "secure" ) );
-  d->secureSocket->setServer( d->server );
-  d->secureSocket->setProtocol( d->testProtocol + QLatin1Char( 's' ) );
-  d->secureSocket->setSecure( true );
-  connect( d->secureSocket, SIGNAL(connected()), SLOT(slotSslPossible()) );
-  connect( d->secureSocket, SIGNAL(failed()), SLOT(slotSslNotPossible()) );
-  connect( d->secureSocket, SIGNAL(data(QString)),
-           SLOT(slotReadSecure(QString)) );
-  d->secureSocket->reconnect();
-  d->secureSocketTimer->start( 10000 );
+  if (d->secureSocket->port() > 0) {
+    d->secureSocket->setObjectName( QLatin1String( "secure" ) );
+    d->secureSocket->setServer( d->server );
+    d->secureSocket->setProtocol( d->testProtocol + QLatin1Char( 's' ) );
+    d->secureSocket->setSecure( true );
+    connect( d->secureSocket, SIGNAL(connected()), SLOT(slotSslPossible()) );
+    connect( d->secureSocket, SIGNAL(failed()), SLOT(slotSslNotPossible()) );
+    connect( d->secureSocket, SIGNAL(data(QString)),
+             SLOT(slotReadSecure(QString)) );
+    d->secureSocket->reconnect();
+    d->secureSocketTimer->start( 10000 );
+  } else {
+    d->slotSslNotPossible();
+  }
 }
 
 void ServerTest::setFakeHostname( const QString &fakeHostname )

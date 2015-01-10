@@ -84,6 +84,8 @@ class MAILTRANSPORT_EXPORT Socket : public QObject
      */
     void setPort( int port );
 
+    int port();
+
     /**
      * this will be a secure connection
      */
