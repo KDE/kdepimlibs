@@ -8,7 +8,7 @@ generate_export_header(KF5AkonadiNotes BASE_NAME akonadi-notes)
 
 add_library(KF5::KF5AkonadiNotes ALIAS KF5AkonadiNotes)
 
-target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/Notes;${KF5_INCLUDE_INSTALL_DIR}/akonadi/notes;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/Notes;${KF5_INCLUDE_INSTALL_DIR}/akonadi/notes;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiNotes PUBLIC "$<BUILD_INTERFACE:${Akonadi-Notes_SOURCE_DIR}/src;${Akonadi-Notes_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiNotes
@@ -42,7 +42,7 @@ ecm_generate_headers(AkonadiNotes_CamelCase_HEADERS
 
 install(FILES
     ${AkonadiNotes_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/Notes
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/Notes
     COMPONENT Devel
 )
 
@@ -50,7 +50,7 @@ install(FILES
     ${AkonadiNotes_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_export.h
     ${AkonadiNotes_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/notes
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/notes
     COMPONENT Devel
 )
 

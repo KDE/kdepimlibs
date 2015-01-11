@@ -27,12 +27,12 @@ add_library(kio_pop3 MODULE ${kio_pop3_PART_SRCS})
 target_link_libraries(kio_pop3  KF5::KIOCore ${pop3_optional_libs} KF5::I18n )
 set_target_properties(kio_pop3 PROPERTIES OUTPUT_NAME "pop3")
 
-install(TARGETS kio_pop3  DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/kio/ )
+install(TARGETS kio_pop3  DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kio/ )
 
 
 ########### install files ###############
 
-install( FILES pop3.protocol pop3s.protocol  DESTINATION  ${SERVICES_INSTALL_DIR} )
+install( FILES pop3.protocol pop3s.protocol  DESTINATION  ${KDE_INSTALL_KSERVICES5DIR} )
 
 
 

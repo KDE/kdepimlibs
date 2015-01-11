@@ -3,10 +3,10 @@ find_package( SharedMimeInfo REQUIRED )
 
 if(WIN32)
   set(
-    LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+    LIB_INSTALL_DIR ${KDE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${KDE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${KDE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${KDE_INSTALL_LIBDIR}
   )
 endif()
 
@@ -20,14 +20,14 @@ add_library(akonadi_serializer_socialfeeditem MODULE ${akonadi_serializer_social
 target_link_libraries(akonadi_serializer_socialfeeditem
   KF5::AkonadiSocialUtils)
 
-install(TARGETS akonadi_serializer_socialfeeditem DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS akonadi_serializer_socialfeeditem DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
 ########### install files ###############
 
 install(FILES
   akonadi_serializer_socialfeeditem.desktop
-  DESTINATION ${DATA_INSTALL_DIR}/akonadi/plugins/serializer)
+  DESTINATION ${KDE_INSTALL_DATADIR}/akonadi/plugins/serializer)
 
-install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 
-update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})

@@ -69,7 +69,7 @@ kconfig_add_kcfg_files(akonadimime_SRCS
 
 install(FILES
     specialmailcollections.kcfg
-    DESTINATION ${KCFG_INSTALL_DIR}
+    DESTINATION ${KDE_INSTALL_KCFGDIR}
 )
 
 add_library(KF5AkonadiMime ${akonadimime_SRCS})
@@ -79,10 +79,10 @@ generate_export_header(KF5AkonadiMime BASE_NAME akonadi-mime)
 add_library(KF5::AkonadiMime ALIAS KF5AkonadiMime)
 
 # NOTE: The include directories remain 'akonadi/kmime' to be as SC as possible.
-target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/KMime;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiMime PUBLIC "$<BUILD_INTERFACE:${Akonadi-Mime_SOURCE_DIR}/src;${Akonadi-Mime_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 # TODO: Remove when kdepimlibs is split (and fix the broken includes in eg. mailtransport)
-target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime>")
+target_include_directories(KF5AkonadiMime INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/kmime>")
 
 target_link_libraries(KF5AkonadiMime
 PUBLIC
@@ -127,23 +127,23 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
 
 install(FILES
     ${AkonadiMime_CamelCase_HEADERS}
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/KMime
     COMPONENT Devel
 )
 
 install(FILES
     ${AkonadiMime_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_export.h
-    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/kmime
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/kmime
     COMPONENT Devel
 )
 
 ecm_generate_pri_file(BASE_NAME AkonadiMime
     LIB_NAME KF5AkonadiMime
-    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KF5_INCLUDE_INSTALL_DIR}/Akonadi/KMime
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/KMime
 )
 
 ## install the MIME type spec file for KDEPIM specific MIME types
-install(FILES kdepimlibs-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+install(FILES kdepimlibs-mime.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
+update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 

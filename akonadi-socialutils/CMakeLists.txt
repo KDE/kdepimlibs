@@ -44,7 +44,7 @@ add_subdirectory(src)
 add_subdirectory(autotests)
 
 ########### CMake Config Files ###########
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiSocialUtils")
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5AkonadiSocialUtils")
 
 ecm_configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiSocialUtilsConfig.cmake.in"
@@ -63,7 +63,7 @@ install(EXPORT KF5AkonadiSocialUtilsTargets DESTINATION "${CMAKECONFIG_INSTALL_D
 
 install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_version.h
-  DESTINATION ${KF5_INCLUDE_INSTALL_DIR} COMPONENT Devel
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
