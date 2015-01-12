@@ -61,6 +61,8 @@ public:
 
     bool operator==( const Email &other ) const;
 
+    Email &operator=( const Email &other );
+
     QString toString() const;
 private:
     class Private;
