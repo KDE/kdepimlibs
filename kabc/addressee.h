@@ -35,6 +35,7 @@
 #include "kabc/picture.h"
 #include "kabc/secrecy.h"
 #include "kabc/sound.h"
+#include "kabc/email.h"
 #include "kabc/timezone.h"
 #include "kabc/addresseelist.h"  // for typedef QList<Addressee> List;
 
@@ -976,7 +977,12 @@ class KABC_EXPORT Addressee
      */
     static QString mimeType();
 
-  private:
+    //kf5 merge with insertEmail(...)
+    void insertEmail(const QString &email, bool preferred, const QMap<QString, QStringList> &param);
+
+    KABC::Email::List emailList() const;
+
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
