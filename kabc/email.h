@@ -46,6 +46,8 @@ public:
 
     ~Email();
 
+    typedef QList<Email> List;
+
     void setEmail(const QString &mail);
     QString mail() const;
 
