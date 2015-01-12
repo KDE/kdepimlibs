@@ -25,6 +25,11 @@
 #include "kabc_export.h"
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
+#include <qmap.h>
+
+/** @short Class that holds a Email for a contact.
+ *  @since 4.14.5
+ */
 
 namespace KABC {
 
@@ -33,13 +38,27 @@ class KABC_EXPORT Email
     friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Email & );
     friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Email & );
 public:
+    /**
+     * Creates an empty email object.
+     */
     Email();
+    Email(const QString &mail, bool preferred);
+
     ~Email();
 
     void setEmail(const QString &mail);
     QString mail() const;
 
     bool isValid() const;
+
+    void setParameters(const QMap<QString, QStringList> &params);
+    QMap<QString, QStringList> parameters() const;
+
+    void setPreferred(bool pref);
+    bool preferred() const;
+
+    bool operator==( const Email &other ) const;
+
 private:
     class Private;
     QSharedDataPointer<Private> d;

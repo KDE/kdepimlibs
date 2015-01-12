@@ -185,3 +185,14 @@ set(vcarddragtest_SRCS vcarddragtest.cpp)
 kde4_add_unit_test(vcarddragtest TESTNAME kabc-vcarddragtest ${vcarddragtest_SRCS})
 
 target_link_libraries(vcarddragtest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY})
+
+
+########### next target ###############
+
+set(emailtest_SRCS emailtest.cpp)
+
+
+kde4_add_unit_test(emailtest TESTNAME kabc-emailtest ${emailtest_SRCS})
+
+target_link_libraries(emailtest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+

@@ -51,9 +51,41 @@ Email::Email()
 
 }
 
+Email::Email(const QString &mail, bool preferred)
+    : d( new Private )
+{
+    d->mail = mail;
+    d->preferred = preferred;
+}
+
 Email::~Email()
 {
 
+}
+
+QMap<QString, QStringList> Email::parameters() const
+{
+    return d->parameters;
+}
+
+bool Email::operator==(const Email &other) const
+{
+    return (d->parameters == other.parameters()) && (d->mail == other.mail()) && (d->preferred == other.preferred());
+}
+
+void Email::setPreferred(bool pref)
+{
+    d->preferred = pref;
+}
+
+bool Email::preferred() const
+{
+    return d->preferred;
+}
+
+void Email::setParameters(const QMap<QString, QStringList> &params)
+{
+    d->parameters = params;
 }
 
 void Email::setEmail(const QString &mail)
