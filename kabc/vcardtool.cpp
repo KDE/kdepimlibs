@@ -188,16 +188,31 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     bool pref = true;
 
     for ( emailIt = emailList.begin(); emailIt != emailEnd; ++emailIt ) {
+        bool needToAddPref = false;
         VCardLine line( QLatin1String( "EMAIL" ), (*emailIt).mail() );
         if ( pref == true && emailList.count() > 1 ) {
-            line.addParameter( QLatin1String( "TYPE" ), QLatin1String( "PREF" ) );
+            needToAddPref = true;
             pref = false;
         }
         QMapIterator<QString, QStringList> i((*emailIt).parameters());
+        bool foundType = false;
         while (i.hasNext()) {
             i.next();
-            qDebug()<<" i.key()"<<i.key()<<" i.value().join(QLatin1S"<<i.value().join(QLatin1String(","));
-            line.addParameter( i.key(), i.value().join(QLatin1String(",")) );
+            QStringList valueStringList = i.value();
+            if (i.key().toLower() == QLatin1String( "type" )) {
+                if (!valueStringList.contains(QLatin1String("PREF"))) {
+                    if (needToAddPref) {
+                        valueStringList.append(QLatin1String( "PREF" ));
+                    } else {
+                        needToAddPref = false;
+                    }
+                }
+                foundType = true;
+            }
+            line.addParameter( i.key(), valueStringList.join(QLatin1String(",")) );
+        }
+        if (!foundType && needToAddPref) {
+            line.addParameter( QLatin1String( "TYPE" ), QLatin1String( "PREF" ) );
         }
         card.addLine( line );
     }

@@ -1293,6 +1293,11 @@ Email::List Addressee::emailList() const
     return d->mEmails;
 }
 
+void Addressee::setEmailList(const Email::List &list)
+{
+    d->mEmails = list;
+}
+
 void Addressee::setEmails( const QStringList& emails )
 {
     d->mEmails.clear();

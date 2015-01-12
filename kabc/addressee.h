@@ -699,7 +699,7 @@ class KABC_EXPORT Addressee
        @param list The list of email addresses.
      */
     void setEmails( const QStringList& list);
-
+    void setEmailList(const Email::List &list);
     /**
       Insert a phone number. If a phone number with the same id already exists
       in this addressee it is not duplicated.
