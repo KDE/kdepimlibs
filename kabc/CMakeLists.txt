@@ -120,6 +120,7 @@ install(FILES
   distributionlist.h
   emailselectdialog.h
   errorhandler.h
+  email.h
   field.h
   geo.h
   key.h
