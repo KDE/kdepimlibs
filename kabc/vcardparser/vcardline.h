@@ -109,6 +109,12 @@ class VCardLine
      */
     QString parameter( const QString &param ) const;
 
+    /**
+     * Returns all parameters
+     * @since 4.14.5
+     */
+    ParamMap parameterMap() const;
+
   private:
     ParamMap mParamMap;
     QString mIdentifier;

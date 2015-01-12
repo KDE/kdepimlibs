@@ -78,7 +78,7 @@ QString Email::toString() const
     QString str;
     str += QString::fromLatin1( "Email {\n" );
     str += QString::fromLatin1( "    mail: %1\n" ).arg( d->mail );
-    str += QString::fromLatin1( "    prefered: %1\n" ).arg( d->preferred ? QLatin1String("True") : QLatin1String("False") );
+    str += QString::fromLatin1( "    preferred: %1\n" ).arg( d->preferred ? QLatin1String("True") : QLatin1String("False") );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
