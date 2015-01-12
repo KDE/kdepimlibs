@@ -47,6 +47,7 @@ set(kabc_LIB_SRCS
   contactgroup.cpp
   contactgrouptool.cpp
   errorhandler.cpp
+  email.cpp
   field.cpp
   geo.cpp
   key.cpp
