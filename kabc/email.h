@@ -59,6 +59,7 @@ public:
 
     bool operator==( const Email &other ) const;
 
+    QString toString() const;
 private:
     class Private;
     QSharedDataPointer<Private> d;

@@ -73,6 +73,25 @@ bool Email::operator==(const Email &other) const
     return (d->parameters == other.parameters()) && (d->mail == other.mail()) && (d->preferred == other.preferred());
 }
 
+QString Email::toString() const
+{
+    QString str;
+    str += QString::fromLatin1( "Email {\n" );
+    str += QString::fromLatin1( "    mail: %1\n" ).arg( d->mail );
+    str += QString::fromLatin1( "    prefered: %1\n" ).arg( d->preferred ? QLatin1String("True") : QLatin1String("False") );
+    if (!d->parameters.isEmpty()) {
+        QMapIterator<QString, QStringList> i(d->parameters);
+        QString param;
+        while (i.hasNext()) {
+            i.next();
+            param += QString::fromLatin1("%1 %2").arg(i.key()).arg(i.value().join(QLatin1String(",")));
+        }
+        str += QString::fromLatin1( "    parameters: %1\n" ).arg( param );
+    }
+    str += QString::fromLatin1( "}\n" );
+    return str;
+}
+
 void Email::setPreferred(bool pref)
 {
     d->preferred = pref;

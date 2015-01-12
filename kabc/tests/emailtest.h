@@ -32,6 +32,9 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAssignValue();
+    void shouldAssignExternal();
+    void shouldSerialized();
 };
 
 #endif // EMAILTEST_H

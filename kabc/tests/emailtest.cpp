@@ -41,4 +41,47 @@ void EmailTest::shouldHaveDefaultValue()
     QVERIFY(!email.preferred());
 }
 
+void EmailTest::shouldAssignValue()
+{
+    const QString mail(QLatin1String("foo@kde.org"));
+    const bool preferred = true;
+    KABC::Email email(mail, preferred);
+    QVERIFY(email.isValid());
+    QVERIFY(!email.mail().isEmpty());
+    QCOMPARE(email.mail(), mail);
+    QVERIFY(email.preferred());
+}
+
+void EmailTest::shouldAssignExternal()
+{
+    KABC::Email email;
+    const QString mail(QLatin1String("foo@kde.org"));
+    const bool preferred = true;
+    email.setEmail(mail);
+    email.setPreferred(preferred);
+    QVERIFY(email.isValid());
+    QVERIFY(!email.mail().isEmpty());
+    QCOMPARE(email.mail(), mail);
+    QVERIFY(email.preferred());
+}
+
+void EmailTest::shouldSerialized()
+{
+    KABC::Email email;
+    KABC::Email result;
+    const QString mail(QLatin1String("foo@kde.org"));
+    const bool preferred = true;
+    email.setEmail(mail);
+    email.setPreferred(preferred);
+
+    QByteArray data;
+    QDataStream s( &data, QIODevice::WriteOnly );
+    s << email;
+
+    QDataStream t( &data, QIODevice::ReadOnly );
+    t >> result;
+
+    QVERIFY( email == result );
+}
+
 QTEST_KDEMAIN(EmailTest, NoGUI)
