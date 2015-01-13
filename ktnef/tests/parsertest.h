@@ -29,6 +29,7 @@ class ParserTest : public QObject
     void testSingleAttachment();
     void testTwoAttachments();
     void testMAPIAttachments();
+    void testUmlautAttachmentFilenames();
 };
 
 #endif

@@ -720,7 +720,7 @@ QString readMAPIString( QDataStream &stream, bool isUnicode, bool align,
   if ( isUnicode ) {
     res = QString::fromUtf16( ( const unsigned short *)buf );
   } else {
-    res = QString::fromLocal8Bit( buf );
+    res = QString::fromLatin1( buf );
   }
   delete [] buf;
   return res;

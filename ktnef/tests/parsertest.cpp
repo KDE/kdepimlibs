@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2013 Andreas Cord-Landwehr <cordlandwehr@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,6 +25,7 @@
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
+#include <QString>
 
 #include <qtest_kde.h>
 
@@ -95,4 +97,19 @@ void ParserTest::testMAPIAttachments()
   QVERIFY( att != 0 );
   QVERIFY( att->size() == 68920 );
   QVERIFY( att->name() == QString( "VIA_Nytt_14021.htm" ) );
+}
+
+void ParserTest::testUmlautAttachmentFilenames()
+{
+  KTNEFParser parser;
+  QVERIFY( parser.openFile( TESTSOURCEDIR "umlaut-filename.tnef" ) == true );
+
+  KTNEFMessage *msg = parser.message();
+  QVERIFY( msg != 0 );
+
+  QList<KTNEFAttach*> atts = msg->attachmentList();
+  QVERIFY( atts.count() == 1 );
+
+  KTNEFAttach *att = atts.first();
+  QCOMPARE(att->fileName(), QString::fromUtf8("döcument.pdf"));
 }
