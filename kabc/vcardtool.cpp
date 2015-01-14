@@ -206,10 +206,16 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
                     } else {
                         needToAddPref = false;
                     }
+                } else {
+                    if (!needToAddPref) {
+                        valueStringList.removeAll(QLatin1String( "PREF" ));
+                    }
                 }
                 foundType = true;
             }
-            line.addParameter( i.key(), valueStringList.join(QLatin1String(",")) );
+            if (!valueStringList.isEmpty()) {
+                line.addParameter( i.key(), valueStringList.join(QLatin1String(",")) );
+            }
         }
         if (!foundType && needToAddPref) {
             line.addParameter( QLatin1String( "TYPE" ), QLatin1String( "PREF" ) );
