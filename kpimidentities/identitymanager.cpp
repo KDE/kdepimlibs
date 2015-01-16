@@ -305,11 +305,15 @@ void IdentityManager::readConfig( KConfig *config )
   for ( QStringList::const_iterator group = identities.constBegin();
         group != groupEnd; ++group ) {
     KConfigGroup configGroup( config, *group );
-    mIdentities << Identity();
-    mIdentities.last().readConfig( configGroup );
-    if ( !haveDefault && mIdentities.last().uoid() == defaultIdentity ) {
-      haveDefault = true;
-      mIdentities.last().setIsDefault( true );
+    Identity identity;
+    identity.readConfig( configGroup );
+    //Don't load invalid identity
+    if (!identity.isNull() && !identity.primaryEmailAddress().isEmpty()) {
+        mIdentities << identity;
+        if ( !haveDefault && identity.uoid() == defaultIdentity ) {
+          haveDefault = true;
+          identity.setIsDefault( true );
+        }
     }
   }
 
