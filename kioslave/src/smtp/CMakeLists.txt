@@ -1,7 +1,8 @@
 
 
+if (BUILD_TESTING)
 add_subdirectory(tests)
-
+endif()	
 set(smtp_optional_includes)
 set(smtp_optional_libs)
 
