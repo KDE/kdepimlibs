@@ -537,11 +537,13 @@ static QString displayViewFormatBirthday(Event::Ptr event)
         return QString();
     }
 
-    QString uid_1 = event->customProperty("KABC", "UID-1");
-    QString name_1 = event->customProperty("KABC", "NAME-1");
-    QString email_1= event->customProperty("KABC", "EMAIL-1");
+    const QString uid_1 = event->customProperty("KABC", "UID-1");
+    const QString name_1 = event->customProperty("KABC", "NAME-1");
+    const QString email_1= event->customProperty("KABC", "EMAIL-1");
 
-    QString tmpStr = displayViewFormatPerson(email_1, name_1, uid_1, QString());
+    KCalCore::Person::Ptr p = Person::fromFullName(email_1);
+
+    const QString tmpStr = displayViewFormatPerson(p->email(), name_1, uid_1, QString());
     return tmpStr;
 }
 
