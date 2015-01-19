@@ -57,7 +57,7 @@ int kdemain(int argc, char **argv)
     }
 
     // let the protocol class do its work
-    LDAPProtocol slave(argv[1], argv[ 2 ], argv[ 3 ]);
+    LDAPProtocol slave(argv[1], argv[2], argv[3]);
     slave.dispatchLoop();
 
     qCDebug(KLDAP_LOG) << "Done";
@@ -68,7 +68,8 @@ int kdemain(int argc, char **argv)
  * Initialize the ldap slave
  */
 LDAPProtocol::LDAPProtocol(const QByteArray &protocol, const QByteArray &pool,
-                           const QByteArray &app) : SlaveBase(protocol, pool, app)
+                           const QByteArray &app)
+    : SlaveBase(protocol, pool, app)
 {
     mConnected = false;
     mOp.setConnection(mConn);
@@ -171,7 +172,7 @@ void LDAPProtocol::LDAPErr(int err)
 
     default:
         error(ERR_SLAVE_DEFINED,
-              i18n("LDAP server returned the error: %1 %2\nThe LDAP URL was: %3" ,
+              i18n("LDAP server returned the error: %1 %2\nThe LDAP URL was: %3",
                    LdapConnection::errorString(err), extramsg, mServer.url().toDisplayString()));
     }
 }
@@ -179,7 +180,9 @@ void LDAPProtocol::LDAPErr(int err)
 void LDAPProtocol::controlsFromMetaData(LdapControls &serverctrls,
                                         LdapControls &clientctrls)
 {
-    QString oid; bool critical; QByteArray value;
+    QString oid;
+    bool critical;
+    QByteArray value;
     int i = 0;
     while (hasMetaData(QString::fromLatin1("SERVER_CTRL%1").arg(i))) {
         QByteArray val = metaData(QString::fromLatin1("SERVER_CTRL%1").arg(i)).toUtf8();
@@ -247,18 +250,18 @@ void LDAPProtocol::changeCheck(const LdapUrl &url)
 
     if (mConnected) {
         if (server.host() != mServer.host() ||
-                server.port() != mServer.port() ||
-                server.baseDn() != mServer.baseDn() ||
-                server.user() != mServer.user() ||
-                server.bindDn() != mServer.bindDn() ||
-                server.realm() != mServer.realm() ||
-                server.password() != mServer.password() ||
-                server.timeLimit() != mServer.timeLimit() ||
-                server.sizeLimit() != mServer.sizeLimit() ||
-                server.version() != mServer.version() ||
-                server.security() != mServer.security() ||
-                server.auth() != mServer.auth() ||
-                server.mech() != mServer.mech()) {
+            server.port() != mServer.port() ||
+            server.baseDn() != mServer.baseDn() ||
+            server.user() != mServer.user() ||
+            server.bindDn() != mServer.bindDn() ||
+            server.realm() != mServer.realm() ||
+            server.password() != mServer.password() ||
+            server.timeLimit() != mServer.timeLimit() ||
+            server.sizeLimit() != mServer.sizeLimit() ||
+            server.version() != mServer.version() ||
+            server.security() != mServer.security() ||
+            server.auth() != mServer.auth() ||
+            server.mech() != mServer.mech()) {
 
             closeConnection();
             mServer = server;
@@ -274,9 +277,9 @@ void LDAPProtocol::setHost(const QString &host, quint16 port,
                            const QString &user, const QString &password)
 {
     if (mServer.host() != host ||
-            mServer.port() != port ||
-            mServer.user() != user ||
-            mServer.password() != password) {
+        mServer.port() != port ||
+        mServer.user() != user ||
+        mServer.password() != password) {
         closeConnection();
     }
 
@@ -285,13 +288,13 @@ void LDAPProtocol::setHost(const QString &host, quint16 port,
         mServer.setPort(port);
     } else {
         struct servent *pse;
-        if ((pse = getservbyname(mProtocol, "tcp")) == NULL)
+        if ((pse = getservbyname(mProtocol, "tcp")) == NULL) {
             if (mProtocol == "ldaps") {
                 mServer.setPort(636);
             } else {
                 mServer.setPort(389);
             }
-        else {
+        } else {
             mServer.setPort(ntohs(pse->s_port));
         }
     }
@@ -341,9 +344,9 @@ void LDAPProtocol::openConnection()
             return;
         }
         if (retval == KLDAP_INVALID_CREDENTIALS ||
-                retval == KLDAP_INSUFFICIENT_ACCESS ||
-                retval == KLDAP_INAPPROPRIATE_AUTH  ||
-                retval == KLDAP_UNWILLING_TO_PERFORM) {
+            retval == KLDAP_INSUFFICIENT_ACCESS ||
+            retval == KLDAP_INAPPROPRIATE_AUTH  ||
+            retval == KLDAP_UNWILLING_TO_PERFORM) {
 
             if (firstauth && cached) {
                 if (mServer.auth() == LdapServer::SASL) {
