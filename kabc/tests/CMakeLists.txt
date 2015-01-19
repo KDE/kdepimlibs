@@ -196,3 +196,13 @@ kde4_add_unit_test(emailtest TESTNAME kabc-emailtest ${emailtest_SRCS})
 
 target_link_libraries(emailtest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
+
+########### next target ###############
+
+set(langtest_SRCS langtest.cpp)
+
+
+kde4_add_unit_test(langtest TESTNAME kabc-langtest ${langtest_SRCS})
+
+target_link_libraries(langtest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+

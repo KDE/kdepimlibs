@@ -60,6 +60,7 @@ set(kabc_LIB_SRCS
   sound.cpp
   timezone.cpp
   ldifconverter.cpp
+  lang.cpp
   addresseelist.cpp
   vcardconverter.cpp
   vcardtool.cpp
@@ -124,6 +125,7 @@ install(FILES
   field.h
   geo.h
   key.h
+  lang.h
   ldifconverter.h
   lock.h
   locknull.h
