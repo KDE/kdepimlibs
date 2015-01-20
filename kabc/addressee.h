@@ -36,6 +36,7 @@
 #include "kabc/secrecy.h"
 #include "kabc/sound.h"
 #include "kabc/email.h"
+#include "kabc/lang.h"
 #include "kabc/timezone.h"
 #include "kabc/addresseelist.h"  // for typedef QList<Addressee> List;
 
@@ -982,6 +983,9 @@ class KABC_EXPORT Addressee
 
     KABC::Email::List emailList() const;
 
+    void removeLang(const QString &language);
+    void insertLang(const Lang &language);
+    Lang::List langs() const;
 private:
     class Private;
     QSharedDataPointer<Private> d;

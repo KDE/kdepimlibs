@@ -23,6 +23,7 @@
 #include "picture.h"
 #include "secrecy.h"
 #include "sound.h"
+#include "lang.h"
 
 #include <QtCore/QString>
 #include <QtCore/QBuffer>
@@ -181,6 +182,21 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
       card.addLine( createSecrecy( ( *addrIt ).secrecy() ) );
     }
 
+    // LANG only for version == 4.0
+    if ( version == VCard::v4_0 ) {
+        const Lang::List langList = ( *addrIt ).langs();
+        Lang::List::ConstIterator langIt;
+        Lang::List::ConstIterator langEnd( langList.end() );
+        for ( langIt = langList.begin(); langIt != langEnd; ++langIt ) {
+            VCardLine line( QLatin1String( "LANG" ), (*langIt).language() );
+            QMapIterator<QString, QStringList> i((*langIt).parameters());
+            while (i.hasNext()) {
+                i.next();
+                line.addParameter( i.key(), i.value().join(QLatin1String(",")) );
+            }
+            card.addLine( line );
+        }
+    }
     // EMAIL
     const Email::List emailList = ( *addrIt ).emailList();
     Email::List::ConstIterator emailIt;
@@ -550,6 +566,13 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           const QStringList types = ( *lineIt ).parameters( QLatin1String( "type" ) );
           addr.insertEmail( ( *lineIt ).value().toString(),
                             types.contains( QLatin1String( "PREF" ) ), (*lineIt).parameterMap() );
+        }
+        // EMAIL
+        else if ( identifier == QLatin1String( "lang" ) ) {
+            Lang lang;
+            lang.setLanguage(( *lineIt ).value().toString());
+            lang.setParameters((*lineIt).parameterMap());
+            addr.insertLang(lang);
         }
 
         // FN
