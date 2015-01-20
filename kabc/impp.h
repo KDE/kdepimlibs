@@ -47,6 +47,9 @@ public:
 
     bool isValid() const;
 
+    void setAddress(const QString &address);
+    QString address() const;
+
     void setParameters(const QMap<QString, QStringList> &params);
     QMap<QString, QStringList> parameters() const;
 

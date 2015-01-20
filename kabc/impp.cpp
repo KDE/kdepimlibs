@@ -38,8 +38,8 @@ public:
         parameters = other.parameters;
     }
     QMap<QString, QStringList> parameters;
+    QString address;
 };
-
 
 Impp::Impp()
     : d(new Private)
@@ -50,12 +50,12 @@ Impp::Impp()
 Impp::Impp(const Impp &other)
     : d( other.d )
 {
-
 }
 
-Impp::Impp(const QString &lang)
+Impp::Impp(const QString &address)
     : d(new Private)
 {
+    d->address = address;
 }
 
 Impp::~Impp()
@@ -63,10 +63,19 @@ Impp::~Impp()
 
 }
 
-
 bool Impp::isValid() const
 {
-    return !d->language.isEmpty();
+    return !d->address.isEmpty();
+}
+
+void Impp::setAddress(const QString &address)
+{
+    d->address = address;
+}
+
+QString Impp::address() const
+{
+    return d->address;
 }
 
 void Impp::setParameters(const QMap<QString, QStringList> &params)
@@ -81,7 +90,7 @@ QMap<QString, QStringList> Impp::parameters() const
 
 bool Impp::operator==(const Impp &other) const
 {
-    return (d->parameters == other.parameters()) && (d->language == other.language());
+    return (d->parameters == other.parameters()) && (d->address == other.address());
 }
 
 bool Impp::operator!=(const Impp &other) const
@@ -102,7 +111,7 @@ QString Impp::toString() const
 {
     QString str;
     str += QString::fromLatin1( "Impp {\n" );
-    //str += QString::fromLatin1( "    type: %1\n" ).arg( d->language );
+    str += QString::fromLatin1( "    address: %1\n" ).arg( d->address );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
@@ -117,13 +126,13 @@ QString Impp::toString() const
 }
 
 
-QDataStream &KABC::operator<<(QDataStream &s, const Impp &lang)
+QDataStream &KABC::operator<<(QDataStream &s, const Impp &impp)
 {
-    return s << lang.d->parameters;
+    return s << impp.d->parameters;
 }
 
-QDataStream &KABC::operator>>(QDataStream &s, Impp &lang)
+QDataStream &KABC::operator>>(QDataStream &s, Impp &impp)
 {
-    s >> lang.d->parameters;
+    s >> impp.d->parameters;
     return s;
 }
