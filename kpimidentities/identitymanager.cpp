@@ -309,11 +309,11 @@ void IdentityManager::readConfig( KConfig *config )
     identity.readConfig( configGroup );
     //Don't load invalid identity
     if (!identity.isNull() && !identity.primaryEmailAddress().isEmpty()) {
-        mIdentities << identity;
         if ( !haveDefault && identity.uoid() == defaultIdentity ) {
           haveDefault = true;
           identity.setIsDefault( true );
         }
+        mIdentities << identity;
     }
   }
 
