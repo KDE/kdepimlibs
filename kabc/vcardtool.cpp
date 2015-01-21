@@ -432,7 +432,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
     }
 
     // X-
-    const QStringList customs = ( *addrIt ).customs();
+    const QStringList customs = ( *addrIt ).customs();    
     for ( strIt = customs.begin(); strIt != customs.end(); ++strIt ) {
       QString identifier = QLatin1String( "X-" ) +
                                  ( *strIt ).left( ( *strIt ).indexOf( QLatin1Char( ':' ) ) );
@@ -470,12 +470,22 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
         }
       }
 
-      VCardLine line( identifier, value );
-      if ( version == VCard::v2_1 && needsEncoding( value ) ) {
-        line.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
-        line.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+      if (identifier.toLower() == QLatin1String( "x-kaddressbook-x-anniversary" ) && version == VCard::v4_0) {
+          // ANNIVERSARY
+          if (!value.isEmpty()) {
+              const QDate date = QDate::fromString( value, Qt::ISODate );
+              QDateTime dt = QDateTime(date);
+              dt.setTime(QTime());
+              card.addLine( VCardLine( QLatin1String( "ANNIVERSARY" ), createDateTime( dt ) ) );
+          }
+      } else {
+          VCardLine line( identifier, value );
+          if ( version == VCard::v2_1 && needsEncoding( value ) ) {
+              line.addParameter( QLatin1String( "charset" ), QLatin1String( "UTF-8" ) );
+              line.addParameter( QLatin1String( "encoding" ), QLatin1String( "QUOTED-PRINTABLE" ) );
+          }
+          card.addLine( line );
       }
-      card.addLine( line );
     }
 
     vCardList.append( card );
