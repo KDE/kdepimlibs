@@ -571,7 +571,7 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           addr.insertEmail( ( *lineIt ).value().toString(),
                             types.contains( QLatin1String( "PREF" ) ), (*lineIt).parameterMap() );
         }
-        // EMAIL
+        // LANG
         else if ( identifier == QLatin1String( "lang" ) ) {
             Lang lang;
             lang.setLanguage(( *lineIt ).value().toString());
