@@ -563,7 +563,12 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
         else if ( identifier == QLatin1String( "bday" ) ) {
           addr.setBirthday( parseDateTime( ( *lineIt ).value().toString() ) );
         }
-
+        // ANNIVERSARY
+        else if ( identifier == QLatin1String( "anniversary" ) ) {
+            const QString t = ( *lineIt ).value().toString();
+            const QDateTime dt(parseDateTime( t ));
+            addr.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"), dt.date().toString(Qt::ISODate) );
+        }
         // CATEGORIES
         else if ( identifier == QLatin1String( "categories" ) ) {
           const QStringList categories = splitString( commaSep, ( *lineIt ).value().toString() );
@@ -866,7 +871,6 @@ QDateTime VCardTool::parseDateTime( const QString &str ) const
     date = QDate( str.left( 4 ).toInt(), str.mid( 5, 2 ).toInt(),
                   str.mid( 8, 2 ).toInt() );
   }
-
   // does it also contain a time ? (Note: mm, ss are optional according ISO-8601)
   int timeStart = str.indexOf( QLatin1Char( 'T' ) );
   if ( timeStart >= 0 ) {
