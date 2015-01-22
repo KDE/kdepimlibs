@@ -28,7 +28,11 @@ public:
     /**
      * This enum is used to determe the url type.
      */
-    enum UrlType { invalid = 0, message = 1, directory = 2 };
+    enum UrlType {
+        invalid = 0,
+        message = 1,
+        directory = 2
+    };
 
     /**
      * Constructor

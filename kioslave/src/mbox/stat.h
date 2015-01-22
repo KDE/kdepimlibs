@@ -35,12 +35,16 @@ public:
     /**
      * Empty constructor
      */
-    Stat()  {}
+    Stat()
+    {
+    }
 
     /**
      * Emtpy destructor
      */
-    ~Stat() {}
+    ~Stat()
+    {
+    }
 
     /**
      * This functions gives information with a given UrlInfo.

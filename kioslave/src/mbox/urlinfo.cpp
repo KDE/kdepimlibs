@@ -25,9 +25,9 @@
 #include <QString>
 
 UrlInfo::UrlInfo(const QUrl &url, const UrlType type)
-    : m_type(invalid),
-      m_filename(new QString),
-      m_id(new QString)
+    : m_type(invalid)
+    , m_filename(new QString)
+    , m_id(new QString)
 {
     calculateInfo(url, type);
 }

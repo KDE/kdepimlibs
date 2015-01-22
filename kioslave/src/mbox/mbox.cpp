@@ -55,8 +55,8 @@ int kdemain(int argc, char *argv[])
 }
 
 MBoxProtocol::MBoxProtocol(const QByteArray &arg1, const QByteArray &arg2)
-    : KIO::SlaveBase("mbox2", arg1, arg2),
-      m_errorState(true)
+    : KIO::SlaveBase("mbox2", arg1, arg2)
+    , m_errorState(true)
 {
 }
 
@@ -157,4 +157,3 @@ void MBoxProtocol::emitError(int _errno, const QString &arg)
     m_errorState = true;
     error(_errno, arg);
 }
-

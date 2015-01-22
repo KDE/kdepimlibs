@@ -32,16 +32,16 @@
 #include <utime.h>
 
 ReadMBox::ReadMBox(const UrlInfo *info, MBoxProtocol *parent, bool onlynew, bool savetime)
-    : MBoxFile(info, parent),
-      m_file(0),
-      m_stream(0),
-      m_atend(true),
-      m_prev_time(0),
-      m_only_new(onlynew),
-      m_savetime(savetime),
-      m_status(false),
-      m_prev_status(false),
-      m_header(true)
+    : MBoxFile(info, parent)
+    , m_file(0)
+    , m_stream(0)
+    , m_atend(true)
+    , m_prev_time(0)
+    , m_only_new(onlynew)
+    , m_savetime(savetime)
+    , m_status(false)
+    , m_prev_status(false)
+    , m_header(true)
 {
     if (m_info->type() == UrlInfo::invalid) {
         m_mbox->emitError(KIO::ERR_DOES_NOT_EXIST, info->url());
@@ -96,7 +96,7 @@ bool ReadMBox::nextLine()
         return true;
     } else if (m_only_new) {
         if (m_header && m_current_line.left(7) == QLatin1String("Status:") &&
-                ! m_current_line.contains(QLatin1String("U")) && ! m_current_line.contains(QLatin1String("N"))) {
+            ! m_current_line.contains(QLatin1String("U")) && ! m_current_line.contains(QLatin1String("N"))) {
             m_status = false;
         }
     }
@@ -192,13 +192,16 @@ void ReadMBox::close()
         return;
     }
 
-    delete m_stream; m_stream = 0;
+    delete m_stream;
+    m_stream = 0;
     m_file->close();
-    delete m_file; m_file = 0;
+    delete m_file;
+    m_file = 0;
 
     if (m_prev_time) {
         const QByteArray ba = QFile::encodeName(m_info->filename());
         utime(ba.constData(), m_prev_time);
-        delete m_prev_time; m_prev_time = 0;
+        delete m_prev_time;
+        m_prev_time = 0;
     }
 }

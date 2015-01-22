@@ -21,8 +21,8 @@
 #include <assert.h>
 
 MBoxFile::MBoxFile(const UrlInfo *info, MBoxProtocol *parent)
-    : m_info(info),
-      m_mbox(parent)
+    : m_info(info)
+    , m_mbox(parent)
 {
     assert(m_info);
 }

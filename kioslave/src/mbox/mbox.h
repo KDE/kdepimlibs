@@ -33,7 +33,7 @@ public:
     /**
      * Constructor, for the parameters,  See KIO::SlaveBase
      */
-    MBoxProtocol(const QByteArray &, const QByteArray &);
+    MBoxProtocol(const QByteArray &arg1, const QByteArray &arg2);
     /**
      * Empty destructor
      */
@@ -77,4 +77,3 @@ private:
 };
 
 #endif
-
