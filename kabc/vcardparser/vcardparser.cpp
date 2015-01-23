@@ -260,6 +260,10 @@ QByteArray VCardParser::createVCards( const VCard::List &list )
     text.append( "BEGIN:VCARD\r\n" );
 
     idents = ( *cardIt ).identifiers();
+    //VERSION must be first
+    if (idents.contains(QLatin1String("VERSION"))) {
+        idents.swap(idents.indexOf(QLatin1String("VERSION")),0);
+    }
     for ( identIt = idents.constBegin(); identIt != idents.constEnd(); ++identIt ) {
       lines = ( *cardIt ).lines( ( *identIt ) );
 

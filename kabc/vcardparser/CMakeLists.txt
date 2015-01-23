@@ -3,7 +3,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/kabc)
 
 ########### next target ###############
-
+if (0)
 set(testroundtrip_SRCS testroundtrip.cpp)
 
 qt4_add_resources(testroundtrip_SRCS testroundtrip.qrc)
@@ -11,7 +11,7 @@ qt4_add_resources(testroundtrip_SRCS testroundtrip.qrc)
 kde4_add_unit_test(testroundtrip TESTNAME kabc-vcardroundtriptest ${testroundtrip_SRCS})
 
 target_link_libraries(testroundtrip kabc ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
+endif()
 ########### next target ###############
 
 set(testread_SRCS testread.cpp)
