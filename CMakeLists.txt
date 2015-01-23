@@ -9,10 +9,10 @@ if (KDEPIMLIBS_SUPERBUILD)
 # This CMakeLists.txt is a "superbuild" for the frameworks.
 # This means it can be used to build them all standalone one-by-one.
 # This is useful to compile all them with one command.
-
 # use mkdir build && cd build && cmake -DKDEPIMLIBS_SUPERBUILD=TRUE ../ && make -j8 sb_all
 
 include(SuperBuild.cmake)
+
 
 sb_add_project(akonadi)
 sb_add_project(akonadi-mime)
