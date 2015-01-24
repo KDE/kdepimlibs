@@ -934,6 +934,7 @@ static bool isCryptoPart( Content* content )
          ( lowerSubType == "pgp-encrypted" ||
            lowerSubType == "pgp-signature" ||
            lowerSubType == "pkcs7-mime" ||
+           lowerSubType == "x-pkcs7-mime" ||
            lowerSubType == "pkcs7-signature" ||
            lowerSubType == "x-pkcs7-signature" ||
            ( lowerSubType == "octet-stream" &&
@@ -1004,9 +1005,11 @@ bool isEncrypted( Message *message )
   if ( contentType->isSubtype( "encrypted" ) ||
        contentType->isSubtype( "pgp-encrypted" ) ||
        contentType->isSubtype( "pkcs7-mime" ) ||
+       contentType->isSubtype( "x-pkcs7-mime" ) ||
        message->mainBodyPart( "multipart/encrypted" ) ||
        message->mainBodyPart( "application/pgp-encrypted" ) ||
-       message->mainBodyPart( "application/pkcs7-mime" ) ) {
+       message->mainBodyPart( "application/pkcs7-mime" ) ||
+       message->mainBodyPart( "application/x-pkcs7-mime" ) ) {
     return true;
   }
 

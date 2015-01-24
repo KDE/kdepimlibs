@@ -585,6 +585,16 @@ void MessageTest::testOutlookAttachmentNaming()
   KMime::setUseOutlookAttachmentEncoding( false );
 }
 
+void MessageTest::testEncryptedMails()
+{
+  KMime::Message::Ptr msg = readAndParseMail("x-pkcs7.mbox");
+  QVERIFY(msg->attachments().count() == 1);
+  QVERIFY(KMime::isEncrypted(msg.get()) == true);
+  QVERIFY(KMime::isInvitation(msg.get()) == false);
+  QVERIFY(KMime::isSigned(msg.get()) == false);
+}
+
+
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
 {
   QFile file( TEST_DATA_DIR"/mails/" + mailFile );
