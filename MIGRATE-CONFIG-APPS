@@ -2,3 +2,4 @@ Migrate configrc done:
 - kidentitymanager (emailidentities) 
 - mailtransport (mailtransports)
 - akonadi-mime/SpecialMailCollections (specialmailcollectionsrc)
+- akonadi (first-runrc)
