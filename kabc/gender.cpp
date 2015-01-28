@@ -35,11 +35,11 @@ public:
     Private( const Private &other )
         : QSharedData( other )
     {
-        parameters = other.parameters;
+        comment = other.comment;
         gender = other.gender;
     }
-    QMap<QString, QStringList> parameters;
     QString gender;
+    QString comment;
 };
 
 Gender::Gender()
@@ -64,14 +64,9 @@ Gender::~Gender()
 
 }
 
-QMap<QString, QStringList> Gender::parameters() const
-{
-    return d->parameters;
-}
-
 bool Gender::operator==(const Gender &other) const
 {
-    return (d->parameters == other.parameters()) && (d->gender == other.gender());
+    return (d->comment == other.comment()) && (d->gender == other.gender());
 }
 
 bool Gender::operator!=(const Gender &other) const
@@ -93,22 +88,9 @@ QString Gender::toString() const
     QString str;
     str += QString::fromLatin1( "Gender {\n" );
     str += QString::fromLatin1( "    gender: %1\n" ).arg( d->gender );
-    if (!d->parameters.isEmpty()) {
-        QMapIterator<QString, QStringList> i(d->parameters);
-        QString param;
-        while (i.hasNext()) {
-            i.next();
-            param += QString::fromLatin1("%1 %2").arg(i.key()).arg(i.value().join(QLatin1String(",")));
-        }
-        str += QString::fromLatin1( "    parameters: %1\n" ).arg( param );
-    }
+    str += QString::fromLatin1( "    comment: %1\n" ).arg( d->comment );
     str += QString::fromLatin1( "}\n" );
     return str;
-}
-
-void Gender::setParameters(const QMap<QString, QStringList> &params)
-{
-    d->parameters = params;
 }
 
 void Gender::setGender(const QString &gender)
@@ -121,19 +103,29 @@ QString Gender::gender() const
     return d->gender;
 }
 
+void Gender::setComment(const QString &comment)
+{
+    d->comment = comment;
+}
+
+QString Gender::comment() const
+{
+    return d->comment;
+}
+
 bool Gender::isValid() const
 {
-  return !d->gender.isEmpty();
+  return !d->gender.isEmpty() || !d->comment.isEmpty();
 }
 
 QDataStream &KABC::operator<<(QDataStream &s, const Gender &gender)
 {
-    return s << gender.d->parameters << gender.d->gender;
+    return s << gender.d->comment << gender.d->gender;
 }
 
 QDataStream &KABC::operator>>(QDataStream &s, Gender &gender)
 {
-    s >> gender.d->parameters >> gender.d->gender;
+    s >> gender.d->comment >> gender.d->gender;
     return s;
 }
 

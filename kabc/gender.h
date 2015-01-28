@@ -50,10 +50,10 @@ public:
     void setGender(const QString &gender);
     QString gender() const;
 
-    bool isValid() const;
+    void setComment(const QString &comment);
+    QString comment() const;
 
-    void setParameters(const QMap<QString, QStringList> &params);
-    QMap<QString, QStringList> parameters() const;
+    bool isValid() const;
 
     bool operator==( const Gender &other ) const;
     bool operator!=( const Gender &other ) const;

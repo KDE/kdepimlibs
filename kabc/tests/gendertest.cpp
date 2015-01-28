@@ -38,22 +38,20 @@ void GenderTest::shouldHaveDefaultValue()
     KABC::Gender gender;
     QVERIFY(!gender.isValid());
     QVERIFY(gender.gender().isEmpty());
-    QVERIFY(gender.parameters().isEmpty());
+    QVERIFY(gender.comment().isEmpty());
 }
 
 void GenderTest::shouldAssignValue()
 {
     const QString genderStr(QLatin1String("F"));
-    QMap<QString, QStringList> params;
-    params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
-    params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
     KABC::Gender gender(genderStr);
-    gender.setParameters(params);
+    const QString commentStr(QLatin1String("foo"));
+    gender.setComment(commentStr);
     QVERIFY(gender.isValid());
     QVERIFY(!gender.gender().isEmpty());
     QCOMPARE(gender.gender(), genderStr);
-    QVERIFY(!gender.parameters().isEmpty());
-    QCOMPARE(gender.parameters(), params);
+    QVERIFY(!gender.comment().isEmpty());
+    QCOMPARE(gender.comment(), commentStr);
 }
 
 void GenderTest::shouldAssignExternal()
@@ -72,10 +70,7 @@ void GenderTest::shouldSerialized()
     KABC::Gender result;
     const QString genderStr(QLatin1String("H"));
     gender.setGender(genderStr);
-    QMap<QString, QStringList> params;
-    params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
-    params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
-    gender.setParameters(params);
+    gender.setComment(QLatin1String("foo"));
 
 
     QByteArray data;
@@ -94,10 +89,7 @@ void GenderTest::shouldEqualGender()
     KABC::Gender result;
     const QString genderStr(QLatin1String("H"));
     gender.setGender(genderStr);
-    QMap<QString, QStringList> params;
-    params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
-    params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
-    gender.setParameters(params);
+    gender.setComment(QLatin1String("foo"));
 
     result = gender;
     QVERIFY( gender == result );
