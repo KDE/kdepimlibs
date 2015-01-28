@@ -24,6 +24,7 @@
 #include "secrecy.h"
 #include "sound.h"
 #include "lang.h"
+#include "gender.h"
 
 #include <QtCore/QString>
 #include <QtCore/QBuffer>
@@ -470,6 +471,19 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
         }
       }
 
+      if (version == VCard::v4_0) {
+          // GENDER
+          const Gender gender = ( *addrIt ).gender();
+          if (gender.isValid()) {
+              VCardLine line( QLatin1String( "GENDER" ), gender.gender() );
+              QMapIterator<QString, QStringList> i(gender.parameters());
+              while (i.hasNext()) {
+                  i.next();
+                  line.addParameter( i.key(), i.value().join(QLatin1String(",")) );
+              }
+              card.addLine( line );
+          }
+      }
       if (identifier.toLower() == QLatin1String( "x-kaddressbook-x-anniversary" ) && version == VCard::v4_0) {
           // ANNIVERSARY
           if (!value.isEmpty()) {
@@ -586,6 +600,14 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
           addr.insertEmail( ( *lineIt ).value().toString(),
                             types.contains( QLatin1String( "PREF" ) ), (*lineIt).parameterMap() );
         }
+        // GENDER
+        else if ( identifier == QLatin1String( "gender" ) ) {
+            Gender gender;
+            gender.setGender(( *lineIt ).value().toString());
+            gender.setParameters((*lineIt).parameterMap());
+            addr.setGender(gender);
+        }
+
         // LANG
         else if ( identifier == QLatin1String( "lang" ) ) {
             Lang lang;

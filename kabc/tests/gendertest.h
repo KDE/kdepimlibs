@@ -29,6 +29,13 @@ class GenderTest : public QObject
 public:
     explicit GenderTest(QObject *parent = 0);
     ~GenderTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldAssignValue();
+    void shouldAssignExternal();
+    void shouldSerialized();
+    void shouldEqualGender();
 };
 
 #endif // GENDERTEST_H

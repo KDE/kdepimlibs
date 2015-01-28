@@ -127,6 +127,7 @@ install(FILES
   geo.h
   key.h
   lang.h
+  gender.h
   ldifconverter.h
   lock.h
   locknull.h

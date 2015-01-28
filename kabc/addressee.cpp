@@ -97,6 +97,7 @@ class Addressee::Private : public QSharedData
       mKeys = other.mKeys;
       mEmails = other.mEmails;
       mLangs =  other.mLangs;
+      mGender = other.mGender;
       mCategories = other.mCategories;
       mCustomFields = other.mCustomFields;
 
@@ -143,6 +144,7 @@ class Addressee::Private : public QSharedData
     Key::List mKeys;
     Email::List mEmails;
     Lang::List mLangs;
+    KABC::Gender mGender;
     QStringList mCategories;
     QMap<QString, QString> mCustomFields;
 
@@ -356,6 +358,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
 
   if (d->mLangs != addressee.d->mLangs) {
       kDebug() << "langs differs";
+      return false;
+  }
+  if (d->mGender != addressee.d->mGender) {
+      kDebug() << "gender differs";
       return false;
   }
   return true;
@@ -1340,7 +1346,21 @@ void Addressee::insertLang( const Lang &language )
 
 Lang::List Addressee::langs() const
 {
-  return d->mLangs;
+    return d->mLangs;
+}
+
+void Addressee::setGender(const Gender &gender)
+{
+    if ( gender == d->mGender )
+      return;
+
+    d->mEmpty = false;
+    d->mGender = gender;
+}
+
+Gender Addressee::gender() const
+{
+    return d->mGender;
 }
 
 void Addressee::insertPhoneNumber( const PhoneNumber &phoneNumber )
@@ -1540,6 +1560,7 @@ QString Addressee::toString() const
   str += QString::fromLatin1( "  Logo: %1\n" ).arg( logo().toString() );
   str += QString::fromLatin1( "  Photo: %1\n" ).arg( photo().toString() );
   str += QString::fromLatin1( "  Sound: %1\n" ).arg( sound().toString() );
+  str += QString::fromLatin1( "  Gender: %1\n" ).arg( gender().toString() );
 
   str += QLatin1String( "  Emails {\n" );
   const Email::List listEmail = d->mEmails;
@@ -1995,6 +2016,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.customs();
   s << a.d->mKeys;
   s << a.d->mLangs;
+  s << a.d->mGender;
   return s;
 }
 
@@ -2036,6 +2058,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   a.setCustoms( customFields );
   s >> a.d->mKeys;
   s >> a.d->mLangs;
+  s >> a.d->mGender;
   a.d->mEmpty = false;
 
   return s;
