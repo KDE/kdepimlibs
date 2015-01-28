@@ -50,6 +50,7 @@ set(kabc_LIB_SRCS
   email.cpp
   field.cpp
   geo.cpp
+  gender.cpp
   key.cpp
   ldapdn.cpp
   ldif.cpp
