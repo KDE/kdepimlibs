@@ -144,7 +144,7 @@ class Addressee::Private : public QSharedData
     Key::List mKeys;
     Email::List mEmails;
     Lang::List mLangs;
-    KABC::Gender mGender;
+    Gender mGender;
     QStringList mCategories;
     QMap<QString, QString> mCustomFields;
 

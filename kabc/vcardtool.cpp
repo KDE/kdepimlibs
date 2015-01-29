@@ -609,11 +609,12 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
                 Gender gender;
                 if (genderStr.at(0) != QLatin1Char(';')) {
                     gender.setGender(genderStr.at(0));
-                    //TODO add comment
+                    if (genderStr.length() > 2) {
+                        gender.setComment(genderStr.right(genderStr.length()-2));
+                    }
                 } else {
-
+                    gender.setComment(genderStr.right(genderStr.length()-1));
                 }
-                //TODO comment
                 addr.setGender(gender);
             }
         }
