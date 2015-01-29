@@ -1581,6 +1581,7 @@ QString Addressee::toString() const
   str += QString::fromLatin1( "  Photo: %1\n" ).arg( photo().toString() );
   str += QString::fromLatin1( "  Sound: %1\n" ).arg( sound().toString() );
   str += QString::fromLatin1( "  Gender: %1\n" ).arg( gender().toString() );
+  str += QString::fromLatin1( "  Kind: %1\n" ).arg(kind());
 
   str += QLatin1String( "  Emails {\n" );
   const Email::List listEmail = d->mEmails;
