@@ -128,11 +128,11 @@ QString Impp::toString() const
 
 QDataStream &KABC::operator<<(QDataStream &s, const Impp &impp)
 {
-    return s << impp.d->parameters;
+    return s << impp.d->parameters << impp.d->address;
 }
 
 QDataStream &KABC::operator>>(QDataStream &s, Impp &impp)
 {
-    s >> impp.d->parameters;
+    s >> impp.d->parameters >> impp.d->address;
     return s;
 }
