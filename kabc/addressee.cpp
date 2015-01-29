@@ -145,6 +145,7 @@ class Addressee::Private : public QSharedData
     Email::List mEmails;
     Lang::List mLangs;
     Gender mGender;
+    QString mKind;
     QStringList mCategories;
     QMap<QString, QString> mCustomFields;
 
@@ -364,6 +365,11 @@ bool Addressee::operator==( const Addressee &addressee ) const
       kDebug() << "gender differs";
       return false;
   }
+  if ( d->mKind != addressee.d->mKind ) {
+    kDebug() << "kind differs";
+    return false;
+  }
+
   return true;
 }
 
@@ -413,6 +419,20 @@ QString Addressee::name() const
 QString Addressee::nameLabel()
 {
   return i18n( "Name" );
+}
+
+void Addressee::setKind( const QString &kind )
+{
+  if ( kind == d->mKind )
+    return;
+
+  d->mEmpty = false;
+  d->mKind = kind;
+}
+
+QString Addressee::kind() const
+{
+  return d->mKind;
 }
 
 
@@ -2017,6 +2037,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mKeys;
   s << a.d->mLangs;
   s << a.d->mGender;
+  s << a.d->mKind;
   return s;
 }
 
@@ -2059,6 +2080,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mKeys;
   s >> a.d->mLangs;
   s >> a.d->mGender;
+  s >> a.d->mKind;
   a.d->mEmpty = false;
 
   return s;

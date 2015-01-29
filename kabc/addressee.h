@@ -991,6 +991,8 @@ class KABC_EXPORT Addressee
     void setGender(const KABC::Gender &gender);
     KABC::Gender gender() const;
 
+    QString kind() const;
+    void setKind(const QString &kind);
 private:
     class Private;
     QSharedDataPointer<Private> d;
