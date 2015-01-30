@@ -34,8 +34,7 @@
 #include <kio/global.h>
 #include <klocalizedstring.h>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 void TransactionState::setFailedFatally(int code, const QString &msg)
 {
@@ -48,12 +47,13 @@ void TransactionState::setMailFromFailed(const QString &addr, const Response &r)
 {
     setFailed();
     mErrorCode = KIO::ERR_NO_CONTENT;
-    if (addr.isEmpty())
+    if (addr.isEmpty()) {
         mErrorMessage = i18n("The server did not accept a blank sender address.\n"
                              "%1",  r.errorMessage());
-    else
+    } else {
         mErrorMessage = i18n("The server did not accept the sender address \"%1\".\n"
-                             "%2",  addr ,  r.errorMessage());
+                             "%2",  addr,  r.errorMessage());
+    }
 }
 
 void TransactionState::addRejectedRecipient(const RecipientRejection &r)
@@ -70,11 +70,10 @@ void TransactionState::setDataCommandSucceeded(bool succeeded, const Response &r
     mDataResponse = r;
     if (!succeeded) {
         setFailed();
-    } else if (failed())
+    } else if (failed()) {
         // can happen with pipelining: the server accepts the DATA, but
         // we don't want to send the data, so force a connection
         // shutdown:
-    {
         setFailedFatally();
     }
 }
@@ -106,17 +105,18 @@ QString TransactionState::errorMessage() const
 
     if (haveRejectedRecipients()) {
         QStringList recip;
-        for (RejectedRecipientList::const_iterator it = mRejectedRecipients.begin() ;
-                it != mRejectedRecipients.end() ; ++it) {
+        for (RejectedRecipientList::const_iterator it = mRejectedRecipients.begin();
+             it != mRejectedRecipients.end() ; ++it) {
             recip.push_back((*it).recipient + QLatin1String(" (") + (*it).reason + QLatin1Char(')'));
         }
         return i18n("Message sending failed since the following recipients were rejected by the server:\n"
                     "%1", recip.join(QLatin1String("\n")));
     }
 
-    if (!dataCommandSucceeded())
+    if (!dataCommandSucceeded()) {
         return i18n("The attempt to start sending the message content failed.\n"
                     "%1", mDataResponse.errorMessage());
+    }
 
     // ### what else?
     return i18n("Unhandled error condition. Please send a bug report.");

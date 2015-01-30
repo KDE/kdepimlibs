@@ -19,4 +19,3 @@
 
 #include "smtp_debug.h"
 Q_LOGGING_CATEGORY(SMTP_LOG, "log_smtp")
-

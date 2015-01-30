@@ -32,8 +32,7 @@
 #include "capabilities.h"
 #include "response.h"
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 Capabilities Capabilities::fromResponse(const Response &ehlo)
 {
@@ -41,8 +40,8 @@ Capabilities Capabilities::fromResponse(const Response &ehlo)
 
     // first, check whether the response was valid and indicates success:
     if (!ehlo.isOk()
-            || ehlo.code() / 10 != 25 // ### restrict to 250 only?
-            || ehlo.lines().empty()) {
+        || ehlo.code() / 10 != 25 // ### restrict to 250 only?
+        || ehlo.lines().empty()) {
         return c;
     }
 
@@ -61,7 +60,8 @@ void Capabilities::add(const QString &cap, bool replace)
     if (tokens.empty()) {
         return;
     }
-    QString name = tokens.front(); tokens.pop_front();
+    QString name = tokens.front();
+    tokens.pop_front();
     add(name, tokens, replace);
 }
 
@@ -90,8 +90,8 @@ QString Capabilities::createSpecialResponse(bool tls) const
     if (have("SIZE")) {
         bool ok = false;
         unsigned int size = 0;
-        if (!mCapabilities[ QLatin1String("SIZE") ].isEmpty()) {
-            size = mCapabilities[ QLatin1String("SIZE") ].front().toUInt(&ok);
+        if (!mCapabilities[QLatin1String("SIZE")].isEmpty()) {
+            size = mCapabilities[QLatin1String("SIZE")].front().toUInt(&ok);
         }
         if (ok && !size) {
             result.push_back(QLatin1String("SIZE=*"));    // any size
@@ -108,7 +108,7 @@ QStringList Capabilities::saslMethodsQSL() const
 {
     QStringList result;
     for (QMap<QString, QStringList>::const_iterator it = mCapabilities.begin();
-            it != mCapabilities.end(); ++it) {
+         it != mCapabilities.end(); ++it) {
         if (it.key() == QLatin1String("AUTH")) {
             result += it.value();
         } else if (it.key().startsWith(QLatin1String("AUTH="))) {
@@ -121,4 +121,3 @@ QStringList Capabilities::saslMethodsQSL() const
 }
 
 } // namespace KioSMTP
-

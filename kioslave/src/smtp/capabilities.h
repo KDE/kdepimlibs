@@ -36,15 +36,16 @@
 
 #include <QStringList>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class Response;
 
 class Capabilities
 {
 public:
-    Capabilities() {}
+    Capabilities()
+    {
+    }
 
     static Capabilities fromResponse(const Response &response);
 

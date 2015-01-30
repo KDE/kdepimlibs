@@ -37,15 +37,18 @@
 
 class QUrl;
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class Request
 {
 public:
     Request()
-        : mSubject(QLatin1String("missing subject")), mEmitHeaders(true),
-          m8Bit(false), mSize(0) {}
+        : mSubject(QLatin1String("missing subject"))
+        , mEmitHeaders(true)
+        , m8Bit(false)
+        , mSize(0)
+    {
+    }
 
     static Request fromURL(const QUrl &url);
 

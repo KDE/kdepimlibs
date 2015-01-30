@@ -38,8 +38,7 @@
 
 #include <assert.h>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 Request Request::fromURL(const QUrl &url)
 {
@@ -79,9 +78,10 @@ Request Request::fromURL(const QUrl &url)
             request.set8BitBody(value.toUpper() == QLatin1String("8BIT"));
         } else if (key == QLatin1String("size")) {
             request.setSize(value.toUInt());
-        } else
+        } else {
             qCWarning(SMTP_LOG) << "while parsing query: unknown query item \""
                                 << key << "\" with value \"" << value << "\"" << endl;
+        }
     }
 
     return request;
@@ -94,10 +94,11 @@ QByteArray Request::heloHostnameCString() const
 
 static bool isUsAscii(const QString &s)
 {
-    for (int i = 0 ; i < s.length() ; ++i)
+    for (int i = 0 ; i < s.length() ; ++i) {
         if (s[i].unicode() > 127) {
             return false;
         }
+    }
     return true;
 }
 
@@ -161,10 +162,9 @@ static QByteArray formatSubject(QString s)
 {
     if (isUsAscii(s)) {
         return s.remove(QLatin1Char('\n')).toLatin1();    // don't break header folding,
-    }
-    // so remove any line break
-    // that happen to be around
-    else {
+    } else {
+        // so remove any line break
+        // that happen to be around
         return rfc2047Encode(s);
     }
 }

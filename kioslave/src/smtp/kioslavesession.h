@@ -23,8 +23,7 @@
 #include "smtpsessioninterface.h"
 #include "smtp.h"
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class KioSlaveSession : public SMTPSessionInterface
 {

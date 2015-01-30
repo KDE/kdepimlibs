@@ -43,8 +43,7 @@
 
 #include <assert.h>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 static const sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
@@ -62,35 +61,48 @@ static const sasl_callback_t callbacks[] = {
 //
 
 Command::Command(SMTPSessionInterface *smtp, int flags)
-    : mSMTP(smtp),
-      mComplete(false), mNeedResponse(false), mFlags(flags)
+    : mSMTP(smtp)
+    , mComplete(false)
+    , mNeedResponse(false)
+    , mFlags(flags)
 {
     assert(smtp);
 }
 
-Command::~Command() {}
-
-bool Command::processResponse(const Response &r, TransactionState *)
+Command::~Command()
 {
+}
+
+bool Command::processResponse(const Response &r, TransactionState *ts)
+{
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = false;
     return r.isOk();
 }
 
-void Command::ungetCommandLine(const QByteArray &, TransactionState *)
+void Command::ungetCommandLine(const QByteArray &cmdLine, TransactionState *ts)
 {
+    Q_UNUSED(cmdLine)
+    Q_UNUSED(ts)
     mComplete = false;
 }
 
 Command *Command::createSimpleCommand(int which, SMTPSessionInterface *smtp)
 {
     switch (which) {
-    case STARTTLS: return new StartTLSCommand(smtp);
-    case DATA:     return new DataCommand(smtp);
-    case NOOP:     return new NoopCommand(smtp);
-    case RSET:     return new RsetCommand(smtp);
-    case QUIT:     return new QuitCommand(smtp);
-    default:       return 0;
+    case STARTTLS:
+        return new StartTLSCommand(smtp);
+    case DATA:
+        return new DataCommand(smtp);
+    case NOOP:
+        return new NoopCommand(smtp);
+    case RSET:
+        return new RsetCommand(smtp);
+    case QUIT:
+        return new QuitCommand(smtp);
+    default:
+        return 0;
     }
 }
 
@@ -117,16 +129,18 @@ bool Command::haveCapability(const char *cap) const
 // EHLO / HELO
 //
 
-QByteArray EHLOCommand::nextCommandLine(TransactionState *)
+QByteArray EHLOCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mNeedResponse = true;
     mComplete = mEHLONotSupported;
     const char *cmd = mEHLONotSupported ? "HELO " : "EHLO " ;
     return cmd + QUrl::toAce(mHostname) + "\r\n";   //krazy:exclude=qclasses
 }
 
-bool EHLOCommand::processResponse(const Response &r, TransactionState *)
+bool EHLOCommand::processResponse(const Response &r, TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mNeedResponse = false;
     // "command not {recognized,implemented}" response:
     if (r.code() == 500 || r.code() == 502) {
@@ -156,15 +170,17 @@ bool EHLOCommand::processResponse(const Response &r, TransactionState *)
 // STARTTLS - rfc 3207
 //
 
-QByteArray StartTLSCommand::nextCommandLine(TransactionState *)
+QByteArray StartTLSCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     return "STARTTLS\r\n";
 }
 
-bool StartTLSCommand::processResponse(const Response &r, TransactionState *)
+bool StartTLSCommand::processResponse(const Response &r, TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mNeedResponse = false;
     if (r.code() != 220) {
         mSMTP->error(r.errorCode(),
@@ -199,15 +215,16 @@ AuthCommand::AuthCommand(SMTPSessionInterface *smtp,
                          const char *mechanisms,
                          const QString &aFQDN,
                          KIO::AuthInfo &ai)
-    : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline),
-      mAi(&ai),
-      mFirstTime(true)
+    : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+    , mAi(&ai)
+    , mFirstTime(true)
 {
     mMechusing = 0;
     int result;
     conn = 0;
     client_interact = 0;
-    mOut = 0; mOutlen = 0;
+    mOut = 0;
+    mOutlen = 0;
     mOneStep = false;
 
     const QByteArray ba = aFQDN.toLatin1();
@@ -221,10 +238,11 @@ AuthCommand::AuthCommand(SMTPSessionInterface *smtp,
         result = sasl_client_start(conn, mechanisms,
                                    &client_interact, &mOut, &mOutlen, &mMechusing);
 
-        if (result == SASL_INTERACT)
+        if (result == SASL_INTERACT) {
             if (!saslInteract(client_interact)) {
                 return;
             };
+        }
     } while (result == SASL_INTERACT);
     if (result != SASL_CONTINUE && result != SASL_OK) {
         SASLERROR
@@ -254,7 +272,7 @@ bool AuthCommand::saslInteract(void *in)
     //window for getting this info
     for (; interact->id != SASL_CB_LIST_END; interact++) {
         if (interact->id == SASL_CB_AUTHNAME ||
-                interact->id == SASL_CB_PASS) {
+            interact->id == SASL_CB_PASS) {
 
             if (mAi->username.isEmpty() || mAi->password.isEmpty()) {
                 if (!mSMTP->openPasswordDialog(*mAi)) {
@@ -275,17 +293,18 @@ bool AuthCommand::saslInteract(void *in)
             const QByteArray baUserName = mAi->username.toUtf8();
             interact->result = strdup(baUserName.constData());
             interact->len = strlen((const char *) interact->result);
+            break;
         }
-        break;
         case SASL_CB_PASS: {
             qCDebug(SMTP_LOG) << "SASL_CB_PASS: [HIDDEN]";
             const QByteArray baPassword = mAi->password.toUtf8();
             interact->result = strdup(baPassword.constData());
             interact->len = strlen((const char *) interact->result);
+            break;
         }
-        break;
         default:
-            interact->result = NULL; interact->len = 0;
+            interact->result = NULL;
+            interact->len = 0;
             break;
         }
         interact++;
@@ -293,19 +312,22 @@ bool AuthCommand::saslInteract(void *in)
     return true;
 }
 
-bool AuthCommand::doNotExecute(const TransactionState *) const
+bool AuthCommand::doNotExecute(const TransactionState *ts) const
 {
+    Q_UNUSED(ts)
     return !mMechusing;
 }
 
-void AuthCommand::ungetCommandLine(const QByteArray &s, TransactionState *)
+void AuthCommand::ungetCommandLine(const QByteArray &s, TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mUngetSASLResponse = s;
     mComplete = false;
 }
 
-QByteArray AuthCommand::nextCommandLine(TransactionState *)
+QByteArray AuthCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mNeedResponse = true;
     QByteArray cmd;
 
@@ -336,10 +358,11 @@ QByteArray AuthCommand::nextCommandLine(TransactionState *)
                                       challenge.size(),
                                       &client_interact,
                                       &mOut, &mOutlen);
-            if (result == SASL_INTERACT)
+            if (result == SASL_INTERACT) {
                 if (!saslInteract(client_interact)) {
                     return "";
                 };
+            }
         } while (result == SASL_INTERACT);
         if (result != SASL_CONTINUE && result != SASL_OK) {
             qCDebug(SMTP_LOG) << "sasl_client_step failed with: " << result;
@@ -355,25 +378,28 @@ QByteArray AuthCommand::nextCommandLine(TransactionState *)
     return cmd;
 }
 
-bool AuthCommand::processResponse(const Response &r, TransactionState *)
+bool AuthCommand::processResponse(const Response &r, TransactionState *ts)
 {
+    Q_UNUSED(ts)
     if (!r.isOk()) {
-        if (mFirstTime)
+        if (mFirstTime) {
             if (haveCapability("AUTH")) {
                 QString chooseADifferentMsg(i18n("Choose a different authentication method."));
                 mSMTP->error(KIO::ERR_COULD_NOT_LOGIN,
                              (mMechusing ? i18n("Your SMTP server does not support %1.", QString::fromLatin1(mMechusing))
                               : i18n("Your SMTP server does not support (unspecified method)."))
                              + QLatin1Char('\n') + chooseADifferentMsg + QLatin1Char('\n') + r.errorMessage());
-            } else
+            } else {
                 mSMTP->error(KIO::ERR_COULD_NOT_LOGIN,
                              i18n("Your SMTP server does not support authentication.\n"
                                   "%1", r.errorMessage()));
-        else
+            }
+        } else {
             mSMTP->error(KIO::ERR_COULD_NOT_LOGIN,
                          i18n("Authentication failed.\n"
                               "Most likely the password is wrong.\n"
                               "%1", r.errorMessage()));
+        }
         return false;
     }
     mFirstTime = false;
@@ -386,8 +412,9 @@ bool AuthCommand::processResponse(const Response &r, TransactionState *)
 // MAIL FROM:
 //
 
-QByteArray MailFromCommand::nextCommandLine(TransactionState *)
+QByteArray MailFromCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     QByteArray cmdLine = "MAIL FROM:<" + mAddr + '>';
@@ -417,8 +444,9 @@ bool MailFromCommand::processResponse(const Response &r, TransactionState *ts)
 // RCPT TO:
 //
 
-QByteArray RcptToCommand::nextCommandLine(TransactionState *)
+QByteArray RcptToCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     return "RCPT TO:<" + mAddr + ">\r\n";
@@ -451,8 +479,9 @@ QByteArray DataCommand::nextCommandLine(TransactionState *ts)
     return "DATA\r\n";
 }
 
-void DataCommand::ungetCommandLine(const QByteArray &, TransactionState *ts)
+void DataCommand::ungetCommandLine(const QByteArray &cmd, TransactionState *ts)
 {
+    Q_UNUSED(cmd)
     assert(ts);
     mComplete = false;
     ts->setDataCommandIssued(false);
@@ -475,8 +504,9 @@ bool DataCommand::processResponse(const Response &r, TransactionState *ts)
 //
 // DATA (data transfer)
 //
-void TransferCommand::ungetCommandLine(const QByteArray &cmd, TransactionState *)
+void TransferCommand::ungetCommandLine(const QByteArray &cmd, TransactionState *ts)
 {
+    Q_UNUSED(ts)
     if (cmd.isEmpty()) {
         return;    // don't change state when we can't detect the unget in
     }
@@ -578,7 +608,7 @@ QByteArray TransferCommand::prepare(const QByteArray &ba)
         qCDebug(SMTP_LOG) << "performing dotstuffing and LF->CRLF transformation";
         return dotstuff_lf2crlf(ba, mLastChar);
     } else {
-        mLastChar = ba[ ba.size() - 1 ];
+        mLastChar = ba[ba.size() - 1];
         return ba;
     }
 }
@@ -587,8 +617,9 @@ QByteArray TransferCommand::prepare(const QByteArray &ba)
 // NOOP
 //
 
-QByteArray NoopCommand::nextCommandLine(TransactionState *)
+QByteArray NoopCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     return "NOOP\r\n";
@@ -598,8 +629,9 @@ QByteArray NoopCommand::nextCommandLine(TransactionState *)
 // RSET
 //
 
-QByteArray RsetCommand::nextCommandLine(TransactionState *)
+QByteArray RsetCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     return "RSET\r\n";
@@ -609,12 +641,12 @@ QByteArray RsetCommand::nextCommandLine(TransactionState *)
 // QUIT
 //
 
-QByteArray QuitCommand::nextCommandLine(TransactionState *)
+QByteArray QuitCommand::nextCommandLine(TransactionState *ts)
 {
+    Q_UNUSED(ts)
     mComplete = true;
     mNeedResponse = true;
     return "QUIT\r\n";
 }
 
 } // namespace KioSMTP
-

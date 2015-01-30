@@ -38,8 +38,7 @@
 
 class QUrl;
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 class Response;
 class TransactionState;
 class Command;

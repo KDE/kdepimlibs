@@ -38,8 +38,7 @@ extern "C" {
 
 #include <kio/authinfo.h>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class Response;
 class TransactionState;
@@ -90,7 +89,11 @@ public:
     virtual ~Command();
 
     enum Type {
-        STARTTLS, DATA, NOOP, RSET, QUIT
+        STARTTLS,
+        DATA,
+        NOOP,
+        RSET,
+        QUIT
     };
 
     static Command *createSimpleCommand(int which, SMTPSessionInterface *smtp);
@@ -107,8 +110,9 @@ public:
        whether the response isOk(). */
     virtual bool processResponse(const Response &response, TransactionState *ts = 0);
 
-    virtual bool doNotExecute(const TransactionState *) const
+    virtual bool doNotExecute(const TransactionState *ts) const
     {
+        Q_UNUSED(ts)
         return false;
     }
 
@@ -164,12 +168,14 @@ class EHLOCommand : public Command
 {
 public:
     EHLOCommand(SMTPSessionInterface *smtp, const QString &hostname)
-        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline),
-          mEHLONotSupported(false),
-          mHostname(hostname.trimmed()) {}
+        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+        , mEHLONotSupported(false)
+        , mHostname(hostname.trimmed())
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
-    bool processResponse(const Response &response, TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *ts);
 private:
     bool mEHLONotSupported;
     QString mHostname;
@@ -179,10 +185,12 @@ class StartTLSCommand : public Command
 {
 public:
     StartTLSCommand(SMTPSessionInterface *smtp)
-        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline) {}
+        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
-    bool processResponse(const Response &response, TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *ts);
 };
 
 class AuthCommand : public Command
@@ -192,9 +200,9 @@ public:
                 const QString &aFQDN, KIO::AuthInfo &ai);
     ~AuthCommand();
     bool doNotExecute(const TransactionState *ts) const;
-    QByteArray nextCommandLine(TransactionState *);
-    void ungetCommandLine(const QByteArray &cmdLine, TransactionState *);
-    bool processResponse(const Response &response, TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
+    void ungetCommandLine(const QByteArray &cmdLine, TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *ts);
 private:
     bool saslInteract(void *in);
 
@@ -216,10 +224,15 @@ class MailFromCommand : public Command
 public:
     MailFromCommand(SMTPSessionInterface *smtp, const QByteArray &addr,
                     bool eightBit = false, unsigned int size = 0)
-        : Command(smtp), mAddr(addr), m8Bit(eightBit), mSize(size) {}
+        : Command(smtp)
+        , mAddr(addr)
+        , m8Bit(eightBit)
+        , mSize(size)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
-    bool processResponse(const Response &response, TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *ts);
 private:
     QByteArray mAddr;
     bool m8Bit;
@@ -230,10 +243,13 @@ class RcptToCommand : public Command
 {
 public:
     RcptToCommand(SMTPSessionInterface *smtp, const QByteArray &addr)
-        : Command(smtp), mAddr(addr) {}
+        : Command(smtp)
+        , mAddr(addr)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
-    bool processResponse(const Response &response, TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *ts);
 private:
     QByteArray mAddr;
 };
@@ -244,11 +260,13 @@ class DataCommand : public Command
 {
 public:
     DataCommand(SMTPSessionInterface *smtp)
-        : Command(smtp, OnlyLastInPipeline) {}
+        : Command(smtp, OnlyLastInPipeline)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
     void ungetCommandLine(const QByteArray &cmd, TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *);
+    bool processResponse(const Response &response, TransactionState *ts);
 };
 
 /** Handles the data transfer following a successful DATA command */
@@ -256,13 +274,17 @@ class TransferCommand : public Command
 {
 public:
     TransferCommand(SMTPSessionInterface *smtp, const QByteArray &initialBuffer)
-        : Command(smtp, OnlyFirstInPipeline),
-          mUngetBuffer(initialBuffer), mLastChar('\n'), mWasComplete(false) {}
+        : Command(smtp, OnlyFirstInPipeline)
+        , mUngetBuffer(initialBuffer)
+        , mLastChar('\n')
+        , mWasComplete(false)
+    {
+    }
 
     bool doNotExecute(const TransactionState *ts) const;
-    QByteArray nextCommandLine(TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
     void ungetCommandLine(const QByteArray &cmd, TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *);
+    bool processResponse(const Response &response, TransactionState *ts);
 private:
     QByteArray prepare(const QByteArray &ba);
     QByteArray mUngetBuffer;
@@ -274,27 +296,33 @@ class NoopCommand : public Command
 {
 public:
     NoopCommand(SMTPSessionInterface *smtp)
-        : Command(smtp, OnlyLastInPipeline) {}
+        : Command(smtp, OnlyLastInPipeline)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
 };
 
 class RsetCommand : public Command
 {
 public:
     RsetCommand(SMTPSessionInterface *smtp)
-        : Command(smtp, CloseConnectionOnError) {}
+        : Command(smtp, CloseConnectionOnError)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
 };
 
 class QuitCommand : public Command
 {
 public:
     QuitCommand(SMTPSessionInterface *smtp)
-        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline) {}
+        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+    {
+    }
 
-    QByteArray nextCommandLine(TransactionState *);
+    QByteArray nextCommandLine(TransactionState *ts);
 };
 
 } // namespace KioSMTP

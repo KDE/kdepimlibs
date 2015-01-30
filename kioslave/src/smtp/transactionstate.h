@@ -36,8 +36,7 @@
 
 #include <QString>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 /**
    @short A class modelling an SMTP transaction's state
@@ -63,10 +62,14 @@ namespace KioSMTP
 class TransactionState
 {
 public:
-    struct RecipientRejection {
+    struct RecipientRejection
+    {
         RecipientRejection(const QString &who = QString(),
                            const QString &why = QString())
-            : recipient(who), reason(why) {}
+            : recipient(who)
+            , reason(why)
+        {
+        }
         QString recipient;
         QString reason;
 #ifdef KIOSMTP_COMPARATORS
@@ -79,14 +82,16 @@ public:
     typedef QList<RecipientRejection> RejectedRecipientList;
 
     TransactionState(bool rcptToDenyIsFailure = true)
-        : mErrorCode(0),
-          mRcptToDenyIsFailure(rcptToDenyIsFailure),
-          mAtLeastOneRecipientWasAccepted(false),
-          mDataCommandIssued(false),
-          mDataCommandSucceeded(false),
-          mFailed(false),
-          mFailedFatally(false),
-          mComplete(false) {}
+        : mErrorCode(0)
+        , mRcptToDenyIsFailure(rcptToDenyIsFailure)
+        , mAtLeastOneRecipientWasAccepted(false)
+        , mDataCommandIssued(false)
+        , mDataCommandSucceeded(false)
+        , mFailed(false)
+        , mFailedFatally(false)
+        , mComplete(false)
+    {
+    }
 
     /**
      * @return whether the transaction failed (e.g. the server

@@ -38,17 +38,18 @@ typedef QList<QByteArray> QCStringList;
 
 class QString;
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class Response
 {
 public:
     Response()
-        : mCode(0),
-          mValid(true),
-          mSawLastLine(false),
-          mWellFormed(true) {}
+        : mCode(0)
+        , mValid(true)
+        , mSawLastLine(false)
+        , mWellFormed(true)
+    {
+    }
 
     void parseLine(const char *line)
     {

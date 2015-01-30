@@ -36,8 +36,7 @@
 
 #include <QByteArray>
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 void Response::parseLine(const char *line, int len)
 {
@@ -46,9 +45,8 @@ void Response::parseLine(const char *line, int len)
         return;    // don't bother
     }
 
-    if (isComplete())
+    if (isComplete()) {
         // if the response is already complete, there can't be another line
-    {
         mValid = false;
     }
 

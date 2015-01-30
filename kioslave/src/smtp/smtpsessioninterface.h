@@ -25,13 +25,11 @@
 class QByteArray;
 class QString;
 
-namespace KIO
-{
+namespace KIO {
 class AuthInfo;
 }
 
-namespace KioSMTP
-{
+namespace KioSMTP {
 
 class Response;
 
@@ -53,7 +51,7 @@ public:
     virtual bool startSsl() = 0;
 
     /** Parse capability response from the server. */
-    void parseFeatures(const KioSMTP::Response &);
+    void parseFeatures(const KioSMTP::Response &ehloResponse);
 
     /** Returns the server reported capabilities. */
     const Capabilities &capabilities() const;

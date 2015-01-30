@@ -21,7 +21,8 @@
 
 using namespace KioSMTP;
 
-KioSMTP::KioSlaveSession::KioSlaveSession(SMTPProtocol *protocol): m_protocol(protocol)
+KioSMTP::KioSlaveSession::KioSlaveSession(SMTPProtocol *protocol)
+    : m_protocol(protocol)
 {
 }
 

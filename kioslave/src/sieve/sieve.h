@@ -28,7 +28,12 @@
 class kio_sieveResponse
 {
 public:
-    enum responses { NONE, KEY_VAL_PAIR, ACTION, QUANTITY };
+    enum responses {
+        NONE,
+        KEY_VAL_PAIR,
+        ACTION,
+        QUANTITY
+    };
 
     kio_sieveResponse();
 
@@ -60,8 +65,16 @@ class kio_sieveProtocol : public KIO::TCPSlaveBase
 {
 
 public:
-    enum connectionModes { NORMAL, CONNECTION_ORIENTED };
-    enum Results { OK, NO, BYE, OTHER };
+    enum connectionModes {
+        NORMAL,
+        CONNECTION_ORIENTED
+    };
+    enum Results {
+        OK,
+        NO,
+        BYE,
+        OTHER
+    };
 
     kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
     virtual ~kio_sieveProtocol();
