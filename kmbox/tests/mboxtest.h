@@ -44,6 +44,7 @@ class MboxTest : public QObject
     void testEntries();
     void testPurge();
     void testHeaders();
+    void testReadOnlyMbox();
 
   private:
     QString fileName();

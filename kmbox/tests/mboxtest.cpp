@@ -455,6 +455,52 @@ void MboxTest::testHeaders()
   }
 }
 
+void MboxTest::testReadOnlyMbox()
+{
+  { // create a non-empty mbox file
+    MBox mbox;
+    QVERIFY(mbox.load(fileName()));
+    mbox.appendMessage(mMail1);
+    mbox.appendMessage(mMail2);
+    QVERIFY(mbox.save());
+  }
+
+  QFile::Permissions perm = QFile::permissions(fileName());
+  QFile::setPermissions(fileName(), QFile::ReadOwner);
+
+  MBox mbox;
+  QVERIFY(mbox.load(fileName()));
+  QVERIFY(mbox.isReadOnly());
+
+  // this still works since we could save it to a different file
+  MBoxEntry entry = mbox.appendMessage(mMail1);
+
+  QVERIFY(!mbox.save());  // original mbox is read-only
+
+  // reading back the appended message (from memory)
+  QByteArray msg = mbox.readRawMessage(entry);
+  QVERIFY(!msg.isEmpty());
+
+  // read first message from disk
+  MBoxEntry::List list = mbox.entries();
+  msg = mbox.readRawMessage(list.at(0));
+  QVERIFY(!msg.isEmpty());
+
+  QVERIFY(!mbox.purge(list));  // original mbox is read-only
+
+  QString tmpSaved = mTempDir->name() + QLatin1String("tempSaved.mbox");
+  QVERIFY(mbox.save(tmpSaved));  // other mbox file can be written
+
+  MBox savedMbox;
+  savedMbox.setReadOnly();
+  QVERIFY(savedMbox.isReadOnly());
+  QVERIFY(savedMbox.load(tmpSaved));
+  QVERIFY(!savedMbox.save());
+
+  // set back to initial permissions
+  QFile::setPermissions(fileName(), perm);
+}
+
 void MboxTest::cleanupTestCase()
 {
   mTempDir->unlink();

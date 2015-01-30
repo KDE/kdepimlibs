@@ -121,8 +121,7 @@ class KMBOX_EXPORT MBox
 
     /**
      * Removes all messages for the given mbox entries from the current reference file
-     * (i.e. the file that is loaded with load( const QString & ) or the file
-     * from the last save( const QString & ) call if that was not the same file).
+     * (the file that is loaded with load( const QString & ).
      * This method will first check if all lines at the offsets are actually
      * separator lines if this is not then no message will be deleted to prevent
      * corruption.
@@ -135,7 +134,7 @@ class KMBOX_EXPORT MBox
      *                     the @c second member is the entry with the new (current) offset
      *
      * @return true if all offsets refer to a mbox separator line and a file was
-     *         loaded, false otherewhise. In the latter the physical file has
+     *         loaded, false otherwise. If the latter, the physical file has
      *         not changed.
      */
     bool purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries = 0 );
@@ -198,7 +197,7 @@ class KMBOX_EXPORT MBox
      * new LockType cannot be used (e.g. the lockfile executable could not be
      * found) the LockType will not be changed.
      * @param ltype the locktype to set
-     * This method will not do anything if the mbox obeject is currently locked
+     * This method will not do anything if the mbox object is currently locked
      * to make sure that it doesn't leave a locked file for one of the lockfile
      * / mutt_dotlock methods.
      */
@@ -230,6 +229,33 @@ class KMBOX_EXPORT MBox
      * @see lock()
      */
     bool unlock();
+
+    /**
+     * Set the access mode of the mbox file to read only.
+     *
+     * If this is set to true, the mbox file can only be read from disk.
+     * When the mbox file given in load() can not be opened in readWrite mode,
+     * but can be opened in readOnly mode, this flag is automatically set to true.
+     * You can still append messages, which are stored in memory
+     * until save() is called, but the mbox can not be saved/purged to itself.
+     * However it is possible to save it to a different file.
+     * @param ro the readOnly flag to use
+     *
+     * @see save( const QString & )
+     *
+     * @since 4.14.5
+     */
+    void setReadOnly(bool ro = true);
+
+    /**
+     * Returns if the current access mode is set to readOnly.
+     *
+     * The access mode can either be set explicitely with setReadOnly() or
+     * implicitely by calling load() on a readOnly file.
+     *
+     * @since 4.14.5
+     */
+    bool isReadOnly() const;
 
   private:
     //@cond PRIVATE

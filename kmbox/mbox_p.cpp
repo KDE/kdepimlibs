@@ -45,10 +45,17 @@ bool MBoxPrivate::open()
     return true;  // already open
   }
 
-  if ( !mMboxFile.open( QIODevice::ReadWrite ) ) { // messages file
-    kDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
-             << mMboxFile.errorString();
-    return false;
+  QIODevice::OpenMode mode = mReadOnly ? QIODevice::ReadOnly : QIODevice::ReadWrite;
+
+  if ( !mMboxFile.open( mode ) ) { // messages file
+    // failed to open readWrite -> try to open readOnly
+    if ( !mMboxFile.open( QIODevice::ReadOnly ) ) {
+      kDebug() << "Cannot open mbox file `" << mMboxFile.fileName() << "' FileError:"
+               << mMboxFile.errorString();
+      return false;
+    } else {
+      mReadOnly = true;
+    }
   }
 
   return true;

@@ -313,8 +313,8 @@ static bool lessThanByOffset( const MBoxEntry &left, const MBoxEntry &right )
 
 bool MBox::purge( const MBoxEntry::List &deletedEntries, QList<MBoxEntry::Pair> *movedEntries )
 {
-  if ( d->mMboxFile.fileName().isEmpty() ) {
-    return false; // No file loaded yet.
+  if ( d->mMboxFile.fileName().isEmpty() || d->mReadOnly ) {
+    return false; // No file loaded yet or it's readOnly
   }
 
   if ( deletedEntries.isEmpty() ) {
@@ -569,6 +569,10 @@ bool MBox::save( const QString &fileName )
   if ( !fileName.isEmpty() && KUrl( fileName ).toLocalFile() != d->mMboxFile.fileName() ) {
     if ( !d->mMboxFile.copy( fileName ) ) {
       return false;
+    } else {
+      // if the original file was read-only, also the copied file is read-only
+      // Let's make it writable now
+      QFile::setPermissions(fileName, d->mMboxFile.permissions() | QFile::WriteOwner);
     }
 
     if ( d->mAppendedEntries.size() == 0 ) {
@@ -588,6 +592,9 @@ bool MBox::save( const QString &fileName )
     // are still valid for the original file.
     return true;
   }
+
+  if ( d->mReadOnly )
+    return false;
 
   if ( d->mAppendedEntries.size() == 0 ) {
     return true; // Nothing to do.
@@ -691,4 +698,14 @@ bool MBox::unlock()
   d->mMboxFile.close();
 
   return !d->mFileLocked;
+}
+
+void MBox::setReadOnly(bool ro)
+{
+  d->mReadOnly = ro;
+}
+
+bool MBox::isReadOnly() const
+{
+  return d->mReadOnly;
 }
