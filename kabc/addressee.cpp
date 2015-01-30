@@ -45,7 +45,6 @@ static bool matchBinaryPattern( int value, int pattern );
 template <class L>
 static bool listEquals( const QList<L>&, const QList<L>& );
 static bool listEquals( const QStringList&, const QStringList& );
-static bool emailsEquals( const QStringList&, const QStringList& );
 
 class Addressee::Private : public QSharedData
 {
@@ -2124,28 +2123,6 @@ bool listEquals( const QStringList &list, const QStringList &pattern )
   const int numberOfElement( list.count() );
   for ( int i = 0; i < numberOfElement; ++i ) {
     if ( !pattern.contains( list[ i ] ) ) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool emailsEquals( const QStringList &list, const QStringList &pattern )
-{
-  if ( list.count() != pattern.count() )
-    return false;
-
-  if ( list.isEmpty() )
-    return true;
-
-  if ( list.first() != pattern.first() )
-    return false;
-
-  QStringList::ConstIterator it;
-  QStringList::ConstIterator end( list.constEnd() );
-  for ( it = list.constBegin(); it != end; ++it ) {
-    if ( !pattern.contains( *it ) ) {
       return false;
     }
   }
