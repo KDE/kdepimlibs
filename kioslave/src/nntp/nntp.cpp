@@ -66,8 +66,8 @@ int kdemain(int argc, char **argv)
 /****************** NNTPProtocol ************************/
 
 NNTPProtocol::NNTPProtocol(const QByteArray &pool, const QByteArray &app, bool isSSL)
-    : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL),
-      isAuthenticated(false)
+    : TCPSlaveBase((isSSL ? "nntps" : "nntp"), pool, app, isSSL)
+    , isAuthenticated(false)
 {
     DBG << "=============> NNTPProtocol::NNTPProtocol";
 
@@ -187,7 +187,7 @@ void NNTPProtocol::get(const QUrl &url)
     finished();
 }
 
-void NNTPProtocol::put(const QUrl &/*url*/, int /*permissions*/, KIO::JobFlags /*flags*/)
+void NNTPProtocol::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 {
     if (!nntp_open()) {
         return;
@@ -431,15 +431,21 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
             long last = 0;
             access = 0;
             if (((pos = line.indexOf(' ')) > 0 || (pos = line.indexOf('\t')) > 0) &&
-                    ((pos2 = line.indexOf(' ', pos + 1)) > 0 || (pos2 = line.indexOf('\t', pos + 1)) > 0)) {
+                ((pos2 = line.indexOf(' ', pos + 1)) > 0 || (pos2 = line.indexOf('\t', pos + 1)) > 0)) {
                 last = line.left(pos).toLongLong();
                 long first = line.mid(pos + 1, pos2 - pos - 1).toLongLong();
                 msg_cnt = abs(last - first + 1);
                 // group access rights
                 switch (line[pos2 + 1]) {
-                case 'n': access = 0; break;
-                case 'm': access = S_IWUSR | S_IWGRP; break;
-                case 'y': access = S_IWUSR | S_IWGRP | S_IWOTH; break;
+                case 'n':
+                    access = 0;
+                    break;
+                case 'm':
+                    access = S_IWUSR | S_IWGRP;
+                    break;
+                case 'y':
+                    access = S_IWUSR | S_IWGRP | S_IWOTH;
+                    break;
                 }
             } else {
                 msg_cnt = 0;
@@ -712,13 +718,13 @@ bool NNTPProtocol::fetchGroupXOVER(unsigned long first, bool &notSupported)
                 continue;
             }
             QString atomStr;
-            if ((*it).endsWith(QLatin1String("full")))
+            if ((*it).endsWith(QLatin1String("full"))) {
                 if ((*it2).trimmed().isEmpty()) {
                     atomStr = (*it).left((*it).indexOf(QLatin1Char(':')) + 1);    // strip of the 'full' suffix
                 } else {
                     atomStr = (*it2).trimmed();
                 }
-            else {
+            } else {
                 atomStr = (*it) + QLatin1Char(' ') + (*it2).trimmed();
             }
             entry.insert(udsType++, atomStr);
@@ -963,7 +969,7 @@ void NNTPProtocol::unexpected_response(int res_code, const QString &command)
 int NNTPProtocol::evalResponse(char *data, ssize_t &len)
 {
     if (!waitForResponse(responseTimeout())) {
-        error(ERR_SERVER_TIMEOUT , mHost);
+        error(ERR_SERVER_TIMEOUT, mHost);
         nntp_close();
         return -1;
     }

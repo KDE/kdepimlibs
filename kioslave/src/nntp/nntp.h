@@ -29,7 +29,7 @@
     - RFC 3977: Network News Transfer Protocol
     - RFC 4643: Network News Transfer Protocol (NNTP) Extension for Authentication
 */
-class NNTPProtocol: public KIO::TCPSlaveBase
+class NNTPProtocol : public KIO::TCPSlaveBase
 {
 
 public:
