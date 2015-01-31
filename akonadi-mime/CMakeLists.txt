@@ -17,7 +17,8 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.6.0")
-set(KDEPIMLIBS_VERSION "4.80.0")
+set(KDEPIMLIBS_VERSION "4.81.0")
+set(KF5_MIME_VERSION "4.81.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_version.h"
@@ -28,7 +29,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
 ########### Find packages ###########
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime CONFIG REQUIRED)
+find_package(KF5Mime ${KF5_MIME_VERSION} CONFIG REQUIRED)
 
 set( SHARED_MIME_INFO_MINIMUM_VERSION "0.40" )
 find_package( SharedMimeInfo REQUIRED )
