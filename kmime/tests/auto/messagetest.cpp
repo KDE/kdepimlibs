@@ -20,6 +20,8 @@
 #include "messagetest.h"
 #include <qtest_kde.h>
 #include <kdebug.h>
+#include <akonadi/kmime/messageflags.h>
+#include <akonadi/item.h>
 
 using namespace KMime;
 
@@ -594,6 +596,32 @@ void MessageTest::testEncryptedMails()
   QVERIFY(KMime::isSigned(msg.get()) == false);
 }
 
+void MessageTest::testCopyFlags()
+{
+  {
+    KMime::Message::Ptr msg = readAndParseMail("x-pkcs7.mbox");
+
+    Akonadi::Item item;
+    Akonadi::MessageFlags::copyMessageFlags(*msg, item);
+
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::Signed) == false);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::Encrypted) == true);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasInvitation) == false);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasAttachment) == false);
+  }
+
+  {
+    KMime::Message::Ptr msg = readAndParseMail("signed.mbox");
+
+    Akonadi::Item item;
+    Akonadi::MessageFlags::copyMessageFlags(*msg, item);
+
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::Signed) == true);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::Encrypted) == false);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasInvitation) == true);
+    QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasAttachment) == true);
+  }
+}
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const
 {

@@ -1,5 +1,8 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
+# to find akonadi-kmime_export.h and akonadi_export.h
+include_directories(${CMAKE_BINARY_DIR}/akonadi/kmime ${CMAKE_BINARY_DIR}/akonadi)
+
 macro(add_kmime_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
@@ -20,3 +23,5 @@ add_kmime_test(codectest.cpp)
 add_kmime_test(rfc2231test.cpp)
 add_kmime_test(base64benchmark.cpp)
 add_kmime_test(sizetest.cpp)
+
+target_link_libraries(messagetest akonadi-kde akonadi-kmime)

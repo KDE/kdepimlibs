@@ -414,6 +414,14 @@ KMIME_EXPORT QString removeBidiControlChars( const QString &input );
 KMIME_EXPORT bool hasAttachment( Content* content );
 
 /**
+ * Returns whether or not the given MIME node contains an invitation part. This function will
+ *  recursively parse the MIME tree looking for a suitable invitation and return true if one is found.
+ * @param content the MIME node to parse
+ * @since 4.14.6
+ */
+KMIME_EXPORT bool hasInvitation( Content* content );
+
+/**
  * Returns whether or not the given @p message is partly or fully signed.
  *
  * @param message the message to check for being signed

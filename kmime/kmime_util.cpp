@@ -975,6 +975,27 @@ bool hasAttachment( Content* content )
   return false;
 }
 
+bool hasInvitation( Content *content )
+{
+  if ( !content ) {
+    return false;
+  }
+
+  if ( isInvitation(content) ) {
+    return true;
+  }
+
+  // Ok, content itself is not an invitation. now we deal with multiparts
+  if ( content->contentType()->isMultipart() ) {
+    Q_FOREACH ( Content *child, content->contents() ) {
+      if ( hasInvitation( child ) ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool isSigned( Message *message )
 {
   if ( !message ) {

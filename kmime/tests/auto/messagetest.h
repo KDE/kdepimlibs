@@ -46,6 +46,7 @@ class MessageTest : public QObject
     void testEncapsulatedMessages();
     void testOutlookAttachmentNaming();
     void testEncryptedMails();
+    void testCopyFlags();
 
   private:
     KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;

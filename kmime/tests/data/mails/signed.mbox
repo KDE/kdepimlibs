@@ -1,0 +1,100 @@
+From kollix@aon.at Sun Jan 25 12:44:33 2015
+From: Martin Koller <kollix@aon.at>
+To: test@localhost.test
+Subject: test
+Date: Sun, 25 Jan 2015 13:44:33 +0100
+Message-ID: <2598248.iFiatFhcDT@lapi.koller>
+X-KMail-Identity: 511735207
+User-Agent: KMail/4.14.3 (Linux/3.16.7-7-desktop; KDE/4.14.3; x86_64; ; )
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart2295257.OfFvv7xAGP"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+
+
+--nextPart2295257.OfFvv7xAGP
+Content-Type: multipart/mixed; boundary="nextPart3532720.K8MVRkdBcf"
+Content-Transfer-Encoding: quoted-printable
+
+This is a multi-part message in MIME format.
+
+=2D-nextPart3532720.K8MVRkdBcf
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+test
+=2D-nextPart3532720.K8MVRkdBcf
+Content-Disposition: attachment; filename="cal.ics"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/calendar; charset="utf-8"; name="cal.ics"
+
+BEGIN:VCALENDAR
+PRODID:-//K Desktop Environment//NONSGML KOrganizer 4.14.3//EN
+VERSION:2.0
+X-KDE-ICAL-IMPLEMENTATION-VERSION:1.0
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Martin Koller":MAILTO:kollix@aon.at
+DTSTAMP:20150125T124126Z
+ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;
+ CUTYPE=INDIVIDUAL;X-UID=116335000:mailto:test@localhost
+CREATED:20150125T123913Z
+UID:KOrganizer-1427713305.180
+SEQUENCE:2
+LAST-MODIFIED:20150125T124121Z
+SUMMARY:test
+ATTACH;FMTTYPE=text/plain;X-LABEL=test.txt:file:///tmp/test.txt
+DTSTART:20150125T150000Z
+DTEND:20150125T154500Z
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
+=2D-nextPart3532720.K8MVRkdBcf--
+This is a multi-part message in MIME format.
+
+--nextPart3532720.K8MVRkdBcf
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+test
+--nextPart3532720.K8MVRkdBcf
+Content-Disposition: attachment; filename="cal.ics"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/calendar; charset="utf-8"; name="cal.ics"
+
+BEGIN:VCALENDAR
+PRODID:-//K Desktop Environment//NONSGML KOrganizer 4.14.3//EN
+VERSION:2.0
+X-KDE-ICAL-IMPLEMENTATION-VERSION:1.0
+METHOD:REQUEST
+BEGIN:VEVENT
+ORGANIZER;CN="Martin Koller":MAILTO:kollix@aon.at
+DTSTAMP:20150125T124126Z
+ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;
+ CUTYPE=INDIVIDUAL;X-UID=116335000:mailto:test@localhost
+CREATED:20150125T123913Z
+UID:KOrganizer-1427713305.180
+SEQUENCE:2
+LAST-MODIFIED:20150125T124121Z
+SUMMARY:test
+ATTACH;FMTTYPE=text/plain;X-LABEL=test.txt:file:///tmp/test.txt
+DTSTART:20150125T150000Z
+DTEND:20150125T154500Z
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
+--nextPart3532720.K8MVRkdBcf--
+
+--nextPart2295257.OfFvv7xAGP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iD8DBQBUxOUxHmdPoI37D4YRAkbbAJ4wxR9wrFu6t1OvZ2KvtjvGBHsLWQCfTVLn
+BT0BF04iL4Ap/lVapK8G9NA=
+=rJWz
+-----END PGP SIGNATURE-----
+
+--nextPart2295257.OfFvv7xAGP--
+
