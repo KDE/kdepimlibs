@@ -48,3 +48,4 @@ if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
 endif()
 
 add_subdirectory(benchmarker)
+add_subdirectory(messagetests)
