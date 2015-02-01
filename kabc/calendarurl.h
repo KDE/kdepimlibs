@@ -39,7 +39,6 @@ class KABC_EXPORT CalendarUrl
 public:
     CalendarUrl();
     CalendarUrl(const CalendarUrl &other);
-    CalendarUrl(const QString &mail);
 
     ~CalendarUrl();
     enum CalendarType {
