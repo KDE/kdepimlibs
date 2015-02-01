@@ -36,22 +36,16 @@ public:
         : QSharedData( other )
     {
         parameters = other.parameters;
-        mail = other.mail;
+        type = other.type;
     }
     QMap<QString, QStringList> parameters;
-    QString mail;
+    CalendarUrl::CalendarType type;
 };
 
 CalendarUrl::CalendarUrl()
     : d( new Private )
 {
 
-}
-
-CalendarUrl::CalendarUrl(const QString &mail)
-    : d( new Private )
-{
-    d->mail = mail;
 }
 
 CalendarUrl::CalendarUrl( const CalendarUrl &other )
@@ -71,7 +65,7 @@ QMap<QString, QStringList> CalendarUrl::parameters() const
 
 bool CalendarUrl::operator==(const CalendarUrl &other) const
 {
-    return (d->parameters == other.parameters()) && (d->mail == other.mail());
+    return (d->parameters == other.parameters()) && (d->type == other.type());
 }
 
 bool CalendarUrl::operator!=(const CalendarUrl &other) const
@@ -92,7 +86,7 @@ QString CalendarUrl::toString() const
 {
     QString str;
     str += QString::fromLatin1( "CalendarUrl {\n" );
-    str += QString::fromLatin1( "    mail: %1\n" ).arg( d->mail );
+    //TODO str += QString::fromLatin1( "    mail: %1\n" ).arg( d->mail );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
@@ -111,29 +105,30 @@ void CalendarUrl::setParameters(const QMap<QString, QStringList> &params)
     d->parameters = params;
 }
 
-void CalendarUrl::setEmail(const QString &mail)
-{
-    d->mail = mail;
-}
-
-QString CalendarUrl::mail() const
-{
-    return d->mail;
-}
-
 bool CalendarUrl::isValid() const
 {
-  return !d->mail.isEmpty();
+    //TODO
+    return /*!d->mail.isEmpty()*/true;
 }
 
-QDataStream &KABC::operator<<(QDataStream &s, const CalendarUrl &email)
+void CalendarUrl::setType(CalendarUrl::CalendarType type)
 {
-    return s << email.d->parameters << email.d->mail;
+    d->type = type;
 }
 
-QDataStream &KABC::operator>>(QDataStream &s, CalendarUrl &email)
+CalendarUrl::CalendarType CalendarUrl::type() const
 {
-    s >> email.d->parameters >> email.d->mail;
+    return d->type;
+}
+
+QDataStream &KABC::operator<<(QDataStream &s, const CalendarUrl &calUrl)
+{
+    return s << calUrl.d->parameters << calUrl.d->type;
+}
+
+QDataStream &KABC::operator>>(QDataStream &s, CalendarUrl &calUrl)
+{
+    s >> calUrl.d->parameters >> calUrl.d->type;
     return s;
 }
 

@@ -42,13 +42,19 @@ public:
     CalendarUrl(const QString &mail);
 
     ~CalendarUrl();
+    enum CalendarType {
+        FBUrl = 0,
+        CALUri,
+        CALADRUri
+    };
 
     typedef QList<CalendarUrl> List;
 
-    void setEmail(const QString &mail);
-    QString mail() const;
 
     bool isValid() const;
+
+    void setType(CalendarUrl::CalendarType type);
+    CalendarUrl::CalendarType type() const;
 
     void setParameters(const QMap<QString, QStringList> &params);
     QMap<QString, QStringList> parameters() const;
