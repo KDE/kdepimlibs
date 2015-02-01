@@ -21,6 +21,7 @@
 #include "calendarurl.h"
 
 #include <QMap>
+#include <QUrl>
 #include <qstringlist.h>
 
 using namespace KABC;
@@ -37,15 +38,40 @@ public:
     {
         parameters = other.parameters;
         type = other.type;
+        url = other.url;
     }
+    QString typeToString() const;
     QMap<QString, QStringList> parameters;
+    QUrl url;
     CalendarUrl::CalendarType type;
+
 };
 
-CalendarUrl::CalendarUrl()
-    : d( new Private )
+QString CalendarUrl::Private::typeToString() const
 {
+    QString ret;
+    switch(d->type) {
+        case Unknown:
+            ret = QLatin1String("Unknown");
+            break;
+        case FBUrl:
+            ret = QLatin1String("FreeBusy");
+            break;
+        case CALUri:
+            ret = QLatin1String("CalUri");
+            break;
+        case CALADRUri:
+            ret = QLatin1String("Caladruri");
+            break;
+    }
+    return ret;
+}
 
+
+CalendarUrl::CalendarUrl(CalendarUrl::CalendarType type)
+    : d(new Private)
+{
+    d->type = type;
 }
 
 CalendarUrl::CalendarUrl( const CalendarUrl &other )
@@ -65,7 +91,7 @@ QMap<QString, QStringList> CalendarUrl::parameters() const
 
 bool CalendarUrl::operator==(const CalendarUrl &other) const
 {
-    return (d->parameters == other.parameters()) && (d->type == other.type());
+    return (d->parameters == other.parameters()) && (d->type == other.type()) && (d->url == other.url());
 }
 
 bool CalendarUrl::operator!=(const CalendarUrl &other) const
@@ -82,11 +108,13 @@ CalendarUrl &CalendarUrl::operator=(const CalendarUrl &other)
     return *this;
 }
 
+
 QString CalendarUrl::toString() const
 {
     QString str;
     str += QString::fromLatin1( "CalendarUrl {\n" );
-    //TODO str += QString::fromLatin1( "    mail: %1\n" ).arg( d->mail );
+    str += QString::fromLatin1( "    url: %1\n" ).arg( d->url.toString() );
+    str += QString::fromLatin1( "    type: %1\n" ).arg( d->typeToString() );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
@@ -107,8 +135,7 @@ void CalendarUrl::setParameters(const QMap<QString, QStringList> &params)
 
 bool CalendarUrl::isValid() const
 {
-    //TODO
-    return /*!d->mail.isEmpty()*/true;
+    return (d->type != Unknown) && (d->url.isValid());
 }
 
 void CalendarUrl::setType(CalendarUrl::CalendarType type)
@@ -121,14 +148,24 @@ CalendarUrl::CalendarType CalendarUrl::type() const
     return d->type;
 }
 
+void CalendarUrl::setUrl(const QUrl &url)
+{
+    d->url = url;
+}
+
+QUrl CalendarUrl::url() const
+{
+    return d->url;
+}
+
 QDataStream &KABC::operator<<(QDataStream &s, const CalendarUrl &calUrl)
 {
-    return s << calUrl.d->parameters << calUrl.d->type;
+    return s << calUrl.d->parameters << calUrl.d->type << calUrl.d->url;
 }
 
 QDataStream &KABC::operator>>(QDataStream &s, CalendarUrl &calUrl)
 {
-    s >> calUrl.d->parameters >> calUrl.d->type;
+    s >> calUrl.d->parameters >> calUrl.d->type >> calUrl.d->url;
     return s;
 }
 

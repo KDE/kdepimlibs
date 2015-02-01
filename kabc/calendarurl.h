@@ -25,7 +25,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
 #include <QtCore/QMap>
-
+class QUrl;
 /** @short Class that holds a Calendar Url (FBURL/CALADRURI/CALURI)
  *  @since 4.14.6
  */
@@ -37,23 +37,26 @@ class KABC_EXPORT CalendarUrl
     friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const CalendarUrl & );
     friend KABC_EXPORT QDataStream &operator>>( QDataStream &, CalendarUrl & );
 public:
-    CalendarUrl();
+    CalendarUrl(CalendarUrl::CalendarType type);
     CalendarUrl(const CalendarUrl &other);
 
     ~CalendarUrl();
     enum CalendarType {
-        FBUrl = 0,
+        Unknown = 0,
+        FBUrl,
         CALUri,
         CALADRUri
     };
 
     typedef QList<CalendarUrl> List;
 
-
     bool isValid() const;
 
     void setType(CalendarUrl::CalendarType type);
     CalendarUrl::CalendarType type() const;
+
+    void setUrl(const QUrl &url);
+    QUrl url() const;
 
     void setParameters(const QMap<QString, QStringList> &params);
     QMap<QString, QStringList> parameters() const;
