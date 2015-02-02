@@ -99,6 +99,7 @@ class Addressee::Private : public QSharedData
       mGender = other.mGender;
       mCategories = other.mCategories;
       mCustomFields = other.mCustomFields;
+      mCalendarUrl = other.mCalendarUrl;
 
 #ifndef KDEPIM_NO_KRESOURCES
       mResource = other.mResource;
@@ -147,6 +148,7 @@ class Addressee::Private : public QSharedData
     QString mKind;
     QStringList mCategories;
     QMap<QString, QString> mCustomFields;
+    CalendarUrl::List mCalendarUrl;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -368,6 +370,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
     kDebug() << "kind differs";
     return false;
   }
+  if ( !listEquals( d->mCalendarUrl, addressee.d->mCalendarUrl ) ) {
+    kDebug() << "calendarUrl differs";
+    return false;
+  }
 
   return true;
 }
@@ -427,6 +433,15 @@ void Addressee::setKind( const QString &kind )
 
   d->mEmpty = false;
   d->mKind = kind;
+}
+
+void Addressee::insertCalendarUrl(const CalendarUrl &calendarUrl)
+{
+    d->mEmpty = false;
+    //TODO verify that there is not same calendarurl
+    if (calendarUrl.isValid()) {
+        d->mCalendarUrl.append(calendarUrl);
+    }
 }
 
 QString Addressee::kind() const
@@ -2038,6 +2053,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mLangs;
   s << a.d->mGender;
   s << a.d->mKind;
+  s << a.d->mCalendarUrl;
   return s;
 }
 
@@ -2081,6 +2097,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mLangs;
   s >> a.d->mGender;
   s >> a.d->mKind;
+  s >> a.d->mCalendarUrl;
   a.d->mEmpty = false;
 
   return s;

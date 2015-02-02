@@ -39,6 +39,7 @@
 #include "kabc/lang.h"
 #include "kabc/gender.h"
 #include "kabc/timezone.h"
+#include "kabc/calendarurl.h"
 #include "kabc/addresseelist.h"  // for typedef QList<Addressee> List;
 
 namespace KABC {
@@ -993,6 +994,9 @@ class KABC_EXPORT Addressee
 
     QString kind() const;
     void setKind(const QString &kind);
+
+    void insertCalendarUrl(const KABC::CalendarUrl &calendarUrl);
+
 private:
     class Private;
     QSharedDataPointer<Private> d;
