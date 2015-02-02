@@ -37,16 +37,18 @@ class KABC_EXPORT CalendarUrl
     friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const CalendarUrl & );
     friend KABC_EXPORT QDataStream &operator>>( QDataStream &, CalendarUrl & );
 public:
-    CalendarUrl(CalendarUrl::CalendarType type);
-    CalendarUrl(const CalendarUrl &other);
-
-    ~CalendarUrl();
     enum CalendarType {
         Unknown = 0,
         FBUrl,
         CALUri,
         CALADRUri
     };
+
+    CalendarUrl();
+    CalendarUrl(CalendarUrl::CalendarType type);
+    CalendarUrl(const CalendarUrl &other);
+
+    ~CalendarUrl();
 
     typedef QList<CalendarUrl> List;
 

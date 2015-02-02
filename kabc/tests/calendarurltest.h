@@ -35,7 +35,7 @@ private Q_SLOTS:
     void shouldAssignValue();
     void shouldAssignExternal();
     void shouldSerialized();
-    //void shouldEqualEmail();
+    void shouldEqualCalendarUrl();
 };
 
 #endif // CALENDARURLTEST_H

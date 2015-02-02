@@ -24,6 +24,8 @@
 #include "kabc/calendarurl.h"
 #include <qtest_kde.h>
 
+using namespace KABC;
+
 CalendarUrlTest::CalendarUrlTest(QObject *parent)
     : QObject(parent)
 {
@@ -37,7 +39,7 @@ CalendarUrlTest::~CalendarUrlTest()
 
 void CalendarUrlTest::shouldHaveDefaultValue()
 {
-    KABC::CalendarUrl calendarUrl;
+    CalendarUrl calendarUrl(CalendarUrl::FBUrl);
     QVERIFY(!calendarUrl.isValid());
     QVERIFY(calendarUrl.url().isEmpty());
     QVERIFY(calendarUrl.parameters().isEmpty());
@@ -45,40 +47,38 @@ void CalendarUrlTest::shouldHaveDefaultValue()
 
 void CalendarUrlTest::shouldAssignValue()
 {
-    const QString mail(QLatin1String("foo@kde.org"));
     QMap<QString, QStringList> params;
     params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
     params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
-    KABC::CalendarUrl calendarUrl(mail);
+    CalendarUrl calendarUrl(CalendarUrl::FBUrl);
     calendarUrl.setParameters(params);
-    QVERIFY(calendarUrl.isValid());
-    QVERIFY(!calendarUrl.mail().isEmpty());
-    QCOMPARE(calendarUrl.mail(), mail);
+    QVERIFY(!calendarUrl.isValid());
+    QCOMPARE(calendarUrl.type(), CalendarUrl::FBUrl);
+    QVERIFY(calendarUrl.url().isEmpty());
     QVERIFY(!calendarUrl.parameters().isEmpty());
     QCOMPARE(calendarUrl.parameters(), params);
 }
 
 void CalendarUrlTest::shouldAssignExternal()
 {
-    KABC::CalendarUrl calendarUrl;
-    const QString mail(QLatin1String("foo@kde.org"));
-    calendarUrl.setEmail(mail);
-    QVERIFY(calendarUrl.isValid());
-    QVERIFY(!calendarUrl.url().isEmpty());
-    QCOMPARE(calendarUrl.url(), mail);
+    CalendarUrl calendarUrl(CalendarUrl::FBUrl);
+    const CalendarUrl::CalendarType type = CalendarUrl::CALUri;
+    calendarUrl.setType(type);
+    QVERIFY(calendarUrl.url().isEmpty());
+    QCOMPARE(calendarUrl.type(), type);
 }
 
 void CalendarUrlTest::shouldSerialized()
 {
-    KABC::CalendarUrl calendarUrl;
-    KABC::CalendarUrl result;
-    const QString mail(QLatin1String("foo@kde.org"));
-    calendarUrl.setEmail(mail);
+    CalendarUrl calendarUrl(CalendarUrl::FBUrl);
+    CalendarUrl result;
+    CalendarUrl::CalendarType type = CalendarUrl::CALUri;
+    calendarUrl.setType(type);
     QMap<QString, QStringList> params;
     params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
     params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
     calendarUrl.setParameters(params);
-
+    calendarUrl.setUrl(QUrl(QLatin1String("mailto:foo@kde.org")));
 
     QByteArray data;
     QDataStream s( &data, QIODevice::WriteOnly );
@@ -90,15 +90,16 @@ void CalendarUrlTest::shouldSerialized()
     QVERIFY( calendarUrl == result );
 }
 
-void CalendarUrlTest::shouldEqualEmail()
+void CalendarUrlTest::shouldEqualCalendarUrl()
 {
-    KABC::CalendarUrl calendarUrl;
-    KABC::CalendarUrl result;
-    const QString mail(QLatin1String("foo@kde.org"));
-    calendarUrl.setEmail(mail);
+    CalendarUrl calendarUrl(CalendarUrl::FBUrl);
+    CalendarUrl result;
+    CalendarUrl::CalendarType type = CalendarUrl::CALUri;
+    calendarUrl.setType(type);
     QMap<QString, QStringList> params;
     params.insert(QLatin1String("Foo1"), QStringList()<< QLatin1String("bla1") <<QLatin1String("blo1"));
     params.insert(QLatin1String("Foo2"), QStringList()<< QLatin1String("bla2") <<QLatin1String("blo2"));
+    calendarUrl.setUrl(QUrl(QLatin1String("mailto:foo@kde.org")));
     calendarUrl.setParameters(params);
 
     result = calendarUrl;

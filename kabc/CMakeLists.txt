@@ -44,6 +44,7 @@ add_subdirectory(tests)
 set(kabc_LIB_SRCS
   address.cpp
   addressee.cpp
+  calendarurl.cpp
   contactgroup.cpp
   contactgrouptool.cpp
   errorhandler.cpp
@@ -117,6 +118,7 @@ install(FILES
   addressee.h
   addresseedialog.h
   addresseelist.h
+  calendarurl.h
   contactgroup.h
   contactgrouptool.h
   distributionlist.h

@@ -216,3 +216,13 @@ kde4_add_unit_test(gendertest TESTNAME kabc-gendertest ${gendertest_SRCS})
 
 target_link_libraries(gendertest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
+
+########### next target ###############
+
+set(calendarurltest_SRCS calendarurltest.cpp)
+
+
+kde4_add_unit_test(calendarurltest TESTNAME kabc-calendarurltest ${calendarurltest_SRCS})
+
+target_link_libraries(calendarurltest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+

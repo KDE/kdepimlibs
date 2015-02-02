@@ -40,17 +40,17 @@ public:
         type = other.type;
         url = other.url;
     }
-    QString typeToString() const;
+    static QString typeToString(CalendarUrl::CalendarType type);
     QMap<QString, QStringList> parameters;
     QUrl url;
     CalendarUrl::CalendarType type;
 
 };
 
-QString CalendarUrl::Private::typeToString() const
+QString CalendarUrl::Private::typeToString(CalendarUrl::CalendarType type)
 {
     QString ret;
-    switch(d->type) {
+    switch(type) {
         case Unknown:
             ret = QLatin1String("Unknown");
             break;
@@ -67,6 +67,12 @@ QString CalendarUrl::Private::typeToString() const
     return ret;
 }
 
+
+CalendarUrl::CalendarUrl()
+    : d(new Private)
+{
+    d->type = Unknown;
+}
 
 CalendarUrl::CalendarUrl(CalendarUrl::CalendarType type)
     : d(new Private)
@@ -114,7 +120,7 @@ QString CalendarUrl::toString() const
     QString str;
     str += QString::fromLatin1( "CalendarUrl {\n" );
     str += QString::fromLatin1( "    url: %1\n" ).arg( d->url.toString() );
-    str += QString::fromLatin1( "    type: %1\n" ).arg( d->typeToString() );
+    str += QString::fromLatin1( "    type: %1\n" ).arg( CalendarUrl::Private::typeToString(d->type) );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
@@ -160,12 +166,14 @@ QUrl CalendarUrl::url() const
 
 QDataStream &KABC::operator<<(QDataStream &s, const CalendarUrl &calUrl)
 {
-    return s << calUrl.d->parameters << calUrl.d->type << calUrl.d->url;
+    return s << calUrl.d->parameters << (uint)calUrl.d->type << calUrl.d->url;
 }
 
 QDataStream &KABC::operator>>(QDataStream &s, CalendarUrl &calUrl)
 {
-    s >> calUrl.d->parameters >> calUrl.d->type >> calUrl.d->url;
+    uint type;
+    s >> calUrl.d->parameters >> type >> calUrl.d->url;
+    calUrl.d->type = static_cast<CalendarUrl::CalendarType>(type);
     return s;
 }
 
