@@ -55,6 +55,8 @@ void AddresseeTest::storeTest()
   QStringList customs;
   customs << QLatin1String( "X-Danger: high" );
 
+  KABC::Gender gender(QLatin1String("H"));
+  addressee.setGender(gender);
   addressee.setUid( QLatin1String( "My uid" ) );
   addressee.setName( QLatin1String( "John Sinclair" ) );
   addressee.setFormattedName( QLatin1String( "Sinclair, John" ) );
@@ -89,6 +91,7 @@ void AddresseeTest::storeTest()
 #endif
   addressee.setChanged( false );
 
+  QVERIFY( addressee.gender() == gender );
   QVERIFY( addressee.uid() == QLatin1String( "My uid" ) );
   QVERIFY( addressee.name() == QLatin1String( "John Sinclair" ) );
   QVERIFY( addressee.formattedName() == QLatin1String( "Sinclair, John" ) );
