@@ -356,9 +356,7 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
 
     // PHOTO
     card.addLine( createPicture( QLatin1String( "PHOTO" ), ( *addrIt ).photo(), version ) );
-    qDebug()<<" ( *addrIt ).extraPhoto()"<<( *addrIt ).extraPhoto().count();
     Q_FOREACH (const KABC::Picture &photo, ( *addrIt ).extraPhoto()) {
-        qDebug()<<" EPORT PHOTO";
         card.addLine( createPicture( QLatin1String( "PHOTO" ), photo, version ) );
     }
 
@@ -802,14 +800,11 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
 
         // PHOTO
         else if ( identifier == QLatin1String( "photo" ) ) {
-            qDebug()<<" photo ";
             Picture picture = parsePicture( *lineIt );
             if (addr.photo().isEmpty()) {
                 addr.setPhoto( picture );
-                qDebug()<<" official photo";
             } else {
                 addr.insertExtraPhoto( picture );
-                qDebug()<<" extra photo";
             }
         }
 
