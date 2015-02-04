@@ -1012,6 +1012,9 @@ class KABC_EXPORT Addressee
     KABC::Picture::List extraLogo() const;
 
 
+    QList<KUrl> extraUrlList() const;
+    void setExtraUrlList(const QList<KUrl> &urlList);
+    void insertExtraUrl(const KUrl &url);
 private:
     class Private;
     QSharedDataPointer<Private> d;

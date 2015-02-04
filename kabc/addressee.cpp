@@ -103,6 +103,7 @@ class Addressee::Private : public QSharedData
       mSoundListExtra = other.mSoundListExtra;
       mPhotoListExtra = other.mPhotoListExtra;
       mLogoListExtra = other.mLogoListExtra;
+      mUrlListExtra = other.mUrlListExtra;
 
 #ifndef KDEPIM_NO_KRESOURCES
       mResource = other.mResource;
@@ -156,6 +157,7 @@ class Addressee::Private : public QSharedData
     Sound::List mSoundListExtra;
     Picture::List mPhotoListExtra;
     Picture::List mLogoListExtra;
+    QList<KUrl> mUrlListExtra;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -393,7 +395,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
     kDebug() << "Extra logo differs";
     return false;
   }
-
+  if ( !listEquals( d->mUrlListExtra, addressee.d->mUrlListExtra ) ) {
+    kDebug() << "Extra url differs";
+    return false;
+  }
   return true;
 }
 
@@ -507,6 +512,22 @@ Picture::List Addressee::extraLogo() const
 {
     return d->mLogoListExtra;
 }
+
+void Addressee::insertExtraUrl(const KUrl &url)
+{
+    d->mUrlListExtra.append(url);
+}
+
+void Addressee::setExtraUrlList(const QList<KUrl> &urlList)
+{
+    d->mUrlListExtra = urlList;
+}
+
+QList<KUrl> Addressee::extraUrlList() const
+{
+    return d->mUrlListExtra;
+}
+
 
 QString Addressee::kind() const
 {
@@ -2126,6 +2147,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mSoundListExtra;
   s << a.d->mPhotoListExtra;
   s << a.d->mLogoListExtra;
+  s << a.d->mUrlListExtra;
   return s;
 }
 
@@ -2173,6 +2195,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mSoundListExtra;
   s >> a.d->mPhotoListExtra;
   s >> a.d->mLogoListExtra;
+  s >> a.d->mUrlListExtra;
 
   a.d->mEmpty = false;
 
