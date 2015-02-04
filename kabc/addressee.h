@@ -999,13 +999,17 @@ class KABC_EXPORT Addressee
 
 
     void insertExtraSound(const KABC::Sound &sound);
+    void setExtraSoundList(const KABC::Sound::List &soundList);
     KABC::Sound::List extraSound() const;
 
     void insertExtraPhoto(const KABC::Picture &picture);
+    void setExtraPhotoList(const KABC::Picture::List &pictureList);
     KABC::Picture::List extraPhoto() const;
 
     void insertExtraLogo(const KABC::Picture &log);
+    void setExtraLogoList(const KABC::Picture::List &logoList);
     KABC::Picture::List extraLogo() const;
+
 
 private:
     class Private;
