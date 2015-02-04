@@ -226,3 +226,12 @@ kde4_add_unit_test(calendarurltest TESTNAME kabc-calendarurltest ${calendarurlte
 
 target_link_libraries(calendarurltest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
+########### next target ###############
+
+set(impptest_SRCS impptest.cpp)
+
+
+kde4_add_unit_test(impptest TESTNAME kabc-impptest ${impptest_SRCS})
+
+target_link_libraries(impptest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+

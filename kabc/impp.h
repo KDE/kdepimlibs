@@ -47,6 +47,9 @@ public:
 
     bool isValid() const;
 
+    void setIMType(const QString &type);
+    QString imType() const;
+
     void setAddress(const QString &address);
     QString address() const;
 

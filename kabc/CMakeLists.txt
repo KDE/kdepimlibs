@@ -52,6 +52,7 @@ set(kabc_LIB_SRCS
   field.cpp
   geo.cpp
   gender.cpp
+  impp.cpp
   key.cpp
   ldapdn.cpp
   ldif.cpp
@@ -127,6 +128,7 @@ install(FILES
   email.h
   field.h
   geo.h
+  impp.h
   key.h
   lang.h
   gender.h

@@ -35,10 +35,13 @@ public:
     Private( const Private &other )
         : QSharedData( other )
     {
+        address = other.address;
+        imType = other.imType;
         parameters = other.parameters;
     }
     QMap<QString, QStringList> parameters;
     QString address;
+    QString imType;
 };
 
 Impp::Impp()
@@ -65,7 +68,17 @@ Impp::~Impp()
 
 bool Impp::isValid() const
 {
-    return !d->address.isEmpty();
+    return !d->address.isEmpty() && !d->imType.isEmpty();
+}
+
+void Impp::setIMType(const QString &type)
+{
+    d->imType = type;
+}
+
+QString Impp::imType() const
+{
+    return d->imType;
 }
 
 void Impp::setAddress(const QString &address)
@@ -90,7 +103,7 @@ QMap<QString, QStringList> Impp::parameters() const
 
 bool Impp::operator==(const Impp &other) const
 {
-    return (d->parameters == other.parameters()) && (d->address == other.address());
+    return (d->parameters == other.parameters()) && (d->address == other.address()) && (d->imType == other.imType());
 }
 
 bool Impp::operator!=(const Impp &other) const
@@ -112,6 +125,7 @@ QString Impp::toString() const
     QString str;
     str += QString::fromLatin1( "Impp {\n" );
     str += QString::fromLatin1( "    address: %1\n" ).arg( d->address );
+    str += QString::fromLatin1( "    type: %1\n" ).arg( d->imType );
     if (!d->parameters.isEmpty()) {
         QMapIterator<QString, QStringList> i(d->parameters);
         QString param;
@@ -128,11 +142,11 @@ QString Impp::toString() const
 
 QDataStream &KABC::operator<<(QDataStream &s, const Impp &impp)
 {
-    return s << impp.d->parameters << impp.d->address;
+    return s << impp.d->parameters << impp.d->address << impp.d->imType;
 }
 
 QDataStream &KABC::operator>>(QDataStream &s, Impp &impp)
 {
-    s >> impp.d->parameters >> impp.d->address;
+    s >> impp.d->parameters >> impp.d->address >> impp.d->imType;
     return s;
 }
