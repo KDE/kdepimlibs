@@ -274,6 +274,9 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
 
     // LOGO
     card.addLine( createPicture( QLatin1String( "LOGO" ), ( *addrIt ).logo(), version ) );
+    Q_FOREACH (const KABC::Picture &logo, ( *addrIt ).extraLogo()) {
+        card.addLine( createPicture( QLatin1String( "LOGO" ), logo, version ) );
+    }
 
     // MAILER only for version < 4.0
     if ( version != VCard::v4_0 ) {
@@ -353,6 +356,11 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
 
     // PHOTO
     card.addLine( createPicture( QLatin1String( "PHOTO" ), ( *addrIt ).photo(), version ) );
+    qDebug()<<" ( *addrIt ).extraPhoto()"<<( *addrIt ).extraPhoto().count();
+    Q_FOREACH (const KABC::Picture &photo, ( *addrIt ).extraPhoto()) {
+        qDebug()<<" EPORT PHOTO";
+        card.addLine( createPicture( QLatin1String( "PHOTO" ), photo, version ) );
+    }
 
     // PROID only for version > 2.1
     if ( version != VCard::v2_1 ) {
@@ -377,6 +385,9 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
 
     // SOUND
     card.addLine( createSound( ( *addrIt ).sound(), version ) );
+    Q_FOREACH (const KABC::Sound &sound, ( *addrIt ).extraSound()) {
+        card.addLine( createSound( sound, version ) );
+    }
 
     // TEL
     const PhoneNumber::List phoneNumbers = ( *addrIt ).phoneNumbers();
@@ -723,7 +734,12 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
 
         // LOGO
         else if ( identifier == QLatin1String( "logo" ) ) {
-          addr.setLogo( parsePicture( *lineIt ) );
+            Picture picture = parsePicture( *lineIt );
+            if (addr.logo().isEmpty()) {
+                addr.setLogo( picture );
+            } else {
+                addr.insertExtraLogo( picture );
+            }
         }
 
         // MAILER
@@ -786,7 +802,15 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
 
         // PHOTO
         else if ( identifier == QLatin1String( "photo" ) ) {
-          addr.setPhoto( parsePicture( *lineIt ) );
+            qDebug()<<" photo ";
+            Picture picture = parsePicture( *lineIt );
+            if (addr.photo().isEmpty()) {
+                addr.setPhoto( picture );
+                qDebug()<<" official photo";
+            } else {
+                addr.insertExtraPhoto( picture );
+                qDebug()<<" extra photo";
+            }
         }
 
         // PROID
@@ -811,7 +835,12 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
 
         // SOUND
         else if ( identifier == QLatin1String( "sound" ) ) {
-          addr.setSound( parseSound( *lineIt ) );
+            Sound sound = parseSound( *lineIt );
+            if (addr.sound().isEmpty()) {
+                addr.setSound( sound );
+            } else {
+                addr.insertExtraSound(sound);
+            }
         }
 
         // TEL

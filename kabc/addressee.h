@@ -997,6 +997,16 @@ class KABC_EXPORT Addressee
 
     void insertCalendarUrl(const KABC::CalendarUrl &calendarUrl);
 
+
+    void insertExtraSound(const KABC::Sound &sound);
+    KABC::Sound::List extraSound() const;
+
+    void insertExtraPhoto(const KABC::Picture &picture);
+    KABC::Picture::List extraPhoto() const;
+
+    void insertExtraLogo(const KABC::Picture &log);
+    KABC::Picture::List extraLogo() const;
+
 private:
     class Private;
     QSharedDataPointer<Private> d;

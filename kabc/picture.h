@@ -75,6 +75,7 @@ class KABC_EXPORT Picture
      */
     ~Picture();
 
+    typedef QList<Picture> List;
     /**
      * Assignment operator
      *

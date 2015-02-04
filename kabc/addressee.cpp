@@ -100,6 +100,9 @@ class Addressee::Private : public QSharedData
       mCategories = other.mCategories;
       mCustomFields = other.mCustomFields;
       mCalendarUrl = other.mCalendarUrl;
+      mSoundListExtra = other.mSoundListExtra;
+      mPhotoListExtra = other.mPhotoListExtra;
+      mLogoListExtra = other.mLogoListExtra;
 
 #ifndef KDEPIM_NO_KRESOURCES
       mResource = other.mResource;
@@ -149,6 +152,10 @@ class Addressee::Private : public QSharedData
     QStringList mCategories;
     QMap<QString, QString> mCustomFields;
     CalendarUrl::List mCalendarUrl;
+
+    Sound::List mSoundListExtra;
+    Picture::List mPhotoListExtra;
+    Picture::List mLogoListExtra;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -374,6 +381,18 @@ bool Addressee::operator==( const Addressee &addressee ) const
     kDebug() << "calendarUrl differs";
     return false;
   }
+  if ( !listEquals( d->mSoundListExtra, addressee.d->mSoundListExtra ) ) {
+    kDebug() << "Extra sound differs";
+    return false;
+  }
+  if ( !listEquals( d->mPhotoListExtra, addressee.d->mPhotoListExtra ) ) {
+    kDebug() << "Extra photo differs";
+    return false;
+  }
+  if ( !listEquals( d->mLogoListExtra, addressee.d->mLogoListExtra ) ) {
+    kDebug() << "Extra logo differs";
+    return false;
+  }
 
   return true;
 }
@@ -444,11 +463,40 @@ void Addressee::insertCalendarUrl(const CalendarUrl &calendarUrl)
     }
 }
 
+void Addressee::insertExtraSound(const Sound &sound)
+{
+    d->mSoundListExtra.append(sound);
+}
+
+KABC::Sound::List Addressee::extraSound() const
+{
+    return d->mSoundListExtra;
+}
+
+void Addressee::insertExtraPhoto(const Picture &picture)
+{
+    d->mPhotoListExtra.append(picture);
+}
+
+Picture::List Addressee::extraPhoto() const
+{
+    return d->mPhotoListExtra;
+}
+
+void Addressee::insertExtraLogo(const Picture &logo)
+{
+    d->mLogoListExtra.append(logo);
+}
+
+Picture::List Addressee::extraLogo() const
+{
+    return d->mLogoListExtra;
+}
+
 QString Addressee::kind() const
 {
   return d->mKind;
 }
-
 
 void Addressee::setFormattedName( const QString &formattedName )
 {
@@ -2054,6 +2102,9 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mGender;
   s << a.d->mKind;
   s << a.d->mCalendarUrl;
+  s << a.d->mSoundListExtra;
+  s << a.d->mPhotoListExtra;
+  s << a.d->mLogoListExtra;
   return s;
 }
 
@@ -2098,6 +2149,10 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mGender;
   s >> a.d->mKind;
   s >> a.d->mCalendarUrl;
+  s >> a.d->mSoundListExtra;
+  s >> a.d->mPhotoListExtra;
+  s >> a.d->mLogoListExtra;
+
   a.d->mEmpty = false;
 
   return s;

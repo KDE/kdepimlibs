@@ -91,6 +91,8 @@ class KABC_EXPORT Sound
      */
     ~Sound();
 
+    typedef QList<Sound> List;
+
     /**
      * Assignment operator.
      *
