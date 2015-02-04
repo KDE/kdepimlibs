@@ -1441,6 +1441,12 @@ void Addressee::insertLang( const Lang &language )
     d->mLangs.append( language );
 }
 
+void Addressee::setLangs(const Lang::List &langs)
+{
+    d->mLangs = langs;
+    d->mEmpty = false;
+}
+
 Lang::List Addressee::langs() const
 {
     return d->mLangs;

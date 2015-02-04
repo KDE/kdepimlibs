@@ -987,6 +987,7 @@ class KABC_EXPORT Addressee
 
     void removeLang(const QString &language);
     void insertLang(const Lang &language);
+    void setLangs(const Lang::List &langs);
     Lang::List langs() const;
 
     void setGender(const KABC::Gender &gender);
