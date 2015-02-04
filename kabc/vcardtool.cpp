@@ -602,15 +602,21 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
         }
         // FBURL
         else if (identifier == QLatin1String( "fburl" ) ) {
-            //TODO
+            CalendarUrl calendarUrl(CalendarUrl::FBUrl);
+            //TODO extract emails
+            addr.insertCalendarUrl(calendarUrl);
         }
         // CALADRURI
         else if (identifier == QLatin1String( "caladruri" ) ) {
-            //TODO
+            CalendarUrl calendarUrl(CalendarUrl::CALADRUri);
+            //TODO extract emails
+            addr.insertCalendarUrl(calendarUrl);
         }
         // CALURI
         else if (identifier == QLatin1String( "caluri" ) ) {
-            //TODO
+            CalendarUrl calendarUrl(CalendarUrl::CALUri);
+            //TODO extract emails
+            addr.insertCalendarUrl(calendarUrl);
         }
 
         // CLASS
