@@ -104,6 +104,7 @@ class Addressee::Private : public QSharedData
       mPhotoListExtra = other.mPhotoListExtra;
       mLogoListExtra = other.mLogoListExtra;
       mUrlListExtra = other.mUrlListExtra;
+      mMembers = other.mMembers;
 
 #ifndef KDEPIM_NO_KRESOURCES
       mResource = other.mResource;
@@ -158,6 +159,7 @@ class Addressee::Private : public QSharedData
     Picture::List mPhotoListExtra;
     Picture::List mLogoListExtra;
     QList<KUrl> mUrlListExtra;
+    QStringList mMembers;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -398,6 +400,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
   if ( !listEquals( d->mUrlListExtra, addressee.d->mUrlListExtra ) ) {
     kDebug() << "Extra url differs";
     return false;
+  }
+  if (!listEquals( d->mMembers, addressee.d->mMembers)) {
+      kDebug() << "Members differs";
+      return false;
   }
   return true;
 }
@@ -1813,6 +1819,27 @@ Address Addressee::findAddress( const QString &id ) const
   return Address();
 }
 
+void Addressee::insertMember( const QString & member)
+{
+    d->mEmpty = false;
+
+    if ( d->mMembers.contains( member ) )
+      return;
+
+    d->mMembers.append( member );
+}
+
+void Addressee::setMembers( const QStringList &m )
+{
+  d->mEmpty = false;
+  d->mMembers = m;
+}
+
+QStringList Addressee::members() const
+{
+  return d->mMembers;
+}
+
 void Addressee::insertCategory( const QString &c )
 {
   d->mEmpty = false;
@@ -2148,6 +2175,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mPhotoListExtra;
   s << a.d->mLogoListExtra;
   s << a.d->mUrlListExtra;
+  s << a.d->mMembers;
   return s;
 }
 
@@ -2196,7 +2224,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mPhotoListExtra;
   s >> a.d->mLogoListExtra;
   s >> a.d->mUrlListExtra;
-
+  s >> a.d->mMembers;
   a.d->mEmpty = false;
 
   return s;

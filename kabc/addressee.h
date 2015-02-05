@@ -1015,6 +1015,11 @@ class KABC_EXPORT Addressee
     QList<KUrl> extraUrlList() const;
     void setExtraUrlList(const QList<KUrl> &urlList);
     void insertExtraUrl(const KUrl &url);
+
+
+    void insertMember(const QString &member);
+    void setMembers(const QStringList &c);
+    QStringList members() const;
 private:
     class Private;
     QSharedDataPointer<Private> d;
