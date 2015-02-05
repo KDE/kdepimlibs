@@ -148,7 +148,6 @@ void RoundtripTest::testVCardRoundtrip()
 
   if ( !output3_0File.isEmpty() ) {
     const QByteArray outputData = converter.createVCards( list, VCardConverter::v3_0 );
-
     QFile outputFile( QFileInfo( mOutput3_0Dir, output3_0File ).absoluteFilePath() );
     QVERIFY( outputFile.open( QIODevice::ReadOnly ) );
 
