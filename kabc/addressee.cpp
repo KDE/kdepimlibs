@@ -478,7 +478,7 @@ void Addressee::setExtraSoundList(const KABC::Sound::List &soundList)
     d->mSoundListExtra = soundList;
 }
 
-KABC::Sound::List Addressee::extraSound() const
+KABC::Sound::List Addressee::extraSoundList() const
 {
     return d->mSoundListExtra;
 }
@@ -493,7 +493,7 @@ void Addressee::setExtraPhotoList(const Picture::List &pictureList)
     d->mPhotoListExtra = pictureList;
 }
 
-Picture::List Addressee::extraPhoto() const
+Picture::List Addressee::extraPhotoList() const
 {
     return d->mPhotoListExtra;
 }
@@ -508,7 +508,7 @@ void Addressee::setExtraLogoList(const Picture::List &logoList)
     d->mLogoListExtra = logoList;
 }
 
-Picture::List Addressee::extraLogo() const
+Picture::List Addressee::extraLogoList() const
 {
     return d->mLogoListExtra;
 }
