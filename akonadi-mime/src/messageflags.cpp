@@ -22,7 +22,7 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_util.h>
-#include <AkonadiCore/Item>
+#include <item.h>
 
 const char Akonadi::MessageFlags::Seen[] = "\\SEEN";
 const char Akonadi::MessageFlags::Deleted[] = "\\DELETED";

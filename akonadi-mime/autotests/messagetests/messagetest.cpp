@@ -21,7 +21,7 @@
 #include <qtest.h>
 #include <qdebug.h>
 #include <QFile>
-#include <AkonadiCore/Item>
+#include <item.h>
 #include <messageflags.h>
 using namespace KMime;
 
