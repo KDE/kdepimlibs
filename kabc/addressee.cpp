@@ -105,6 +105,7 @@ class Addressee::Private : public QSharedData
       mLogoListExtra = other.mLogoListExtra;
       mUrlListExtra = other.mUrlListExtra;
       mMembers = other.mMembers;
+      mRelationShips = other.mRelationShips;
 
 #ifndef KDEPIM_NO_KRESOURCES
       mResource = other.mResource;
@@ -160,6 +161,7 @@ class Addressee::Private : public QSharedData
     Picture::List mLogoListExtra;
     QList<KUrl> mUrlListExtra;
     QStringList mMembers;
+    QStringList mRelationShips;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -403,6 +405,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
   }
   if (!listEquals( d->mMembers, addressee.d->mMembers)) {
       kDebug() << "Members differs";
+      return false;
+  }
+  if (!listEquals( d->mRelationShips, addressee.d->mRelationShips)) {
+      kDebug() << "RelationShips differs";
       return false;
   }
   return true;
@@ -1837,7 +1843,28 @@ void Addressee::setMembers( const QStringList &m )
 
 QStringList Addressee::members() const
 {
-  return d->mMembers;
+    return d->mMembers;
+}
+
+void Addressee::insertRelationShip(const QString &relation)
+{
+    d->mEmpty = false;
+
+    if ( d->mRelationShips.contains( relation ) )
+      return;
+
+    d->mRelationShips.append( relation );
+}
+
+void Addressee::setRelationShips(const QStringList &c)
+{
+    d->mEmpty = false;
+    d->mRelationShips = c;
+}
+
+QStringList Addressee::relationShips() const
+{
+    return d->mRelationShips;
 }
 
 void Addressee::insertCategory( const QString &c )
@@ -2176,6 +2203,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mLogoListExtra;
   s << a.d->mUrlListExtra;
   s << a.d->mMembers;
+  s << a.d->mRelationShips;
   return s;
 }
 
@@ -2225,6 +2253,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mLogoListExtra;
   s >> a.d->mUrlListExtra;
   s >> a.d->mMembers;
+  s >> a.d->mRelationShips;
   a.d->mEmpty = false;
 
   return s;
