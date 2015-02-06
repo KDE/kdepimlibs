@@ -39,7 +39,7 @@
 
 #define MAX_PACKET_LEN 4096
 
-class POP3Protocol: public KIO::TCPSlaveBase
+class POP3Protocol : public KIO::TCPSlaveBase
 {
 public:
     POP3Protocol(const QByteArray &pool, const QByteArray &app, bool SSL);
@@ -72,7 +72,12 @@ protected:
      */
     bool sendCommand(const QByteArray &cmd);
 
-    enum Resp {Err, Ok, Cont, Invalid};
+    enum Resp {
+        Err,
+        Ok,
+        Cont,
+        Invalid
+    };
     /**
      *  Send a command to the server, and wait for the  one-line-status
      *  reply via getResponse.  Similar rules apply.  If no buffer is

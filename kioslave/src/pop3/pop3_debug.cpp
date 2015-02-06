@@ -19,4 +19,3 @@
 
 #include "pop3_debug.h"
 Q_LOGGING_CATEGORY(POP3_LOG, "log_pop3")
-

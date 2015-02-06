@@ -137,7 +137,7 @@ ssize_t POP3Protocol::myRead(void *data, ssize_t len)
         return copyLen;
     }
     waitForResponse(600);
-    return read((char *)data, len);
+    return read((char *) data, len);
 }
 
 ssize_t POP3Protocol::myReadLine(char *data, ssize_t len)
@@ -204,7 +204,7 @@ POP3Protocol::Resp POP3Protocol::getResponse(char *r_buf, unsigned int r_len)
                    qMin(r_len, (buf[3] == ' ' ? recv_len - 4 : recv_len - 3)));
         }
 
-        delete[]buf;
+        delete[] buf;
 
         return Ok;
     } else if (strncmp(buf, "-ERR", 4) == 0) {
@@ -217,7 +217,7 @@ POP3Protocol::Resp POP3Protocol::getResponse(char *r_buf, unsigned int r_len)
 
         m_sError = i18n("The server said: \"%1\"", serverMsg);
 
-        delete[]buf;
+        delete[] buf;
 
         return Err;
     } else if (strncmp(buf, "+ ", 2) == 0) {
@@ -226,7 +226,7 @@ POP3Protocol::Resp POP3Protocol::getResponse(char *r_buf, unsigned int r_len)
             r_buf[qMin(r_len - 1, recv_len - 4)] = '\0';
         }
 
-        delete[]buf;
+        delete[] buf;
 
         return Cont;
     } else {
@@ -242,7 +242,7 @@ POP3Protocol::Resp POP3Protocol::getResponse(char *r_buf, unsigned int r_len)
             m_sError = i18n("Invalid response from server:\n\"%1\"", QLatin1String(buf));
         }
 
-        delete[]buf;
+        delete[] buf;
 
         return Invalid;
     }
@@ -276,8 +276,7 @@ bool POP3Protocol::sendCommand(const QByteArray &cmd)
     //qCDebug(POP3_LOG) << "C:" << debugCommand;
 
     // Now actually write the command to the socket
-    if (write(cmdrn.data(), cmdrn.size()) != static_cast < ssize_t >
-            (cmdrn.size())) {
+    if (write(cmdrn.data(), cmdrn.size()) != static_cast < ssize_t >(cmdrn.size())) {
         m_sError = i18n("Could not send to server.\n");
         return false;
     }
@@ -286,7 +285,7 @@ bool POP3Protocol::sendCommand(const QByteArray &cmd)
 }
 
 POP3Protocol::Resp POP3Protocol::command(const QByteArray &cmd, char *recv_buf,
-        unsigned int len)
+                                         unsigned int len)
 {
     sendCommand(cmd);
     return getResponse(recv_buf, len);
@@ -344,7 +343,7 @@ int POP3Protocol::loginAPOP(const char *challenge, KIO::AuthInfo &ai)
 
     apop_string.append(m_sUser);
 
-    memset(buf, 0, sizeof(buf));
+    memset(buf, 0, sizeof (buf));
 
     QCryptographicHash ctx(QCryptographicHash::Md5);
 
@@ -358,7 +357,7 @@ int POP3Protocol::loginAPOP(const char *challenge, KIO::AuthInfo &ai)
     apop_string.append(QLatin1String(" "));
     apop_string.append(QLatin1String(ctx.result().toHex()));
 
-    if (command(apop_string.toLocal8Bit(), buf, sizeof(buf)) == Ok) {
+    if (command(apop_string.toLocal8Bit(), buf, sizeof (buf)) == Ok) {
         return 0;
     }
 
@@ -384,7 +383,7 @@ bool POP3Protocol::saslInteract(void *in, AuthInfo &ai)
     //window for getting this info
     for (; interact->id != SASL_CB_LIST_END; interact++) {
         if (interact->id == SASL_CB_AUTHNAME ||
-                interact->id == SASL_CB_PASS) {
+            interact->id == SASL_CB_PASS) {
 
             if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
                 if (!openPasswordDialog(ai)) {
@@ -414,7 +413,8 @@ bool POP3Protocol::saslInteract(void *in, AuthInfo &ai)
             interact->len = strlen((const char *) interact->result);
             break;
         default:
-            interact->result = NULL; interact->len = 0;
+            interact->result = NULL;
+            interact->len = 0;
             break;
         }
         interact++;
@@ -425,7 +425,7 @@ bool POP3Protocol::saslInteract(void *in, AuthInfo &ai)
 #define SASLERROR  closeConnection(); \
     error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1",  \
                                            QString::fromUtf8( sasl_errdetail( conn ) ))); \
-     
+
 int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
 {
     char buf[512];
@@ -456,10 +456,10 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
         QStringList sasl_list;
         if (hasMetaData(QLatin1String("sasl"))) {
             sasl_list.append(metaData(QLatin1String("sasl")));
-        } else
+        } else {
             while (true /* !AtEOF() */) {
-                memset(buf, 0, sizeof(buf));
-                myReadLine(buf, sizeof(buf) - 1);
+                memset(buf, 0, sizeof (buf));
+                myReadLine(buf, sizeof (buf) - 1);
 
                 // HACK: This assumes fread stops at the first \n and not \r
                 if ((buf[0] == 0) || (strcmp(buf, ".\r\n") == 0)) {
@@ -470,17 +470,19 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
 
                 sasl_list.append(QLatin1String(buf));
             }
+        }
 
         do {
             result = sasl_client_start(conn, sasl_list.join(QLatin1String(" ")).toLatin1(),
                                        &client_interact, &out, &outlen, &mechusing);
 
-            if (result == SASL_INTERACT)
+            if (result == SASL_INTERACT) {
                 if (!saslInteract(client_interact, ai)) {
                     closeConnection();
                     sasl_dispose(&conn);
                     return -1;
                 };
+            }
         } while (result == SASL_INTERACT);
         if (result != SASL_CONTINUE && result != SASL_OK) {
             qCDebug(POP3_LOG) << "sasl_client_start failed with: " << result;
@@ -511,12 +513,13 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
                                           &client_interact,
                                           &out, &outlen);
 
-                if (result == SASL_INTERACT)
+                if (result == SASL_INTERACT) {
                     if (!saslInteract(client_interact, ai)) {
                         closeConnection();
                         sasl_dispose(&conn);
                         return -1;
                     };
+                }
             } while (result == SASL_INTERACT);
             if (result != SASL_CONTINUE && result != SASL_OK) {
                 qCDebug(POP3_LOG) << "sasl_client_step failed with: " << result;
@@ -579,7 +582,7 @@ bool POP3Protocol::loginPASS(KIO::AuthInfo &ai)
     QString one_string = QString::fromLatin1("USER ");
     one_string.append(m_sUser);
 
-    if (command(one_string.toLocal8Bit(), buf, sizeof(buf)) != Ok) {
+    if (command(one_string.toLocal8Bit(), buf, sizeof (buf)) != Ok) {
         qCDebug(POP3_LOG) << "Could not login. Bad username Sorry";
 
         m_sError =
@@ -593,7 +596,7 @@ bool POP3Protocol::loginPASS(KIO::AuthInfo &ai)
     one_string = QString::fromLatin1("PASS ");
     one_string.append(m_sPass);
 
-    if (command(one_string.toLocal8Bit(), buf, sizeof(buf)) != Ok) {
+    if (command(one_string.toLocal8Bit(), buf, sizeof (buf)) != Ok) {
         qCDebug(POP3_LOG) << "Could not login. Bad password Sorry.";
         m_sError =
             i18n
@@ -612,7 +615,7 @@ bool POP3Protocol::pop3_open()
     qCDebug(POP3_LOG);
     char  *greeting_buf;
     if ((m_iOldPort == m_iPort) && (m_sOldServer == m_sServer) &&
-            (m_sOldUser == m_sUser) && (m_sOldPass == m_sPass)) {
+        (m_sOldUser == m_sUser) && (m_sOldPass == m_sPass)) {
         qCDebug(POP3_LOG) << "Reusing old connection";
         return true;
     }
@@ -639,13 +642,13 @@ bool POP3Protocol::pop3_open()
                  i18n("Server does not respond properly:\n%1\n",
                       QLatin1String(greeting_buf)));
             error(ERR_COULD_NOT_LOGIN, m_sError);
-            delete[]greeting_buf;
+            delete[] greeting_buf;
             closeConnection();
             return false;             // we've got major problems, and possibly the
             // wrong port
         }
         QString greeting = QLatin1String(greeting_buf);
-        delete[]greeting_buf;
+        delete[] greeting_buf;
 
         if (greeting.length() > 0) {
             greeting.truncate(greeting.length() - 2);
@@ -677,7 +680,7 @@ bool POP3Protocol::pop3_open()
         // Try to go into TLS mode
         if ((metaData(QLatin1String("tls")) == QLatin1String("on") /*### || (canUseTLS() &&
                                      metaData("tls") != "off")*/)
-                && command("STLS") == Ok) {
+            && command("STLS") == Ok) {
             if (startSsl()) {
                 qCDebug(POP3_LOG) << "TLS mode has been enabled.";
             } else {
@@ -707,8 +710,10 @@ bool POP3Protocol::pop3_open()
             qCDebug(POP3_LOG) << "Trying APOP";
             int retval = loginAPOP(greeting.toLatin1().data() + apop_pos, authInfo);
             switch (retval) {
-            case 0: return true;
-            case -1: return false;
+            case 0:
+                return true;
+            case -1:
+                return false;
             default:
                 m_try_apop = false;
             }
@@ -716,8 +721,10 @@ bool POP3Protocol::pop3_open()
             qCDebug(POP3_LOG) << "Trying SASL";
             int retval = loginSASL(authInfo);
             switch (retval) {
-            case 0: return true;
-            case -1: return false;
+            case 0:
+                return true;
+            case -1:
+                return false;
             default:
                 m_try_sasl = false;
             }
@@ -739,14 +746,14 @@ size_t POP3Protocol::realGetSize(unsigned int msg_num)
     memset(buf, 0, MAX_RESPONSE_LEN);
     cmd = "LIST " + QByteArray::number(msg_num);
     if (command(cmd, buf, MAX_RESPONSE_LEN) != Ok) {
-        delete[]buf;
+        delete[] buf;
         return 0;
     } else {
         cmd = buf;
         cmd.remove(0, cmd.indexOf(" "));
         ret = cmd.toLong();
     }
-    delete[]buf;
+    delete[] buf;
     return ret;
 }
 
@@ -786,7 +793,7 @@ void POP3Protocol::get(const QUrl &url)
     }
 
     if (((path.indexOf(QLatin1Char('/')) == -1) && (path != QLatin1String("index")) && (path != QLatin1String("uidl"))
-            && (path != QLatin1String("commit")))) {
+         && (path != QLatin1String("commit")))) {
         error(ERR_MALFORMED_URL, url.url());
         //m_cmd = CMD_NONE;
         return;
@@ -820,8 +827,8 @@ void POP3Protocol::get(const QUrl &url)
          */
         if (result) {
             while (true /* !AtEOF() */) {
-                memset(buf, 0, sizeof(buf));
-                myReadLine(buf, sizeof(buf) - 1);
+                memset(buf, 0, sizeof (buf));
+                myReadLine(buf, sizeof (buf) - 1);
 
                 // HACK: This assumes fread stops at the first \n and not \r
                 if ((buf[0] == 0) || (strcmp(buf, ".\r\n") == 0)) {
@@ -848,7 +855,7 @@ void POP3Protocol::get(const QUrl &url)
                 activeCommands++;
                 it++;
             }
-            getResponse(buf, sizeof(buf) - 1);
+            getResponse(buf, sizeof (buf) - 1);
             activeCommands--;
         }
         finished();
@@ -861,9 +868,9 @@ void POP3Protocol::get(const QUrl &url)
         unsigned int msg_len = 0;
         QString list_cmd(QLatin1String("LIST "));
         list_cmd += path;
-        memset(buf, 0, sizeof(buf));
+        memset(buf, 0, sizeof (buf));
         if (!noProgress) {
-            if (command(list_cmd.toLatin1(), buf, sizeof(buf) - 1) == Ok) {
+            if (command(list_cmd.toLatin1(), buf, sizeof (buf) - 1) == Ok) {
                 list_cmd = QLatin1String(buf);
                 // We need a space, otherwise we got an invalid reply
                 if (!list_cmd.indexOf(QLatin1String(" "))) {
@@ -898,19 +905,19 @@ void POP3Protocol::get(const QUrl &url)
                 activeCommands++;
                 it++;
             }
-            if (getResponse(buf, sizeof(buf) - 1) == Ok) {
+            if (getResponse(buf, sizeof (buf) - 1) == Ok) {
                 activeCommands--;
                 if (firstCommand) {
                     firstCommand = false;
                     mimeType(QLatin1String("message/rfc822"));
                 }
                 totalSize(msg_len);
-                memset(buf, 0, sizeof(buf));
+                memset(buf, 0, sizeof (buf));
                 char ending = '\n';
                 bool endOfMail = false;
                 bool eat = false;
                 while (true /* !AtEOF() */) {
-                    ssize_t readlen = myRead(buf, sizeof(buf) - 1);
+                    ssize_t readlen = myRead(buf, sizeof (buf) - 1);
                     if (readlen <= 0) {
                         if (isConnected()) {
                             error(ERR_SERVER_TIMEOUT, m_sServer);
@@ -921,7 +928,7 @@ void POP3Protocol::get(const QUrl &url)
                         return;
                     }
                     if (ending == '.' && readlen > 1 && buf[0] == '\r'
-                            && buf[1] == '\n') {
+                        && buf[1] == '\n') {
                         readBufferLen = readlen - 2;
                         memcpy(readBuffer, &buf[2], readBufferLen);
                         break;
@@ -931,8 +938,7 @@ void POP3Protocol::get(const QUrl &url)
                     if (buf[readlen - 1] == '\n') {
                         ending = '\n';
                     } else if (buf[readlen - 1] == '.'
-                               && ((readlen > 1) ? buf[readlen - 2] == '\n' : ending ==
-                                   '\n')) {
+                               && ((readlen > 1) ? buf[readlen - 2] == '\n' : ending == '\n')) {
                         ending = '.';
                     } else {
                         ending = ' ';
@@ -1007,8 +1013,8 @@ void POP3Protocol::get(const QUrl &url)
             path.prepend(QLatin1String("LIST "));
         }
 
-        memset(buf, 0, sizeof(buf));
-        if (command(path.toLatin1(), buf, sizeof(buf) - 1) == Ok) {
+        memset(buf, 0, sizeof (buf));
+        if (command(path.toLatin1(), buf, sizeof (buf) - 1) == Ok) {
             const int len = strlen(buf);
             mimeType(QLatin1String("text/plain"));
             totalSize(len);
@@ -1032,7 +1038,7 @@ void POP3Protocol::get(const QUrl &url)
     }
 }
 
-void POP3Protocol::listDir(const QUrl &)
+void POP3Protocol::listDir(const QUrl &url)
 {
     bool isINT;
     int num_messages = 0;
