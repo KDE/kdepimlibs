@@ -25,6 +25,7 @@
 #include <QSharedPointer>
 #include <QVariant>
 #include <QUrl>
+#include <QVector>
 
 class QDateTime;
 
@@ -272,12 +273,12 @@ public:
      * Sets replies/comments for this post
      * @param replies List of replies
      */
-    void setPostReplies(const QList<SocialFeedItem> &replies);
+    void setPostReplies(const QVector<SocialFeedItem> &replies);
 
     /**
      * @return List of replies/comments to this post
      */
-    QList<SocialFeedItem> postReplies() const;
+    QVector<SocialFeedItem> postReplies() const;
 
 private:
     QSharedDataPointer<SocialFeedItemPrivate> d;
@@ -286,5 +287,5 @@ private:
 }
 
 Q_DECLARE_METATYPE(Akonadi::SocialFeedItem)
-
+Q_DECLARE_TYPEINFO(Akonadi::SocialFeedItem, Q_MOVABLE_TYPE);
 #endif // SOCIALFEEDITEM_H

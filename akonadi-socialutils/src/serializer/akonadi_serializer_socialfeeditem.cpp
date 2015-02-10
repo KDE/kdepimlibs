@@ -68,7 +68,7 @@ bool SocialFeedItemSerializerPlugin::deserialize(Item &item,
     feedItem.setItemSourceMap(map.value(QStringLiteral("itemSourceMap")).toVariant().toMap());
 
     if (map.keys().contains(QStringLiteral("postReplies"))) {
-        QList<SocialFeedItem> replies;
+        QVector<SocialFeedItem> replies;
         QJsonArray repliesArray = map.value(QStringLiteral("postReplies")).toArray();
         Q_FOREACH (const QJsonValue &replyData, repliesArray) {
             QJsonObject reply = replyData.toObject();

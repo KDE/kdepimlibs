@@ -52,7 +52,7 @@ public:
     QString sharedFromId;
     QUrl avatarUrl;
     bool liked;
-    QList<SocialFeedItem> replies;
+    QVector<SocialFeedItem> replies;
 };
 
 Akonadi::SocialFeedItemPrivate::SocialFeedItemPrivate()

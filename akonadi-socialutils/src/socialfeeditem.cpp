@@ -228,12 +228,12 @@ void Akonadi::SocialFeedItem::setLiked(bool liked)
     d->liked = liked;
 }
 
-QList<Akonadi::SocialFeedItem> Akonadi::SocialFeedItem::postReplies() const
+QVector<Akonadi::SocialFeedItem> Akonadi::SocialFeedItem::postReplies() const
 {
     return d->replies;
 }
 
-void Akonadi::SocialFeedItem::setPostReplies(const QList<Akonadi::SocialFeedItem> &replies)
+void Akonadi::SocialFeedItem::setPostReplies(const QVector<Akonadi::SocialFeedItem> &replies)
 {
     d->replies = replies;
 }
