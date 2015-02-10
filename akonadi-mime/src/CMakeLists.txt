@@ -40,8 +40,6 @@ set(akonadimime_SRCS
     messageparts.cpp
     messageflags.cpp
     messagestatus.cpp
-    messagethreadingattribute.cpp
-    messagethreaderproxymodel.cpp
 
     commandbase.cpp
     util.cpp
@@ -114,8 +112,6 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   MessageModel
   MessageParts
   MessageStatus
-  MessageThreaderProxyModel
-  MessageThreadingAttribute
   RemoveDuplicatesJob
   SpecialMailCollections
   SpecialMailCollectionsDiscoveryJob
