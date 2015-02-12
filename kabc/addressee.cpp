@@ -104,6 +104,7 @@ class Addressee::Private : public QSharedData
       mPhotoListExtra = other.mPhotoListExtra;
       mLogoListExtra = other.mLogoListExtra;
       mUrlListExtra = other.mUrlListExtra;
+      mSources = other.mSources;
       mMembers = other.mMembers;
       mRelationShips = other.mRelationShips;
 
@@ -162,6 +163,7 @@ class Addressee::Private : public QSharedData
     QList<KUrl> mUrlListExtra;
     QStringList mMembers;
     QStringList mRelationShips;
+    QList<KUrl> mSources;
 
 #ifndef KDEPIM_NO_KRESOURCES
     Resource *mResource;
@@ -411,6 +413,10 @@ bool Addressee::operator==( const Addressee &addressee ) const
       kDebug() << "RelationShips differs";
       return false;
   }
+  if (!listEquals( d->mSources, addressee.d->mSources)) {
+      kDebug() << "Sources differs";
+      return false;
+  }
   return true;
 }
 
@@ -538,6 +544,21 @@ void Addressee::setExtraUrlList(const QList<KUrl> &urlList)
 QList<KUrl> Addressee::extraUrlList() const
 {
     return d->mUrlListExtra;
+}
+
+void Addressee::insertSourceUrl(const KUrl &url)
+{
+    d->mSources.append(url);
+}
+
+void Addressee::setSourcesUrlList(const QList<KUrl> &urlList)
+{
+    d->mSources = urlList;
+}
+
+QList<KUrl> Addressee::sourcesUrlList() const
+{
+    return d->mSources;
 }
 
 
@@ -2204,6 +2225,7 @@ QDataStream &KABC::operator<<( QDataStream &s, const Addressee &a )
   s << a.d->mUrlListExtra;
   s << a.d->mMembers;
   s << a.d->mRelationShips;
+  s << a.d->mSources;
   return s;
 }
 
@@ -2254,6 +2276,7 @@ QDataStream &KABC::operator>>( QDataStream &s, Addressee &a )
   s >> a.d->mUrlListExtra;
   s >> a.d->mMembers;
   s >> a.d->mRelationShips;
+  s >> a.d->mSources;
   a.d->mEmpty = false;
 
   return s;

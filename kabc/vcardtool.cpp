@@ -192,6 +192,14 @@ QByteArray VCardTool::createVCards( const Addressee::List &list,
             }
         }
     }
+
+    // SOURCE
+    Q_FOREACH (const KUrl &url, ( *addrIt ).sourcesUrlList()) {
+        VCardLine line = VCardLine( QLatin1String( "SOURCE" ), url.url() );
+        card.addLine( line );
+    }
+
+    // RELATED
     if (version == VCard::v4_0) {
         Q_FOREACH (const QString &relation, ( *addrIt ).relationShips() ) {
             VCardLine line( QLatin1String( "RELATED" ), relation );
@@ -910,6 +918,11 @@ Addressee::List VCardTool::parseVCards( const QByteArray &vcard ) const
             } else {
                 addr.insertExtraUrl(url);
             }
+        }
+        // SOURCE
+        else if ( identifier == QLatin1String( "source" ) ) {
+            const KUrl url = KUrl( ( *lineIt ).value().toString() );
+            addr.insertSourceUrl( url );
         }
         // MEMBER (vcard 4.0)
         else if ( identifier == QLatin1String( "member" ) ) {

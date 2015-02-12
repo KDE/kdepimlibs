@@ -1025,6 +1025,9 @@ class KABC_EXPORT Addressee
     void setRelationShips(const QStringList &c);
     QStringList relationShips() const;
 
+    void insertSourceUrl(const KUrl &url);
+    void setSourcesUrlList(const QList<KUrl> &urlList);
+    QList<KUrl> sourcesUrlList() const;
 private:
     class Private;
     QSharedDataPointer<Private> d;
