@@ -1,6 +1,6 @@
 BEGIN:VCARD
 VERSION:2.1
-EMAIL:geiseri@yahoo.com
+EMAIL;INTERNET:geiseri@yahoo.com
 FN:ian geiser
 N:geiser;ian;;;
 ORG:Source eXtreme

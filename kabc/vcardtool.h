@@ -85,7 +85,7 @@ class KABC_EXPORT VCardTool
 
     QMap<QString, Address::TypeFlag> mAddressTypeMap;
     QMap<QString, PhoneNumber::TypeFlag> mPhoneTypeMap;
-
+    void addParameter(VCardLine &line, VCard::Version version, const QString &key, const QStringList &valueStringList) const;
     class VCardToolPrivate;
     VCardToolPrivate *d;
 };

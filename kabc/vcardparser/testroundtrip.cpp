@@ -58,9 +58,9 @@ void RoundtripTest::initTestCase()
   QVERIFY( mInputDir.exists() );
   QVERIFY( mInputDir.cd( QLatin1String( "tests" ) ) );
 
-  //mOutput2_1Dir = QDir( QLatin1String( ":/output2.1" ) );
-  //QVERIFY( mOutput2_1Dir.exists() );
-  //QVERIFY( mOutput2_1Dir.cd( QLatin1String( "tests" ) ) );
+  mOutput2_1Dir = QDir( QLatin1String( ":/output2.1" ) );
+  QVERIFY( mOutput2_1Dir.exists() );
+  QVERIFY( mOutput2_1Dir.cd( QLatin1String( "tests" ) ) );
 
   mOutput3_0Dir = QDir( QLatin1String( ":/output3.0" ) );
   QVERIFY( mOutput3_0Dir.exists() );
