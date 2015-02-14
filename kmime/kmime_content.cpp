@@ -586,42 +586,66 @@ void Content::addContent( Content *c, bool prepend )
   }
 }
 
+void Content::replaceContent(Content *oldContent, Content *newContent)
+{
+    Q_D( Content );
+    if ( d->multipartContents.isEmpty() || !d->multipartContents.contains( oldContent ) ) {
+      return;
+    }
+
+    d->multipartContents.removeAll( oldContent );
+    delete oldContent;
+    d->multipartContents.append( newContent );
+    if( newContent->parent() != this ) {
+      // If the content was part of something else, this will remove it from there.
+      newContent->setParent( this );
+    }
+}
+
+void Content::removeContent( Content *c, bool del, bool cleanUpMultipart)
+{
+    Q_D( Content );
+    if ( d->multipartContents.isEmpty() || !d->multipartContents.contains( c ) ) {
+      return;
+    }
+
+    // This method makes no sense for encapsulated messages.
+    // Should be covered by the above assert already, though.
+    Q_ASSERT( !bodyIsMessage() );
+
+    d->multipartContents.removeAll( c );
+    if ( del ) {
+      delete c;
+    } else {
+      c->d_ptr->parent = 0;
+    }
+
+    qDebug()<<" d->multipartContents.count()"<<d->multipartContents.count();
+    // If only one content is left, turn this content into a single-part.
+    if( d->multipartContents.count() == 1 && cleanUpMultipart ) {
+      Content *main = d->multipartContents.first();
+
+      // Move all headers from the old subcontent to ourselves.
+      // NOTE: This also sets the new Content-Type.
+      foreach( Headers::Base *h, main->h_eaders ) {
+        setHeader( h ); // Will remove the old one if present.
+      }
+      main->h_eaders.clear();
+
+      // Move the body.
+      d->body = main->body();
+
+      // Delete the old subcontent.
+      delete main;
+      d->multipartContents.clear();
+    }
+
+}
+
 void Content::removeContent( Content *c, bool del )
 {
   Q_D( Content );
-  if ( d->multipartContents.isEmpty() || !d->multipartContents.contains( c ) ) {
-    return;
-  }
-
-  // This method makes no sense for encapsulated messages.
-  // Should be covered by the above assert already, though.
-  Q_ASSERT( !bodyIsMessage() );
-
-  d->multipartContents.removeAll( c );
-  if ( del ) {
-    delete c;
-  } else {
-    c->d_ptr->parent = 0;
-  }
-
-  // If only one content is left, turn this content into a single-part.
-  if( d->multipartContents.count() == 1 ) {
-    Content *main = d->multipartContents.first();
-
-    // Move all headers from the old subcontent to ourselves.
-    // NOTE: This also sets the new Content-Type.
-    foreach( Headers::Base *h, main->h_eaders ) {
-      setHeader( h ); // Will remove the old one if present.
-    }
-    main->h_eaders.clear();
-
-    // Move the body.
-    d->body = main->body();
-
-    // Delete the old subcontent.
-    delete main;
-    d->multipartContents.clear();
-  }
+  removeContent( c, del, true );
 }
 
 void Content::changeEncoding( Headers::contentEncoding e )
