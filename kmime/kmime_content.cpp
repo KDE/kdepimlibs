@@ -602,7 +602,7 @@ void Content::replaceContent(Content *oldContent, Content *newContent)
     }
 }
 
-void Content::removeContent( Content *c, bool del, bool cleanUpMultipart)
+void Content::removeContent( Content *c, bool del )
 {
     Q_D( Content );
     if ( d->multipartContents.isEmpty() || !d->multipartContents.contains( c ) ) {
@@ -620,9 +620,8 @@ void Content::removeContent( Content *c, bool del, bool cleanUpMultipart)
       c->d_ptr->parent = 0;
     }
 
-    qDebug()<<" d->multipartContents.count()"<<d->multipartContents.count();
     // If only one content is left, turn this content into a single-part.
-    if( d->multipartContents.count() == 1 && cleanUpMultipart ) {
+    if( d->multipartContents.count() == 1 ) {
       Content *main = d->multipartContents.first();
 
       // Move all headers from the old subcontent to ourselves.
@@ -640,12 +639,6 @@ void Content::removeContent( Content *c, bool del, bool cleanUpMultipart)
       d->multipartContents.clear();
     }
 
-}
-
-void Content::removeContent( Content *c, bool del )
-{
-  Q_D( Content );
-  removeContent( c, del, true );
 }
 
 void Content::changeEncoding( Headers::contentEncoding e )
