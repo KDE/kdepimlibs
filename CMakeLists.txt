@@ -2,6 +2,7 @@ project(kdepimlibs)
 cmake_minimum_required(VERSION 2.8.12)
 
 option(KDEPIMLIBS_SUPERBUILD "Build standalone lib" FALSE)
+option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
 
 if (KDEPIMLIBS_SUPERBUILD)
 
