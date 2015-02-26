@@ -38,10 +38,10 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes(const QString &userNam
                                                           uint maxPostLength)
     : d(new SocialNetworkAttributesPrivate())
 {
-    d->attributes[QLatin1String("userName")] = userName;
-    d->attributes[QLatin1String("networkName")] = networkName;
-    d->attributes[QLatin1String("canPublish")] = canPublish;
-    d->attributes[QLatin1String("maxPostLength")] = maxPostLength;
+    d->attributes[QStringLiteral("userName")] = userName;
+    d->attributes[QStringLiteral("networkName")] = networkName;
+    d->attributes[QStringLiteral("canPublish")] = canPublish;
+    d->attributes[QStringLiteral("maxPostLength")] = maxPostLength;
 }
 
 Akonadi::SocialNetworkAttributes::~SocialNetworkAttributes()
@@ -71,10 +71,10 @@ Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 {
     return
         new SocialNetworkAttributes(
-            d->attributes[QLatin1String("userName")].toString(),
-            d->attributes[QLatin1String("networkName")].toString(),
-            d->attributes[QLatin1String("canPublish")].toBool(),
-            d->attributes[QLatin1String("maxPostLength")].toUInt());
+            d->attributes[QStringLiteral("userName")].toString(),
+            d->attributes[QStringLiteral("networkName")].toString(),
+            d->attributes[QStringLiteral("canPublish")].toBool(),
+            d->attributes[QStringLiteral("maxPostLength")].toUInt());
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::type() const
@@ -85,20 +85,20 @@ QByteArray Akonadi::SocialNetworkAttributes::type() const
 
 QString Akonadi::SocialNetworkAttributes::userName() const
 {
-    return d->attributes[QLatin1String("userName")].toString();
+    return d->attributes[QStringLiteral("userName")].toString();
 }
 
 QString Akonadi::SocialNetworkAttributes::networkName() const
 {
-    return d->attributes[QLatin1String("networkName")].toString();
+    return d->attributes[QStringLiteral("networkName")].toString();
 }
 
 bool Akonadi::SocialNetworkAttributes::canPublish() const
 {
-    return d->attributes[QLatin1String("canPublish")].toBool();
+    return d->attributes[QStringLiteral("canPublish")].toBool();
 }
 
 uint Akonadi::SocialNetworkAttributes::maxPostLength() const
 {
-    return d->attributes[QLatin1String("maxPostLength")].toUInt();
+    return d->attributes[QStringLiteral("maxPostLength")].toUInt();
 }
