@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.6.0")
-set(KDEPIMLIBS_VERSION "4.81.0")
+set(KDEPIMLIBS_VERSION "4.82.0")
 set(KF5_MIME_VERSION "4.81.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
