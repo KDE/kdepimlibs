@@ -19,7 +19,6 @@
 
 #include "messagetest.h"
 #include <qtest.h>
-#include <qdebug.h>
 #include <QFile>
 #include <item.h>
 #include <messageflags.h>
