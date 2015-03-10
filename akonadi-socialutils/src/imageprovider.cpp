@@ -169,7 +169,7 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
 
     if (!d->imageCache && !cache) {
         //if no old cache and no passed cache, default to plasma_engine_preview
-        d->imageCache = new KImageCache(QLatin1String("plasma_engine_preview"),
+        d->imageCache = new KImageCache(QStringLiteral("plasma_engine_preview"),
                                         10485760);  // Re-use previewengine's cache
     } else if (!d->imageCache && cache) {
         //if there is no old cache, set the new one
