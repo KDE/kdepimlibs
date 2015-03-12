@@ -83,6 +83,14 @@ public:
      */
     KDateTime occurrenceStartDate() const;
 
+    /**
+     * Returns the recurrence Id.
+     *
+     * This is the date where the occurrence starts without exceptions,
+     * this id is used to identify one excat occurence.
+     */
+    KDateTime recurrenceId() const;
+
 private:
     Q_DISABLE_COPY(OccurrenceIterator)
     //@cond PRIVATE
