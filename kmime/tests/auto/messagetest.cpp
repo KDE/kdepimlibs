@@ -461,7 +461,8 @@ void MessageTest::testBug223509()
   QCOMPARE( msg->subject()->as7BitString().data(), "Subject: Blub" );
   QCOMPARE( msg->contents().size(), 0 );
   QCOMPARE( msg->contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
-  QCOMPARE( msg->decodedText().toLatin1().data(), "Bla Bla Bla\n" );
+  QCOMPARE( msg->decodedText().toLatin1().data(), "Bla Bla Bla" );
+  QCOMPARE(msg->encodedBody().data(), "Bla Bla Bla\n");
 
   // encodedContent() was crashing in this bug because of an invalid assert
   QVERIFY( !msg->encodedContent().isEmpty() );
@@ -470,12 +471,12 @@ void MessageTest::testBug223509()
   KMime::Message msg2;
   msg2.setContent( msg->encodedContent() );
   msg2.parse();
+  QCOMPARE(msg2.encodedContent(), msg->encodedContent());
   QCOMPARE( msg2.subject()->as7BitString().data(), "Subject: Blub" );
   QCOMPARE( msg2.contents().size(), 0 );
   QCOMPARE( msg2.contentTransferEncoding()->encoding(), KMime::Headers::CEbinary );
 
-  QEXPECT_FAIL( "", "KMime adds an additional newline", Continue );
-  QCOMPARE( msg2.decodedText().toLatin1().data(), "Bla Bla Bla\n" );
+  QCOMPARE( msg2.decodedText().toLatin1().data(), "Bla Bla Bla" );
   QCOMPARE( msg2.decodedText( true, true /* remove newlines at end */ ).toLatin1().data(),
             "Bla Bla Bla" );
 }
@@ -621,6 +622,24 @@ void MessageTest::testCopyFlags()
     QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasInvitation) == true);
     QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasAttachment) == true);
   }
+}
+
+void MessageTest::testReturnSameMail()
+{
+    KMime::Message::Ptr msg = readAndParseMail("dontchangemail.mbox");
+    QFile file(TEST_DATA_DIR"/mails/dontchangemail.mbox");
+    const bool ok = file.open(QIODevice::ReadOnly);
+    if (!ok) {
+        qWarning() << file.fileName() << "not found";
+    }
+    Q_ASSERT(ok);
+    QByteArray fileContent = file.readAll();
+    QCOMPARE(msg->encodedContent(), fileContent);
+    QCOMPARE(msg->decodedText(), QLatin1String(""));
+    KMime::Message msg2;
+    msg2.setContent(msg->encodedContent());
+    msg2.parse();
+    QCOMPARE(msg2.encodedContent(), fileContent);
 }
 
 KMime::Message::Ptr MessageTest::readAndParseMail( const QString &mailFile ) const

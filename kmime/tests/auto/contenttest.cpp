@@ -427,7 +427,6 @@ void ContentTest::testMultipartMixed()
     "MIME-Version: 1.0\n"
     "Content-Type: multipart/mixed; boundary=\"simple boundary\"\n"
     "\n"
-    "\n"
     "--simple boundary\n"
     "\n"
     "This is implicitly typed plain US-ASCII text.\n"

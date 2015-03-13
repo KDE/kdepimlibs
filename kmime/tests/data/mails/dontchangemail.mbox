@@ -1,0 +1,49 @@
+From: test@test.de
+To: a@b.de
+Subject: test
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/bf9NRhujKrpGsHEluCGG1Ux"; protocol="application/pgp-signature"
+
+--Sig_/bf9NRhujKrpGsHEluCGG1Ux
+Content-Type: multipart/mixed; boundary="MP_/H9EtWvl.za1Pp+XaxTBdQH8"
+
+--MP_/H9EtWvl.za1Pp+XaxTBdQH8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+test
+
+--MP_/H9EtWvl.za1Pp+XaxTBdQH8
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename=poc.txt
+
+hdsswkrwerifjekdjvsze3diocfgh
+
+--MP_/H9EtWvl.za1Pp+XaxTBdQH8--
+
+--Sig_/bf9NRhujKrpGsHEluCGG1Ux
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTOSvMAAoJELtUlLP5ziidaY0P/1fhefScUXUoKB52HXx+uRZY
+PAXw0RwIHbOG2V6dcKcC697/XG0xjRItpSkYuK0SzldFVrwarAs8RWqADfqYtL3z
+40LRdUjldAP1PNOLyrBRdJv0TMNwu3waKZ2yug3d48dbmdlt5LU3PUEgY88odClg
+0mP3oWtAp+gzINwJu3B3pW07kdcvyR165w8MnF0hKyXw9mEMrV0WB3pvUbg76Fym
+LsG8haTu+U/qVGSs1NuUEXCPCFxqYo0MPjjjTG3i7yvF/9iBsHTM2kIgbJB5DbGN
+HOy0yOxj1AI8wHNKxG+ylM9jYDAholKXbHJBQhI5LE1pVvdZG7svva1xCl7w0752
+C5bL866CJosH9a3qSJkCnJK20yEvJPFhDsA4HcTln1vo4oh9cNON9mYaheHCLCXP
+N9cMmNMroC2nMW65IkOIkqUncaMRiH58Ykb/EWS9iPqXzyya7T8mCJed5kgb39Iw
+IL1zK6S378nn9qDisGW51Lp4mkiabLMnE62XPoSDwR4zHG8ubd3uGmV1p1RvkETJ
+ciWW31cXtEV80LtnaZzwtKrbqQ/nsvIAv5F6d+iQsh74npFgZJPbS9RS3JjUIHk7
+wnglbXaRq7POR7SssNZAM0x8ylFJ/XCgYKkj2w4WYw437IcNGDdpDXWzZ0CT19oC
+Z/tmc6Ahb8f3J+8Uj+VU
+=/zVi
+-----END PGP SIGNATURE-----
+
+--Sig_/bf9NRhujKrpGsHEluCGG1Ux--

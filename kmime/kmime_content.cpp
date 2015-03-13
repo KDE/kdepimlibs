@@ -298,18 +298,24 @@ void Content::clearContents( bool del )
 
 QByteArray Content::encodedContent( bool useCrLf )
 {
-  Q_D( Content );
-  QByteArray e;
+  QByteArray encodedContentData = head();           // return value; initialise with the head data
+  const QByteArray encodedBodyData = encodedBody();
 
-  // Head.
-  e = d->head;
-  e += '\n';
-  e += encodedBody();
+  /* Make sure, that head and body have at least two newlines as seperator, otherwise add one.
+   * If we have enough newlines as sperator, than we should not change the number of newlines
+   * to not break digital signatures
+   */
+  if (!encodedContentData.endsWith("\n\n") &&
+      !encodedBodyData.startsWith("\n\n") &&
+      !(encodedContentData.endsWith("\n") && encodedBodyData.startsWith("\n"))){
+    encodedContentData += '\n';
+  }
+  encodedContentData += encodedBodyData;
 
   if ( useCrLf ) {
-    return LFtoCRLF( e );
+    return LFtoCRLF( encodedContentData );
   } else {
-    return e;
+    return encodedContentData;
   }
 }
 
@@ -853,20 +859,20 @@ bool Content::decodeText()
   {
   case Headers::CEbase64 :
     d->body = KCodecs::base64Decode( d->body );
-    d->body.append( "\n" );
     break;
   case Headers::CEquPr :
     d->body = KCodecs::quotedPrintableDecode( d->body );
     break;
   case Headers::CEuuenc :
     d->body = KCodecs::uudecode( d->body );
-    d->body.append( "\n" );
     break;
   case Headers::CEbinary :
     // nothing to decode
-    d->body.append( "\n" );
   default :
     break;
+  }
+  if (!d->body.endsWith("\n")) {
+      d->body.append( "\n" );
   }
   enc->setDecoded( true );
   return true;

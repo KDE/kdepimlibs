@@ -2246,7 +2246,10 @@ void extractHeaderAndBody( const QByteArray &content, QByteArray &header, QByteA
   int pos = content.indexOf( "\n\n", 0 );
   if ( pos > -1 ) {
     header = content.left( ++pos );  //header *must* end with "\n" !!
-    body = content.mid( pos + 1, content.length() - pos - 1 );
+    body = content.mid(pos+1);
+    if (body.startsWith("\n")) {
+        body = "\n"+body;
+    }
   } else {
     header = content;
   }
