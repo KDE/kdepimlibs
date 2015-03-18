@@ -125,10 +125,10 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
   QStringList streets = homeAddr.street().split( QLatin1Char( '\n' ) );
   const int numberOfStreets( streets.count() );
   if ( numberOfStreets > 0 ) {
-    ldif_out( t, QLatin1String( "homepostaladdress" ), streets[ 0 ] ); // Netscape 7
+    ldif_out( t, QLatin1String( "homepostaladdress" ), streets.at(0) ); // Netscape 7
   }
   if ( numberOfStreets > 1 ) {
-    ldif_out( t, QLatin1String( "mozillahomepostaladdress2" ), streets[ 1 ] ); // Netscape 7
+    ldif_out( t, QLatin1String( "mozillahomepostaladdress2" ), streets.at(1) ); // Netscape 7
   }
   ldif_out( t, QLatin1String( "mozillahomelocalityname" ), homeAddr.locality() ); // Netscape 7
   ldif_out( t, QLatin1String( "mozillahomestate" ), homeAddr.region() );
@@ -140,10 +140,10 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
 
   streets = workAddr.street().split( QLatin1Char( '\n' ) );
   if ( streets.count() > 0 ) {
-    ldif_out( t, QLatin1String( "postaladdress" ), streets[ 0 ] );
+    ldif_out( t, QLatin1String( "postaladdress" ), streets.at(0) );
   }
   if ( streets.count() > 1 ) {
-    ldif_out( t, QLatin1String( "mozillapostaladdress2" ), streets[ 1 ] );
+    ldif_out( t, QLatin1String( "mozillapostaladdress2" ), streets.at(1) );
   }
   ldif_out( t, QLatin1String( "countryname" ), Address::ISOtoCountry( workAddr.country() ) );
   ldif_out( t, QLatin1String( "l" ), workAddr.locality() );
@@ -557,7 +557,7 @@ addComment:
     return true;
   }
   if ( fieldname == QLatin1String("xbatbirthday")) {
-    QDate dt = QDate::fromString(value, QString::fromLatin1("yyyyMMdd"));
+    const QDate dt = QDate::fromString(value, QString::fromLatin1("yyyyMMdd"));
     if (dt.isValid()) {
         a.setBirthday(QDateTime(dt));
     }
