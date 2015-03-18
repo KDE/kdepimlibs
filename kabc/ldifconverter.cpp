@@ -556,6 +556,13 @@ addComment:
     birthday = value.toInt();
     return true;
   }
+  if ( fieldname == QLatin1String("xbatbirthday")) {
+    QDate dt = QDate::fromString(value, QString::fromLatin1("yyyyMMdd"));
+    if (dt.isValid()) {
+        a.setBirthday(QDateTime(dt));
+    }
+    return true;
+  }
 
   kWarning( 5700 ) << QString::fromLatin1( "LDIFConverter: Unknown field for '%1': '%2=%3'\n" ).
     arg( a.formattedName() ).arg( fieldname ).arg( value );
