@@ -235,3 +235,12 @@ kde4_add_unit_test(impptest TESTNAME kabc-impptest ${impptest_SRCS})
 
 target_link_libraries(impptest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
+
+########### next target ###############
+
+set(ldifconverter_SRCS ldifconvertertest.cpp)
+
+
+kde4_add_unit_test(ldifconvertertest TESTNAME kabc-ldifconvertertest ${ldifconverter_SRCS})
+
+target_link_libraries(ldifconvertertest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
