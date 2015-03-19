@@ -382,12 +382,8 @@ addComment:
     return true;
   }
 
-  if ( fieldname == QLatin1String( "mobile" ) ) {         // mozilla/Netscape 7
-    a.insertPhoneNumber( PhoneNumber( value, PhoneNumber::Cell ) );
-    return true;
-  }
-
-  if ( fieldname == QLatin1String( "cellphone" ) ) {
+  if ( fieldname == QLatin1String( "mobile" ) || /* mozilla/Netscape 7 */
+       fieldname == QLatin1String( "cellphone" )) {
     a.insertPhoneNumber( PhoneNumber( value, PhoneNumber::Cell ) );
     return true;
   }
