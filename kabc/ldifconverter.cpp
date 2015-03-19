@@ -512,8 +512,9 @@ addComment:
     QStringList list = value.split( QLatin1Char( ',' ) );
     QString name, email;
 
-    QStringList::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
+    QStringList::ConstIterator it;
+    QStringList::ConstIterator end(list.constEnd());
+    for ( it = list.constBegin(); it != end; ++it ) {
       if ( ( *it ).startsWith( QLatin1String( "cn=" ) ) ) {
         name = ( *it ).mid( 3 ).trimmed();
       }
@@ -525,7 +526,6 @@ addComment:
       email = QLatin1String( " <" ) + email + QLatin1Char( '>' );
     }
     a.insertEmail( name + email );
-    a.insertCategory( i18n( "List of Emails" ) );
     return true;
   }
 
