@@ -420,7 +420,8 @@ addComment:
     return true;
   }
 
-  if ( fieldname == QLatin1String( "mozillapostaladdress2" ) ) {  // mozilla
+  if ( fieldname == QLatin1String( "mozillapostaladdress2" ) ||
+       fieldname == QLatin1String( "mozillaworkstreet2" ) ) {  // mozilla
     workAddr.setStreet( workAddr.street() + QLatin1String( "\n" ) + value );
     return true;
   }
