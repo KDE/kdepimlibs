@@ -140,10 +140,10 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
 
   streets = workAddr.street().split( QLatin1Char( '\n' ) );
   if ( streets.count() > 0 ) {
-    ldif_out( t, QLatin1String( "postaladdress" ), streets.at(0) );
+    ldif_out( t, QLatin1String( "street" ), streets.at(0) );
   }
   if ( streets.count() > 1 ) {
-    ldif_out( t, QLatin1String( "mozillapostaladdress2" ), streets.at(1) );
+    ldif_out( t, QLatin1String( "mozillaworkstreet2" ), streets.at(1) );
   }
   ldif_out( t, QLatin1String( "countryname" ), Address::ISOtoCountry( workAddr.country() ) );
   ldif_out( t, QLatin1String( "l" ), workAddr.locality() );
