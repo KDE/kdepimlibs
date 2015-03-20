@@ -342,20 +342,16 @@ bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
     return true;
   }
 
-  if ( fieldname == QLatin1String( "description" ) ) {
-addComment:
-    if ( !a.note().isEmpty() ) {
-      a.setNote( a.note() + QLatin1Char( '\n' ) );
-    }
-    a.setNote( a.note() + value );
-    return true;
-  }
-
-  if ( fieldname == QLatin1String( "custom1" ) ||
+  if ( fieldname == QLatin1String( "description" ) ||
+       fieldname == QLatin1String( "custom1" ) ||
        fieldname == QLatin1String( "custom2" ) ||
        fieldname == QLatin1String( "custom3" ) ||
        fieldname == QLatin1String( "custom4" ) ) {
-    goto addComment;
+      if ( !a.note().isEmpty() ) {
+        a.setNote( a.note() + QLatin1Char( '\n' ) );
+      }
+      a.setNote( a.note() + value );
+      return true;
   }
 
   if ( fieldname == QLatin1String( "homeurl" ) ||
