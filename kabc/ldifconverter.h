@@ -22,6 +22,7 @@
 
 #include "addressee.h"
 #include "addresseelist.h"
+#include "contactgroup.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
@@ -44,6 +45,9 @@ namespace KABC {
     @param dt          The date & time value of the last modification (e.g. file modification time).
   */
   KABC_EXPORT bool LDIFToAddressee( const QString &str, AddresseeList &addrList,
+                                    const QDateTime &dt = QDateTime::currentDateTime() );
+
+  KABC_EXPORT bool LDIFToAddressee( const QString &str, AddresseeList &addrList, ContactGroup::List &contactGroupList,
                                     const QDateTime &dt = QDateTime::currentDateTime() );
 
   /**
@@ -79,7 +83,7 @@ namespace KABC {
   KABC_EXPORT bool evaluatePair( Addressee &a, Address &homeAddr,
                                  Address &workAddr,
                                  QString &fieldname, QString &value,
-                                 int &birthday, int &birthmonth, int &birthyear );
+                                 int &birthday, int &birthmonth, int &birthyear, ContactGroup &contactGroup);
 
   }
 

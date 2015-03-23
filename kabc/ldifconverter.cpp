@@ -89,6 +89,12 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
   ldif_out( t, QLatin1String( "dn" ), QString::fromLatin1( "cn=%1,mail=%2" ).
             arg( addr.formattedName().simplified() ).
             arg( addr.preferredEmail() ) );
+
+  t << "objectclass: top\n";
+  t << "objectclass: person\n";
+  t << "objectclass: organizationalPerson\n";
+
+
   ldif_out( t, QLatin1String( "givenname" ), addr.givenName() );
   ldif_out( t, QLatin1String( "sn" ), addr.familyName() );
   ldif_out( t, QLatin1String( "cn" ), addr.formattedName().simplified() );
@@ -182,10 +188,6 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
     ldif_out( t, QLatin1String( "birthday" ), QString::number( date.day() ) );
   }
 
-  t << "objectclass: top\n";
-  t << "objectclass: person\n";
-  t << "objectclass: organizationalPerson\n";
-
   t << "\n";
 
   return true;
@@ -193,87 +195,99 @@ bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
 
 /* convert from LDIF stream */
 
+bool LDIFConverter::LDIFToAddressee( const QString &str, AddresseeList &addrList, ContactGroup::List &contactGroupList,
+                                  const QDateTime &dt )
+{
+    if ( str.isEmpty() ) {
+      return true;
+    }
+    bool endldif = false, end = false;
+    Ldif ldif;
+    Ldif::ParseValue ret;
+    Addressee a;
+    ContactGroup contactGroup;
+    Address homeAddr, workAddr;
+    int birthday = -1;
+    int birthmonth = -1;
+    int birthyear = -1;
+
+    ldif.setLdif( str.toLatin1() );
+    QDateTime qdt = dt;
+    if ( !qdt.isValid() ) {
+      qdt = QDateTime::currentDateTime();
+    }
+    a.setRevision( qdt );
+    homeAddr = Address( Address::Home );
+    workAddr = Address( Address::Work );
+
+    do {
+      ret = ldif.nextItem();
+      switch ( ret ) {
+        case Ldif::Item:
+        {
+          QString fieldname = ldif.attr().toLower();
+          QString value = QString::fromUtf8( ldif.value(), ldif.value().size() );
+          evaluatePair( a, homeAddr, workAddr, fieldname, value, birthday, birthmonth, birthyear, contactGroup );
+          break;
+        }
+        case Ldif::EndEntry:
+        {
+          if (contactGroup.count() == 0) {
+              // if the new address is not empty, append it
+              QDateTime birthDate( QDate( birthyear, birthmonth, birthday ) );
+              if ( birthDate.isValid() ) {
+                  a.setBirthday( birthDate );
+              }
+
+              if ( !a.formattedName().isEmpty() || !a.name().isEmpty() ||
+                   !a.familyName().isEmpty() ) {
+                  if ( !homeAddr.isEmpty() ) {
+                      a.insertAddress( homeAddr );
+                  }
+                  if ( !workAddr.isEmpty() ) {
+                      a.insertAddress( workAddr );
+                  }
+                  addrList.append( a );
+              }
+          } else {
+              contactGroupList.append(contactGroup);
+          }
+          a = Addressee();
+          contactGroup = ContactGroup();
+          a.setRevision( qdt );
+          homeAddr = Address( Address::Home );
+          workAddr = Address( Address::Work );
+        }
+        break;
+        case Ldif::MoreData:
+        {
+          if ( endldif ) {
+            end = true;
+          } else {
+            ldif.endLdif();
+            endldif = true;
+            break;
+          }
+        }
+        default:
+          break;
+      }
+    } while ( !end );
+    return true;
+}
+
+
 bool LDIFConverter::LDIFToAddressee( const QString &str, AddresseeList &addrList,
                                      const QDateTime &dt )
 {
-  if ( str.isEmpty() ) {
-    return true;
-  }
-
-  bool endldif = false, end = false;
-  Ldif ldif;
-  Ldif::ParseValue ret;
-  Addressee a;
-  Address homeAddr, workAddr;
-  int birthday = -1;
-  int birthmonth = -1;
-  int birthyear = -1;
-
-  ldif.setLdif( str.toLatin1() );
-  QDateTime qdt = dt;
-  if ( !qdt.isValid() ) {
-    qdt = QDateTime::currentDateTime();
-  }
-  a.setRevision( qdt );
-  homeAddr = Address( Address::Home );
-  workAddr = Address( Address::Work );
-
-  do {
-    ret = ldif.nextItem();
-    switch ( ret ) {
-      case Ldif::Item:
-      {
-        QString fieldname = ldif.attr().toLower();
-        QString value = QString::fromUtf8( ldif.value(), ldif.value().size() );
-        evaluatePair( a, homeAddr, workAddr, fieldname, value, birthday, birthmonth, birthyear );
-        break;
-      }
-      case Ldif::EndEntry:
-      {
-        // if the new address is not empty, append it
-        QDateTime birthDate( QDate( birthyear, birthmonth, birthday ) );
-        if ( birthDate.isValid() ) {
-          a.setBirthday( birthDate );
-        }
-
-        if ( !a.formattedName().isEmpty() || !a.name().isEmpty() ||
-             !a.familyName().isEmpty() ) {
-          if ( !homeAddr.isEmpty() ) {
-            a.insertAddress( homeAddr );
-          }
-          if ( !workAddr.isEmpty() ) {
-            a.insertAddress( workAddr );
-          }
-          addrList.append( a );
-        }
-        a = Addressee();
-        a.setRevision( qdt );
-        homeAddr = Address( Address::Home );
-        workAddr = Address( Address::Work );
-      }
-      break;
-      case Ldif::MoreData:
-      {
-        if ( endldif ) {
-          end = true;
-        } else {
-          ldif.endLdif();
-          endldif = true;
-          break;
-        }
-      }
-      default:
-        break;
-    }
-  } while ( !end );
-
-  return true;
+    ContactGroup::List contactGroupList;
+    return LDIFToAddressee( str, addrList, contactGroupList, dt);
 }
 
 bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
                                   Address &workAddr,
                                   QString &fieldname, QString &value,
-                                  int &birthday, int &birthmonth, int &birthyear )
+                                  int &birthday, int &birthmonth, int &birthyear, ContactGroup &contactGroup )
 {
   if ( fieldname == QLatin1String( "dn" ) ) { // ignore & return false!
     return false;
@@ -518,6 +532,10 @@ bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
     if ( !name.isEmpty() && !email.isEmpty() ) {
       email = QLatin1String( " <" ) + email + QLatin1Char( '>' );
     }
+    ContactGroup::Data data;
+    data.setEmail(email);
+    data.setName(name);
+    contactGroup.append(data);
     a.insertEmail( name + email );
     return true;
   }
@@ -531,6 +549,11 @@ bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
       a.setRevision( dt );
       return true;
     }
+  }
+
+  if ( fieldname == QLatin1String( "display-name" ) ) {
+      contactGroup.setName(value);
+    return true;
   }
 
   if ( fieldname == QLatin1String( "objectclass" ) ) { // ignore
