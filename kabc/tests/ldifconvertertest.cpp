@@ -162,5 +162,35 @@ void LDifConverterTest::shouldConvertContactGroup()
     QCOMPARE((int)first.count(), 3);
 }
 
+void LDifConverterTest::shouldConvertMultiEntries()
+{
+    QString str = QLatin1String("dn: cn=test1,mail=test1@test.test\n"
+                                "sn: test1\n"
+                                "cn: test1\n"
+                                "uid: jpgdf2NrLQ\n"
+                                "mail: test1@test.test\n"
+                                "modifytimestamp: 20121219T140848Z\n"
+                                "objectclass: top\n"
+                                "objectclass: person\n"
+                                "objectclass: organizationalPerson\n"
+                                "\n"
+                                "dn: cn=test2,mail=test2@test.test\n"
+                                "sn: test2\n"
+                                "cn: test2\n"
+                                "uid: ow2mwdUb6A\n"
+                                "mail: test2@test.test\n"
+                                "objectclass: top\n"
+                                "objectclass: person\n"
+                                "objectclass: organizationalPerson\n");
+    AddresseeList lst;
+    ContactGroup::List contactGroup;
+    bool result = LDIFConverter::LDIFToAddressee(str, lst, contactGroup);
+    QVERIFY(result);
+    QCOMPARE(lst.count(), 2);
+    QCOMPARE(contactGroup.count(), 0);
+    QCOMPARE(lst.at(0).emails().at(0), QLatin1String("test1@test.test"));
+    QCOMPARE(lst.at(1).emails().at(0), QLatin1String("test2@test.test"));
+}
+
 
 QTEST_KDEMAIN(LDifConverterTest, NoGUI)
