@@ -536,7 +536,6 @@ bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
     data.setEmail(email);
     data.setName(name);
     contactGroup.append(data);
-    a.insertEmail( name + email );
     return true;
   }
 
