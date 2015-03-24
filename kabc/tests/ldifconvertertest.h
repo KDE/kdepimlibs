@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldConvertWorkStreet();
     void shouldConvertContactGroup();
     void shouldConvertMultiEntries();
+    void shouldConvertGroupAndAddress();
 };
 
 #endif // LDIFCONVERTERTEST_H
