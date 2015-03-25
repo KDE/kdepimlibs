@@ -1458,6 +1458,7 @@ Email::List Addressee::emailList() const
 void Addressee::setEmailList(const Email::List &list)
 {
     d->mEmails = list;
+    d->mEmpty = false;
 }
 
 void Addressee::setEmails( const QStringList& emails )
@@ -1466,6 +1467,7 @@ void Addressee::setEmails( const QStringList& emails )
     for (int i = 0; i < emails.size(); ++i) {
         d->mEmails.append(Email(emails.at(i)));
     }
+    d->mEmpty = false;
 }
 
 void Addressee::removeLang( const QString &language )
@@ -1642,6 +1644,7 @@ Key Addressee::key( Key::Type type, QString customTypeString ) const
 
 void Addressee::setKeys( const Key::List& list )
 {
+  d->mEmpty = false;
   d->mKeys = list;
 }
 
