@@ -57,7 +57,8 @@ namespace KABC {
     @param str         The LDIF string.
   */
   KABC_EXPORT bool addresseeToLDIF( const AddresseeList &addrList, QString &str );
-
+  KABC_EXPORT bool addresseeToLDIF( const AddresseeList &addrList, const ContactGroup::List &contactGroupList, QString &str );
+  KABC_EXPORT bool addresseeToLDIF( const ContactGroup::List &contactGroupList, QString &str );
   /**
     Converts an addressee to a LDIF string.
 
