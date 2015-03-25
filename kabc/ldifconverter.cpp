@@ -90,8 +90,16 @@ bool LDIFConverter::contactGroupToLDIF( const ContactGroup &contactGroup, QStrin
     }
     QTextStream t( &str, QIODevice::WriteOnly|QIODevice::Append );
     t.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+    t << "objectclass: top\n";
+    t << "objectclass: groupOfNames\n";
+
+    for (unsigned int i = 0; i < contactGroup.dataCount(); ++i) {
+        ContactGroup::Data data = contactGroup.data(i);
+        const QString value = QString::fromLatin1("cn=%1,mail=%2").arg(data.name()).arg(data.email());
+        ldif_out( t, QLatin1String( "member" ), value );
+    }
+
     t << "\n";
-    //TODO
     return true;
 }
 
