@@ -74,23 +74,38 @@ static void ldif_out( QTextStream &t, const QString &formatStr,
   t << QString::fromUtf8( txt ) << "\n";
 }
 
-bool LDIFConverter::addresseeToLDIF( const AddresseeList &addrList, const ContactGroup::List &contactGroupList, QString &str )
+bool LDIFConverter::addresseeAndContactGroupToLDIF( const AddresseeList &addrList, const ContactGroup::List &contactGroupList, QString &str )
 {
     bool result = addresseeToLDIF( addrList, str );
     if (!contactGroupList.isEmpty()) {
-
+        result = contactGroupToLDIF( contactGroupList, str );
     }
     return result;
 }
 
-bool LDIFConverter::addresseeToLDIF( const ContactGroup::List &contactGroupList, QString &str )
+bool LDIFConverter::contactGroupToLDIF( const ContactGroup &contactGroup, QString &str )
 {
-    if ( contactGroupList.isEmpty() ) {
+    if ( contactGroup.dataCount() <= 0 ) {
         return false;
     }
+    QTextStream t( &str, QIODevice::WriteOnly|QIODevice::Append );
+    t.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+    t << "\n";
     //TODO
     return true;
 }
+
+bool LDIFConverter::contactGroupToLDIF( const ContactGroup::List &contactGroupList, QString &str )
+{
+    ContactGroup::List::ConstIterator it;
+    ContactGroup::List::ConstIterator end( contactGroupList.constEnd() );
+    for ( it = contactGroupList.constBegin(); it != end; ++it ) {
+      contactGroupToLDIF( *it, str );
+    }
+    return true;
+}
+
+
 
 bool LDIFConverter::addresseeToLDIF( const Addressee &addr, QString &str )
 {
