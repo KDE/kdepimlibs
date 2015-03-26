@@ -398,6 +398,10 @@ bool LDIFConverter::evaluatePair( Addressee &a, Address &homeAddr,
   }
 
   if ( fieldname == QLatin1String( "description" ) ||
+       fieldname == QLatin1String( "mozillacustom1" ) ||
+       fieldname == QLatin1String( "mozillacustom2" ) ||
+       fieldname == QLatin1String( "mozillacustom3" ) ||
+       fieldname == QLatin1String( "mozillacustom4" ) ||
        fieldname == QLatin1String( "custom1" ) ||
        fieldname == QLatin1String( "custom2" ) ||
        fieldname == QLatin1String( "custom3" ) ||
