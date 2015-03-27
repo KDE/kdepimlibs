@@ -33,8 +33,10 @@ public:
 private Q_SLOTS:
     //Import
     void shouldImportEmail();
+    void shouldImportMultiEmails();
     void shouldImportStandardBirthday();
     void shouldImportTheBatsBirthday();
+    void shouldImportTheBatsEmails();
     void shouldImportTitle();
     void shouldImportWorkStreet();
     void shouldImportContactGroup();
@@ -43,6 +45,7 @@ private Q_SLOTS:
 
     //Export
     void shouldExportEmail();
+    void shouldExportMultiEmails();
     void shouldExportBirthday();
     void shouldExportTitle();
     void shouldExportMultiEntries();
