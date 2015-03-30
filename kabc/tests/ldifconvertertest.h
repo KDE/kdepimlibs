@@ -50,6 +50,7 @@ private Q_SLOTS:
     void shouldExportTitle();
     void shouldExportMultiEntries();
     void shouldExportGroup();
+    void shouldExportWorkStreet();
 };
 
 #endif // LDIFCONVERTERTEST_H

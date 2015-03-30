@@ -436,6 +436,36 @@ void LDifConverterTest::shouldExportGroup()
     QCOMPARE(str, expected);
 }
 
+void LDifConverterTest::shouldExportWorkStreet()
+{
+    AddresseeList lst;
+    Addressee addr;
+    addr.setEmails(QStringList() << QLatin1String("foo@kde.org"));
+    addr.setUid(QLatin1String("testuid"));
+    Address address(Address::Work);
+    address.setStreet(QLatin1String("work address"));
+    address.setPostalCode(QLatin1String("postal"));
+    addr.insertAddress(address);
+    lst << addr;
+    ContactGroup::List contactGroup;
+
+    QString str;
+    bool result = LDIFConverter::addresseeAndContactGroupToLDIF(lst, contactGroup, str);
+    QVERIFY(result);
+
+    const QString expected = QLatin1String("dn: cn=,mail=foo@kde.org\n"
+                                           "objectclass: top\n"
+                                           "objectclass: person\n"
+                                           "objectclass: organizationalPerson\n"
+                                           "uid: testuid\n"
+                                           "mail: foo@kde.org\n"
+                                           "postalcode: postal\n"
+                                           "streetaddress: work address\n"
+                                           "street: work address\n"
+                                           "\n");
+    QCOMPARE(str, expected);
+}
+
 
 
 QTEST_KDEMAIN(LDifConverterTest, NoGUI)
