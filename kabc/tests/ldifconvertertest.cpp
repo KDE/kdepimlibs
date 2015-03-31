@@ -302,7 +302,6 @@ void LDifConverterTest::shouldExportMultiEmails()
     QString str;
     bool result = LDIFConverter::addresseeAndContactGroupToLDIF(lst, contactGroup, str);
     QVERIFY(result);
-    //TODO ldif export just 2 emails! How to export more ?
     QString expected = QLatin1String("dn: cn=,mail=foo@kde.org\n"
                                      "objectclass: top\n"
                                      "objectclass: person\n"
@@ -310,6 +309,7 @@ void LDifConverterTest::shouldExportMultiEmails()
                                      "uid: testuid\n"
                                      "mail: foo@kde.org\n"
                                      "mozillasecondemail: foo2@kde.org\n"
+                                     "othermailbox: foo3@kde.org\n"
                                      "\n");
 
     QCOMPARE(str, expected);
