@@ -22,7 +22,7 @@
 #include "imapsettings.h"
 #include "specialmailcollections.h"
 
-#include <QDebug>
+#include "akonadi_mime_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -107,7 +107,7 @@ void EmptyTrashCommand::expunge(const Akonadi::Collection &col)
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(col, this);
         connect(job, &Akonadi::ItemFetchJob::result, this, &EmptyTrashCommand::slotExpungeJob);
     } else {
-        qDebug() << " Try to expunge an invalid collection :" << col;
+        qCDebug(AKONADIMIME_LOG) << " Try to expunge an invalid collection :" << col;
         emitResult(Failed);
     }
 }

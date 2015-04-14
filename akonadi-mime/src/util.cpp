@@ -24,7 +24,7 @@
 #include <KDBusConnectionPool>
 
 #include <assert.h>
-#include <QDebug>
+#include "akonadi_mime_debug.h"
 #include <KIO/JobUiDelegate>
 #include <KIO/Job>
 
@@ -39,7 +39,7 @@ void showJobError(KJob *job)
     if (kiojob && kiojob->ui()) {
         kiojob->ui()->showErrorMessage();
     } else {
-        qWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
+        qCWarning(AKONADIMIME_LOG) << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
     }
 }
 

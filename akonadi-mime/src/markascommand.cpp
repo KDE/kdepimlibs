@@ -19,7 +19,7 @@
 
 #include "markascommand_p.h"
 #include "util_p.h"
-
+#include "akonadi_mime_debug.h"
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 #include <itemmodifyjob.h>
@@ -144,7 +144,7 @@ void MarkAsCommand::slotModifyItemDone(KJob *job)
     mMarkJobCount--;
     //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
     if (job && job->error()) {
-        qDebug() << " Error trying to set item status:" << job->errorText();
+        qCDebug(AKONADIMIME_LOG) << " Error trying to set item status:" << job->errorText();
         emitResult(Failed);
     }
     if (mMarkJobCount == 0 && mFolderListJobCount == 0) {

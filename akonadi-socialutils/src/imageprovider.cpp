@@ -21,7 +21,7 @@
 
 #include "imageprovider.h"
 
-#include <QDebug>
+#include "akonadi_socialutils_debug.h"
 #include <KIO/Job>
 
 #include <QPainter>
@@ -103,7 +103,7 @@ void Akonadi::ImageProviderPrivate::result(KJob *job)
 {
     Q_Q(ImageProvider);
     if (!jobs.contains(job)) {
-        qDebug() << "Tried to handle unknown job, returning...";
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Tried to handle unknown job, returning...";
         return;
     }
 
@@ -127,7 +127,7 @@ void Akonadi::ImageProviderPrivate::result(KJob *job)
         const QString cacheKey = who + QLatin1Char('@') +
                                  kiojob->property("imageUrl").value<QUrl>().toDisplayString();
 
-        qDebug() << "Downloaded image for" << who << "(key:" << cacheKey << ")";
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Downloaded image for" << who << "(key:" << cacheKey << ")";
 
         imageCache->insertImage(cacheKey, image);
         pendingPersons.removeAll(cacheKey);
@@ -184,7 +184,7 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
 
     // Make sure we only start one job per user
     if (d->pendingPersons.contains(cacheKey)) {
-        qDebug() << "Job for" << who << "already running, returning";
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Job for" << who << "already running, returning";
         return QImage();
     }
 
@@ -194,16 +194,16 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
 
     if (d->imageCache->findImage(cacheKey, &preview)) {
         // cache hit
-        qDebug() << "Image for" << who << "already in cache, returning it";
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Image for" << who << "already in cache, returning it";
         return polishImage ? d->polishImage(preview) : preview;
     }
 
     if (!url.isValid()) {
-        qDebug() << "Invalid url, returning";
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Invalid url, returning";
         return QImage();
     }
 
-    qDebug() << "No cache, fetching image for" << who;
+    qCDebug(AKONADISOCIALUTILS_LOG) << "No cache, fetching image for" << who;
 
     d->pendingPersons << cacheKey;
     //FIXME: since kio_http bombs the system with too many request put a temporary
@@ -211,7 +211,7 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
     // Note: seems fixed.
     if (d->runningJobs < 500) {
         d->runningJobs++;
-        qDebug() << "Starting fetch job for" << who;
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Starting fetch job for" << who;
         KIO::Job *job = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
         job->setAutoDelete(true);
         d->jobs[job] = who;
@@ -227,7 +227,7 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
         job->setProperty("polishImage", polishImage);
         job->start();
     } else {
-        qDebug() << "Queuing job for" << who;
+        qCDebug(AKONADISOCIALUTILS_LOG) << "Queuing job for" << who;
         ImageProviderPrivate::QueuedJobHelper helper;
         helper.who = who;
         helper.url = url;

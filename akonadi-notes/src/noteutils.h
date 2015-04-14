@@ -123,7 +123,7 @@ private:
 * @code
 * if ( item.hasPayload<KMime::MessagePtr>() ) {
 *   NoteUtils::NoteMessageWrapper note(item.payload<KMime::MessagePtr>());
-*   qDebug() << note.text();
+*   qCDebug(AKONADINOTES_LOG) << note.text();
 *   textIsRich = messageWrapper.textFormat() == Qt::RichText;
 * }
 * @endcode

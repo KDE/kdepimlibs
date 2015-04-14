@@ -29,6 +29,7 @@ endmacro()
 ########### next target ###############
 
 set(akonadimime_SRCS
+    akonadi_mime_debug.cpp
     addressattribute.cpp
     attributeregistrar.cpp
     removeduplicatesjob.cpp

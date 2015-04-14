@@ -19,6 +19,7 @@
 
 #include "specialmailcollections.h"
 #include "specialmailcollectionssettings.h"
+#include "akonadi_mime_debug.h"
 
 #include <specialcollectionattribute.h>
 #include <entitydisplayattribute.h>
@@ -180,7 +181,7 @@ void SpecialMailCollections::verifyI18nDefaultCollection(Type type)
 void SpecialMailCollections::slotCollectionModified(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " Error when we modified collection";
+        qCDebug(AKONADIMIME_LOG) << " Error when we modified collection";
         return;
     }
 }

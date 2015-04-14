@@ -1,5 +1,6 @@
 set(akonadinotes_LIB_SRC
   noteutils.cpp
+  akonadi_notes_debug.cpp
 )
 
 add_library(KF5AkonadiNotes ${akonadinotes_LIB_SRC})

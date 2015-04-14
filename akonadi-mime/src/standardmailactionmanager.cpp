@@ -23,6 +23,7 @@
 
 #include "standardmailactionmanager.h"
 
+#include "akonadi_mime_debug.h"
 #include "emptytrashcommand_p.h"
 #include "markascommand_p.h"
 #include "movetotrashcommand_p.h"
@@ -500,7 +501,7 @@ public:
         }
 
         QByteArray typeStr = action->data().toByteArray();
-        qDebug() << "Mark mail as: " << typeStr;
+        qCDebug(AKONADIMIME_LOG) << "Mark mail as: " << typeStr;
 
         bool invert = false;
         if (typeStr.startsWith('!')) {
@@ -536,7 +537,7 @@ public:
         Q_ASSERT(action);
 
         QByteArray typeStr = action->data().toByteArray();
-        qDebug() << "Mark all as: " << typeStr;
+        qCDebug(AKONADIMIME_LOG) << "Mark all as: " << typeStr;
 
         const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
         if (collections.isEmpty()) {

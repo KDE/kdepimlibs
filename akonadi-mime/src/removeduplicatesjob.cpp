@@ -19,7 +19,7 @@
 */
 
 #include "removeduplicatesjob.h"
-
+#include "akonadi_mime_debug.h"
 #include <itemfetchjob.h>
 #include <itemdeletejob.h>
 #include <itemfetchscope.h>
@@ -43,7 +43,7 @@ public:
     void fetchItem()
     {
         Akonadi::Collection collection = mFolders.value(mJobCount - 1);
-        qDebug() << "Processing collection" << collection.name() << "(" << collection.id() << ")";
+        qCDebug(AKONADIMIME_LOG) << "Processing collection" << collection.name() << "(" << collection.id() << ")";
 
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection, mParent);
         job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
@@ -96,7 +96,7 @@ public:
                             bodyHashes.insert(mainId, qHash(items.value(mainId).payload<KMime::Message::Ptr>()->encodedContent()));
                         }
                         uint hash = qHash(message->encodedContent());
-                        qDebug() << idStr << bodyHashes.value(mainId) << hash;
+                        qCDebug(AKONADIMIME_LOG) << idStr << bodyHashes.value(mainId) << hash;
                         if (bodyHashes.value(mainId) == hash) {
                             duplicates[mainId].append(i);
                         }
@@ -124,7 +124,7 @@ public:
             fetchItem();
         } else {
             if (mDuplicateItems.isEmpty()) {
-                qDebug() << "No duplicates, I'm done here";
+                qCDebug(AKONADIMIME_LOG) << "No duplicates, I'm done here";
                 mParent->emitResult();
                 return;
             } else {
@@ -137,7 +137,7 @@ public:
 
     void slotDeleteDone(KJob *job)
     {
-        qDebug() << "Job done";
+        qCDebug(AKONADIMIME_LOG) << "Job done";
 
         mParent->setError(job->error());
         mParent->setErrorText(job->errorText());
@@ -180,10 +180,10 @@ RemoveDuplicatesJob::~RemoveDuplicatesJob()
 
 void RemoveDuplicatesJob::doStart()
 {
-    qDebug();
+    qCDebug(AKONADIMIME_LOG);
 
     if (d->mFolders.isEmpty()) {
-        qWarning() << "No collections to process";
+        qCWarning(AKONADIMIME_LOG) << "No collections to process";
         emitResult();
         return;
     }
@@ -193,7 +193,7 @@ void RemoveDuplicatesJob::doStart()
 
 bool RemoveDuplicatesJob::doKill()
 {
-    qDebug() << "Killed!";
+    qCDebug(AKONADIMIME_LOG) << "Killed!";
 
     d->mKilled = true;
     if (d->mCurrentJob) {

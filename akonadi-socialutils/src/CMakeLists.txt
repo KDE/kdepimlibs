@@ -8,6 +8,7 @@ endif()
 add_subdirectory(serializer)
 
 set(akonadi_social_utils_SRCS
+  akonadi_socialutils_debug.cpp
   socialnetworkattributes.cpp
   imageprovider.cpp
   socialfeeditem.cpp

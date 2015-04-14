@@ -22,7 +22,7 @@
 #include <klocalizedstring.h>
 #include <qdatetime.h>
 #include <kmime/kmime_message.h>
-#include <qdebug.h>
+#include "akonadi_notes_debug.h"
 
 #include <qstring.h>
 #include <quuid.h>
@@ -180,7 +180,7 @@ public:
 void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime::MessagePtr &msg)
 {
     if (!msg.get()) {
-        qWarning() << "Empty message";
+        qCWarning(AKONADINOTES_LOG) << "Empty message";
         return;
     }
     title = msg->subject(true)->asUnicodeString();
@@ -196,7 +196,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
     if (KMime::Headers::Base *lastmod = msg->headerByType(X_NOTES_LASTMODIFIED_HEADER)) {
         lastModifiedDate = QDateTime::fromString(lastmod->asUnicodeString(), Qt::RFC2822Date);
         if (!lastModifiedDate.isValid()) {
-            qWarning() << "failed to parse lastModifiedDate";
+            qCWarning(AKONADINOTES_LOG) << "failed to parse lastModifiedDate";
         }
     }
 
@@ -222,7 +222,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
             } else if (type == CONTENT_TYPE_ATTACHMENT) {
                 parseAttachmentPart(c);
             } else {
-                qWarning() << "unknown type " << type;
+                qCWarning(AKONADINOTES_LOG) << "unknown type " << type;
             }
         }
     }
@@ -243,7 +243,7 @@ QDomDocument loadDocument(KMime::Content *part)
     QDomDocument document;
     bool ok = document.setContent(part->body(), &errorMsg, &errorLine, &errorColumn);
     if (!ok) {
-        qWarning() << part->body();
+        qCWarning(AKONADINOTES_LOG) << part->body();
         qWarning("Error loading document: %s, line %d, column %d", qPrintable(errorMsg), errorLine, errorColumn);
         return QDomDocument();
     }
@@ -287,7 +287,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseCustomPart(KMime::Conte
             QDomElement e = n.toElement();
             custom.insert(e.tagName(), e.text());
         } else {
-            qDebug() << "Node is not an element";
+            qCDebug(AKONADINOTES_LOG) << "Node is not an element";
             Q_ASSERT(false);
         }
     }
