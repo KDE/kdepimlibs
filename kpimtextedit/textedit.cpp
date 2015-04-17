@@ -131,6 +131,15 @@ class TextEditPrivate
     /// The parent class
     TextEdit *q;
 
+    /**
+     * The names of embedded images.
+     * Used to easily obtain the names of the images.
+     * New images are compared to the list and not added as resource if already present.
+     */
+    QStringList mImageNames;
+
+    QString configFile;
+    QFont saveFont;
     /// Whether or not adding or pasting images is supported
     bool imageSupportEnabled;
 
@@ -139,12 +148,6 @@ class TextEditPrivate
     bool insertHtmlSupportEnabled;
 
     bool insertTableSupportEnabled;
-    /**
-     * The names of embedded images.
-     * Used to easily obtain the names of the images.
-     * New images are compared to the list and not added as resource if already present.
-     */
-    QStringList mImageNames;
 
     /**
      * Although KTextEdit keeps track of the spell checking state, we override
@@ -159,8 +162,6 @@ class TextEditPrivate
      */
     bool spellCheckingEnabled;
 
-    QString configFile;
-    QFont saveFont;
 };
 
 } // namespace

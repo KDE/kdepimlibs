@@ -67,8 +67,8 @@ class Plugin::Private
     QString serviceName;
     QByteArray partLibraryName;
     QByteArray pluginName;
-    bool hasPart;
     KParts::ReadOnlyPart *part;
+    bool hasPart;
     bool disabled;
 };
 //@endcond
