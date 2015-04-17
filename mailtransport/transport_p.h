@@ -31,11 +31,11 @@ class TransportPrivate
   public:
     MailTransport::TransportType transportType;
     QString password;
+    QString oldName;
     bool passwordLoaded;
     bool passwordDirty;
     bool storePasswordInFile;
     bool needsWalletMigration;
-    QString oldName;
     bool passwordNeedsUpdateFromWallet;
 };
 
