@@ -87,7 +87,7 @@ SpecialMailCollectionsPrivate::~SpecialMailCollectionsPrivate()
 
 static KCoreConfigSkeleton *getConfig(const QString &filename)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("specialmailcollection"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("specialmailcollection"));
     migrate.setConfigFiles(QStringList() << filename);
     migrate.migrate();
 
@@ -96,7 +96,7 @@ static KCoreConfigSkeleton *getConfig(const QString &filename)
 }
 
 SpecialMailCollections::SpecialMailCollections(SpecialMailCollectionsPrivate *dd)
-    : SpecialCollections(getConfig(QLatin1String("specialmailcollectionsrc")))
+    : SpecialCollections(getConfig(QStringLiteral("specialmailcollectionsrc")))
     , d(dd)
 {
 }

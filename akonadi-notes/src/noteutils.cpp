@@ -231,8 +231,8 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
 QDomDocument createXMLDocument()
 {
     QDomDocument document;
-    QString p = QLatin1String("version=\"1.0\" encoding=\"UTF-8\"");
-    document.appendChild(document.createProcessingInstruction(QLatin1String("xml"), p));
+    QString p = QStringLiteral("version=\"1.0\" encoding=\"UTF-8\"");
+    document.appendChild(document.createProcessingInstruction(QStringLiteral("xml"), p));
     return document;
 }
 
@@ -255,8 +255,8 @@ KMime::Content *NoteMessageWrapper::NoteMessageWrapperPrivate::createCustomPart(
     KMime::Content *content = new KMime::Content();
     content->appendHeader(new KMime::Headers::Generic(X_NOTES_CONTENTTYPE_HEADER, content, CONTENT_TYPE_CUSTOM, ENCODING));
     QDomDocument document = createXMLDocument();
-    QDomElement element = document.createElement(QLatin1String("custom"));
-    element.setAttribute(QLatin1String("version"), QLatin1String("1.0"));
+    QDomElement element = document.createElement(QStringLiteral("custom"));
+    element.setAttribute(QStringLiteral("version"), QStringLiteral("1.0"));
     QMap <QString, QString >::const_iterator end = custom.end();
     for (QMap <QString, QString >::const_iterator it = custom.begin(); it != end; ++it) {
         QDomElement e = element.ownerDocument().createElement(it.key());
@@ -308,7 +308,7 @@ KMime::Content *NoteMessageWrapper::NoteMessageWrapperPrivate::createAttachmentP
     }
     content->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
     content->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-    content->contentDisposition()->setFilename(QLatin1String("attachment"));
+    content->contentDisposition()->setFilename(QStringLiteral("attachment"));
     return content;
 }
 

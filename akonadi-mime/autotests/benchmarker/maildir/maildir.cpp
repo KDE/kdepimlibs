@@ -41,8 +41,8 @@ using namespace Akonadi;
 MailDir::MailDir(const QString &dir)
     : MakeTest()
 {
-    createAgent(QLatin1String("akonadi_maildir_resource"));
-    configureDBusIface(QLatin1String("Maildir"), dir);
+    createAgent(QStringLiteral("akonadi_maildir_resource"));
+    configureDBusIface(QStringLiteral("Maildir"), dir);
 }
 
 MailDir::MailDir()

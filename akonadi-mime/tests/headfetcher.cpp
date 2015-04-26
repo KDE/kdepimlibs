@@ -72,21 +72,21 @@ void HeadFetcher::stop()
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData(QLatin1String("headfetcher"), i18n("Headfetcher"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("headfetcher"), i18n("Headfetcher"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("header fetching application"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("multipart"), i18n("Run test on multipart data (default is singlepart).")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("multipart"), i18n("Run test on multipart data (default is singlepart).")));
 
     //PORTING SCRIPT: adapt aboutdata variable if necessary
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    bool multipart = parser.isSet(QLatin1String("multipart"));
+    bool multipart = parser.isSet(QStringLiteral("multipart"));
 
     HeadFetcher d(multipart);
 
