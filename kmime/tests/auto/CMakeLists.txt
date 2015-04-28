@@ -23,5 +23,6 @@ add_kmime_test(codectest.cpp)
 add_kmime_test(rfc2231test.cpp)
 add_kmime_test(base64benchmark.cpp)
 add_kmime_test(sizetest.cpp)
+add_kmime_test(parsedatetimetest.cpp)
 
 target_link_libraries(messagetest akonadi-kde akonadi-kmime)

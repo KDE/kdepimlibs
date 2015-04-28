@@ -2024,8 +2024,19 @@ bool parseTime( const char* &scursor, const char * send,
     const char sign = *scursor++;
     // numerical timezone:
     int maybeTimeZone;
-    if ( parseDigits( scursor, send, maybeTimeZone ) != 4 ) {
-      return false;
+    const int tzDigits = parseDigits( scursor, send, maybeTimeZone );
+    if ( tzDigits != 4 ) {
+      // Allow timezones in 02:00 format
+      if (tzDigits == 2 && scursor != send && *scursor == ':') {
+        scursor++;
+        int maybeTimeZone2;
+        if (parseDigits( scursor, send, maybeTimeZone2 ) != 2) {
+          return false;
+        }
+        maybeTimeZone = maybeTimeZone * 100 + maybeTimeZone2;
+      } else {
+        return false;
+      }
     }
     secsEastOfGMT = 60 * ( maybeTimeZone / 100 * 60 + maybeTimeZone % 100 );
     if ( sign == '-' ) {
