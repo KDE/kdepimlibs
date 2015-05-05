@@ -22,7 +22,6 @@
 #include <qtest_kde.h>
 
 #include <kmime_header_parsing.h>
-#include <kdebug.h>
 
 using namespace KMime;
 
