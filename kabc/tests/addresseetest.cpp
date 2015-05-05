@@ -55,6 +55,8 @@ void AddresseeTest::storeTest()
   QStringList customs;
   customs << QLatin1String( "X-Danger: high" );
 
+  KABC::Lang lang(QLatin1String("lang"));
+  addressee.setLangs(KABC::Lang::List() << lang);
   KABC::Gender gender(QLatin1String("H"));
   addressee.setGender(gender);
   addressee.setUid( QLatin1String( "My uid" ) );
@@ -86,11 +88,13 @@ void AddresseeTest::storeTest()
   addressee.setKeys( keys );
   addressee.setCategories( categories );
   addressee.setCustoms( customs );
+  addressee.setKind(QLatin1String("foo"));
 #ifndef KDEPIM_NO_KRESOURCES
   addressee.setResource( 0 );
 #endif
   addressee.setChanged( false );
 
+  QVERIFY( addressee.langs() == (KABC::Lang::List() << lang));
   QVERIFY( addressee.gender() == gender );
   QVERIFY( addressee.uid() == QLatin1String( "My uid" ) );
   QVERIFY( addressee.name() == QLatin1String( "John Sinclair" ) );
@@ -125,6 +129,7 @@ void AddresseeTest::storeTest()
   QVERIFY( addressee.resource() == 0 );
 #endif
   QVERIFY( addressee.changed() == false );
+  QCOMPARE( addressee.kind(), QLatin1String("foo"));
 }
 
 void AddresseeTest::equalsTest()
