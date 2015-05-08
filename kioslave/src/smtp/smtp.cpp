@@ -62,6 +62,7 @@ using KioSMTP::SMTPSessionInterface;
 #include <QUrl>
 
 #include <QHostInfo>
+#include <QDataStream>
 
 #include <memory>
 using std::unique_ptr;

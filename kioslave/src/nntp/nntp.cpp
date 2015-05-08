@@ -21,6 +21,7 @@
 #include <QUrlQuery>
 #include <klocalizedstring.h>
 #include <QCoreApplication>
+#include <QDataStream>
 
 #include <kio/ioslave_defaults.h>
 

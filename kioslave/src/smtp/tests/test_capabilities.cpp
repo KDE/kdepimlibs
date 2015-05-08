@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "capabilities.h"
+#include <QObject>
 
 using namespace KioSMTP;
 
