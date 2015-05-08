@@ -174,8 +174,8 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 private:
     bool mEHLONotSupported;
     QString mHostname;
@@ -189,8 +189,8 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 };
 
 class AuthCommand : public Command
@@ -199,10 +199,10 @@ public:
     AuthCommand(SMTPSessionInterface *smtp, const char *mechanisms,
                 const QString &aFQDN, KIO::AuthInfo &ai);
     ~AuthCommand();
-    bool doNotExecute(const TransactionState *ts) const;
-    QByteArray nextCommandLine(TransactionState *ts);
-    void ungetCommandLine(const QByteArray &cmdLine, TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    bool doNotExecute(const TransactionState *ts) const Q_DECL_OVERRIDE;
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    void ungetCommandLine(const QByteArray &cmdLine, TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 private:
     bool saslInteract(void *in);
 
@@ -231,8 +231,8 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 private:
     QByteArray mAddr;
     bool m8Bit;
@@ -248,8 +248,8 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 private:
     QByteArray mAddr;
 };
@@ -264,9 +264,9 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
-    void ungetCommandLine(const QByteArray &cmd, TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    void ungetCommandLine(const QByteArray &cmd, TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 };
 
 /** Handles the data transfer following a successful DATA command */
@@ -281,10 +281,10 @@ public:
     {
     }
 
-    bool doNotExecute(const TransactionState *ts) const;
-    QByteArray nextCommandLine(TransactionState *ts);
-    void ungetCommandLine(const QByteArray &cmd, TransactionState *ts);
-    bool processResponse(const Response &response, TransactionState *ts);
+    bool doNotExecute(const TransactionState *ts) const Q_DECL_OVERRIDE;
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
+    void ungetCommandLine(const QByteArray &cmd, TransactionState *ts) Q_DECL_OVERRIDE;
+    bool processResponse(const Response &response, TransactionState *ts) Q_DECL_OVERRIDE;
 private:
     QByteArray prepare(const QByteArray &ba);
     QByteArray mUngetBuffer;
@@ -300,7 +300,7 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
 };
 
 class RsetCommand : public Command
@@ -311,7 +311,7 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
 };
 
 class QuitCommand : public Command
@@ -322,7 +322,7 @@ public:
     {
     }
 
-    QByteArray nextCommandLine(TransactionState *ts);
+    QByteArray nextCommandLine(TransactionState *ts) Q_DECL_OVERRIDE;
 };
 
 } // namespace KioSMTP

@@ -44,25 +44,25 @@ public:
      * get a file from a mbox-file
      * @param url The url which points to the virtual file to get
      */
-    virtual void get(const QUrl &url);
+    void get(const QUrl &url) Q_DECL_OVERRIDE;
 
     /**
      * This functions gives a listing back.
      * @param url The url to the mbox-file.
      */
-    virtual void listDir(const QUrl &url);
+    void listDir(const QUrl &url) Q_DECL_OVERRIDE;
 
     /**
      * This functions gives general properties about a mbox-file,
      * or mbox-email back.
      */
-    virtual void stat(const QUrl &url);
+    void stat(const QUrl &url) Q_DECL_OVERRIDE;
 
     /**
      * This functions determinate the mimetype of a given mbox-file or mbox-email.
      * @param url The url to get the mimetype from
      */
-    virtual void mimetype(const QUrl &url);
+    void mimetype(const QUrl &url) Q_DECL_OVERRIDE;
 
     /**
      * Through this functions, other class which have an instance to this

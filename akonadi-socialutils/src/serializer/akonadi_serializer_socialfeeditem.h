@@ -35,9 +35,9 @@ class SocialFeedItemSerializerPlugin : public QObject, public ItemSerializerPlug
     Q_PLUGIN_METADATA(IID "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0")
 
 public:
-    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
-    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version);
-    QSet<QByteArray> parts(const Item &item) const;
+    bool deserialize(Item &item, const QByteArray &label, QIODevice &data, int version) Q_DECL_OVERRIDE;
+    void serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version) Q_DECL_OVERRIDE;
+    QSet<QByteArray> parts(const Item &item) const Q_DECL_OVERRIDE;
 };
 
 }

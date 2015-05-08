@@ -54,13 +54,13 @@ public:
     virtual ~ SMTPProtocol();
 
     virtual void setHost(const QString &host, quint16 port,
-                         const QString &user, const QString &pass);
+                         const QString &user, const QString &pass) Q_DECL_OVERRIDE;
 
-    virtual void special(const QByteArray &aData);
-    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
-    virtual void stat(const QUrl &url);
-    virtual void openConnection();
-    virtual void closeConnection();
+    void special(const QByteArray &aData) Q_DECL_OVERRIDE;
+    void put(const QUrl &url, int permissions, KIO::JobFlags flags) Q_DECL_OVERRIDE;
+    void stat(const QUrl &url) Q_DECL_OVERRIDE;
+    void openConnection() Q_DECL_OVERRIDE;
+    void closeConnection() Q_DECL_OVERRIDE;
 
 protected:
 

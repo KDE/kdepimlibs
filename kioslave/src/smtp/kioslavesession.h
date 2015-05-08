@@ -29,18 +29,18 @@ class KioSlaveSession : public SMTPSessionInterface
 {
 public:
     explicit KioSlaveSession(SMTPProtocol *protocol);
-    virtual void error(int id, const QString &msg);
-    virtual void informationMessageBox(const QString &msg, const QString &caption);
-    virtual bool openPasswordDialog(KIO::AuthInfo &authInfo);
-    virtual void dataReq();
-    virtual int readData(QByteArray &ba);
-    virtual bool startSsl();
+    void error(int id, const QString &msg) Q_DECL_OVERRIDE;
+    void informationMessageBox(const QString &msg, const QString &caption) Q_DECL_OVERRIDE;
+    bool openPasswordDialog(KIO::AuthInfo &authInfo) Q_DECL_OVERRIDE;
+    void dataReq() Q_DECL_OVERRIDE;
+    int readData(QByteArray &ba) Q_DECL_OVERRIDE;
+    bool startSsl() Q_DECL_OVERRIDE;
 
-    virtual QString requestedSaslMethod() const;
-    virtual bool eightBitMimeRequested() const;
-    virtual bool lf2crlfAndDotStuffingRequested() const;
-    virtual bool pipeliningRequested() const;
-    virtual TLSRequestState tlsRequested() const;
+    QString requestedSaslMethod() const Q_DECL_OVERRIDE;
+    bool eightBitMimeRequested() const Q_DECL_OVERRIDE;
+    bool lf2crlfAndDotStuffingRequested() const Q_DECL_OVERRIDE;
+    bool pipeliningRequested() const Q_DECL_OVERRIDE;
+    TLSRequestState tlsRequested() const Q_DECL_OVERRIDE;
 
 private:
     SMTPProtocol *m_protocol;

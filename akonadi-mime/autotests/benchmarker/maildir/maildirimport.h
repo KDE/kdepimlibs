@@ -28,6 +28,6 @@ class MailDirImport : public MailDir
 
 public:
     MailDirImport(const QString &dir);
-    void runTest();
+    void runTest() Q_DECL_OVERRIDE;
 };
 #endif

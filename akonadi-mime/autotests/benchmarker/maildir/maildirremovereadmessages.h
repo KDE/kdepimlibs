@@ -28,6 +28,6 @@ class MailDirRemoveReadMessages : public MailDir
 
 public:
     MailDirRemoveReadMessages();
-    void runTest();
+    void runTest() Q_DECL_OVERRIDE;
 };
 #endif

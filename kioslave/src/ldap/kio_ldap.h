@@ -39,16 +39,16 @@ public:
     virtual ~LDAPProtocol();
 
     virtual void setHost(const QString &host, quint16 port,
-                         const QString &user, const QString &pass);
+                         const QString &user, const QString &pass) Q_DECL_OVERRIDE;
 
-    virtual void openConnection();
-    virtual void closeConnection();
+    void openConnection() Q_DECL_OVERRIDE;
+    void closeConnection() Q_DECL_OVERRIDE;
 
-    virtual void get(const QUrl &url);
-    virtual void stat(const QUrl &url);
-    virtual void listDir(const QUrl &url);
-    virtual void del(const QUrl &url, bool isfile);
-    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
+    void get(const QUrl &url) Q_DECL_OVERRIDE;
+    void stat(const QUrl &url) Q_DECL_OVERRIDE;
+    void listDir(const QUrl &url) Q_DECL_OVERRIDE;
+    void del(const QUrl &url, bool isfile) Q_DECL_OVERRIDE;
+    void put(const QUrl &url, int permissions, KIO::JobFlags flags) Q_DECL_OVERRIDE;
 
 private:
 

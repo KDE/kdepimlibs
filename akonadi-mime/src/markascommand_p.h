@@ -35,7 +35,7 @@ class MarkAsCommand : public CommandBase
 public:
     MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = 0);
     MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = 0);
-    void execute();
+    void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotFetchDone(KJob *job);

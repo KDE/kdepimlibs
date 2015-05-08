@@ -28,6 +28,6 @@ class MailDirFetchUnreadHeaders : public MailDir
 
 public:
     MailDirFetchUnreadHeaders();
-    void runTest();
+    void runTest() Q_DECL_OVERRIDE;
 };
 #endif

@@ -28,6 +28,6 @@ class MailDir20PercentAsRead : public MailDir
 
 public:
     MailDir20PercentAsRead();
-    void runTest();
+    void runTest() Q_DECL_OVERRIDE;
 };
 #endif
