@@ -28,6 +28,7 @@ target_link_libraries(KF5AkonadiSocialUtils
 PUBLIC
     KF5::AkonadiCore
     KF5::CoreAddons
+    KF5::GuiAddons # for KImageCache
 PRIVATE
     KF5::KIOCore
 )

@@ -90,6 +90,7 @@ PRIVATE
     KF5::Mime
     KF5::AkonadiWidgets
     KF5::KIOCore
+    KF5::DBusAddons
 )
 
 set_target_properties(KF5AkonadiMime PROPERTIES
