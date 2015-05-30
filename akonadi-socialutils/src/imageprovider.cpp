@@ -116,14 +116,14 @@ void Akonadi::ImageProviderPrivate::result(KJob *job)
 
     if (job->error()) {
         // TODO: error handling
-        KIO::TransferJob *kiojob = dynamic_cast<KIO::TransferJob *>(job);
+        KIO::TransferJob *kiojob = qobject_cast<KIO::TransferJob *>(job);
         qCritical() << "Image job for" << jobs.value(job) << "returned error:" << kiojob->errorString();
     } else {
         const QString who = jobs.value(job);
 
         QImage image;
         image.loadFromData(jobData.value(job));
-        KIO::TransferJob *kiojob = dynamic_cast<KIO::TransferJob *>(job);
+        KIO::TransferJob *kiojob = qobject_cast<KIO::TransferJob *>(job);
         const QString cacheKey = who + QLatin1Char('@') +
                                  kiojob->property("imageUrl").value<QUrl>().toDisplayString();
 

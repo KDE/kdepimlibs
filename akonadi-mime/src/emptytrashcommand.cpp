@@ -119,7 +119,7 @@ void EmptyTrashCommand::slotExpungeJob(KJob *job)
         emitResult(Failed);
         return;
     }
-    Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob *>(job);
+    Akonadi::ItemFetchJob *fjob = qobject_cast<Akonadi::ItemFetchJob *>(job);
     if (!fjob) {
         emitResult(Failed);
         return;
