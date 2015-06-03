@@ -37,6 +37,9 @@ class AddresseeTest : public QObject
     void fullEmailTest();
     void nameFromStringTest();
     void customFieldsTest();
+    void parseEmailAddress_data();
+    void parseEmailAddress();
+
 };
 
 #endif

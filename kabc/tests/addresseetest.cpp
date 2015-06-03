@@ -453,3 +453,26 @@ void AddresseeTest::customFieldsTest()
   c.removeCustom( QLatin1String( "FirstApp" ), QLatin1String( "FirstKey" ) );
   QCOMPARE( c.customs().count(), 2 );
 }
+
+void AddresseeTest::parseEmailAddress_data()
+{
+    QTest::addColumn<QString>("inputEmail");
+    QTest::addColumn<QString>("email");
+    QTest::addColumn<QString>("name");
+    QTest::newRow("simpleemail") << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("foo@kde.org")) << QString();
+    QTest::newRow("email") << QString(QLatin1String("foo <foo@kde.org>")) << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("foo"));
+}
+
+void AddresseeTest::parseEmailAddress()
+{
+    QFETCH(QString, inputEmail);
+    QFETCH(QString, email);
+    QFETCH(QString, name);
+
+    QString parsedName;
+    QString parsedEmail;
+    KABC::Addressee::parseEmailAddress(inputEmail, parsedName, parsedEmail);
+    QCOMPARE(parsedEmail, email);
+    QCOMPARE(parsedName, name);
+}
+
