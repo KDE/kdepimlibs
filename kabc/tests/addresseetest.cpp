@@ -461,6 +461,7 @@ void AddresseeTest::parseEmailAddress_data()
     QTest::addColumn<QString>("name");
     QTest::newRow("simpleemail") << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("foo@kde.org")) << QString();
     QTest::newRow("email") << QString(QLatin1String("foo <foo@kde.org>")) << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("foo"));
+    QTest::newRow("namewithdoublequote") << QString(QLatin1String("\"foo\" <foo@kde.org>")) << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("foo"));
 }
 
 void AddresseeTest::parseEmailAddress()
