@@ -105,6 +105,7 @@ QString TransactionState::errorMessage() const
 
     if (haveRejectedRecipients()) {
         QStringList recip;
+        recip.reserve(mRejectedRecipients.count());
         for (RejectedRecipientList::const_iterator it = mRejectedRecipients.begin();
              it != mRejectedRecipients.end() ; ++it) {
             recip.push_back((*it).recipient + QLatin1String(" (") + (*it).reason + QLatin1Char(')'));
