@@ -10,9 +10,12 @@ remove_definitions( -DQT_NO_CAST_TO_ASCII )
 set( requester_srcs foldersrequester.cpp )
 add_executable( requester "${requester_srcs}" )
 target_link_libraries( requester KF5::AkonadiMime KF5::I18n Qt5::Widgets )
-# for racetest
-set(requester_exe_string "QLatin1String( \\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\\" )" )
-add_definitions( -DREQUESTER_EXE="${requester_exe_string}" )
+
+if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
+  # for racetest
+  set(requester_exe_string "QLatin1String( \\\"${CMAKE_CURRENT_BINARY_DIR}/requester\\\" )" )
+  add_definitions( -DREQUESTER_EXE="${requester_exe_string}" )
+endif()
 
 # convenience macro to add akonadi demo application
 macro(add_akonadimime_demo _source)
