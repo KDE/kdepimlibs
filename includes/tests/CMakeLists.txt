@@ -34,6 +34,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/akonadi
   ${CMAKE_BINARY_DIR}/akonadi/contact
   ${CMAKE_BINARY_DIR}/akonadi/calendar
+  ${CMAKE_BINARY_DIR}/akonadi/kabc
   ${CMAKE_BINARY_DIR}/akonadi/kcal
   ${CMAKE_BINARY_DIR}/akonadi/kmime
   ${CMAKE_BINARY_DIR}/akonadi/notes
