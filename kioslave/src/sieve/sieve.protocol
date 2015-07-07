@@ -13,6 +13,7 @@ moving=false
 Icon=view-filter
 X-DocPath=kioslave5/sieve/index.html
 Description=An ioslave for the Sieve mail filtering protocol
+Description[ast]=Un esclavu ES pal protocolu de peñera de corréu Sieve
 Description[bs]=U/I program za Sieve protokol filtriranja e-pošte
 Description[ca]=Un «ioslave» pel protocol de filtratge de correu «Sieve»
 Description[ca@valencia]=Un «ioslave» pel protocol de filtratge de correu «Sieve»
