@@ -29,7 +29,8 @@
 
 class QDateTime;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class SocialFeedItemPrivate;
 

@@ -143,11 +143,11 @@ public:
         }
         case Akonadi::StandardActionManager::CopyCollections: {
             mGenericManager->setActionText(Akonadi::StandardActionManager::CopyCollections,
-                ki18np("Copy Folder", "Copy %1 Folders"));
+                                           ki18np("Copy Folder", "Copy %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::CopyCollections)->setWhatsThis(
                 i18n("Copy the selected folders to the clipboard."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CopyCollections),
-                i18n("Copy the selected folders to the clipboard."));
+                        i18n("Copy the selected folders to the clipboard."));
             mGenericManager->setContextText(
                 StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
                 ki18nc("@title:window", "Properties of Folder %1"));
@@ -155,11 +155,11 @@ public:
         }
         case Akonadi::StandardActionManager::DeleteCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteCollections,
-                ki18np("Delete Folder", "Delete %1 Folders"));
+                                           ki18np("Delete Folder", "Delete %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteCollections)->setWhatsThis(
                 i18n("Delete the selected folders from the account."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::DeleteCollections),
-                i18n("Delete the selected folders from the account."));
+                        i18n("Delete the selected folders from the account."));
             mGenericManager->setContextText(
                 StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
                 ki18np("Do you really want to delete this folder and all its sub-folders?",
@@ -180,20 +180,20 @@ public:
             break;
         case Akonadi::StandardActionManager::SynchronizeCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeCollections,
-                ki18np("Update Folder", "Update Folders"));
+                                           ki18np("Update Folder", "Update Folders"));
 
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollections)->setWhatsThis(
                 i18n("Update the contents of the selected folders."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollections),
-                i18n("Update the contents of the selected folders."));
+                        i18n("Update the contents of the selected folders."));
             break;
         case Akonadi::StandardActionManager::CutCollections:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CutCollections,
-                ki18np("Cut Folder", "Cut %1 Folders"));
+                                           ki18np("Cut Folder", "Cut %1 Folders"));
             mGenericManager->action(Akonadi::StandardActionManager::CutCollections)->setWhatsThis(
                 i18n("Cut the selected folders from the account."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CutCollections),
-                i18n("Cut the selected folders from the account."));
+                        i18n("Cut the selected folders from the account."));
             break;
         case Akonadi::StandardActionManager::CollectionProperties:
             mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties)->setText(
@@ -201,23 +201,23 @@ public:
             mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
                 i18n("Open a dialog to edit the properties of the selected folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties),
-                i18n("Open a dialog to edit the properties of the selected folder."));
+                        i18n("Open a dialog to edit the properties of the selected folder."));
             break;
         case  Akonadi::StandardActionManager::CopyItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CopyItems,
-                ki18np("Copy Message", "Copy %1 Messages"));
+                                           ki18np("Copy Message", "Copy %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::CopyItems)->setWhatsThis(
                 i18n("Copy the selected messages to the clipboard."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CopyItems),
-                i18n("Copy the selected messages to the clipboard."));
+                        i18n("Copy the selected messages to the clipboard."));
             break;
         case Akonadi::StandardActionManager::DeleteItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteItems,
-                ki18np("Delete Message", "Delete %1 Messages"));
+                                           ki18np("Delete Message", "Delete %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteItems)->setWhatsThis(
                 i18n("Delete the selected messages from the folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::DeleteItems),
-                i18n("Delete the selected messages from the folder."));
+                        i18n("Delete the selected messages from the folder."));
             mGenericManager->setContextText(
                 StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
                 ki18np("Do you really want to delete the selected message?",
@@ -237,11 +237,11 @@ public:
             break;
         case Akonadi::StandardActionManager::CutItems:
             mGenericManager->setActionText(Akonadi::StandardActionManager::CutItems,
-                ki18np("Cut Message", "Cut %1 Messages"));
+                                           ki18np("Cut Message", "Cut %1 Messages"));
             mGenericManager->action(Akonadi::StandardActionManager::CutItems)->setWhatsThis(
                 i18n("Cut the selected message from the folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CutItems),
-                i18n("Cut the selected message from the folder."));
+                        i18n("Cut the selected message from the folder."));
             break;
         case Akonadi::StandardActionManager::CreateResource:
             mGenericManager->action(Akonadi::StandardActionManager::CreateResource)->setText(
@@ -264,7 +264,7 @@ public:
             break;
         case Akonadi::StandardActionManager::DeleteResources:
             mGenericManager->setActionText(Akonadi::StandardActionManager::DeleteResources,
-                ki18np("&Delete Account", "&Delete %1 Accounts"));
+                                           ki18np("&Delete Account", "&Delete %1 Accounts"));
             mGenericManager->action(Akonadi::StandardActionManager::DeleteResources)->setWhatsThis(
                 i18n("Delete the selected accounts<p>"
                      "The currently selected accounts will be deleted, "
@@ -286,19 +286,19 @@ public:
             break;
         case Akonadi::StandardActionManager::SynchronizeResources:
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeResources,
-                ki18np("Update Account", "Update %1 Accounts"));
+                                           ki18np("Update Account", "Update %1 Accounts"));
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeResources)->setWhatsThis(
                 i18n("Updates the content of all folders of the selected accounts."));
             break;
         case Akonadi::StandardActionManager::SynchronizeCollectionsRecursive:
             mGenericManager->setActionText(Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
-                ki18np("Update This Folder and All Its Subfolders",
-                       "Update These Folders and All Their Subfolders"));
+                                           ki18np("Update This Folder and All Its Subfolders",
+                                                  "Update These Folders and All Their Subfolders"));
 
             mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollectionsRecursive)->setWhatsThis(
                 i18n("Update the contents of the selected folders and all their subfolders."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::SynchronizeCollectionsRecursive),
-                i18n("Update the contents of the selected folders and all their subfolders."));
+                        i18n("Update the contents of the selected folders and all their subfolders."));
             break;
         case Akonadi::StandardActionManager::Paste:
             mGenericManager->setContextText(

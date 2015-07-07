@@ -20,4 +20,3 @@
 #include "akonadi_socialutils_debug.h"
 Q_LOGGING_CATEGORY(AKONADISOCIALUTILS_LOG, "log_akonadi_socialutils")
 
-

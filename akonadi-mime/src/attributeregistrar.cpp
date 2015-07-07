@@ -22,7 +22,8 @@
 #include <attributefactory.h>
 
 #ifndef KDELIBS_STATIC_LIBS
-namespace {
+namespace
+{
 
 // Anonymous namespace; function is invisible outside this file.
 bool messagefolder_dummy()

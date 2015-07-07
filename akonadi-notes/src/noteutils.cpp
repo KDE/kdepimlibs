@@ -28,8 +28,10 @@
 #include <quuid.h>
 #include <qdom.h>
 
-namespace Akonadi {
-namespace NoteUtils {
+namespace Akonadi
+{
+namespace NoteUtils
+{
 
 #define X_NOTES_UID_HEADER "X-Akonotes-UID"
 #define X_NOTES_LASTMODIFIED_HEADER "X-Akonotes-LastModified"
@@ -152,7 +154,7 @@ public:
 
     NoteMessageWrapperPrivate(const KMime::MessagePtr &msg)
         : classification(Public)
-        ,textFormat(Qt::PlainText)
+        , textFormat(Qt::PlainText)
     {
         readMimeMessage(msg);
     }

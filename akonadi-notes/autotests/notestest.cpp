@@ -109,7 +109,7 @@ private Q_SLOTS:
         QCOMPARE(result.text(), text);
         QCOMPARE(result.textFormat(), Qt::RichText);
     }
- 
+
     void testRichTextWithAttachments()
     {
         NoteMessageWrapper note;

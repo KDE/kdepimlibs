@@ -65,8 +65,8 @@ int MessageModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     if (collection().isValid()
-        && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
-        && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
+            && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
+            && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
         return 1;
     }
 
@@ -76,8 +76,8 @@ int MessageModel::rowCount(const QModelIndex &parent) const
 int MessageModel::columnCount(const QModelIndex &parent) const
 {
     if (collection().isValid()
-        && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
-        && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
+            && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
+            && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
         return 1;
     }
 
@@ -154,8 +154,8 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
 {
 
     if (collection().isValid()
-        && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
-        && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
+            && !collection().contentMimeTypes().contains(QLatin1String("message/rfc822"))
+            && collection().contentMimeTypes() != QStringList(QLatin1String("inode/directory"))) {
         return QVariant();
     }
 

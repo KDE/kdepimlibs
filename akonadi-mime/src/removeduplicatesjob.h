@@ -28,7 +28,8 @@
 
 class QAbstractItemModel;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short Job that finds and removes duplicate messages in given collection

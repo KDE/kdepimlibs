@@ -20,4 +20,3 @@
 #include "akonadi_notes_debug.h"
 Q_LOGGING_CATEGORY(AKONADINOTES_LOG, "log_akonadi_notes")
 
-

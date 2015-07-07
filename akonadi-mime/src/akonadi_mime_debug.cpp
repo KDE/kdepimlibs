@@ -20,4 +20,3 @@
 #include "akonadi_mime_debug.h"
 Q_LOGGING_CATEGORY(AKONADIMIME_LOG, "log_akonadi_mime")
 
-

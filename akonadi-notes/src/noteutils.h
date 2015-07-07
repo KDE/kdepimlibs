@@ -27,16 +27,20 @@
 class QDateTime;
 class QString;
 
-namespace boost {
+namespace boost
+{
 template <typename T> class shared_ptr;
 }
 
-namespace KMime {
+namespace KMime
+{
 class Message;
 typedef boost::shared_ptr<Message> MessagePtr;
 }
-namespace Akonadi {
-namespace NoteUtils {
+namespace Akonadi
+{
+namespace NoteUtils
+{
 
 /**
 * @return mimetype for notes

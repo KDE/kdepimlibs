@@ -26,7 +26,6 @@ using namespace KMime;
 
 QTEST_MAIN(MessageTest)
 
-
 void MessageTest::testCopyFlags()
 {
     {
@@ -53,7 +52,6 @@ void MessageTest::testCopyFlags()
         QVERIFY(item.hasFlag(Akonadi::MessageFlags::HasAttachment) == true);
     }
 }
-
 
 KMime::Message::Ptr MessageTest::readAndParseMail(const QString &mailFile) const
 {

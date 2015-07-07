@@ -28,7 +28,8 @@
 #include <KIO/JobUiDelegate>
 #include <KIO/Job>
 
-namespace Util {
+namespace Util
+{
 /// Helper to sanely show an error message for a job
 void showJobError(KJob *job)
 {
@@ -47,8 +48,8 @@ OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(const QString &i
 {
     //NOTE(Andras): from kmail/util.cpp
     return new OrgKdeAkonadiImapSettingsInterface(Akonadi::ServerManager::agentServiceName(Akonadi::ServerManager::Resource, ident),
-                                                  QStringLiteral("/Settings"),
-                                                  KDBusConnectionPool::threadConnection());
+            QStringLiteral("/Settings"),
+            KDBusConnectionPool::threadConnection());
 }
 
 }

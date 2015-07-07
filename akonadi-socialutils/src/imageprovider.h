@@ -29,11 +29,13 @@
 class KJob;
 class QImage;
 
-namespace KIO {
+namespace KIO
+{
 class Job;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ImageProviderPrivate;
 

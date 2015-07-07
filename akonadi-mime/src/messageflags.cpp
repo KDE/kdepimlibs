@@ -45,15 +45,19 @@ const char Akonadi::MessageFlags::Ham[] = "$NOTJUNK";
 
 void Akonadi::MessageFlags::copyMessageFlags(KMime::Message &message, Akonadi::Item &item)
 {
-    if (KMime::isSigned(&message))
+    if (KMime::isSigned(&message)) {
         item.setFlag(Akonadi::MessageFlags::Signed);
+    }
 
-    if (KMime::isEncrypted(&message))
+    if (KMime::isEncrypted(&message)) {
         item.setFlag(Akonadi::MessageFlags::Encrypted);
+    }
 
-    if (KMime::hasInvitation(&message))
+    if (KMime::hasInvitation(&message)) {
         item.setFlag(Akonadi::MessageFlags::HasInvitation);
+    }
 
-    if (KMime::hasAttachment(&message))
+    if (KMime::hasAttachment(&message)) {
         item.setFlag(Akonadi::MessageFlags::HasAttachment);
+    }
 }

@@ -62,7 +62,7 @@ void EmptyTrashCommand::execute()
         if (KMessageBox::warningContinueCancel(0, text, title,
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String("confirm_empty_trash"))
-            != KMessageBox::Continue) {
+                != KMessageBox::Continue) {
             emitResult(OK);
             return;
         }
@@ -148,8 +148,8 @@ Akonadi::AgentInstance::List EmptyTrashCommand::agentInstances()
     Akonadi::AgentInstance::List relevantInstances;
     foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         if (instance.type().mimeTypes().contains(KMime::Message::mimeType()) &&
-            instance.type().capabilities().contains(QLatin1String("Resource")) &&
-            !instance.type().capabilities().contains(QLatin1String("Virtual"))) {
+                instance.type().capabilities().contains(QLatin1String("Resource")) &&
+                !instance.type().capabilities().contains(QLatin1String("Virtual"))) {
             relevantInstances << instance;
         }
     }

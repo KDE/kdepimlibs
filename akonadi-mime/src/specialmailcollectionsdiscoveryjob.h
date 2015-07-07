@@ -24,7 +24,8 @@
 
 #include <specialcollectionsdiscoveryjob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADI_MIME_EXPORT SpecialMailCollectionsDiscoveryJob : public SpecialCollectionsDiscoveryJob
 {

@@ -33,9 +33,9 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes()
 }
 
 Akonadi::SocialNetworkAttributes::SocialNetworkAttributes(const QString &userName,
-                                                          const QString &networkName,
-                                                          bool canPublish,
-                                                          uint maxPostLength)
+        const QString &networkName,
+        bool canPublish,
+        uint maxPostLength)
     : d(new SocialNetworkAttributesPrivate())
 {
     d->attributes[QStringLiteral("userName")] = userName;
@@ -79,7 +79,7 @@ Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 
 QByteArray Akonadi::SocialNetworkAttributes::type() const
 {
-    static const QByteArray sType( "socialattributes" );
+    static const QByteArray sType("socialattributes");
     return sType;
 }
 

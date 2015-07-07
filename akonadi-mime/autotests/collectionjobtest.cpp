@@ -441,8 +441,8 @@ void CollectionJobTest::testModify_data()
 }
 
 #define RESET_COLLECTION_ID \
-  col.setId( uid ); \
-  if ( !rid.isEmpty() ) col.setRemoteId( rid )
+    col.setId( uid ); \
+    if ( !rid.isEmpty() ) col.setRemoteId( rid )
 
 void CollectionJobTest::testModify()
 {

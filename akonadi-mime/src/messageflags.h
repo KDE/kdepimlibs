@@ -25,12 +25,12 @@
 
 namespace KMime
 {
-  class Message;
+class Message;
 }
 
 namespace Akonadi
 {
-  class Item;
+class Item;
 
 /**
  * @short Contains predefined message flag identifiers.
@@ -38,7 +38,8 @@ namespace Akonadi
  * This namespace contains identifiers of message flags that
  *  are used internally in the Akonadi server.
  */
-namespace MessageFlags {
+namespace MessageFlags
+{
 /**
  * The flag for a message being seen (i.e. opened by user).
  */

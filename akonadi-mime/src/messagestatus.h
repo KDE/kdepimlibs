@@ -28,7 +28,8 @@
 
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 //---------------------------------------------------------------------------
 /**
