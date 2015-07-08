@@ -19,7 +19,7 @@
 
 #include "noteutils.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <qdatetime.h>
 #include <kmime/kmime_message.h>
 #include "akonadi_notes_debug.h"

@@ -30,7 +30,7 @@
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 #include <kglobal.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #include <KLocale>
 #include <KFormat>

@@ -19,7 +19,7 @@
 #include <QHash>
 #include <QRegExp>
 #include <QUrlQuery>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QCoreApplication>
 #include <QDataStream>
 

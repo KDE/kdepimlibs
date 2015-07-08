@@ -36,9 +36,9 @@ extern "C" {
 #include <QSslSocket>
 #include <QUrlQuery>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QUrl>
-#include <kmessagebox.h>
+#include <KMessageBox>
 #include <QApplication>
 #include <sys/stat.h>
 #include <cassert>

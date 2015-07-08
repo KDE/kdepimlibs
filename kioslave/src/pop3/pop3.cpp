@@ -38,7 +38,7 @@ extern "C" {
 #include "pop3_debug.h"
 
 #include <qdebug.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QCryptographicHash>
 
 #include <kio/slaveinterface.h>

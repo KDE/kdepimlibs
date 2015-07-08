@@ -25,7 +25,7 @@
 #include <QString>
 
 #include <qdebug.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QCoreApplication>
 
 #include <kio/global.h>

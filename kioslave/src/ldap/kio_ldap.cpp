@@ -27,7 +27,7 @@
 #include <kldap/ldapcontrol.h>
 
 #include <qdebug.h>
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QCoreApplication>
 
 #include <netdb.h>

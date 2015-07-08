@@ -21,7 +21,7 @@
 
 #include "specialmailcollections.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 #include <QStandardPaths>
 
 using namespace Akonadi;
