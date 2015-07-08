@@ -108,7 +108,7 @@ void Akonadi::ImageProviderPrivate::result(KJob *job)
 
     runningJobs--;
 
-    if (queuedJobs.count() > 0) {
+    if (!queuedJobs.isEmpty()) {
         QueuedJobHelper helper = queuedJobs.takeFirst();
         q->loadImage(helper.who, helper.url, helper.polishImage);
     }
