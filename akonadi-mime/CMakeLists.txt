@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi-Mime)
 
 # ECM setup
-find_package(ECM 5.11.0 CONFIG REQUIRED)
+find_package(ECM 5.12.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
@@ -16,7 +16,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
-set(KF5_VERSION "5.11.0")
+set(KF5_VERSION "5.12.0")
 set(KDEPIMLIBS_VERSION "4.84.0")
 set(KF5_MIME_VERSION "4.82.0")
 
@@ -27,7 +27,6 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
 )
 
 ########### Find packages ###########
-find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KF5_MIME_VERSION} CONFIG REQUIRED)
 
