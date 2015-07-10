@@ -76,6 +76,12 @@ public:
     QString mLabel;
 };
 
+Attachment::Attachment()
+    : d_ptr(new Attachment::AttachmentPrivate(QUrl(), QString()))
+{
+
+}
+
 Attachment::Attachment(const QUrl &url, const QString &mimetype)
     : d_ptr(new Attachment::AttachmentPrivate(url, mimetype))
 {
@@ -174,7 +180,7 @@ public:
     QDateTime creationDate;
     QDateTime lastModifiedDate;
     QMap< QString, QString > custom;
-    QList<Attachment> attachments;
+    QVector<Attachment> attachments;
     Classification classification;
     Qt::TextFormat textFormat;
 };
@@ -521,7 +527,7 @@ QString NoteMessageWrapper::toPlainText() const
     return body.remove(QRegExp(QStringLiteral("<[^>]*>"))).trimmed().toHtmlEscaped();
 }
 
-QList<Attachment> &NoteMessageWrapper::attachments()
+QVector<Attachment> &NoteMessageWrapper::attachments()
 {
     Q_D(NoteMessageWrapper);
     return d->attachments;

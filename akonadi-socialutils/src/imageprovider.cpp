@@ -71,7 +71,7 @@ public:
     int runningJobs;
 
     ///Queued jobs when the limit is reached
-    QList<QueuedJobHelper> queuedJobs;
+    QVector<QueuedJobHelper> queuedJobs;
 
     ///String list containing the list of loaded persons avatars
     QStringList pendingPersons;

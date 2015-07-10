@@ -64,6 +64,7 @@ public:
     /**
      * Create an attachment referencing a url only
      */
+    Attachment();
     Attachment(const QUrl &url, const QString &mimetype);
     /**
      * Create an attachment with the content stored inline
@@ -246,7 +247,7 @@ public:
     /**
       * Returns a reference to the list of attachments of the note
       */
-    QList<Attachment> &attachments();
+    QVector<Attachment> &attachments();
 
     /**
       * Returns a reference to the custom-value map
@@ -272,4 +273,5 @@ private:
 }
 }
 
+Q_DECLARE_TYPEINFO( Akonadi::NoteUtils::Attachment, Q_MOVABLE_TYPE );
 #endif
