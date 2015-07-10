@@ -36,7 +36,8 @@
 
 #include <QStringList>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Response;
 

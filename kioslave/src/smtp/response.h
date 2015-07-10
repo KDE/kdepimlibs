@@ -38,7 +38,8 @@ typedef QList<QByteArray> QCStringList;
 
 class QString;
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Response
 {

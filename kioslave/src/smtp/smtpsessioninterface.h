@@ -25,11 +25,13 @@
 class QByteArray;
 class QString;
 
-namespace KIO {
+namespace KIO
+{
 class AuthInfo;
 }
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Response;
 

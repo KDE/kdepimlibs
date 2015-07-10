@@ -34,7 +34,8 @@
 #include <kio/global.h>
 #include <KLocalizedString>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 void TransactionState::setFailedFatally(int code, const QString &msg)
 {
@@ -107,7 +108,7 @@ QString TransactionState::errorMessage() const
         QStringList recip;
         recip.reserve(mRejectedRecipients.count());
         for (RejectedRecipientList::const_iterator it = mRejectedRecipients.begin();
-             it != mRejectedRecipients.end() ; ++it) {
+                it != mRejectedRecipients.end() ; ++it) {
             recip.push_back((*it).recipient + QLatin1String(" (") + (*it).reason + QLatin1Char(')'));
         }
         return i18n("Message sending failed since the following recipients were rejected by the server:\n"

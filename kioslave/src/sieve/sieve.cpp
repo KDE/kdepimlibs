@@ -195,10 +195,10 @@ kio_sieveProtocol::~kio_sieveProtocol()
 void kio_sieveProtocol::setHost(const QString &host, quint16 port, const QString &user, const QString &pass)
 {
     if (isConnected() &&
-        (m_sServer != host ||
-         m_port != port ||
-         m_sUser != user ||
-         m_sPass != pass)) {
+            (m_sServer != host ||
+             m_port != port ||
+             m_sUser != user ||
+             m_sPass != pass)) {
         disconnect();
     }
     m_sServer = host;
@@ -360,10 +360,10 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
     }
 
     if (!m_allowUnencrypted && useTLSIfAvailable && QSslSocket::supportsSsl() && !m_supportsTLS &&
-        messageBox(WarningContinueCancel,
-                   i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
-                        "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
-                   i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel")) != KMessageBox::Continue) {
+            messageBox(WarningContinueCancel,
+                       i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                            "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                       i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel")) != KMessageBox::Continue) {
         error(ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server."));
         disconnect();
         return false;
@@ -953,7 +953,7 @@ bool kio_sieveProtocol::saslInteract(void *in, AuthInfo &ai)
     //window for getting this info
     for (; interact->id != SASL_CB_LIST_END; interact++) {
         if (interact->id == SASL_CB_AUTHNAME ||
-            interact->id == SASL_CB_PASS) {
+                interact->id == SASL_CB_PASS) {
 
             if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
                 if (!openPasswordDialog(ai)) {

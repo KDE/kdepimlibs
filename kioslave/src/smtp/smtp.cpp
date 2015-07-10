@@ -218,7 +218,7 @@ void SMTPProtocol::put(const QUrl &url, int permissions, KIO::JobFlags)
     }
 
     if (request.is8BitBody()
-        && !m_sessionIface->haveCapability("8BITMIME") && !m_sessionIface->eightBitMimeRequested()) {
+            && !m_sessionIface->haveCapability("8BITMIME") && !m_sessionIface->eightBitMimeRequested()) {
         error(KIO::ERR_SERVICE_NOT_AVAILABLE,
               i18n("Your server (%1) does not support sending of 8-bit messages.\n"
                    "Please use base64 or quoted-printable encoding.", m_sServer));
@@ -295,7 +295,7 @@ Response SMTPProtocol::getResponse(bool *ok)
         }
 
         // ...read data...
-        recv_len = readLine(buf, sizeof (buf) - 1);
+        recv_len = readLine(buf, sizeof(buf) - 1);
         if (recv_len < 1 && !isConnected()) {
             error(KIO::ERR_CONNECTION_BROKEN, m_sServer);
             return response;
@@ -342,8 +342,8 @@ bool SMTPProtocol::executeQueuedCommands(TransactionState *ts)
             continue;
         }
         if (!sendCommandLine(cmdline) ||
-            !batchProcessResponses(ts) ||
-            ts->failedFatally()) {
+                !batchProcessResponses(ts) ||
+                ts->failedFatally()) {
             smtp_close(false);   // _hard_ shutdown
             return false;
         }
@@ -409,7 +409,7 @@ QByteArray SMTPProtocol::collectPipelineCommands(TransactionState *ts)
             // 32 KB seems to be a sensible limit. Additionally, a job can only transfer
             // 32 KB at once anyway.
             if (dynamic_cast<TransferCommand *>(cmd) != 0 &&
-                cmdLine_len >= 32 * 1024) {
+                    cmdLine_len >= 32 * 1024) {
                 return cmdLine;
             }
         }
@@ -507,8 +507,8 @@ bool SMTPProtocol::execute(Command *cmd, TransactionState *ts)
         }
         if (!cmd->processResponse(r, ts)) {
             if ((ts && ts->failedFatally()) ||
-                cmd->closeConnectionOnError() ||
-                !execute(Command::RSET)) {
+                    cmd->closeConnectionOnError() ||
+                    !execute(Command::RSET)) {
                 smtp_close(false);
             }
             return false;
@@ -521,10 +521,10 @@ bool SMTPProtocol::execute(Command *cmd, TransactionState *ts)
 bool SMTPProtocol::smtp_open(const QString &fakeHostname)
 {
     if (m_opened &&
-        m_sOldPort == m_port &&
-        m_sOldServer == m_sServer &&
-        m_sOldUser == m_sUser &&
-        (fakeHostname.isNull() || m_hostname == fakeHostname)) {
+            m_sOldPort == m_port &&
+            m_sOldServer == m_sServer &&
+            m_sOldUser == m_sUser &&
+            (fakeHostname.isNull() || m_hostname == fakeHostname)) {
         return true;
     }
 
@@ -565,7 +565,7 @@ bool SMTPProtocol::smtp_open(const QString &fakeHostname)
     }
 
     if ((m_sessionIface->haveCapability("STARTTLS") /*### && canUseTLS()*/ && m_sessionIface->tlsRequested() != SMTPSessionInterface::ForceNoTLS)
-        || m_sessionIface->tlsRequested() == SMTPSessionInterface::ForceTLS) {
+            || m_sessionIface->tlsRequested() == SMTPSessionInterface::ForceTLS) {
         // For now we're gonna force it on.
 
         if (execute(Command::STARTTLS)) {
@@ -598,7 +598,7 @@ bool SMTPProtocol::authenticate()
     // return with success if the server doesn't support SMTP-AUTH or an user
     // name is not specified and metadata doesn't tell us to force it.
     if ((m_sUser.isEmpty() || !m_sessionIface->haveCapability("AUTH")) &&
-        m_sessionIface->requestedSaslMethod().isEmpty()) {
+            m_sessionIface->requestedSaslMethod().isEmpty()) {
         return true;
     }
 

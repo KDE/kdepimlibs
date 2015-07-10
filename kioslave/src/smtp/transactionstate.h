@@ -36,7 +36,8 @@
 
 #include <QString>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 /**
    @short A class modelling an SMTP transaction's state
@@ -62,8 +63,7 @@ namespace KioSMTP {
 class TransactionState
 {
 public:
-    struct RecipientRejection
-    {
+    struct RecipientRejection {
         RecipientRejection(const QString &who = QString(),
                            const QString &why = QString())
             : recipient(who)

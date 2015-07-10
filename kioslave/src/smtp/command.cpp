@@ -43,7 +43,8 @@
 
 #include <assert.h>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 static const sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
@@ -272,7 +273,7 @@ bool AuthCommand::saslInteract(void *in)
     //window for getting this info
     for (; interact->id != SASL_CB_LIST_END; interact++) {
         if (interact->id == SASL_CB_AUTHNAME ||
-            interact->id == SASL_CB_PASS) {
+                interact->id == SASL_CB_PASS) {
 
             if (mAi->username.isEmpty() || mAi->password.isEmpty()) {
                 if (!mSMTP->openPasswordDialog(*mAi)) {

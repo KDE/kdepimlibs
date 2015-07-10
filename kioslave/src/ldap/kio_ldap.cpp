@@ -250,18 +250,18 @@ void LDAPProtocol::changeCheck(const LdapUrl &url)
 
     if (mConnected) {
         if (server.host() != mServer.host() ||
-            server.port() != mServer.port() ||
-            server.baseDn() != mServer.baseDn() ||
-            server.user() != mServer.user() ||
-            server.bindDn() != mServer.bindDn() ||
-            server.realm() != mServer.realm() ||
-            server.password() != mServer.password() ||
-            server.timeLimit() != mServer.timeLimit() ||
-            server.sizeLimit() != mServer.sizeLimit() ||
-            server.version() != mServer.version() ||
-            server.security() != mServer.security() ||
-            server.auth() != mServer.auth() ||
-            server.mech() != mServer.mech()) {
+                server.port() != mServer.port() ||
+                server.baseDn() != mServer.baseDn() ||
+                server.user() != mServer.user() ||
+                server.bindDn() != mServer.bindDn() ||
+                server.realm() != mServer.realm() ||
+                server.password() != mServer.password() ||
+                server.timeLimit() != mServer.timeLimit() ||
+                server.sizeLimit() != mServer.sizeLimit() ||
+                server.version() != mServer.version() ||
+                server.security() != mServer.security() ||
+                server.auth() != mServer.auth() ||
+                server.mech() != mServer.mech()) {
 
             closeConnection();
             mServer = server;
@@ -277,9 +277,9 @@ void LDAPProtocol::setHost(const QString &host, quint16 port,
                            const QString &user, const QString &password)
 {
     if (mServer.host() != host ||
-        mServer.port() != port ||
-        mServer.user() != user ||
-        mServer.password() != password) {
+            mServer.port() != port ||
+            mServer.user() != user ||
+            mServer.password() != password) {
         closeConnection();
     }
 
@@ -344,9 +344,9 @@ void LDAPProtocol::openConnection()
             return;
         }
         if (retval == KLDAP_INVALID_CREDENTIALS ||
-            retval == KLDAP_INSUFFICIENT_ACCESS ||
-            retval == KLDAP_INAPPROPRIATE_AUTH  ||
-            retval == KLDAP_UNWILLING_TO_PERFORM) {
+                retval == KLDAP_INSUFFICIENT_ACCESS ||
+                retval == KLDAP_INAPPROPRIATE_AUTH  ||
+                retval == KLDAP_UNWILLING_TO_PERFORM) {
 
             if (firstauth && cached) {
                 if (mServer.auth() == LdapServer::SASL) {

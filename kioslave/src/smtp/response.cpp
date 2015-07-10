@@ -36,7 +36,8 @@
 
 #include <QByteArray>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 void Response::parseLine(const char *line, int len)
 {

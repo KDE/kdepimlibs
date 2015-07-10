@@ -96,7 +96,7 @@ bool ReadMBox::nextLine()
         return true;
     } else if (m_only_new) {
         if (m_header && m_current_line.left(7) == QLatin1String("Status:") &&
-            ! m_current_line.contains(QLatin1String("U")) && ! m_current_line.contains(QLatin1String("N"))) {
+                ! m_current_line.contains(QLatin1String("U")) && ! m_current_line.contains(QLatin1String("N"))) {
             m_status = false;
         }
     }

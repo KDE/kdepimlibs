@@ -37,7 +37,8 @@
 
 class QUrl;
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Request
 {

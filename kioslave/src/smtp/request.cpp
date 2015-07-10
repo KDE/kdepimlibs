@@ -38,7 +38,8 @@
 
 #include <assert.h>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 Request Request::fromURL(const QUrl &url)
 {

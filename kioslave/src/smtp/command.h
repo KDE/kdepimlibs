@@ -38,7 +38,8 @@ extern "C" {
 
 #include <kio/authinfo.h>
 
-namespace KioSMTP {
+namespace KioSMTP
+{
 
 class Response;
 class TransactionState;

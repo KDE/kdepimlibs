@@ -432,7 +432,7 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
             long last = 0;
             access = 0;
             if (((pos = line.indexOf(' ')) > 0 || (pos = line.indexOf('\t')) > 0) &&
-                ((pos2 = line.indexOf(' ', pos + 1)) > 0 || (pos2 = line.indexOf('\t', pos + 1)) > 0)) {
+                    ((pos2 = line.indexOf(' ', pos + 1)) > 0 || (pos2 = line.indexOf('\t', pos + 1)) > 0)) {
                 last = line.left(pos).toLongLong();
                 long first = line.mid(pos + 1, pos2 - pos - 1).toLongLong();
                 msg_cnt = abs(last - first + 1);
