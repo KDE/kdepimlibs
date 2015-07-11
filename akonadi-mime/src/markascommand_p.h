@@ -45,7 +45,7 @@ private:
     void markMessages();
 
     Akonadi::Collection::List mFolders;
-    QList<Akonadi::Item> mMessages;
+    Akonadi::Item::List mMessages;
     Akonadi::MessageStatus mTargetStatus;
     int mMarkJobCount;
     int mFolderListJobCount;

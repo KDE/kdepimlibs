@@ -36,7 +36,7 @@ MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel *model, const Ak
     mFolderListJobCount = mFolders.size();
 }
 
-MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel *model, const QList< Akonadi::Item > &msgList, QObject *parent)
+MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Item::List &msgList, QObject *parent)
     : CommandBase(parent)
 {
     the_trashCollectionFolder = -1;

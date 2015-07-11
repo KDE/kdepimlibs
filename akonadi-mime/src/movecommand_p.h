@@ -40,7 +40,7 @@ private Q_SLOTS:
 
 private:
     Akonadi::Collection mDestFolder;
-    QList<Akonadi::Item> mMessages;
+    Akonadi::Item::List mMessages;
 };
 
 #endif // MOVECOMMAND_H

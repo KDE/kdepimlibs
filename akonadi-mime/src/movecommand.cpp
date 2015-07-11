@@ -24,7 +24,7 @@
 #include <itemdeletejob.h>
 
 MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
-                         const QList<Akonadi::Item> &msgList,
+                         const Akonadi::Item::List &msgList,
                          QObject *parent)
     : CommandBase(parent)
 {
