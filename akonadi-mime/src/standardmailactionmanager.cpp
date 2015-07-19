@@ -197,7 +197,7 @@ public:
             break;
         case Akonadi::StandardActionManager::CollectionProperties:
             mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties)->setText(
-                i18n("Folder Properties..."));
+                i18n("Folder Properties"));
             mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
                 i18n("Open a dialog to edit the properties of the selected folder."));
             setHelpText(mGenericManager->action(Akonadi::StandardActionManager::CollectionProperties),
