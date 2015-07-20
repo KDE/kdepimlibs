@@ -23,7 +23,7 @@ macro(add_akonadi_isolated_test _source _path)
 
   # based on kde4_add_unit_test
   if (WIN32)
-    get_target_property( _loc ${_targetName} LOCATION )
+    set(_loc ${EXECUTABLE_OUTPUT_PATH}/${_targetName})
     set(_executable ${_loc}.bat)
   else()
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_targetName})
