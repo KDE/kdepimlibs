@@ -58,7 +58,7 @@ if ( GPGME_VANILLA_FOUND )
                                   SOVERSION   ${_gpgmepp_soversion}
                                   OUTPUT_NAME gpgme++
    )
-   get_target_property( GPGMEPP_VANILLA_LIBRARY gpgmepp LOCATION )
+   set(GPGMEPP_VANILLA_LIBRARY ${LIBRARY_OUTPUT_PATH}/libgpgmepp.so)
    install(TARGETS gpgmepp EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} COMPONENT Devel)
 
 endif()
@@ -71,7 +71,7 @@ if ( GPGME_GLIB_FOUND )
                                        SOVERSION   ${_gpgmepp_soversion}
                                        OUTPUT_NAME gpgme++-glib DEFINE_SYMBOL gpgmepp_EXPORTS
    )
-   get_target_property( GPGMEPP_GLIB_LIBRARY gpgmepp LOCATION )
+   set(GPGMEPP_GLIB_LIBRARY ${LIBRARY_OUTPUT_PATH}/libgpgmepp.so)
    install(TARGETS gpgmepp-glib EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 endif()
 
@@ -87,7 +87,7 @@ if ( GPGME_QT_FOUND )
                                      SOVERSION   ${_gpgmepp_soversion}
                                      OUTPUT_NAME gpgme++-qt DEFINE_SYMBOL gpgmepp_EXPORTS
    )
-   get_target_property( GPGMEPP_QT_LIBRARY gpgmepp LOCATION )
+   set(GPGMEPP_QT_LIBRARY ${LIBRARY_OUTPUT_PATH}/libgpgmepp.so)
    install(TARGETS gpgmepp-qt EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 endif()
 
@@ -100,7 +100,7 @@ if ( GPGME_PTHREAD_FOUND )
                                           SOVERSION   ${_gpgmepp_soversion}
                                           OUTPUT_NAME gpgme++-pthread DEFINE_SYMBOL gpgmepp_EXPORTS
    )
-   get_target_property( GPGMEPP_PTHREAD_LIBRARY gpgmepp LOCATION )
+   set(GPGMEPP_PTHREAD_LIBRARY ${LIBRARY_OUTPUT_PATH}/libgpgmepp.so)
    install(TARGETS gpgmepp-pthread EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 endif()
 
@@ -112,7 +112,7 @@ if ( GPGME_PTH_FOUND )
                                       SOVERSION   ${_gpgmepp_soversion}
                                       OUTPUT_NAME gpgme++-pth DEFINE_SYMBOL gpgmepp_EXPORTS
    )
-   get_target_property( GPGMEPP_PTH_LIBRARY gpgmepp LOCATION )
+   set(GPGMEPP_PTH_LIBRARY ${LIBRARY_OUTPUT_PATH}/libgpgmepp.so)
    install(TARGETS gpgmepp-pth EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 endif()
 
