@@ -40,7 +40,7 @@ add_definitions(
 add_library(kblog ${LIBRARY_TYPE} ${kblog_LIB_SRCS})
 generate_export_header(kblog)
 
-target_link_libraries(kblog kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
+target_link_libraries(kblog LINK_PRIVATE kxmlrpcclient syndication ${KDE4_KIO_LIBS} kcal )
 
 set_target_properties(kblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

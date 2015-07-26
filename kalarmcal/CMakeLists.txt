@@ -67,7 +67,7 @@ else()
 endif()
 
 if(USE_KRESOURCES)
-    target_link_libraries(kalarmcal
+    target_link_libraries(kalarmcal LINK_PRIVATE
                           kcal
                           kholidays
                           kpimidentities
@@ -76,7 +76,7 @@ if(USE_KRESOURCES)
                           ${QT_QTCORE_LIBRARY}
                          )
 else()
-    target_link_libraries(kalarmcal
+    target_link_libraries(kalarmcal LINK_PRIVATE
                           akonadi-kde
                           kcalcore
                           kholidays

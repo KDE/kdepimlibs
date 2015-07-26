@@ -18,7 +18,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kmime
 )
 
-target_link_libraries(kmbox
+target_link_libraries(kmbox LINK_PRIVATE
   ${KDE4_KDECORE_LIBS}
   kmime
   kpimutils # TODO KF5 remove this

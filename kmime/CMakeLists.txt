@@ -35,7 +35,7 @@ set(kmime_LIB_SRCS
 add_library(kmime ${LIBRARY_TYPE} ${kmime_LIB_SRCS})
 generate_export_header(kmime)
 
-target_link_libraries(kmime  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kmime LINK_PRIVATE ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

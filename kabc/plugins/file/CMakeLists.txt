@@ -8,7 +8,7 @@ set(kabc_file_core_SRCS resourcefile.cpp resourcefileconfig.cpp)
 add_library(kabc_file_core ${LIBRARY_TYPE} ${kabc_file_core_SRCS})
 generate_export_header(kabc_file_core)
 
-target_link_libraries(kabc_file_core ${KDE4_KIO_LIBS} kabc kresources)
+target_link_libraries(kabc_file_core LINK_PRIVATE ${KDE4_KIO_LIBS} kabc kresources)
 
 set_target_properties(
   kabc_file_core PROPERTIES

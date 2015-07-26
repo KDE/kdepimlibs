@@ -29,7 +29,7 @@ generate_export_header(akonadi-socialutils
   EXPORT_FILE_NAME libakonadisocialutils_export.h
 )
 
-target_link_libraries(akonadi-socialutils
+target_link_libraries(akonadi-socialutils LINK_PRIVATE
   akonadi-kde
   ${KDE4_KIO_LIBS}
   ${QT_QTNETWORK_LIBS}

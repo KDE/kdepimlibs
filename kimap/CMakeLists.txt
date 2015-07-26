@@ -55,7 +55,7 @@ set(kimap_LIB_SRCS
 add_library(kimap ${LIBRARY_TYPE} ${kimap_LIB_SRCS})
 generate_export_header(kimap)
 
-target_link_libraries(kimap ${KDE4_KDECORE_LIBS} ${QT_QTNETWORK_LIBRARY} kmime  ${SASL2_LIBRARIES})
+target_link_libraries(kimap LINK_PRIVATE ${KDE4_KDECORE_LIBS} ${QT_QTNETWORK_LIBRARY} kmime  ${SASL2_LIBRARIES})
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/kioslave

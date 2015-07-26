@@ -52,7 +52,7 @@ if ( GPGME_VANILLA_FOUND )
    add_library( gpgmepp ${LIBRARY_TYPE} ${gpgme_LIB_SRCS} context_vanilla.cpp )
    generate_export_header(gpgmepp EXPORT_FILE_NAME gpgme++_export.h)
 
-   target_link_libraries( gpgmepp ${GPGME_VANILLA_LIBRARIES} )
+   target_link_libraries( gpgmepp LINK_PRIVATE ${GPGME_VANILLA_LIBRARIES} )
    set_target_properties( gpgmepp PROPERTIES
                                   VERSION     ${_gpgmepp_version}
                                   SOVERSION   ${_gpgmepp_soversion}
@@ -65,7 +65,7 @@ endif()
 
 if ( GPGME_GLIB_FOUND )
    add_library( gpgmepp-glib ${LIBRARY_TYPE} ${gpgme_LIB_SRCS} context_glib.cpp )
-   target_link_libraries( gpgmepp-glib ${GPGME_GLIB_LIBRARIES} )
+   target_link_libraries( gpgmepp-glib LINK_PRIVATE ${GPGME_GLIB_LIBRARIES} )
    set_target_properties( gpgmepp-glib PROPERTIES
                                        VERSION     ${_gpgmepp_version}
                                        SOVERSION   ${_gpgmepp_soversion}
@@ -78,9 +78,9 @@ endif()
 
 if ( GPGME_QT_FOUND )
    add_library( gpgmepp-qt ${LIBRARY_TYPE} ${gpgme_LIB_SRCS} context_qt.cpp )
-   target_link_libraries( gpgmepp-qt ${GPGME_QT_LIBRARIES} )
+   target_link_libraries( gpgmepp-qt LINK_PRIVATE ${GPGME_QT_LIBRARIES} )
    if(WIN32)
-      target_link_libraries( gpgmepp-qt ${GPGME_VANILLA_LIBRARIES} )
+      target_link_libraries( gpgmepp-qt LINK_PRIVATE ${GPGME_VANILLA_LIBRARIES} )
    endif()
    set_target_properties( gpgmepp-qt PROPERTIES
                                      VERSION     ${_gpgmepp_version}
@@ -94,7 +94,7 @@ endif()
 
 if ( GPGME_PTHREAD_FOUND )
    add_library( gpgmepp-pthread ${LIBRARY_TYPE} ${gpgme_LIB_SRCS} context_vanilla.cpp )
-   target_link_libraries( gpgmepp-pthread ${GPGME_PTHREAD_LIBRARIES} )
+   target_link_libraries( gpgmepp-pthread LINK_PRIVATE ${GPGME_PTHREAD_LIBRARIES} )
    set_target_properties( gpgmepp-pthread PROPERTIES
                                           VERSION     ${_gpgmepp_version}
                                           SOVERSION   ${_gpgmepp_soversion}
@@ -106,7 +106,7 @@ endif()
 
 if ( GPGME_PTH_FOUND )
    add_library( gpgmepp-pth ${LIBRARY_TYPE} ${gpgme_LIB_SRCS} context_vanilla.cpp )
-   target_link_libraries( gpgmepp-pth ${GPGME_PTH_LIBRARIES} )
+   target_link_libraries( gpgmepp-pth LINK_PRIVATE ${GPGME_PTH_LIBRARIES} )
    set_target_properties( gpgmepp-pth PROPERTIES
                                       VERSION     ${_gpgmepp_version}
                                       SOVERSION   ${_gpgmepp_soversion}

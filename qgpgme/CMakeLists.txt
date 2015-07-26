@@ -44,7 +44,7 @@ if ( _any_gpgme_found )
    add_library( qgpgme ${LIBRARY_TYPE} ${qgpgme_LIB_SRCS} )
    generate_export_header(qgpgme)
 
-   target_link_libraries( qgpgme ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
+   target_link_libraries( qgpgme LINK_PRIVATE ${QT_QTCORE_LIBRARY} ${_qgpgme_libgpgme} )
 
    set_target_properties( qgpgme PROPERTIES
      VERSION ${_qgpgme_version}

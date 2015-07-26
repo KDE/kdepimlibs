@@ -12,7 +12,7 @@ set(kxmlrpcclient_LIB_SRCS
 add_library(kxmlrpcclient ${LIBRARY_TYPE} ${kxmlrpcclient_LIB_SRCS})
 generate_export_header(kxmlrpcclient)
 
-target_link_libraries(kxmlrpcclient ${KDE4_KIO_LIBS})
+target_link_libraries(kxmlrpcclient LINK_PRIVATE ${KDE4_KIO_LIBS})
 
 set_target_properties(kxmlrpcclient PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}

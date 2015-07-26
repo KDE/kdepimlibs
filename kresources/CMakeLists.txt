@@ -34,7 +34,7 @@ qt4_add_dbus_adaptor(kresources_LIB_SRCS
 add_library(kresources ${LIBRARY_TYPE} ${kresources_LIB_SRCS})
 generate_export_header(kresources)
 
-target_link_libraries(kresources ${KDE4_KIO_LIBS})
+target_link_libraries(kresources LINK_PRIVATE ${KDE4_KIO_LIBS})
 
 set_target_properties(kresources PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}

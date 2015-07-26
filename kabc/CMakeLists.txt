@@ -96,11 +96,10 @@ endif()
 add_library(kabc ${LIBRARY_TYPE} ${kabc_LIB_SRCS})
 generate_export_header(kabc)
 
-target_link_libraries(kabc ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS})
-target_link_libraries(kabc LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
+target_link_libraries(kabc LINK_PRIVATE ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS})
+target_link_libraries(kabc LINK_PUBLIC ${KDE4_KDEUI_LIBS})
 if(NOT KDEPIM_NO_KRESOURCES)
-  target_link_libraries(kabc kresources)
-  target_link_libraries(kabc LINK_INTERFACE_LIBRARIES kresources)
+  target_link_libraries(kabc LINK_PUBLIC kresources)
 endif()
 
 set_target_properties(

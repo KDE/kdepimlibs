@@ -21,7 +21,7 @@ include_directories(
 add_library(kontactinterface ${LIBRARY_TYPE} ${kontactinterface_LIB_SRCS})
 generate_export_header(kontactinterface)
 
-target_link_libraries(kontactinterface kpimutils ${KDE4_KPARTS_LIBS})
+target_link_libraries(kontactinterface LINK_PRIVATE kpimutils ${KDE4_KPARTS_LIBS})
 
 set_target_properties(kontactinterface PROPERTIES
   VERSION ${GENERIC_LIB_VERSION}

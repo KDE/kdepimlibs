@@ -17,7 +17,7 @@ include_directories(
 add_library(microblog ${LIBRARY_TYPE} ${microblog_LIB_SRCS})
 generate_export_header(microblog)
 
-target_link_libraries(microblog ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )
+target_link_libraries(microblog LINK_PRIVATE ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} kpimutils )
 
 set_target_properties(microblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

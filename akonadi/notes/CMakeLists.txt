@@ -24,7 +24,7 @@ include_directories(
 )
 
 
-target_link_libraries(akonadi-notes
+target_link_libraries(akonadi-notes LINK_PRIVATE
                       akonadi-kde
                       kmime ${QT_QTXML_LIBRARY})
 

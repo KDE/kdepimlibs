@@ -38,7 +38,7 @@ generate_export_header(akonadi-kcal
   EXPORT_FILE_NAME akonadi-kcal_export.h
 )
 
-target_link_libraries( akonadi-kcal kcal akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} )
+target_link_libraries( akonadi-kcal LINK_PRIVATE kcal akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} )
 set_target_properties( akonadi-kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadi-kcal EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 

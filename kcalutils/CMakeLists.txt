@@ -33,7 +33,7 @@ kde4_add_ui_files(kcalutils_LIB_SRCS recurrenceactionsscopewidget.ui)
 add_library(kcalutils ${LIBRARY_TYPE} ${kcalutils_LIB_SRCS})
 generate_export_header(kcalutils)
 
-target_link_libraries(kcalutils
+target_link_libraries(kcalutils LINK_PRIVATE
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KDEUI_LIBS}
   kcalcore

@@ -20,7 +20,7 @@ generate_export_header(akonadi-kabc
   EXPORT_FILE_NAME akonadi-kabc_export.h
 )
 
-target_link_libraries( akonadi-kabc akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} )
+target_link_libraries( akonadi-kabc LINK_PRIVATE akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} )
 set_target_properties( akonadi-kabc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadi-kabc EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 

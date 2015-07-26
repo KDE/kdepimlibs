@@ -73,7 +73,7 @@ generate_export_header(akonadi-calendar
   EXPORT_FILE_NAME akonadi-calendar_export.h
 )
 
-target_link_libraries(akonadi-calendar
+target_link_libraries(akonadi-calendar LINK_PRIVATE
                       akonadi-contact
                       akonadi-kmime
                       akonadi-kde

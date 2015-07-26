@@ -143,21 +143,11 @@ if (KDE4_BUILD_TESTS)
 endif()
 configure_file(akonadi-contactprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h")
 
-
-target_link_libraries(akonadi-contact akonadi-kde
-                                      kabc
-                                      kcalcore
-                                      kmime
-                                      kpimutils
-                                      ${KDE4_KDEUI_LIBS}
-				      ${KDE4_KIO_LIBS} 
-                                      ${KDE4_PHONON_LIBS})
-
 if(PRISON_FOUND) 
-target_link_libraries(akonadi-contact ${PRISON_LIBRARIES})
+target_link_libraries(akonadi-contact LINK_PRIVATE ${PRISON_LIBRARIES})
 endif()
 
-target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
+target_link_libraries(akonadi-contact LINK_PUBLIC
                                       akonadi-kde
                                       kabc
                                       kcalcore

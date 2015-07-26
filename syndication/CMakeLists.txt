@@ -124,7 +124,7 @@ set(syndication_LIB_SRCS
 add_library(syndication ${LIBRARY_TYPE} ${syndication_LIB_SRCS})
 generate_export_header(syndication EXPORT_FILE_NAME ksyndication_export.h)
 
-target_link_libraries(syndication  ${KDE4_KIO_LIBS})
+target_link_libraries(syndication LINK_PRIVATE ${KDE4_KIO_LIBS})
 
 set_target_properties(syndication PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS syndication EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

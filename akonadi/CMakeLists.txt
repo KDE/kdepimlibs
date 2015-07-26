@@ -293,14 +293,14 @@ configure_file(akonadiprivate_export.h.in
   "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h"
 )
 
-target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
+target_link_libraries( akonadi-kde LINK_PRIVATE ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} ${QJSON_LIBRARIES})
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 if (KDEPIM_MOBILE_UI)
-target_link_libraries( akonadi-kde ${QT_QTDECLARATIVE_LIBRARY} )
+target_link_libraries( akonadi-kde LINK_PRIVATE ${QT_QTDECLARATIVE_LIBRARY} )
 endif()
 
-target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})
+target_link_libraries( akonadi-kde LINK_PUBLIC ${AKONADI_KDE_DEPS})
 
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_DEFAULT_ARGS} )

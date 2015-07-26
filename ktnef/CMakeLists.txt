@@ -44,9 +44,9 @@ add_library(ktnef ${LIBRARY_TYPE} ${ktnef_LIB_SRCS})
 generate_export_header(ktnef)
 
 if(KDEPIM_NO_KCAL)
-  target_link_libraries(ktnef ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
+  target_link_libraries(ktnef LINK_PRIVATE ${KDE4_KIO_LIBS} kabc kcalcore kcalutils)
 else()
-  target_link_libraries(ktnef ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
+  target_link_libraries(ktnef LINK_PRIVATE ${KDE4_KIO_LIBS} kabc kcal kcalcore kcalutils)
 endif()
 
 set_target_properties(ktnef PROPERTIES

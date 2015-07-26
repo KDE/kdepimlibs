@@ -29,7 +29,7 @@ include_directories(
 add_library(kpimtextedit ${LIBRARY_TYPE} ${kpimtextedit_lib_srcs})
 generate_export_header(kpimtextedit)
 
-target_link_libraries(kpimtextedit
+target_link_libraries(kpimtextedit LINK_PRIVATE
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KEMOTICONS_LIBS}

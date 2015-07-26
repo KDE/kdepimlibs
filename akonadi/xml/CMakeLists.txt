@@ -28,7 +28,7 @@ set( akonadixml_HDRS
 kde4_add_library(akonadi-xml ${LIBRARY_TYPE} ${akonadixml_SRCS})
 generate_export_header(akonadi-xml BASE_NAME akonadi_xml EXPORT_FILE_NAME akonadi-xml_export.h)
 
-target_link_libraries(akonadi-xml
+target_link_libraries(akonadi-xml LINK_PRIVATE
   ${KDE4_KIO_LIBS}
   ${QT_QTXML_LIBRARY}
   ${LIBXML2_LIBRARIES}
