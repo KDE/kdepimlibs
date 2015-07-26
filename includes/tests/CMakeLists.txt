@@ -86,12 +86,12 @@ add_includes( Mailtransport )
 add_includes( Syndication )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII -DQT_NO_KEYWORDS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_STRICT_ITERATORS )
-kde4_add_executable( headertest header_compile.cpp )
-target_link_libraries( headertest ${QT_QTCORE_LIBRARY} )
-add_dependencies( headertest akonadi-calendar ) # ensure calendarsettings.h is generated in parallel builds
-add_dependencies( headertest kabc ) # ensure addressee.h is generated in parallel builds
-add_dependencies( headertest kcal )
-add_dependencies( headertest mailtransport ) # ensure transportbase.h is generated in parallel builds
+kde4_add_executable( headercompiletest header_compile.cpp )
+target_link_libraries( headercompiletest ${QT_QTCORE_LIBRARY} )
+add_dependencies( headercompiletest akonadi-calendar ) # ensure calendarsettings.h is generated in parallel builds
+add_dependencies( headercompiletest kabc ) # ensure addressee.h is generated in parallel builds
+add_dependencies( headercompiletest kcal )
+add_dependencies( headercompiletest mailtransport ) # ensure transportbase.h is generated in parallel builds
 
 endif()
 
