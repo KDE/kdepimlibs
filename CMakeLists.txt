@@ -44,7 +44,7 @@ option(KDEPIM_ONLY_KLEO "Only build the libraries needed by Kleopatra." FALSE)
 cmake_dependent_option(KDEPIM_NO_KCAL "Build without legacy KCal" TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
 cmake_dependent_option(KDEPIM_NO_KRESOURCES "Build without legacy KResource support." TRUE "KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED" FALSE)
 cmake_dependent_option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" TRUE "_default_mobile_ui" FALSE)
-option(STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
+option(KDEPIM_STATIC_LIBRARY "Build kdepimlibs as static libraries." FALSE)
 #option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled." FALSE)
 option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
 
