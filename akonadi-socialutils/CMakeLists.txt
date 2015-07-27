@@ -28,6 +28,8 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_packagE(KF5GuiAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-SocialUtils_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)
