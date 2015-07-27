@@ -9,16 +9,16 @@ generate_export_header(KF5AkonadiNotes BASE_NAME akonadi-notes)
 
 add_library(KF5::KF5AkonadiNotes ALIAS KF5AkonadiNotes)
 
-target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/Notes;${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/notes;${Boost_INCLUDE_DIR}>")
+kde_target_enable_exceptions(KF5AkonadiNotes PUBLIC)
+
+target_include_directories(KF5AkonadiNotes INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Akonadi/Notes;${Boost_INCLUDE_DIR};${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/notes;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiNotes PUBLIC "$<BUILD_INTERFACE:${Akonadi-Notes_SOURCE_DIR}/src;${Akonadi-Notes_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 
 target_link_libraries(KF5AkonadiNotes
 PUBLIC
     KF5::Mime
-    KF5::AkonadiCore
 PRIVATE
     Qt5::Xml
-    Qt5::Gui
     KF5::I18n
 )
 

@@ -30,7 +30,6 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 
 ########### Find packages ###########
 #kdelibs4support is needed by kmime
-#find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIMELIB_VERSION} CONFIG REQUIRED)
 
@@ -41,6 +40,14 @@ else()
   # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
   find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 endif()
+
+set(Boost_MINIMUM_VERSION "1.34.0")
+find_package(Boost ${Boost_MINIMUM_VERSION})
+set_package_properties(Boost PROPERTIES
+    DESCRIPTION "Boost C++ Libraries"
+    URL "http://www.boost.org"
+    TYPE REQUIRED
+)
 
 ########### Targets ###########
 
