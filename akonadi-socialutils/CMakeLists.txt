@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.12.0")
-set(KDEPIMLIBS_VERSION "5.1.40")
+set(KDEPIMLIBS_VERSION "5.0.40")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_version.h"
