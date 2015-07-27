@@ -92,8 +92,7 @@ PRIVATE
     KF5::KIOCore
     KF5::DBusAddons
     KF5::I18n
-    KF5::ConfigGui
-    KF5::KIOWidgets
+    KF5::ConfigWidgets
     KF5::XmlGui
 )
 

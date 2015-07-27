@@ -25,7 +25,7 @@
 
 #include <assert.h>
 #include "akonadi_mime_debug.h"
-#include <KIO/JobUiDelegate>
+#include <KJobUiDelegate>
 #include <KIO/Job>
 
 namespace Util

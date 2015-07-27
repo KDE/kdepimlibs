@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.12.0")
-set(KDEPIMLIBS_VERSION "5.0.40")
+set(KDEPIMLIBS_VERSION "5.0.41")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_version.h"
@@ -27,7 +27,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
 
 ########### Find packages ###########
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_packagE(KF5GuiAddons ${KF5_VERSION} CONFIG REQUIRED)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-SocialUtils_SOURCE_DIR})
   find_package(KF5Akonadi CONFIG REQUIRED)

@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.12.0")
-set(KDEPIMLIBS_VERSION "5.0.40")
+set(KDEPIMLIBS_VERSION "5.0.41")
 
 set(KMIMELIB_VERSION "4.79.0")
 
@@ -30,7 +30,7 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 
 ########### Find packages ###########
 #kdelibs4support is needed by kmime
-find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+#find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIMELIB_VERSION} CONFIG REQUIRED)
 
