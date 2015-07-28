@@ -41,7 +41,7 @@ set_target_properties(KF5AkonadiSocialUtils PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiSocialUtils
     LIB_NAME KF5AkonadiSocialUtils
-    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore CoreAddons" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
