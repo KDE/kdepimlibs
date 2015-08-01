@@ -455,7 +455,7 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
             entry.clear();
             fillUDSEntry(entry, group, msg_cnt, false, access);
             if (!desc) {
-                listEntry(entry, false);
+                listEntry(entry);
             } else {
                 entryMap.insert(group, entry);
             }
@@ -511,7 +511,7 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
             if (entryMap.contains(group)) {
                 entry = entryMap.take(group);
                 entry.insert(KIO::UDSEntry::UDS_EXTRA, groupDesc);
-                listEntry(entry, false);
+                listEntry(entry);
             }
         }
 
@@ -521,11 +521,11 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
     }
     // take care of groups without descriptions
     for (QHash<QString, UDSEntry>::Iterator it = entryMap.begin(); it != entryMap.end(); ++it) {
-        listEntry(it.value(), false);
+        listEntry(it.value());
     }
 
     entry.clear();
-    listEntry(entry, true);
+    finished();
 }
 
 bool NNTPProtocol::fetchGroup(QString &group, unsigned long first, unsigned long max)
@@ -607,7 +607,7 @@ bool NNTPProtocol::fetchGroupRFC977(unsigned long first)
     if ((pos = resp_line.indexOf(QLatin1Char('<'))) > 0 && (pos2 = resp_line.indexOf(QLatin1Char('>'), pos + 1))) {
         msg_id = resp_line.mid(pos, pos2 - pos + 1);
         fillUDSEntry(entry, msg_id, 0, true);
-        listEntry(entry, false);
+        listEntry(entry);
     } else {
         error(ERR_INTERNAL, i18n("Could not extract first message id from server response:\n%1",
                                  resp_line));
@@ -620,7 +620,7 @@ bool NNTPProtocol::fetchGroupRFC977(unsigned long first)
         if (res_code == 421) {
             // last artice reached
             entry.clear();
-            listEntry(entry, true);
+            finished();
             return true;
         } else if (res_code != 223) {
             unexpected_response(res_code, QLatin1String("NEXT"));
@@ -633,7 +633,7 @@ bool NNTPProtocol::fetchGroupRFC977(unsigned long first)
             msg_id = resp_line.mid(pos, pos2 - pos + 1);
             entry.clear();
             fillUDSEntry(entry, msg_id, 0, true);
-            listEntry(entry, false);
+            listEntry(entry);
         } else {
             error(ERR_INTERNAL, i18n("Could not extract message id from server response:\n%1",
                                      resp_line));
@@ -700,7 +700,7 @@ bool NNTPProtocol::fetchGroupXOVER(unsigned long first, bool &notSupported)
         line = QString::fromLatin1(readBuffer, readBufferLen);
         if (line == QLatin1String(".\r\n")) {
             entry.clear();
-            listEntry(entry, true);
+            finished();
             return true;
         }
 
@@ -734,7 +734,7 @@ bool NNTPProtocol::fetchGroupXOVER(unsigned long first, bool &notSupported)
             }
         }
         fillUDSEntry(entry, name, msgSize, true);
-        listEntry(entry, false);
+        listEntry(entry);
     }
     return true; // not reached
 }
