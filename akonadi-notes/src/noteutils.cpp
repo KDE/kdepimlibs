@@ -221,7 +221,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime:
         }
     }
 
-    const KMime::Content::List list = msg->contents();
+    const auto list = msg->contents();
     Q_FOREACH (KMime::Content *c, msg->contents()) {
         if (KMime::Headers::Base *typeHeader = c->headerByType(X_NOTES_CONTENTTYPE_HEADER)) {
             const QString &type = typeHeader->asUnicodeString();
