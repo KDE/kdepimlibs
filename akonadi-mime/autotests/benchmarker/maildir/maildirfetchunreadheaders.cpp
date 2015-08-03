@@ -31,10 +31,6 @@
 #include <kmime/kmime_message.h>
 #include "akonadi/kmime/messageparts.h"
 
-#include <boost/shared_ptr.hpp>
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
-
 using namespace Akonadi;
 
 MailDirFetchUnreadHeaders::MailDirFetchUnreadHeaders()
@@ -58,7 +54,7 @@ void MailDirFetchUnreadHeaders::runTest()
         foreach (const Item &item, ifj->items()) {
             // filter read messages
             if (!item.hasFlag("\\SEEN")) {
-                a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+                a = item.payload<KMime::Message::Ptr>()->subject()->asUnicodeString();
             }
         }
     }

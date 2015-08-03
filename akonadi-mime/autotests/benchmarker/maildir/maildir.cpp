@@ -30,11 +30,7 @@
 #include <kmime/kmime_message.h>
 #include "akonadi/kmime/messageparts.h"
 
-#include <boost/shared_ptr.hpp>
-
 #define WAIT_TIME 100
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 

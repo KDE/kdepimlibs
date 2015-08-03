@@ -18,9 +18,8 @@ include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.12.0")
 set(KDEPIMLIBS_VERSION "5.0.41")
-
-set(KMIMELIB_VERSION "4.79.0")
-
+set(QT_REQUIRED_VERSION "5.2.0")
+set(KMIMELIB_VERSION "4.83.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_version.h"
@@ -29,6 +28,8 @@ ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
 )
 
 ########### Find packages ###########
+find_package(Qt5Xml ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIMELIB_VERSION} CONFIG REQUIRED)
 

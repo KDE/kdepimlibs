@@ -31,7 +31,6 @@
 
 #include <kmime/kmime_message.h>
 
-#include <boost/shared_ptr.hpp>
 #include <KAboutData>
 #include <KLocalizedString>
 #include <QCommandLineParser>
@@ -57,7 +56,7 @@ HeadFetcher::HeadFetcher(bool multipart)
         ifj->exec();
         qDebug() << "  Listing" << ifj->items().count() << "item headers.";
         foreach (const Item &item, ifj->items()) {
-            qDebug() << item.payload< boost::shared_ptr<KMime::Message> >()->subject()->asUnicodeString();
+            qDebug() << item.payload<KMime::Message::Ptr>()->subject()->asUnicodeString();
         }
     }
 

@@ -27,15 +27,12 @@
 class QDateTime;
 class QString;
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
+template <typename T> class QSharedPointer;
 
 namespace KMime
 {
 class Message;
-typedef boost::shared_ptr<Message> MessagePtr;
+typedef QSharedPointer<Message> MessagePtr;
 }
 namespace Akonadi
 {

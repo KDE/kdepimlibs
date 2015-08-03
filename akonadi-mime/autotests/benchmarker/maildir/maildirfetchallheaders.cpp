@@ -31,10 +31,6 @@
 #include <kmime/kmime_message.h>
 #include "akonadi/kmime/messageparts.h"
 
-#include <boost/shared_ptr.hpp>
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
-
 using namespace Akonadi;
 
 MailDirFetchAllHeaders::MailDirFetchAllHeaders()
@@ -56,7 +52,7 @@ void MailDirFetchAllHeaders::runTest()
         ifj->exec();
         QString a;
         foreach (const Item &item, ifj->items()) {
-            a = item.payload<MessagePtr>()->subject()->asUnicodeString();
+            a = item.payload<KMime::Message::Ptr>()->subject()->asUnicodeString();
         }
     }
     outputStats(QStringLiteral("fullheaderlist"));

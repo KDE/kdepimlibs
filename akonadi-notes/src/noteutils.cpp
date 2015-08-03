@@ -187,7 +187,7 @@ public:
 
 void NoteMessageWrapper::NoteMessageWrapperPrivate::readMimeMessage(const KMime::MessagePtr &msg)
 {
-    if (!msg.get()) {
+    if (!msg.data()) {
         qCWarning(AKONADINOTES_LOG) << "Empty message";
         return;
     }
@@ -389,8 +389,8 @@ KMime::MessagePtr NoteMessageWrapper::message() const
     msg->from(true)->fromUnicodeString(d->from, ENCODING);
     const QString formatDate = QLocale::c().toString(lastModifiedDate, QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
 
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.get(), formatDate, ENCODING));
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_UID_HEADER, msg.get(), uid, ENCODING));
+    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.data(), formatDate, ENCODING));
+    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_UID_HEADER, msg.data(), uid, ENCODING));
 
     QString classification = CLASSIFICATION_PUBLIC;
     switch (d->classification) {
@@ -404,7 +404,7 @@ KMime::MessagePtr NoteMessageWrapper::message() const
         //do nothing
         break;
     }
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_CLASSIFICATION_HEADER, msg.get(), classification, ENCODING));
+    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_CLASSIFICATION_HEADER, msg.data(), classification, ENCODING));
 
     foreach (const Attachment &a, d->attachments) {
         msg->addContent(d->createAttachmentPart(a));

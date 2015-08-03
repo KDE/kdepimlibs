@@ -26,13 +26,12 @@
 
 #include <kmime/kmime_message.h>
 
-#include <boost/shared_ptr.hpp>
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
-
 #include <KLocalizedString>
 
 #include <QLocale>
 #include <KFormat>
+
+typedef KMime::Message::Ptr MessagePtr;
 
 using namespace Akonadi;
 
