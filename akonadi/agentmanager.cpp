@@ -56,10 +56,7 @@ void AgentManagerPrivate::agentTypeAdded(const QString &identifier)
         return;
     }
 
-    const AgentType type = fillAgentType(identifier);
-    if (type.isValid()) {
-        mTypes.insert(identifier, type);
-
+    if (mTypes.isEmpty()) {
         // The Akonadi ServerManager assumes that the server is up and running as soon
         // as it knows about at least one agent type.
         // If we emit the typeAdded() signal here, it therefore thinks the server is
@@ -72,6 +69,11 @@ void AgentManagerPrivate::agentTypeAdded(const QString &identifier)
         //
         // Therefore, we read all agent types from the server here so they are known.
         readAgentTypes();
+    }
+
+    const AgentType type = fillAgentType(identifier);
+    if (type.isValid()) {
+        mTypes.insert(identifier, type);
 
         emit mParent->typeAdded(type);
     }
@@ -197,8 +199,10 @@ void AgentManagerPrivate::readAgentTypes()
     const QDBusReply<QStringList> types = mManager->agentTypes();
     if (types.isValid()) {
         foreach (const QString &type, types.value()) {
-            if (!mTypes.contains(type)) {
-                agentTypeAdded(type);
+            const AgentType agentType = fillAgentType(type);
+            if (agentType.isValid()) {
+                mTypes.insert(type, agentType);
+                emit mParent->typeAdded(agentType);
             }
         }
     }
@@ -209,8 +213,10 @@ void AgentManagerPrivate::readAgentInstances()
     const QDBusReply<QStringList> instances = mManager->agentInstances();
     if (instances.isValid()) {
         foreach (const QString &instance, instances.value()) {
-            if (!mInstances.contains(instance)) {
-                agentInstanceAdded(instance);
+            const AgentInstance agentInstance = fillAgentInstance(instance);
+            if (agentInstance.isValid()) {
+                mInstances.insert(instance, agentInstance);
+                emit mParent->instanceAdded(agentInstance);
             }
         }
     }
@@ -296,8 +302,12 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight(const QString &identif
 void AgentManagerPrivate::serviceOwnerChanged(const QString &, const QString &oldOwner, const QString &)
 {
     if (oldOwner.isEmpty()) {
-        readAgentTypes();
-        readAgentInstances();
+        if (mTypes.isEmpty()) { // just to be safe
+            readAgentTypes();
+        }
+        if (mInstances.isEmpty()) {
+            readAgentInstances();
+        }
     }
 }
 
@@ -333,22 +343,8 @@ void AgentManagerPrivate::createDBusInterface()
                      mParent, SLOT(agentInstanceOnlineChanged(QString,bool)));
 
     if (mManager->isValid()) {
-        QDBusReply<QStringList> result = mManager->agentTypes();
-        if (result.isValid()) {
-            foreach (const QString &type, result.value()) {
-                const AgentType agentType = fillAgentType(type);
-                mTypes.insert(type, agentType);
-            }
-        }
-        result = mManager->agentInstances();
-        if (result.isValid()) {
-            foreach (const QString &instance, result.value()) {
-                const AgentInstance agentInstance = fillAgentInstance(instance);
-                mInstances.insert(instance, agentInstance);
-            }
-        }
-    } else {
-        kWarning() << "AgentManager failed to get a valid AgentManager DBus interface. Error is:" << mManager->lastError().type() << mManager->lastError().name() << mManager->lastError().message();
+        readAgentTypes();
+        readAgentInstances();
     }
 }
 
