@@ -40,7 +40,8 @@ public:
 
 K_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay)
 
-static bool isParentOf(QObject *o1, QObject *o2)
+// return true if o1 is a parent of o2
+static bool isParentOf(QWidget *o1, QWidget *o2)
 {
     if (!o1 || !o2) {
         return false;
@@ -48,7 +49,10 @@ static bool isParentOf(QObject *o1, QObject *o2)
     if (o1 == o2) {
         return true;
     }
-    return isParentOf(o1, o2->parent());
+    if (o2->isWindow()) {
+        return false;
+    }
+    return isParentOf(o1, o2->parentWidget());
 }
 
 ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
