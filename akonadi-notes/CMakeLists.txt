@@ -41,14 +41,6 @@ else()
   find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
-set(Boost_MINIMUM_VERSION "1.34.0")
-find_package(Boost ${Boost_MINIMUM_VERSION})
-set_package_properties(Boost PROPERTIES
-    DESCRIPTION "Boost C++ Libraries"
-    URL "http://www.boost.org"
-    TYPE REQUIRED
-)
-
 ########### Targets ###########
 
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadinotes5\")
