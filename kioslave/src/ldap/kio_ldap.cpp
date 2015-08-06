@@ -780,7 +780,7 @@ void LDAPProtocol::listDir(const QUrl &_url)
         uds.clear();
 
         LDAPEntry2UDSEntry(mOp.object().dn(), uds, usrc);
-        listEntry(uds, false);
+        listEntry(uds);
 //      processedSize( total );
         qCDebug(KLDAP_LOG) << " total: " << total << " " << usrc.toDisplayString();
 
@@ -801,7 +801,7 @@ void LDAPProtocol::listDir(const QUrl &_url)
                     }
                     if (ret2 == LdapOperation::RES_SEARCH_ENTRY) {
                         LDAPEntry2UDSEntry(dn, uds, usrc2, true);
-                        listEntry(uds, false);
+                        listEntry(uds);
                         total++;
                         mOp.abandon(id2);
                         break;
@@ -814,7 +814,6 @@ void LDAPProtocol::listDir(const QUrl &_url)
 //  totalSize( total );
 
     uds.clear();
-    listEntry(uds, true);
     // we are done
     finished();
 }

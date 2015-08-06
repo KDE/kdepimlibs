@@ -114,11 +114,10 @@ void MBoxProtocol::listDir(const QUrl &url)
     while (!mbox.atEnd() && !m_errorState) {
         entry = Stat::stat(mbox, info);
         if (mbox.inListing()) {
-            listEntry(entry, false);
+            listEntry(entry);
         }
     }
 
-    listEntry(KIO::UDSEntry(), true);
     finished();
 }
 
