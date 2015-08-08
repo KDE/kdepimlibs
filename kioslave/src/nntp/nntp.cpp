@@ -435,7 +435,7 @@ void NNTPProtocol::fetchGroups(const QString &since, bool desc)
                     ((pos2 = line.indexOf(' ', pos + 1)) > 0 || (pos2 = line.indexOf('\t', pos + 1)) > 0)) {
                 last = line.left(pos).toLongLong();
                 long first = line.mid(pos + 1, pos2 - pos - 1).toLongLong();
-                msg_cnt = abs(last - first + 1);
+                msg_cnt = std::abs(last - first + 1);
                 // group access rights
                 switch (line[pos2 + 1]) {
                 case 'n':
