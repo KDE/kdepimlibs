@@ -668,7 +668,9 @@ void checkSuccessfulTransferCommand(bool error, bool preload, bool ungetLast,
     }
 }
 
-#define NDEBUG
+#ifndef NDEBUG
+# define NDEBUG
+#endif
 
 #include "command.cpp"
 #include "response.cpp"
