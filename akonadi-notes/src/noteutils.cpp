@@ -261,7 +261,9 @@ QDomDocument loadDocument(KMime::Content *part)
 KMime::Content *NoteMessageWrapper::NoteMessageWrapperPrivate::createCustomPart() const
 {
     KMime::Content *content = new KMime::Content();
-    content->appendHeader(new KMime::Headers::Generic(X_NOTES_CONTENTTYPE_HEADER, content, CONTENT_TYPE_CUSTOM, ENCODING));
+    auto header = new KMime::Headers::Generic(X_NOTES_CONTENTTYPE_HEADER, content);
+    header->fromUnicodeString(CONTENT_TYPE_CUSTOM, ENCODING);
+    content->appendHeader(header);
     QDomDocument document = createXMLDocument();
     QDomElement element = document.createElement(QStringLiteral("custom"));
     element.setAttribute(QStringLiteral("version"), QStringLiteral("1.0"));
@@ -304,15 +306,21 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseCustomPart(KMime::Conte
 KMime::Content *NoteMessageWrapper::NoteMessageWrapperPrivate::createAttachmentPart(const Attachment &a) const
 {
     KMime::Content *content = new KMime::Content();
-    content->appendHeader(new KMime::Headers::Generic(X_NOTES_CONTENTTYPE_HEADER, content, CONTENT_TYPE_ATTACHMENT, ENCODING));
+    auto header = new KMime::Headers::Generic(X_NOTES_CONTENTTYPE_HEADER, content);
+    header->fromUnicodeString(CONTENT_TYPE_ATTACHMENT, ENCODING);
+    content->appendHeader(header);
     if (a.url().isValid()) {
-        content->appendHeader(new KMime::Headers::Generic(X_NOTES_URL_HEADER, content, a.url().toString(), ENCODING));
+        header = new KMime::Headers::Generic(X_NOTES_URL_HEADER, content);
+        header->fromUnicodeString(a.url().toString(), ENCODING);
+        content->appendHeader(header);
     } else {
         content->setBody(a.data());
     }
     content->contentType()->setMimeType(a.mimetype().toLatin1());
     if (!a.label().isEmpty()) {
-        content->appendHeader(new KMime::Headers::Generic(X_NOTES_LABEL_HEADER, content, a.label(), ENCODING));
+        header = new KMime::Headers::Generic(X_NOTES_LABEL_HEADER, content);
+        header->fromUnicodeString(a.label(), ENCODING);
+        content->appendHeader(header);
     }
     content->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
     content->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
@@ -389,8 +397,12 @@ KMime::MessagePtr NoteMessageWrapper::message() const
     msg->from(true)->fromUnicodeString(d->from, ENCODING);
     const QString formatDate = QLocale::c().toString(lastModifiedDate, QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
 
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.data(), formatDate, ENCODING));
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_UID_HEADER, msg.data(), uid, ENCODING));
+    auto header = new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER, msg.data());
+    header->fromUnicodeString(formatDate, ENCODING);
+    msg->appendHeader(header);
+    header = new KMime::Headers::Generic(X_NOTES_UID_HEADER, msg.data());
+    header->fromUnicodeString(uid, ENCODING);
+    msg->appendHeader(header);
 
     QString classification = CLASSIFICATION_PUBLIC;
     switch (d->classification) {
@@ -404,7 +416,9 @@ KMime::MessagePtr NoteMessageWrapper::message() const
         //do nothing
         break;
     }
-    msg->appendHeader(new KMime::Headers::Generic(X_NOTES_CLASSIFICATION_HEADER, msg.data(), classification, ENCODING));
+    header = new KMime::Headers::Generic(X_NOTES_CLASSIFICATION_HEADER, msg.data());
+    header->fromUnicodeString(classification, ENCODING);
+    msg->appendHeader(header);
 
     foreach (const Attachment &a, d->attachments) {
         msg->addContent(d->createAttachmentPart(a));
