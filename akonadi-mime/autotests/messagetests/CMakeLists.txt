@@ -3,7 +3,7 @@ include(ECMMarkAsTest)
 macro(ADD_AKONADIMIME_TEST)
   foreach(_testName ${ARGN})
     add_executable(${_testName} ${_testName}.cpp)
-    add_test(akonadimime-${_testName} ${_testName})
+    add_test(akonadimime-${_testName} ${EXECUTABLE_OUTPUT_PATH}/${_testName})
     target_link_libraries(${_testName}
       KF5::Mime
       Qt5::Test
