@@ -32,6 +32,7 @@ set_package_properties(Sasl2 PROPERTIES
 )
 
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DocTools ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Ldap ${LDABLIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Mbox ${MBOXLIB_VERSION} CONFIG REQUIRED)
