@@ -69,3 +69,7 @@ install(FILES
    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/akonadi/socialutils
    COMPONENT Devel)
 
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
