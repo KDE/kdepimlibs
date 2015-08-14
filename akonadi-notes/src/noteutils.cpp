@@ -50,7 +50,7 @@ namespace NoteUtils
 
 #define ENCODING "utf-8"
 
-class Attachment::AttachmentPrivate
+class Q_DECL_HIDDEN Attachment::AttachmentPrivate
 {
 public:
     AttachmentPrivate(const QUrl &url, const QString &mimetype)
@@ -150,7 +150,7 @@ QString Attachment::label() const
     return d->mLabel;
 }
 
-class NoteMessageWrapper::NoteMessageWrapperPrivate
+class Q_DECL_HIDDEN NoteMessageWrapper::NoteMessageWrapperPrivate
 {
 public:
     NoteMessageWrapperPrivate()
