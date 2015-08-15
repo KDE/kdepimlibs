@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 
 set(KF5_VERSION "5.12.0")
 set(KDEPIMLIBS_VERSION "5.0.41")
-set(KF5_MIME_VERSION "4.83.0")
+set(KF5_MIME_VERSION "4.85.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-mime_version.h"
