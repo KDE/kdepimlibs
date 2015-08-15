@@ -55,7 +55,7 @@
 
 using namespace Akonadi;
 
-class StandardMailActionManager::Private
+class Q_DECL_HIDDEN StandardMailActionManager::Private
 {
 public:
     Private(KActionCollection *actionCollection, QWidget *parentWidget, StandardMailActionManager *parent)

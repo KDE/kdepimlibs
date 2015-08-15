@@ -28,7 +28,7 @@
 
 #include <KLocalizedString>
 
-class Akonadi::RemoveDuplicatesJob::Private
+class Q_DECL_HIDDEN Akonadi::RemoveDuplicatesJob::Private
 {
 
 public:
