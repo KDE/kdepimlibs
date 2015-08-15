@@ -72,7 +72,7 @@ int kdemain(int argc, char **argv)
         return -1;
     }
     QCoreApplication app(argc, argv);   // needed for QSocketNotifier
-    app.setApplicationName(QLatin1String("kio_pop3"));
+    app.setApplicationName(QStringLiteral("kio_pop3"));
 
     if (!initSASL()) {
         return -1;
@@ -293,8 +293,8 @@ POP3Protocol::Resp POP3Protocol::command(const QByteArray &cmd, char *recv_buf,
 
 void POP3Protocol::openConnection()
 {
-    m_try_apop = !hasMetaData(QLatin1String("auth")) || metaData(QLatin1String("auth")) == QLatin1String("APOP");
-    m_try_sasl = !hasMetaData(QLatin1String("auth")) || metaData(QLatin1String("auth")) == QLatin1String("SASL");
+    m_try_apop = !hasMetaData(QStringLiteral("auth")) || metaData(QStringLiteral("auth")) == QLatin1String("APOP");
+    m_try_sasl = !hasMetaData(QStringLiteral("auth")) || metaData(QStringLiteral("auth")) == QLatin1String("SASL");
 
     if (!pop3_open()) {
         qCDebug(POP3_LOG) << "pop3_open failed";
@@ -363,7 +363,7 @@ int POP3Protocol::loginAPOP(const char *challenge, KIO::AuthInfo &ai)
 
     qCDebug(POP3_LOG) << "Could not login via APOP. Falling back to USER/PASS";
     closeConnection();
-    if (metaData(QLatin1String("auth")) == QLatin1String("APOP")) {
+    if (metaData(QStringLiteral("auth")) == QLatin1String("APOP")) {
         error(ERR_COULD_NOT_LOGIN,
               i18n
               ("Login via APOP failed. The server %1 may not support APOP, although it claims to support it, or the password may be wrong.\n\n%2",
@@ -451,11 +451,11 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
 
     // We need to check what methods the server supports...
     // This is based on RFC 1734's wisdom
-    if (hasMetaData(QLatin1String("sasl")) || command(sasl_buffer.toLocal8Bit()) == Ok) {
+    if (hasMetaData(QStringLiteral("sasl")) || command(sasl_buffer.toLocal8Bit()) == Ok) {
 
         QStringList sasl_list;
-        if (hasMetaData(QLatin1String("sasl"))) {
-            sasl_list.append(metaData(QLatin1String("sasl")));
+        if (hasMetaData(QStringLiteral("sasl"))) {
+            sasl_list.append(metaData(QStringLiteral("sasl")));
         } else {
             while (true /* !AtEOF() */) {
                 memset(buf, 0, sizeof(buf));
@@ -473,7 +473,7 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
         }
 
         do {
-            result = sasl_client_start(conn, sasl_list.join(QLatin1String(" ")).toLatin1(),
+            result = sasl_client_start(conn, sasl_list.join(QStringLiteral(" ")).toLatin1(),
                                        &client_interact, &out, &outlen, &mechusing);
 
             if (result == SASL_INTERACT) {
@@ -541,7 +541,7 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
             return 0;
         }
 
-        if (metaData(QLatin1String("auth")) == QLatin1String("SASL")) {
+        if (metaData(QStringLiteral("auth")) == QLatin1String("SASL")) {
             closeConnection();
             error(ERR_COULD_NOT_LOGIN,
                   i18n
@@ -551,7 +551,7 @@ int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
         }
     }
 
-    if (metaData(QLatin1String("auth")) == QLatin1String("SASL")) {
+    if (metaData(QStringLiteral("auth")) == QLatin1String("SASL")) {
         closeConnection();
         error(ERR_COULD_NOT_LOGIN,
               i18n("Your POP3 server (%1) does not support SASL.\n"
@@ -622,7 +622,7 @@ bool POP3Protocol::pop3_open()
     do {
         closeConnection();
 
-        if (!connectToHost((isAutoSsl() ? QLatin1String("pop3s") : QLatin1String("pop3")), m_sServer, m_iPort)) {
+        if (!connectToHost((isAutoSsl() ? QStringLiteral("pop3s") : QStringLiteral("pop3")), m_sServer, m_iPort)) {
             // error(ERR_COULD_NOT_CONNECT, m_sServer);
             // ConnectToHost has already send an error message.
             return false;
@@ -656,17 +656,17 @@ bool POP3Protocol::pop3_open()
 
         // Does the server support APOP?
         //QString apop_cmd;
-        QRegExp re(QLatin1String("<[A-Za-z0-9\\.\\-_]+@[A-Za-z0-9\\.\\-_]+>$"), Qt::CaseInsensitive);
+        QRegExp re(QStringLiteral("<[A-Za-z0-9\\.\\-_]+@[A-Za-z0-9\\.\\-_]+>$"), Qt::CaseInsensitive);
 
         qCDebug(POP3_LOG) << "greeting: " << greeting;
         int apop_pos = greeting.indexOf(re);
         supports_apop = (bool)(apop_pos != -1);
 
-        if (metaData(QLatin1String("nologin")) == QLatin1String("on")) {
+        if (metaData(QStringLiteral("nologin")) == QLatin1String("on")) {
             return true;
         }
 
-        if (metaData(QLatin1String("auth")) == QLatin1String("APOP") && !supports_apop) {
+        if (metaData(QStringLiteral("auth")) == QLatin1String("APOP") && !supports_apop) {
             error(ERR_COULD_NOT_LOGIN,
                   i18n("Your POP3 server (%1) does not support APOP.\n"
                        "Choose a different authentication method.", m_sServer));
@@ -678,7 +678,7 @@ bool POP3Protocol::pop3_open()
         m_sOldServer = m_sServer;
 
         // Try to go into TLS mode
-        if ((metaData(QLatin1String("tls")) == QLatin1String("on") /*### || (canUseTLS() &&
+        if ((metaData(QStringLiteral("tls")) == QLatin1String("on") /*### || (canUseTLS() &&
                                      metaData("tls") != "off")*/)
                 && command("STLS") == Ok) {
             if (startSsl()) {
@@ -693,7 +693,7 @@ bool POP3Protocol::pop3_open()
                 closeConnection();
                 return false;
             }
-        } else if (metaData(QLatin1String("tls")) == QLatin1String("on")) {
+        } else if (metaData(QStringLiteral("tls")) == QLatin1String("on")) {
             error(ERR_SLAVE_DEFINED,
                   i18n("Your POP3 server (%1) does not support TLS. Disable "
                        "TLS, if you want to connect without encryption.", m_sServer));
@@ -780,7 +780,7 @@ void POP3Protocol::get(const QUrl &url)
     char buf[MAX_PACKET_LEN];
     char destbuf[MAX_PACKET_LEN];
     QString cmd, path = url.path();
-    int maxCommands = (metaData(QLatin1String("pipelining")) == QLatin1String("on")) ? MAX_COMMANDS : 1;
+    int maxCommands = (metaData(QStringLiteral("pipelining")) == QLatin1String("on")) ? MAX_COMMANDS : 1;
 
     if (path.at(0) == QLatin1Char('/')) {
         path.remove(0, 1);
@@ -862,11 +862,11 @@ void POP3Protocol::get(const QUrl &url)
         //m_cmd = CMD_NONE;
     } else if (cmd == QLatin1String("download") || cmd == QLatin1String("headers")) {
         const QStringList waitingCommands = path.split(QLatin1Char(','), QString::SkipEmptyParts);
-        bool noProgress = (metaData(QLatin1String("progress")) == QLatin1String("off")
+        bool noProgress = (metaData(QStringLiteral("progress")) == QLatin1String("off")
                            || waitingCommands.count() > 1);
         int p_size = 0;
         unsigned int msg_len = 0;
-        QString list_cmd(QLatin1String("LIST "));
+        QString list_cmd(QStringLiteral("LIST "));
         list_cmd += path;
         memset(buf, 0, sizeof(buf));
         if (!noProgress) {
@@ -909,7 +909,7 @@ void POP3Protocol::get(const QUrl &url)
                 activeCommands--;
                 if (firstCommand) {
                     firstCommand = false;
-                    mimeType(QLatin1String("message/rfc822"));
+                    mimeType(QStringLiteral("message/rfc822"));
                 }
                 totalSize(msg_len);
                 memset(buf, 0, sizeof(buf));
@@ -987,7 +987,7 @@ void POP3Protocol::get(const QUrl &url)
                         processedSize(p_size);
                     }
                 }
-                infoMessage(QLatin1String("message complete"));
+                infoMessage(QStringLiteral("message complete"));
             } else {
                 qCDebug(POP3_LOG) << "Could not login. Bad RETR Sorry";
                 closeConnection();
@@ -1016,7 +1016,7 @@ void POP3Protocol::get(const QUrl &url)
         memset(buf, 0, sizeof(buf));
         if (command(path.toLatin1(), buf, sizeof(buf) - 1) == Ok) {
             const int len = strlen(buf);
-            mimeType(QLatin1String("text/plain"));
+            mimeType(QStringLiteral("text/plain"));
             totalSize(len);
             data(QByteArray::fromRawData(buf, len));
             processedSize(len);
@@ -1074,16 +1074,16 @@ void POP3Protocol::listDir(const QUrl &url)
     UDSEntry entry;
     QString fname;
     for (int i = 0; i < num_messages; i++) {
-        fname = QLatin1String("Message %1");
+        fname = QStringLiteral("Message %1");
 
         entry.insert(KIO::UDSEntry::UDS_NAME, fname.arg(i + 1));
         entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
 
         QUrl uds_url;
         if (isAutoSsl()) {
-            uds_url.setScheme(QLatin1String("pop3s"));
+            uds_url.setScheme(QStringLiteral("pop3s"));
         } else {
-            uds_url.setScheme(QLatin1String("pop3"));
+            uds_url.setScheme(QStringLiteral("pop3"));
         }
 
         uds_url.setUserName(m_sUser);

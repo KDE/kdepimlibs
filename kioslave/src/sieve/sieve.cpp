@@ -66,7 +66,7 @@ extern "C"
     Q_DECL_EXPORT int kdemain(int argc, char **argv)
     {
         QApplication app(argc, argv);
-        app.setApplicationName(QLatin1String("kio_sieve"));
+        app.setApplicationName(QStringLiteral("kio_sieve"));
 
         ksDebug << "*** Starting kio_sieve " << endl;
 
@@ -240,27 +240,27 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
         } else if (r.getKey() == "IMPLEMENTATION") {
             ksDebug << "Connected to Sieve server: " << r.getVal() << endl;
             ret = true;
-            setMetaData(QLatin1String("implementation"), QLatin1String(r.getVal()));
+            setMetaData(QStringLiteral("implementation"), QLatin1String(r.getVal()));
             m_implementation = QLatin1String(r.getVal());
 
         } else if (r.getKey() == "SASL") {
             // Save list of available SASL methods
             const QString val = QLatin1String(r.getVal());
             m_sasl_caps = val.split(QLatin1Char(' '));
-            ksDebug << "Server SASL authentication methods: " << m_sasl_caps.join(QLatin1String(", ")) << endl;
-            setMetaData(QLatin1String("saslMethods"), QLatin1String(r.getVal()));
+            ksDebug << "Server SASL authentication methods: " << m_sasl_caps.join(QStringLiteral(", ")) << endl;
+            setMetaData(QStringLiteral("saslMethods"), QLatin1String(r.getVal()));
 
         } else if (r.getKey() == "SIEVE") {
             // Save script capabilities; report back as meta data:
             const QString val = QLatin1String(r.getVal());
-            ksDebug << "Server script capabilities: " << val.split(QLatin1Char(' ')).join(QLatin1String(", ")) << endl;
-            setMetaData(QLatin1String("sieveExtensions"), QLatin1String(r.getVal()));
+            ksDebug << "Server script capabilities: " << val.split(QLatin1Char(' ')).join(QStringLiteral(", ")) << endl;
+            setMetaData(QStringLiteral("sieveExtensions"), QLatin1String(r.getVal()));
 
         } else if (r.getKey() == "STARTTLS") {
             // The server supports TLS
             ksDebug << "Server supports TLS" << endl;
             m_supportsTLS = true;
-            setMetaData(QLatin1String("tlsSupported"), QLatin1String("true"));
+            setMetaData(QStringLiteral("tlsSupported"), QStringLiteral("true"));
 
         } else {
             ksDebug << "Unrecognised key " << r.getKey() << endl;
@@ -268,7 +268,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
     }
 
     if (!m_supportsTLS) {
-        setMetaData(QLatin1String("tlsSupported"), QLatin1String("false"));
+        setMetaData(QStringLiteral("tlsSupported"), QStringLiteral("false"));
     }
 
     return ret;
@@ -284,8 +284,8 @@ void kio_sieveProtocol::changeCheck(const QUrl &url)
     QString auth;
 
     // Check the SASL auth mechanism in the 'sasl' metadata...
-    if (!metaData(QLatin1String("sasl")).isEmpty()) {
-        auth = metaData(QLatin1String("sasl")).toUpper();
+    if (!metaData(QStringLiteral("sasl")).isEmpty()) {
+        auth = metaData(QStringLiteral("sasl")).toUpper();
     } else {
         // ... and if not found, check the x-mech=AUTH query part of the url.
         QString query = url.query();
@@ -311,7 +311,7 @@ void kio_sieveProtocol::changeCheck(const QUrl &url)
     }
     // For TLS, only disconnect if we are unencrypted and are
     // no longer allowed (otherwise, it's still fine):
-    const bool allowUnencryptedNow = QUrlQuery(url).queryItemValue(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
+    const bool allowUnencryptedNow = QUrlQuery(url).queryItemValue(QStringLiteral("x-allow-unencrypted")) == QLatin1String("true");
     if (m_allowUnencrypted && !allowUnencryptedNow) {
         if (isConnected()) {
             disconnect();
@@ -342,7 +342,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 
     setBlocking(true);
 
-    if (!connectToHost(QLatin1String("sieve"), m_sServer, m_port)) {
+    if (!connectToHost(QStringLiteral("sieve"), m_sServer, m_port)) {
         return false;
     }
 
@@ -1013,7 +1013,7 @@ bool kio_sieveProtocol::authenticate()
      * before it automatically skips the prompt?
      * Note2: encoding issues with PLAIN login? */
     AuthInfo ai;
-    ai.url.setScheme(QLatin1String("sieve"));
+    ai.url.setScheme(QStringLiteral("sieve"));
     ai.url.setHost(m_sServer);
     ai.url.setPort(m_port);
     ai.username = m_sUser;
@@ -1040,7 +1040,7 @@ bool kio_sieveProtocol::authenticate()
     }
 
     do {
-        result = sasl_client_start(conn, strList.join(QLatin1String(" ")).toLatin1(),
+        result = sasl_client_start(conn, strList.join(QStringLiteral(" ")).toLatin1(),
                                    &client_interact, &out, &outlen, &mechusing);
 
         if (result == SASL_INTERACT) {
@@ -1144,9 +1144,9 @@ void kio_sieveProtocol::mimetype(const QUrl &url)
     ksDebug << "Requesting mimetype for " << url.toDisplayString() << endl;
 
     if (url.fileName().isEmpty()) {
-        mimeType(QLatin1String("inode/directory"));
+        mimeType(QStringLiteral("inode/directory"));
     } else {
-        mimeType(QLatin1String("application/sieve"));
+        mimeType(QStringLiteral("application/sieve"));
     }
 
     finished();
@@ -1300,7 +1300,7 @@ bool kio_sieveProtocol::requestCapabilitiesAfterStartTLS() const
     // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
     // not standard conform, but we need to support that anyway.
     // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-    QRegExp regExp(QLatin1String("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive);
+    QRegExp regExp(QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive);
     if (regExp.indexIn(m_implementation) >= 0) {
         const int major = regExp.cap(1).toInt();
         const int minor = regExp.cap(2).toInt();

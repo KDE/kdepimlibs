@@ -44,7 +44,7 @@ class Request
 {
 public:
     Request()
-        : mSubject(QLatin1String("missing subject"))
+        : mSubject(QStringLiteral("missing subject"))
         , mEmitHeaders(true)
         , m8Bit(false)
         , mSize(0)

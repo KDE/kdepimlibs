@@ -185,10 +185,10 @@ QByteArray Request::headerFields(const QString &fromRealName) const
         result += "Subject: " + formatSubject(subject()) + "\r\n";
     }
     if (!to().empty()) {
-        result += QByteArray("To: ") + to().join(QLatin1String(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
+        result += QByteArray("To: ") + to().join(QStringLiteral(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
     }
     if (!cc().empty()) {
-        result += QByteArray("Cc: ") + cc().join(QLatin1String(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
+        result += QByteArray("Cc: ") + cc().join(QStringLiteral(",\r\n\t") /* line folding */).toLatin1() + "\r\n";
     }
     return result;
 }

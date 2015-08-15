@@ -58,30 +58,30 @@ bool KioSMTP::KioSlaveSession::startSsl()
 
 bool KioSlaveSession::eightBitMimeRequested() const
 {
-    return m_protocol->metaData(QLatin1String("8bitmime")) == QLatin1String("on");
+    return m_protocol->metaData(QStringLiteral("8bitmime")) == QLatin1String("on");
 }
 
 bool KioSlaveSession::lf2crlfAndDotStuffingRequested() const
 {
-    return m_protocol->metaData(QLatin1String("lf2crlf+dotstuff")) == QLatin1String("slave");
+    return m_protocol->metaData(QStringLiteral("lf2crlf+dotstuff")) == QLatin1String("slave");
 }
 
 bool KioSlaveSession::pipeliningRequested() const
 {
-    return m_protocol->metaData(QLatin1String("pipelining")) != QLatin1String("off");
+    return m_protocol->metaData(QStringLiteral("pipelining")) != QLatin1String("off");
 }
 
 QString KioSlaveSession::requestedSaslMethod() const
 {
-    return m_protocol->metaData(QLatin1String("sasl"));
+    return m_protocol->metaData(QStringLiteral("sasl"));
 }
 
 KioSMTP::SMTPSessionInterface::TLSRequestState KioSMTP::KioSlaveSession::tlsRequested() const
 {
-    if (m_protocol->metaData(QLatin1String("tls")) == QLatin1String("off")) {
+    if (m_protocol->metaData(QStringLiteral("tls")) == QLatin1String("off")) {
         return ForceNoTLS;
     }
-    if (m_protocol->metaData(QLatin1String("tls")) == QLatin1String("on")) {
+    if (m_protocol->metaData(QStringLiteral("tls")) == QLatin1String("on")) {
         return ForceTLS;
     }
     return UseTLSIfAvailable;

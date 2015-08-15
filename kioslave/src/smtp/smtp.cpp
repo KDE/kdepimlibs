@@ -81,7 +81,7 @@ extern "C" {
 int kdemain(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-    app.setApplicationName(QLatin1String("kio_smtp"));
+    app.setApplicationName(QStringLiteral("kio_smtp"));
 
     if (argc != 4) {
         fprintf(stderr,
@@ -529,7 +529,7 @@ bool SMTPProtocol::smtp_open(const QString &fakeHostname)
     }
 
     smtp_close();
-    if (!connectToHost(isAutoSsl() ? QLatin1String("smtps") : QLatin1String("smtp"), m_sServer, m_port)) {
+    if (!connectToHost(isAutoSsl() ? QStringLiteral("smtps") : QStringLiteral("smtp"), m_sServer, m_port)) {
         return false;    // connectToHost has already send an error message.
     }
     m_opened = true;
@@ -552,7 +552,7 @@ bool SMTPProtocol::smtp_open(const QString &fakeHostname)
         // FIXME: We need a way to find the FQDN again. Also change in servertest then.
         m_hostname = QHostInfo::localHostName();
         if (m_hostname.isEmpty()) {
-            m_hostname = QLatin1String("localhost.invalid");
+            m_hostname = QStringLiteral("localhost.invalid");
         } else if (!m_hostname.contains(QLatin1Char('.'))) {
             m_hostname += QLatin1String(".localnet");
         }
@@ -615,7 +615,7 @@ bool SMTPProtocol::authenticate()
         strList = m_sessionIface->capabilities().saslMethodsQSL();
     }
 
-    const QByteArray ba = strList.join(QLatin1String(" ")).toLatin1();
+    const QByteArray ba = strList.join(QStringLiteral(" ")).toLatin1();
     AuthCommand authCmd(m_sessionIface, ba.constData(), m_sServer, authInfo);
     bool ret = execute(&authCmd);
     m_sUser = authInfo.username;

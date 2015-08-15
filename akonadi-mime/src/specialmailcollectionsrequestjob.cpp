@@ -63,28 +63,28 @@ SpecialMailCollectionsRequestJob::SpecialMailCollectionsRequestJob(QObject *pare
 {
     static QMap<QByteArray, QString> displayNameMap;
     displayNameMap.insert("local-mail", i18nc("local mail folder", "Local Folders"));
-    displayNameMap.insert("inbox", /*i18nc( "local mail folder",*/QLatin1String("inbox"));
-    displayNameMap.insert("outbox", /*i18nc( "local mail folder",*/ QLatin1String("outbox"));
-    displayNameMap.insert("sent-mail", /*i18nc( "local mail folder",*/QLatin1String("sent-mail"));
-    displayNameMap.insert("trash", /*i18nc( "local mail folder", */QLatin1String("trash"));
-    displayNameMap.insert("drafts", /*i18nc( "local mail folder", */QLatin1String("drafts"));
-    displayNameMap.insert("templates", /*i18nc( "local mail folder", */QLatin1String("templates"));
+    displayNameMap.insert("inbox", /*i18nc( "local mail folder",*/QStringLiteral("inbox"));
+    displayNameMap.insert("outbox", /*i18nc( "local mail folder",*/ QStringLiteral("outbox"));
+    displayNameMap.insert("sent-mail", /*i18nc( "local mail folder",*/QStringLiteral("sent-mail"));
+    displayNameMap.insert("trash", /*i18nc( "local mail folder", */QStringLiteral("trash"));
+    displayNameMap.insert("drafts", /*i18nc( "local mail folder", */QStringLiteral("drafts"));
+    displayNameMap.insert("templates", /*i18nc( "local mail folder", */QStringLiteral("templates"));
 
     static QMap<QByteArray, QString> iconNameMap;
-    iconNameMap.insert("local-mail", QLatin1String("folder"));
-    iconNameMap.insert("inbox", QLatin1String("mail-folder-inbox"));
-    iconNameMap.insert("outbox", QLatin1String("mail-folder-outbox"));
-    iconNameMap.insert("sent-mail", QLatin1String("mail-folder-sent"));
-    iconNameMap.insert("trash", QLatin1String("user-trash"));
-    iconNameMap.insert("drafts", QLatin1String("document-properties"));
-    iconNameMap.insert("templates", QLatin1String("document-new"));
+    iconNameMap.insert("local-mail", QStringLiteral("folder"));
+    iconNameMap.insert("inbox", QStringLiteral("mail-folder-inbox"));
+    iconNameMap.insert("outbox", QStringLiteral("mail-folder-outbox"));
+    iconNameMap.insert("sent-mail", QStringLiteral("mail-folder-sent"));
+    iconNameMap.insert("trash", QStringLiteral("user-trash"));
+    iconNameMap.insert("drafts", QStringLiteral("document-properties"));
+    iconNameMap.insert("templates", QStringLiteral("document-new"));
 
     QVariantMap options;
-    options.insert(QLatin1String("Name"), displayNameMap.value("local-mail"));
-    options.insert(QLatin1String("TopLevelIsContainer"), true);
-    options.insert(QLatin1String("Path"), QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("local-mail")));
+    options.insert(QStringLiteral("Name"), displayNameMap.value("local-mail"));
+    options.insert(QStringLiteral("TopLevelIsContainer"), true);
+    options.insert(QStringLiteral("Path"), QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("local-mail")));
 
-    setDefaultResourceType(QLatin1String("akonadi_maildir_resource"));
+    setDefaultResourceType(QStringLiteral("akonadi_maildir_resource"));
     setDefaultResourceOptions(options);
 
     setTypes(displayNameMap.keys());

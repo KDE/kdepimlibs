@@ -112,7 +112,7 @@ QString TransactionState::errorMessage() const
             recip.push_back((*it).recipient + QLatin1String(" (") + (*it).reason + QLatin1Char(')'));
         }
         return i18n("Message sending failed since the following recipients were rejected by the server:\n"
-                    "%1", recip.join(QLatin1String("\n")));
+                    "%1", recip.join(QStringLiteral("\n")));
     }
 
     if (!dataCommandSucceeded()) {

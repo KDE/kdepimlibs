@@ -50,7 +50,7 @@ KIO::UDSEntry Stat::stat(ReadMBox &mbox, const UrlInfo &info)
     }
 
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
-    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String("message/rfc822"));
+    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("message/rfc822"));
 
     url = QStringLiteral("mbox:%1/%2").arg(info.filename(), mbox.currentID());
     entry.insert(KIO::UDSEntry::UDS_URL, url);
@@ -85,7 +85,7 @@ KIO::UDSEntry Stat::statMessage(const UrlInfo &info)
 
     //Specific things for a message
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
-    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QLatin1String("message/rfc822"));
+    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("message/rfc822"));
 
     entry.insert(KIO::UDSEntry::UDS_URL, url);
     url = url.right(url.length() - url.lastIndexOf(QLatin1Char('/')) - 1);

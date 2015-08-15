@@ -61,7 +61,7 @@ void EmptyTrashCommand::execute()
         const QString text = i18n("Are you sure you want to empty the trash folders of all accounts?");
         if (KMessageBox::warningContinueCancel(0, text, title,
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                               QLatin1String("confirm_empty_trash"))
+                                               QStringLiteral("confirm_empty_trash"))
                 != KMessageBox::Continue) {
             emitResult(OK);
             return;
@@ -148,8 +148,8 @@ Akonadi::AgentInstance::List EmptyTrashCommand::agentInstances()
     Akonadi::AgentInstance::List relevantInstances;
     foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         if (instance.type().mimeTypes().contains(KMime::Message::mimeType()) &&
-                instance.type().capabilities().contains(QLatin1String("Resource")) &&
-                !instance.type().capabilities().contains(QLatin1String("Virtual"))) {
+                instance.type().capabilities().contains(QStringLiteral("Resource")) &&
+                !instance.type().capabilities().contains(QStringLiteral("Virtual"))) {
             relevantInstances << instance;
         }
     }

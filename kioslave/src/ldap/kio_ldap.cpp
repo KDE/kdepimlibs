@@ -428,7 +428,7 @@ void LDAPProtocol::get(const QUrl &_url)
     }
 
     // tell the mimetype
-    mimeType(QLatin1String("text/plain"));
+    mimeType(QStringLiteral("text/plain"));
     // collect the result
     //QByteArray result;
     filesize_t processed_size = 0;
@@ -504,7 +504,7 @@ void LDAPProtocol::stat(const QUrl &_url)
 
     // look how many entries match
     saveatt = usrc.attributes();
-    att.append(QLatin1String("dn"));
+    att.append(QStringLiteral("dn"));
 
     if ((id = mOp.search(usrc.dn(), usrc.scope(), usrc.filter(), att)) == -1) {
         LDAPErr();
@@ -530,7 +530,7 @@ void LDAPProtocol::stat(const QUrl &_url)
 
     UDSEntry uds;
     bool critical;
-    LDAPEntry2UDSEntry(usrc.dn(), uds, usrc, usrc.extension(QLatin1String("x-dir"), critical) != QLatin1String("base"));
+    LDAPEntry2UDSEntry(usrc.dn(), uds, usrc, usrc.extension(QStringLiteral("x-dir"), critical) != QLatin1String("base"));
 
     statEntry(uds);
     // we are done
@@ -730,7 +730,7 @@ void LDAPProtocol::listDir(const QUrl &_url)
     QStringList att, saveatt;
     LdapUrl usrc(_url), usrc2;
     bool critical = true;
-    bool isSub = (usrc.extension(QLatin1String("x-dir"), critical) == QLatin1String("sub"));
+    bool isSub = (usrc.extension(QStringLiteral("x-dir"), critical) == QLatin1String("sub"));
 
 //Reactivate it
     //qCDebug(KLDAP_LOG) << "listDir(" << _url << ")";
@@ -745,7 +745,7 @@ void LDAPProtocol::listDir(const QUrl &_url)
     saveatt = usrc.attributes();
     // look up the entries
     if (isSub) {
-        att.append(QLatin1String("dn"));
+        att.append(QStringLiteral("dn"));
         usrc.setAttributes(att);
     }
     if (_url.query().isEmpty()) {
@@ -758,7 +758,7 @@ void LDAPProtocol::listDir(const QUrl &_url)
     }
 
     usrc.setAttributes(QStringList() << QLatin1String(""));
-    usrc.setExtension(QLatin1String("x-dir"), QLatin1String("base"));
+    usrc.setExtension(QStringLiteral("x-dir"), QStringLiteral("base"));
     // publish the results
     UDSEntry uds;
 

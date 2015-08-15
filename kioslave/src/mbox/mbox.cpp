@@ -100,7 +100,7 @@ void MBoxProtocol::listDir(const QUrl &url)
 
     KIO::UDSEntry entry;
     UrlInfo info(url, UrlInfo::directory);
-    ReadMBox mbox(&info, this, hasMetaData(QLatin1String("onlynew")), hasMetaData(QLatin1String("savetime")));
+    ReadMBox mbox(&info, this, hasMetaData(QStringLiteral("onlynew")), hasMetaData(QStringLiteral("savetime")));
 
     if (m_errorState) {
         return;

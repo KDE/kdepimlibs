@@ -395,7 +395,7 @@ KMime::MessagePtr NoteMessageWrapper::message() const
     msg->subject(true)->fromUnicodeString(title, ENCODING);
     msg->date(true)->setDateTime(creationDate);
     msg->from(true)->fromUnicodeString(d->from, ENCODING);
-    const QString formatDate = QLocale::c().toString(lastModifiedDate, QLatin1String("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
+    const QString formatDate = QLocale::c().toString(lastModifiedDate, QStringLiteral("ddd, ")) + lastModifiedDate.toString(Qt::RFC2822Date);
 
     auto header = new KMime::Headers::Generic(X_NOTES_LASTMODIFIED_HEADER);
     header->fromUnicodeString(formatDate, ENCODING);

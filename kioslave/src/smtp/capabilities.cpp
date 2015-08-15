@@ -79,30 +79,30 @@ QString Capabilities::createSpecialResponse(bool tls) const
 {
     QStringList result;
     if (tls) {
-        result.push_back(QLatin1String("STARTTLS"));
+        result.push_back(QStringLiteral("STARTTLS"));
     }
     result += saslMethodsQSL();
     if (have("PIPELINING")) {
-        result.push_back(QLatin1String("PIPELINING"));
+        result.push_back(QStringLiteral("PIPELINING"));
     }
     if (have("8BITMIME")) {
-        result.push_back(QLatin1String("8BITMIME"));
+        result.push_back(QStringLiteral("8BITMIME"));
     }
     if (have("SIZE")) {
         bool ok = false;
         unsigned int size = 0;
-        if (!mCapabilities[QLatin1String("SIZE")].isEmpty()) {
-            size = mCapabilities[QLatin1String("SIZE")].front().toUInt(&ok);
+        if (!mCapabilities[QStringLiteral("SIZE")].isEmpty()) {
+            size = mCapabilities[QStringLiteral("SIZE")].front().toUInt(&ok);
         }
         if (ok && !size) {
-            result.push_back(QLatin1String("SIZE=*"));    // any size
+            result.push_back(QStringLiteral("SIZE=*"));    // any size
         } else if (ok) {
             result.push_back(QString::fromLatin1("SIZE=%1").arg(size));    // fixed max
         } else {
-            result.push_back(QLatin1String("SIZE"));    // indetermined
+            result.push_back(QStringLiteral("SIZE"));    // indetermined
         }
     }
-    return result.join(QLatin1String(" "));
+    return result.join(QStringLiteral(" "));
 }
 
 QStringList Capabilities::saslMethodsQSL() const
