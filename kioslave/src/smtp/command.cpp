@@ -162,7 +162,7 @@ bool EHLOCommand::processResponse(const Response &r, TransactionState *ts)
     }
     mSMTP->error(KIO::ERR_UNKNOWN,
                  i18n("Unexpected server response to %1 command.\n%2",
-                      QString::fromLatin1(mEHLONotSupported ? "HELO" : "EHLO"),
+                      (mEHLONotSupported ? QStringLiteral("HELO") : QStringLiteral("EHLO")),
                       r.errorMessage()));
     return false;
 }

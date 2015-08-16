@@ -38,15 +38,15 @@ namespace NoteUtils
 #define X_NOTES_CLASSIFICATION_HEADER "X-Akonotes-Classification"
 #define X_NOTES_CUSTOM_HEADER "X-Akonotes-Custom"
 
-#define CLASSIFICATION_PUBLIC QLatin1String("Public")
-#define CLASSIFICATION_PRIVATE QLatin1String("Private")
-#define CLASSIFICATION_CONFIDENTIAL QLatin1String("Confidential")
+#define CLASSIFICATION_PUBLIC QStringLiteral("Public")
+#define CLASSIFICATION_PRIVATE QStringLiteral("Private")
+#define CLASSIFICATION_CONFIDENTIAL QStringLiteral("Confidential")
 
 #define X_NOTES_URL_HEADER "X-Akonotes-Url"
 #define X_NOTES_LABEL_HEADER "X-Akonotes-Label"
 #define X_NOTES_CONTENTTYPE_HEADER "X-Akonotes-Type"
-#define CONTENT_TYPE_CUSTOM QLatin1String("custom")
-#define CONTENT_TYPE_ATTACHMENT QLatin1String("attachment")
+#define CONTENT_TYPE_CUSTOM QStringLiteral("custom")
+#define CONTENT_TYPE_ATTACHMENT QStringLiteral("attachment")
 
 #define ENCODING "utf-8"
 
