@@ -326,7 +326,7 @@ int POP3Protocol::loginAPOP(const char *challenge, KIO::AuthInfo &ai)
 {
     char buf[512];
 
-    QString apop_string = QString::fromLatin1("APOP ");
+    QString apop_string = QStringLiteral("APOP ");
     if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
         // Prompt for usernames
         if (!openPasswordDialog(ai)) {
@@ -429,7 +429,7 @@ bool POP3Protocol::saslInteract(void *in, AuthInfo &ai)
 int POP3Protocol::loginSASL(KIO::AuthInfo &ai)
 {
     char buf[512];
-    QString sasl_buffer = QString::fromLatin1("AUTH");
+    QString sasl_buffer = QStringLiteral("AUTH");
 
     int result;
     sasl_conn_t *conn = NULL;
@@ -579,7 +579,7 @@ bool POP3Protocol::loginPASS(KIO::AuthInfo &ai)
     m_sOldUser = m_sUser;
     m_sOldPass = m_sPass;
 
-    QString one_string = QString::fromLatin1("USER ");
+    QString one_string = QStringLiteral("USER ");
     one_string.append(m_sUser);
 
     if (command(one_string.toLocal8Bit(), buf, sizeof(buf)) != Ok) {
@@ -593,7 +593,7 @@ bool POP3Protocol::loginPASS(KIO::AuthInfo &ai)
         return false;
     }
 
-    one_string = QString::fromLatin1("PASS ");
+    one_string = QStringLiteral("PASS ");
     one_string.append(m_sPass);
 
     if (command(one_string.toLocal8Bit(), buf, sizeof(buf)) != Ok) {
@@ -1077,7 +1077,7 @@ void POP3Protocol::listDir(const QUrl &url)
         fname = QStringLiteral("Message %1");
 
         entry.insert(KIO::UDSEntry::UDS_NAME, fname.arg(i + 1));
-        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
+        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("text/plain"));
 
         QUrl uds_url;
         if (isAutoSsl()) {
@@ -1089,7 +1089,7 @@ void POP3Protocol::listDir(const QUrl &url)
         uds_url.setUserName(m_sUser);
         uds_url.setPassword(m_sPass);
         uds_url.setHost(m_sServer);
-        uds_url.setPath(QString::fromLatin1("/download/%1").arg(i + 1));
+        uds_url.setPath(QStringLiteral("/download/%1").arg(i + 1));
         entry.insert(KIO::UDSEntry::UDS_URL, uds_url.url());
 
         entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
@@ -1115,7 +1115,7 @@ void POP3Protocol::stat(const QUrl &url)
     UDSEntry entry;
     entry.insert(KIO::UDSEntry::UDS_NAME, _path);
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
-    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("message/rfc822"));
+    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("message/rfc822"));
 
     // TODO: maybe get the size of the message?
     statEntry(entry);

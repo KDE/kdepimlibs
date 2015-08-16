@@ -848,7 +848,7 @@ void kio_sieveProtocol::urlStat(const QUrl &url)
     QString filename = url.fileName();
 
     if (filename.isEmpty()) {
-        entry.insert(KIO::UDSEntry::UDS_NAME, QString::fromLatin1("/"));
+        entry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("/"));
 
         entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
 
@@ -882,7 +882,7 @@ void kio_sieveProtocol::urlStat(const QUrl &url)
                         entry.insert(KIO::UDSEntry::UDS_ACCESS, 0600);
                     }
 
-                    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("application/sieve"));
+                    entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("application/sieve"));
 
                     //setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
 
@@ -929,7 +929,7 @@ void kio_sieveProtocol::listDir(const QUrl &url)
                 entry.insert(KIO::UDSEntry::UDS_ACCESS, 0600);
             }
 
-            entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("application/sieve"));
+            entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("application/sieve"));
 
             //asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 

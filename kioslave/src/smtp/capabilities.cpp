@@ -97,7 +97,7 @@ QString Capabilities::createSpecialResponse(bool tls) const
         if (ok && !size) {
             result.push_back(QStringLiteral("SIZE=*"));    // any size
         } else if (ok) {
-            result.push_back(QString::fromLatin1("SIZE=%1").arg(size));    // fixed max
+            result.push_back(QStringLiteral("SIZE=%1").arg(size));    // fixed max
         } else {
             result.push_back(QStringLiteral("SIZE"));    // indetermined
         }

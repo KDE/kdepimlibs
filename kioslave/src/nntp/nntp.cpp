@@ -88,7 +88,7 @@ NNTPProtocol::~NNTPProtocol()
 void NNTPProtocol::setHost(const QString &host, quint16 port, const QString &user,
                            const QString &pass)
 {
-    DBG << (! user.isEmpty() ? (user + QLatin1Char('@')) : QString::fromLatin1(""))
+    DBG << (! user.isEmpty() ? (user + QLatin1Char('@')) : QStringLiteral(""))
         << host << ":" << ((port == 0) ? m_defaultPort : port);
 
     if (isConnected() && (mHost != host || m_port != port ||
@@ -760,7 +760,7 @@ void NNTPProtocol::fillUDSEntry(UDSEntry &entry, const QString &name, long size,
                           (S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH | posting);
     entry.insert(KIO::UDSEntry::UDS_ACCESS, accessVal);
 
-    entry.insert(KIO::UDSEntry::UDS_USER, mUser.isEmpty() ? QString::fromLatin1("root") : mUser);
+    entry.insert(KIO::UDSEntry::UDS_USER, mUser.isEmpty() ? QStringLiteral("root") : mUser);
 
     /*
     entry->insert(UDS_GROUP, QString::fromLatin1("root"));
@@ -768,7 +768,7 @@ void NNTPProtocol::fillUDSEntry(UDSEntry &entry, const QString &name, long size,
 
     // MIME type
     if (is_article) {
-        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("message/news"));
+        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("message/news"));
     }
 }
 

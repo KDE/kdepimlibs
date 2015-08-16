@@ -184,8 +184,8 @@ void LDAPProtocol::controlsFromMetaData(LdapControls &serverctrls,
     bool critical;
     QByteArray value;
     int i = 0;
-    while (hasMetaData(QString::fromLatin1("SERVER_CTRL%1").arg(i))) {
-        QByteArray val = metaData(QString::fromLatin1("SERVER_CTRL%1").arg(i)).toUtf8();
+    while (hasMetaData(QStringLiteral("SERVER_CTRL%1").arg(i))) {
+        QByteArray val = metaData(QStringLiteral("SERVER_CTRL%1").arg(i)).toUtf8();
         Ldif::splitControl(val, oid, critical, value);
         qCDebug(KLDAP_LOG) << "server ctrl #" << i << " value: " << val <<
                            " oid: " << oid << " critical: " << critical << " value: " <<
@@ -195,8 +195,8 @@ void LDAPProtocol::controlsFromMetaData(LdapControls &serverctrls,
         i++;
     }
     i = 0;
-    while (hasMetaData(QString::fromLatin1("CLIENT_CTRL%1").arg(i))) {
-        QByteArray val = metaData(QString::fromLatin1("CLIENT_CTRL%1").arg(i)).toUtf8();
+    while (hasMetaData(QStringLiteral("CLIENT_CTRL%1").arg(i))) {
+        QByteArray val = metaData(QStringLiteral("CLIENT_CTRL%1").arg(i)).toUtf8();
         Ldif::splitControl(val, oid, critical, value);
         qCDebug(KLDAP_LOG) << "client ctrl #" << i << " value: " << val <<
                            " oid: " << oid << " critical: " << critical << " value: " <<
@@ -231,7 +231,7 @@ void LDAPProtocol::LDAPEntry2UDSEntry(const LdapDN &dn, UDSEntry &entry,
 
     // the mimetype
     if (!dir) {
-        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QString::fromLatin1("text/plain"));
+        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, QStringLiteral("text/plain"));
     }
 
     entry.insert(KIO::UDSEntry::UDS_ACCESS, dir ? 0500 : 0400);
