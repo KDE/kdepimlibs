@@ -28,6 +28,6 @@ install(FILES
   akonadi_serializer_socialfeeditem.desktop
   DESTINATION ${KDE_INSTALL_DATADIR}/akonadi/plugins/serializer)
 
-install(FILES x-vnd.akonadi.socialfeeditem.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
+install(FILES x-vnd.akonadi5.socialfeeditem.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 
 update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
