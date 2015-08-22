@@ -112,7 +112,7 @@ QString Response::errorMessage() const
     if (lines().count() > 1) {
         msg = i18n("The server responded:\n%1", QString::fromLatin1(join('\n', lines())));
     } else {
-        msg = i18n("The server responded: \"%1\"", QString::fromLatin1(lines().front()));
+        msg = i18n("The server responded: \"%1\"", QString::fromLatin1(lines().at(0)));
     }
     if (first() == 4) {
         msg += QLatin1Char('\n') + i18n("This is a temporary failure. You may try again later.");
