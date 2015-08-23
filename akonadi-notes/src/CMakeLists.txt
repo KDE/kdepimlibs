@@ -1,7 +1,8 @@
 set(akonadinotes_LIB_SRC
   noteutils.cpp
-  akonadi_notes_debug.cpp
 )
+
+ecm_qt_declare_logging_category(akonadinotes_LIB_SRC HEADER akonadi_notes_debug.h IDENTIFIER AKONADINOTES_LOG CATEGORY_NAME log_akonadi_notes)
 
 add_library(KF5AkonadiNotes ${akonadinotes_LIB_SRC})
 

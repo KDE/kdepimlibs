@@ -8,11 +8,12 @@ endif()
 add_subdirectory(serializer)
 
 set(akonadi_social_utils_SRCS
-  akonadi_socialutils_debug.cpp
   socialnetworkattributes.cpp
   imageprovider.cpp
   socialfeeditem.cpp
 )
+
+ecm_qt_declare_logging_category(akonadi_social_utils_SRCS HEADER akonadi_socialutils_debug.h IDENTIFIER AKONADISOCIALUTILS_LOG CATEGORY_NAME log_akonadi_socialutils)
 
 add_library(KF5AkonadiSocialUtils ${akonadi_social_utils_SRCS})
 
