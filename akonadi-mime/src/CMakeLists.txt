@@ -29,7 +29,6 @@ endmacro()
 ########### next target ###############
 
 set(akonadimime_SRCS
-    akonadi_mime_debug.cpp
     addressattribute.cpp
     attributeregistrar.cpp
     removeduplicatesjob.cpp
@@ -50,6 +49,8 @@ set(akonadimime_SRCS
     movetotrashcommand.cpp
     standardmailactionmanager.cpp
 )
+
+ecm_qt_declare_logging_category(akonadimime_SRCS HEADER akonadi_mime_debug.h IDENTIFIER AKONADIMIME_LOG CATEGORY_NAME log_akonadi_mime)
 
 add_resource_iface(imapresource.kcfg
     org.kde.Akonadi.Imap.Settings ImapSettings)

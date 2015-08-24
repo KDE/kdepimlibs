@@ -15,6 +15,7 @@ include(FeatureSummary)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.12.0")
 set(KDEPIMLIBS_VERSION "5.0.41")
