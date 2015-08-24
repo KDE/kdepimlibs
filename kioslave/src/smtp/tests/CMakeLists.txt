@@ -16,7 +16,8 @@ target_link_libraries(test_responseparser   Qt5::Test KF5::I18n KF5::KIOCore)
 
 ########### next target ###############
 
-set(test_headergeneration_SRCS test_headergeneration.cpp ../smtp_debug.cpp )
+set(test_headergeneration_SRCS test_headergeneration.cpp)
+ecm_qt_declare_logging_category(test_headergeneration_SRCS HEADER smtp_debug.h IDENTIFIER SMTP_LOG CATEGORY_NAME log_smtp)
 
 add_executable( test_headergeneration  ${test_headergeneration_SRCS} )
 add_test( test_headergeneration test_headergeneration )
@@ -26,7 +27,8 @@ target_link_libraries(test_headergeneration  Qt5::Test )
 
 
 ########### next target ###############
-set(test_commands_SRCS test_commands.cpp ../smtp_debug.cpp )
+set(test_commands_SRCS test_commands.cpp )
+ecm_qt_declare_logging_category(test_commands_SRCS HEADER smtp_debug.h IDENTIFIER SMTP_LOG CATEGORY_NAME log_smtp)
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${Sasl2_INCLUDE_DIR}  ${kioslave_SOURCE_DIR}/src/)
 
@@ -55,7 +57,9 @@ target_link_libraries(test_capabilities   KF5::KIOCore)
 
 
 ########### next target ###############
-set( test_request_source requesttest.cpp ../request.cpp ../smtp_debug.cpp)
+set( test_request_source requesttest.cpp ../request.cpp )
+ecm_qt_declare_logging_category(test_request_source HEADER smtp_debug.h IDENTIFIER SMTP_LOG CATEGORY_NAME log_smtp)
+
 add_executable( requesttest ${test_request_source})
 add_test(requesttest requesttest)
 ecm_mark_as_test(requesttest)

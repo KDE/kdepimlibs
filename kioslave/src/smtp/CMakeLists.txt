@@ -26,9 +26,9 @@ set(kio_smtp_PART_SRCS
    transactionstate.cpp
    smtpsessioninterface.cpp
    kioslavesession.cpp
-   smtp_debug.cpp
 )
 
+ecm_qt_declare_logging_category(kio_smtp_PART_SRCS HEADER smtp_debug.h IDENTIFIER SMTP_LOG CATEGORY_NAME log_smtp)
 
 add_library(kio_smtp MODULE ${kio_smtp_PART_SRCS})
 
