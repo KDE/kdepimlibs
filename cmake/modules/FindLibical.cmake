@@ -16,6 +16,17 @@ if(NOT LIBICAL_MIN_VERSION)
   set(LIBICAL_MIN_VERSION "0.33")
 endif()
 
+find_package(LibIcal QUIET CONFIG)
+if(LibIcal_FOUND)
+  set(LIBICAL_FOUND ${LibIcal_FOUND})
+  set(LIBICAL_INCLUDE_DIRS ${LibIcal_INCLUDE_DIR})
+  set(LIBICAL_LIBRARIES ${LibIcal_LIBRARIES})
+  set(LIBICAL_VERSION ${LibIcal_VERSION})
+  set(LIBICAL_MAJOR_VERSION ${LibIcal_VERSION_MAJOR})
+  set(LIBICAL_MINOR_VERSION ${LibIcal_VERSION_MINOR})
+
+else()
+
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
 endif()
@@ -90,6 +101,7 @@ if(LIBICAL_INCLUDE_DIRS AND LIBICAL_LIBRARIES)
     string(REGEX REPLACE "^.*\\." "" LIBICAL_MINOR_VERSION ${LIBICAL_VERSION})
   endif()
 
+endif()
 endif()
 
 include(FindPackageHandleStandardArgs)
