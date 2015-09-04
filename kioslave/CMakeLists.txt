@@ -21,7 +21,7 @@ include(ECMQtDeclareLoggingCategory)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.12.0")
-set(KDEPIMLIBS_VERSION "5.0.41")
+set(KDEPIMLIBS_VERSION "5.0.42")
 set(MBOXLIB_VERSION "4.79.0")
 set(LDABLIB_VERSION "4.79.0")
 find_package(Sasl2)
