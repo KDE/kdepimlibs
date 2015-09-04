@@ -1,7 +1,5 @@
 @PACKAGE_INIT@
 
-find_dependency(KF5Akonadi "@KDEPIMLIBS_VERSION@")
-find_dependency(KF5KDELibs4Support "@KF5_VERSION@")
 find_dependency(KF5Mime "@KMIMELIB_VERSION@")
 
 
