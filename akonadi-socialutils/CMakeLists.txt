@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
-set(KF5_VERSION "5.12.0")
+set(KF5_VERSION "5.14.0")
 set(KDEPIMLIBS_VERSION "5.0.42")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
