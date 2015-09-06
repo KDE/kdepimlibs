@@ -812,6 +812,7 @@ void POP3Protocol::get(const KUrl & url)
        .
      */
     if (result) {
+      mimeType("text/plain");
       while (true /* !AtEOF() */ ) {
         memset(buf, 0, sizeof(buf));
         myReadLine(buf, sizeof(buf) - 1);
@@ -848,6 +849,12 @@ void POP3Protocol::get(const KUrl & url)
     m_cmd = CMD_NONE;
   } else if (cmd == "download" || cmd == "headers") {
     const QStringList waitingCommands = path.split(',', QString::SkipEmptyParts);
+    if ( waitingCommands.isEmpty() ) {
+      kDebug(7105) << "tried to request" << cmd << "for" << path << "with no specific item to get";
+      closeConnection();
+      error(ERR_INTERNAL, m_sServer);
+      return;
+    }
     bool noProgress = (metaData("progress") == "off"
                        || waitingCommands.count() > 1);
     int p_size = 0;
