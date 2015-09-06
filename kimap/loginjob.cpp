@@ -372,8 +372,14 @@ void LoginJob::handleResponse( const Message &response )
         if ( !d->answerChallenge( QByteArray::fromBase64( response.content[1].toString() ) ) ) {
           emitResult(); //error, we're done
         }
+      } else if ( d->authMode == QLatin1String( "GSSAPI" ) && response.content.size() == 1 ) {
+          // fix for bug 267884
+          // Empty continuation for GSSAPI, accept as challenge nevertheless
+          if ( !d->answerChallenge( "" ) ) {
+              emitResult(); //error, we're done
+          }
       } else {
-        // Received empty continuation for authMode other than PLAIN
+        // Received empty continuation for authMode other than PLAIN or GSSAPI
         code = MALFORMED;
       }
       break;
