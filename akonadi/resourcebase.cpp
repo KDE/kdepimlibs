@@ -75,6 +75,7 @@ public:
         , mItemSyncer(0)
         , mItemSyncFetchScope(0)
         , mItemTransactionMode(ItemSync::SingleTransaction)
+        , mItemMergeMode(ItemSync::RIDMerge)
         , mCollectionSyncer(0)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
@@ -179,6 +180,7 @@ public:
             mItemSyncer = new ItemSync(q->currentCollection());
             mItemSyncer->setTransactionMode(mItemTransactionMode);
             mItemSyncer->setBatchSize(mItemSyncBatchSize);
+            mItemSyncer->setMergeMode(mItemMergeMode);
             if (mItemSyncFetchScope) {
                 mItemSyncer->setFetchScope(*mItemSyncFetchScope);
             }
@@ -448,6 +450,7 @@ public:
     ItemSync *mItemSyncer;
     ItemFetchScope *mItemSyncFetchScope;
     ItemSync::TransactionMode mItemTransactionMode;
+    ItemSync::MergeMode mItemMergeMode;
     CollectionSync *mCollectionSyncer;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
@@ -1312,6 +1315,12 @@ void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope &fetchS
         d->mItemSyncFetchScope = new ItemFetchScope;
     }
     *(d->mItemSyncFetchScope) = fetchScope;
+}
+
+void ResourceBase::setItemMergingMode(ItemSync::MergeMode mode)
+{
+    Q_D(ResourceBase);
+    d->mItemMergeMode = mode;
 }
 
 void ResourceBase::setAutomaticProgressReporting(bool enabled)
