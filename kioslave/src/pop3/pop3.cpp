@@ -826,7 +826,7 @@ void POP3Protocol::get(const QUrl &url)
            .
          */
         if (result) {
-            mimeType("text/plain");
+            mimeType(QStringLiteral("text/plain"));
             while (true /* !AtEOF() */) {
                 memset(buf, 0, sizeof(buf));
                 myReadLine(buf, sizeof(buf) - 1);
