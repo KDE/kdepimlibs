@@ -71,7 +71,7 @@ void AddTransportDialog::Private::writeConfig()
 void AddTransportDialog::Private::readConfig()
 {
   KConfigGroup group( KGlobal::config(), "AddTransportDialog" );
-  const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
+  const QSize sizeDialog = group.readEntry( "Size", QSize(400,300) );
   if ( sizeDialog.isValid() ) {
     q->resize( sizeDialog );
   }
