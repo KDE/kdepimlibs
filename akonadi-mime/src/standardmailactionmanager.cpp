@@ -67,8 +67,8 @@ public:
     {
         mGenericManager = new StandardActionManager(actionCollection, parentWidget);
 
-        mParent->connect(mGenericManager, SIGNAL(actionStateUpdated()),
-                         mParent, SIGNAL(actionStateUpdated()));
+        mParent->connect(mGenericManager, &StandardActionManager::actionStateUpdated,
+                         mParent, &StandardMailActionManager::actionStateUpdated);
 
         mGenericManager->setMimeTypeFilter(QStringList() << KMime::Message::mimeType());
         mGenericManager->setCapabilityFilter(QStringList() << QStringLiteral("Resource"));
