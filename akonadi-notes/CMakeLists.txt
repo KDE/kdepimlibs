@@ -17,9 +17,8 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
-
 set(KF5_VERSION "5.14.0")
-set(KDEPIMLIBS_VERSION "5.0.42")
+set(KDEPIMLIBS_VERSION "5.0.43")
 set(QT_REQUIRED_VERSION "5.2.0")
 set(KMIMELIB_VERSION "4.83.0")
 
