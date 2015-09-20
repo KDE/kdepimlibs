@@ -384,6 +384,29 @@ static bool incOrganizerOwnsCalendar(const Calendar::Ptr &calendar,
     return iamOrganizer(incidence);
 }
 
+static QString displayViewFormatDescription(const Incidence::Ptr &incidence)
+{
+    QString tmpStr;
+    if (!incidence->description().isEmpty()) {
+        QString descStr;
+        if (!incidence->descriptionIsRich() &&
+            !incidence->description().startsWith(QLatin1String("<!DOCTYPE HTML"))) {
+            descStr = string2HTML(incidence->description());
+        } else {
+            if (!incidence->description().startsWith(QLatin1String("<!DOCTYPE HTML"))) {
+                descStr = incidence->richDescription();
+            } else {
+                descStr = incidence->description();
+            }
+        }
+        tmpStr += QLatin1String("<tr>");
+        tmpStr += QLatin1String("<td><b>") + i18n("Description:") + QLatin1String("</b></td>");
+        tmpStr += QLatin1String("<td>") + descStr + QLatin1String("</td>");
+        tmpStr += QLatin1String("</tr>");
+    }
+    return tmpStr;
+}
+
 static QString displayViewFormatAttendeeRoleList(Incidence::Ptr incidence, Attendee::Role role,
         bool showStatus)
 {
@@ -726,24 +749,7 @@ static QString displayViewFormatEvent(const Calendar::Ptr calendar, const QStrin
         return tmpStr;
     }
 
-    if (!event->description().isEmpty()) {
-        QString descStr;
-        if (!event->descriptionIsRich() &&
-                !event->description().startsWith(QLatin1String("<!DOCTYPE HTML")))
-        {
-            descStr = string2HTML(event->description());
-        } else {
-            if (!event->description().startsWith(QLatin1String("<!DOCTYPE HTML"))) {
-                descStr = event->richDescription();
-            } else {
-                descStr = event->description();
-            }
-        }
-        tmpStr += QLatin1String("<tr>");
-        tmpStr += QLatin1String("<td><b>") + i18n("Description:") + QLatin1String("</b></td>");
-        tmpStr += QLatin1String("<td>") + descStr + QLatin1String("</td>");
-        tmpStr += QLatin1String("</tr>");
-    }
+    tmpStr += displayViewFormatDescription(event);
 
     // TODO: print comments?
 
@@ -887,12 +893,7 @@ static QString displayViewFormatTodo(const Calendar::Ptr &calendar, const QStrin
         tmpStr += QLatin1String("</tr>");
     }
 
-    if (!todo->description().isEmpty()) {
-        tmpStr += QLatin1String("<tr>");
-        tmpStr += QLatin1String("<td><b>") + i18n("Description:") + QLatin1String("</b></td>");
-        tmpStr += QLatin1String("<td>") + todo->richDescription() + QLatin1String("</td>");
-        tmpStr += QLatin1String("</tr>");
-    }
+    tmpStr += displayViewFormatDescription(todo);
 
     // TODO: print comments?
 
@@ -984,12 +985,7 @@ static QString displayViewFormatJournal(const Calendar::Ptr &calendar, const QSt
               QLatin1String("</td>");
     tmpStr += QLatin1String("</tr>");
 
-    if (!journal->description().isEmpty()) {
-        tmpStr += QLatin1String("<tr>");
-        tmpStr += QLatin1String("<td><b>") + i18n("Description:") + QLatin1String("</b></td>");
-        tmpStr += QLatin1String("<td>") + journal->richDescription() + QLatin1String("</td>");
-        tmpStr += QLatin1String("</tr>");
-    }
+    tmpStr += displayViewFormatDescription(journal);
 
     int categoryCount = journal->categories().count();
     if (categoryCount > 0) {
@@ -1256,9 +1252,7 @@ static QString htmlInvitationDetailsEnd()
 
 static QString htmlInvitationDetailsTableBegin()
 {
-
     return QLatin1String("<table cellspacing=\"4\" style=\"border-width:4px; border-style:groove\">");
-
 }
 
 static QString htmlInvitationDetailsTableEnd()
@@ -1308,7 +1302,6 @@ static QString htmlRow(const QString &title, const QString &value, const QString
                        QLatin1String("&nbsp;")+
                        QLatin1String("(<strike>") + oldvalue + QLatin1String("</strike>");
     return htmlRow(newtitle, newvalue);
-
 }
 
 static Attendee::Ptr findDelegatedFromMyAttendee(const Incidence::Ptr &incidence)
@@ -1522,7 +1515,7 @@ static QString invitationDetailsIncidence(const Incidence::Ptr &incidence, bool 
         //else desc and comments are empty
     } else {
         // non-empty comments
-        foreach(const QString &c, incidence->comments()) {
+        foreach (const QString &c, incidence->comments()) {
             if (!c.isEmpty()) {
                 // kcalutils doesn't know about richtext comments, so we need to guess
                 if (!Qt::mightBeRichText(c)) {
@@ -4628,7 +4621,6 @@ QStringList IncidenceFormatter::reminderStringList(const Incidence::Ptr &inciden
                 QString repeatStr = i18nc("(repeat string, interval string)",
                                           "(%1, %2)", countStr, intervalStr);
                 remStr = remStr + QLatin1Char(' ') + repeatStr;
-
             }
             reminderStringList << remStr;
         }
