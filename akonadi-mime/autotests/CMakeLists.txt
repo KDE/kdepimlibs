@@ -1,6 +1,8 @@
 set(QT_REQUIRED_VERSION "5.2.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED COMPONENTS Test Widgets)
 
+add_subdirectory(messagetests)
+
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 # TODO apparently QTEST_AKONADIMAIN doesn't like NO_CASTs...
@@ -49,4 +51,3 @@ if (KDEPIMLIBS_RUN_KDEPIMRUNTIME_ISOLATED_TESTS)
 endif()
 
 add_subdirectory(benchmarker)
-add_subdirectory(messagetests)
