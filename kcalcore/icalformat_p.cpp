@@ -2440,8 +2440,8 @@ KDateTime ICalFormatImpl::readICalDateTime(icalproperty *p,
         }
         icalparameter *param =
             p ? icalproperty_get_first_parameter(p, ICAL_TZID_PARAMETER) : 0;
-        const char *tzid = param ? icalparameter_get_tzid(param) : 0;
-        if (!tzid) {
+        QByteArray tzid = param ? QByteArray(icalparameter_get_tzid(param)) : QByteArray();
+        if (tzid.isNull()) {
             timeSpec = KDateTime::ClockTime;
         } else {
             QString tzidStr = QString::fromUtf8(tzid);
