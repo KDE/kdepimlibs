@@ -446,8 +446,8 @@ void LDAPProtocol::get(const QUrl &_url)
                 QByteArray cookie;
                 int estsize = -1;
                 for (int i = 0; i < mOp.controls().count(); ++i) {
-                    qCDebug(KLDAP_LOG) << " control oid: " << mOp.controls()[i].oid();
-                    estsize = mOp.controls()[i].parsePageControl(cookie);
+                    qCDebug(KLDAP_LOG) << " control oid: " << mOp.controls().at(i).oid();
+                    estsize = mOp.controls().at(i).parsePageControl(cookie);
                     if (estsize != -1) {
                         break;
                     }
