@@ -1,5 +1,5 @@
 include(ECMMarkAsTest)
-set(QT_REQUIRED_VERSION "5.2.0")
+set(QT_REQUIRED_VERSION "5.4.0")
 find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
 set(notestest_SRCS notestest.cpp)

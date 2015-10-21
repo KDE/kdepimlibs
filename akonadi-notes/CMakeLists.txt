@@ -18,8 +18,8 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.14.0")
-set(KDEPIMLIBS_VERSION "5.0.46")
-set(QT_REQUIRED_VERSION "5.2.0")
+set(KDEPIMLIBS_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIMELIB_VERSION "4.83.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
