@@ -35,19 +35,19 @@ private Q_SLOTS:
     void testSerializeAndParse()
     {
         NoteMessageWrapper note;
-        note.setTitle(QLatin1String("title"));
-        note.setText(QLatin1String("title"));
-        note.setUid(QLatin1String("uid"));
+        note.setTitle(QStringLiteral("title"));
+        note.setText(QStringLiteral("title"));
+        note.setUid(QStringLiteral("uid"));
         note.setClassification(NoteMessageWrapper::Private);
-        note.setFrom(QLatin1String("from@kde.org"));
+        note.setFrom(QStringLiteral("from@kde.org"));
         note.setCreationDate(QDateTime(QDate(2012, 3, 3), QTime(3, 3, 3), Qt::UTC));
         note.setLastModifiedDate(QDateTime(QDate(2012, 3, 3), QTime(4, 4, 4), Qt::UTC));
-        Attachment a("testfile2", QLatin1String("mimetype/mime3"));
-        a.setLabel(QLatin1String("label"));
-        note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << Attachment("testfile", QLatin1String("mimetype/mime2")) << a;
-        note.custom().insert(QLatin1String("key1"), QLatin1String("value1"));
-        note.custom().insert(QLatin1String("key2"), QLatin1String("value2"));
-        note.custom().insert(QLatin1String("key3"), QLatin1String("value3"));
+        Attachment a("testfile2", QStringLiteral("mimetype/mime3"));
+        a.setLabel(QStringLiteral("label"));
+        note.attachments() << Attachment(QUrl(QStringLiteral("file://url/to/file")), QStringLiteral("mimetype/mime")) << Attachment("testfile", QStringLiteral("mimetype/mime2")) << a;
+        note.custom().insert(QStringLiteral("key1"), QStringLiteral("value1"));
+        note.custom().insert(QStringLiteral("key2"), QStringLiteral("value2"));
+        note.custom().insert(QStringLiteral("key3"), QStringLiteral("value3"));
 
         KMime::MessagePtr msg = note.message();
 //       qWarning() << msg->encodedContent();
@@ -79,7 +79,7 @@ private Q_SLOTS:
     void testNormalTextWithoutAttachments()
     {
         NoteMessageWrapper note;
-        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+        QString text(QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
             <html> \
               <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
               <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
@@ -96,7 +96,7 @@ private Q_SLOTS:
     void testRichTextWithoutAttachments()
     {
         NoteMessageWrapper note;
-        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+        QString text(QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
             <html> \
               <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
               <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
@@ -113,16 +113,16 @@ private Q_SLOTS:
     void testRichTextWithAttachments()
     {
         NoteMessageWrapper note;
-        QString text(QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
+        QString text(QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"> \
             <html> \
               <head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\"> p, li { white-space: pre-wrap; } </style></head> \
               <body style=\"font-family:'Sans Serif'; font-size:9pt;\"> <p>sdfg</p></body> \
             </html>"));
         note.setText(text, Qt::RichText);
 
-        Attachment a(QByteArray("testfile2"), QLatin1String("mimetype/mime3"));
-        a.setLabel(QLatin1String("label"));
-        note.attachments() << Attachment(QUrl(QLatin1String("file://url/to/file")), QLatin1String("mimetype/mime")) << a;
+        Attachment a(QByteArray("testfile2"), QStringLiteral("mimetype/mime3"));
+        a.setLabel(QStringLiteral("label"));
+        note.attachments() << Attachment(QUrl(QStringLiteral("file://url/to/file")), QStringLiteral("mimetype/mime")) << a;
 
         KMime::Message::Ptr msg = note.message();
         NoteMessageWrapper result(msg);

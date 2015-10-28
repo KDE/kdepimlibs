@@ -52,9 +52,9 @@ void RequestTest::shouldParseRequest_data()
     QTest::addColumn<QString>("bcc");
     QTest::addColumn<bool>("emitheaders");
     QTest::addColumn<unsigned int>("size");
-    QTest::newRow("correct url") <<  QUrl(QLatin1String("smtps://smtp.kde.org:465/send?headers=0&from=foo%40kde.org&to=foo%40kde.org&size=617"))
-                                 << QString(QLatin1String("foo@kde.org"))
-                                 << QString(QLatin1String("foo@kde.org"))
+    QTest::newRow("correct url") <<  QUrl(QStringLiteral("smtps://smtp.kde.org:465/send?headers=0&from=foo%40kde.org&to=foo%40kde.org&size=617"))
+                                 << QStringLiteral("foo@kde.org")
+                                 << QStringLiteral("foo@kde.org")
                                  << QString()
                                  << QString()
                                  << false

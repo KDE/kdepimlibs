@@ -29,13 +29,13 @@
 void ImageProviderTests::setup()
 {
     //use special cache
-    KImageCache *cache = new KImageCache(QLatin1String("asu_tests_cache"), 10485760);
+    KImageCache *cache = new KImageCache(QStringLiteral("asu_tests_cache"), 10485760);
     cache->clear();
 
     QEventLoop e;
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadImage(QLatin1String("mck182"),
+    QImage image = i.loadImage(QStringLiteral("mck182"),
                                QUrl(IMAGE_URL),
                                true,
                                cache);
@@ -51,11 +51,11 @@ void ImageProviderTests::setup()
 
 void ImageProviderTests::testImageNoCache()
 {
-    KImageCache *cache = new KImageCache(QLatin1String("asu_tests_cache"), 10485760);
+    KImageCache *cache = new KImageCache(QStringLiteral("asu_tests_cache"), 10485760);
     cache->clear();
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadImage(QLatin1String("mck182"),
+    QImage image = i.loadImage(QStringLiteral("mck182"),
                                QUrl(IMAGE_URL),
                                true,
                                cache);

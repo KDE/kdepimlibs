@@ -22,8 +22,8 @@
 VCard::VCard(const QString &dir)
     : MakeTest()
 {
-    createAgent(QLatin1String("akonadi_vcarddir_resource"));
-    configureDBusIface(QLatin1String("VCard"), dir);
+    createAgent(QStringLiteral("akonadi_vcarddir_resource"));
+    configureDBusIface(QStringLiteral("VCard"), dir);
 }
 
 VCard::VCard()

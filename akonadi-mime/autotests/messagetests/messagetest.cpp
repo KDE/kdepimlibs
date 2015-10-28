@@ -29,7 +29,7 @@ QTEST_MAIN(MessageTest)
 void MessageTest::testCopyFlags()
 {
     {
-        KMime::Message::Ptr msg = readAndParseMail(QLatin1String("x-pkcs7.mbox"));
+        KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("x-pkcs7.mbox"));
 
         Akonadi::Item item;
         Akonadi::MessageFlags::copyMessageFlags(*msg, item);
@@ -41,7 +41,7 @@ void MessageTest::testCopyFlags()
     }
 
     {
-        KMime::Message::Ptr msg = readAndParseMail(QLatin1String("signed.mbox"));
+        KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("signed.mbox"));
 
         Akonadi::Item item;
         Akonadi::MessageFlags::copyMessageFlags(*msg, item);

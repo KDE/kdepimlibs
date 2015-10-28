@@ -47,7 +47,7 @@ Request Request::fromURL(const QUrl &url)
 
     const QStringList query = url.query().split(QLatin1Char('&'));
 #ifndef NDEBUG
-    qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join(QLatin1String("\n"));
+    qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join(QStringLiteral("\n"));
 #endif
     for (QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it) {
         int equalsPos = (*it).indexOf(QLatin1Char('='));

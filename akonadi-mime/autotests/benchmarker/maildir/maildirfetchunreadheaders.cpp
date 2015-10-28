@@ -58,5 +58,5 @@ void MailDirFetchUnreadHeaders::runTest()
             }
         }
     }
-    outputStats(QLatin1String("unreadheaderlist"));
+    outputStats(QStringLiteral("unreadheaderlist"));
 }
