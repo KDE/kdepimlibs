@@ -55,13 +55,6 @@ public:
     /** Constructor - sets status initially to unknown. */
     MessageStatus();
 
-    /** Assign the status from another instance. The internal
-        representation is identical afterwards, i.e. a comparison
-        by operator == will return true.
-        @param other message status to copy from
-    */
-    MessageStatus &operator=(const MessageStatus &other);
-
     /** Compare the status with that from another instance.
         @return true if the stati are equal, false if different.
         @param other message status to compare with current object
