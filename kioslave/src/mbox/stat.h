@@ -33,20 +33,6 @@ class Stat
 {
 public:
     /**
-     * Empty constructor
-     */
-    Stat()
-    {
-    }
-
-    /**
-     * Emtpy destructor
-     */
-    ~Stat()
-    {
-    }
-
-    /**
      * This functions gives information with a given UrlInfo.
      * @param info The file information
      * @return The information of the file as destribed in UrlInfo.
