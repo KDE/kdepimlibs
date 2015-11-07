@@ -261,6 +261,7 @@ public:
 
 private:
     //@cond PRIVATE
+    Q_DISABLE_COPY(NoteMessageWrapper)
     class NoteMessageWrapperPrivate;
     NoteMessageWrapperPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(NoteMessageWrapper)

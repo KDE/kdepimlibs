@@ -18,8 +18,10 @@
  */
 #ifndef URLINFO_H
 #define URLINFO_H
-class QUrl;
 
+#include <qglobal.h>
+
+class QUrl;
 class QString;
 
 class UrlInfo
@@ -82,6 +84,7 @@ private:
     bool isMessage(const QUrl &url);
 
 private:
+    Q_DISABLE_COPY(UrlInfo)
     UrlType m_type;
     QString *m_filename;
     QString *m_id;
