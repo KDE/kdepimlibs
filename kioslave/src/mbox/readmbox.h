@@ -119,6 +119,7 @@ private:
     void close();
 
 private:
+    Q_DISABLE_COPY(ReadMBox)
     QFile *m_file;
     QTextStream *m_stream;
     QString m_current_line;

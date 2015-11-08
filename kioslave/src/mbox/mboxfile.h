@@ -18,6 +18,9 @@
  */
 #ifndef MBOXFILE_H
 #define MBOXFILE_H
+
+#include <qglobal.h>
+
 class MBoxProtocol;
 class UrlInfo;
 
@@ -64,5 +67,8 @@ protected:
      * A instance of the parent protocol, meant to throw errors if neccesairy.
      */
     MBoxProtocol *const m_mbox;
+private:
+    Q_DISABLE_COPY(MBoxFile)
 };
+
 #endif
