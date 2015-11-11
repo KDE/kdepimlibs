@@ -120,6 +120,7 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   MessageParts
   MessageStatus
   MarkAsCommand
+  MoveCommand
   RemoveDuplicatesJob
   SpecialMailCollections
   SpecialMailCollectionsDiscoveryJob
