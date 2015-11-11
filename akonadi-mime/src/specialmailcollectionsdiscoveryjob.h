@@ -31,7 +31,7 @@ class AKONADI_MIME_EXPORT SpecialMailCollectionsDiscoveryJob : public SpecialCol
 {
     Q_OBJECT
 public:
-    SpecialMailCollectionsDiscoveryJob(QObject *parent = Q_NULLPTR);
+    explicit SpecialMailCollectionsDiscoveryJob(QObject *parent = Q_NULLPTR);
 };
 
 }

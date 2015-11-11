@@ -33,8 +33,8 @@ class MarkAsCommand : public CommandBase
 {
     Q_OBJECT
 public:
-    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = 0);
-    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = 0);
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = Q_NULLPTR);
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = Q_NULLPTR);
     void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:

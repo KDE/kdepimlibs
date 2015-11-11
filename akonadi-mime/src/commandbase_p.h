@@ -27,7 +27,7 @@ class CommandBase : public QObject
     Q_OBJECT
 
 public:
-    explicit CommandBase(QObject *parent = 0);
+    explicit CommandBase(QObject *parent = Q_NULLPTR);
     virtual void execute() = 0;
 
     enum Result {

@@ -32,7 +32,7 @@ class MoveCommand : public CommandBase
 {
     Q_OBJECT
 public:
-    MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = 0);
+    MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = Q_NULLPTR);
     void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
