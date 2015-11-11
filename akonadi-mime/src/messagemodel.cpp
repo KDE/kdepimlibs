@@ -35,7 +35,7 @@ typedef KMime::Message::Ptr MessagePtr;
 
 using namespace Akonadi;
 
-class Akonadi::MessageModel::Private
+class Q_DECL_HIDDEN Akonadi::MessageModel::Private
 {
 public:
 };
