@@ -27,7 +27,7 @@ CommandBase::CommandBase(QObject *parent)
 
 void CommandBase::emitResult(Result value)
 {
-    emit result(value);
+    Q_EMIT result(value);
     deleteLater();
 }
 
