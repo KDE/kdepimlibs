@@ -20,7 +20,7 @@
 #ifndef MOVETOTRASHCOMMAND_H
 #define MOVETOTRASHCOMMAND_H
 
-#include "commandbase_p.h"
+#include "commandbase.h"
 
 #include <collection.h>
 #include <item.h>

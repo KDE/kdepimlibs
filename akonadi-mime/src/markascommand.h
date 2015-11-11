@@ -17,10 +17,11 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MOVECOMMAND_H
-#define MOVECOMMAND_H
+#ifndef MARKASCOMMAND_H
+#define MARKASCOMMAND_H
 
-#include "commandbase_p.h"
+#include "commandbase.h"
+#include "messagestatus.h"
 
 #include <collection.h>
 #include <item.h>
@@ -28,19 +29,27 @@
 #include <QList>
 
 class KJob;
-class MoveCommand : public CommandBase
+class MarkAsCommand : public CommandBase
 {
     Q_OBJECT
 public:
-    MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = Q_NULLPTR);
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = Q_NULLPTR);
+    MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = Q_NULLPTR);
     void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void slotMoveResult(KJob *job);
+    void slotFetchDone(KJob *job);
+    void slotModifyItemDone(KJob *job);
 
 private:
-    Akonadi::Collection mDestFolder;
+    void markMessages();
+
+    Akonadi::Collection::List mFolders;
     Akonadi::Item::List mMessages;
+    Akonadi::MessageStatus mTargetStatus;
+    int mMarkJobCount;
+    int mFolderListJobCount;
+    int mInvertMark;
 };
 
-#endif // MOVECOMMAND_H
+#endif // MARKASCOMMAND_H

@@ -17,9 +17,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "movetotrashcommand_p.h"
+#include "movetotrashcommand.h"
 #include "util_p.h"
-#include "movecommand_p.h"
+#include "movecommand.h"
 #include "imapsettings.h"
 #include "specialmailcollections.h"
 
@@ -152,4 +152,3 @@ Akonadi::Collection MoveToTrashCommand::findTrashFolder(const Akonadi::Collectio
     return Akonadi::Collection();
 }
 
-#include "moc_movetotrashcommand_p.cpp"

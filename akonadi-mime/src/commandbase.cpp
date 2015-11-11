@@ -17,7 +17,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "commandbase_p.h"
+#include "commandbase.h"
 
 CommandBase::CommandBase(QObject *parent)
     : QObject(parent)
@@ -31,4 +31,3 @@ void CommandBase::emitResult(Result value)
     deleteLater();
 }
 
-#include "moc_commandbase_p.cpp"

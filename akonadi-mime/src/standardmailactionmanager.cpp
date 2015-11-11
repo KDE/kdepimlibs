@@ -24,9 +24,9 @@
 #include "standardmailactionmanager.h"
 
 #include "akonadi_mime_debug.h"
-#include "emptytrashcommand_p.h"
-#include "markascommand_p.h"
-#include "movetotrashcommand_p.h"
+#include "emptytrashcommand.h"
+#include "markascommand.h"
+#include "movetotrashcommand.h"
 #include "specialmailcollections.h"
 #include "removeduplicatesjob.h"
 #include "util_p.h"

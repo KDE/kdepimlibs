@@ -17,7 +17,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "movecommand_p.h"
+#include "movecommand.h"
 #include "util_p.h"
 
 #include <itemmovejob.h>
@@ -58,4 +58,3 @@ void MoveCommand::slotMoveResult(KJob *job)
     }
 }
 
-#include "moc_movecommand_p.cpp"

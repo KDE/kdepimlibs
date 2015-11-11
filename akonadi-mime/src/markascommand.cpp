@@ -17,7 +17,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "markascommand_p.h"
+#include "markascommand.h"
 #include "util_p.h"
 #include "akonadi_mime_debug.h"
 #include <itemfetchjob.h>
@@ -152,4 +152,3 @@ void MarkAsCommand::slotModifyItemDone(KJob *job)
     }
 }
 
-#include "moc_markascommand_p.cpp"

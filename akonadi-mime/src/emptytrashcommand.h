@@ -20,7 +20,7 @@
 #ifndef EMPTYTRASHCOMMAND_P_H
 #define EMPTYTRASHCOMMAND_P_H
 
-#include "commandbase_p.h"
+#include "commandbase.h"
 
 #include <agentinstance.h>
 #include <collection.h>
