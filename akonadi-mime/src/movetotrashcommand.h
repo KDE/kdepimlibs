@@ -29,6 +29,8 @@
 
 class QAbstractItemModel;
 class KJob;
+namespace Akonadi
+{
 class MoveToTrashCommand : public CommandBase
 {
     Q_OBJECT
@@ -55,5 +57,5 @@ private:
     const QAbstractItemModel *mModel;
     int mFolderListJobCount;
 };
-
+}
 #endif // MOVETOTRASHCOMMAND_H

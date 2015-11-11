@@ -29,6 +29,8 @@
 #include <QList>
 
 class KJob;
+namespace Akonadi
+{
 class MarkAsCommand : public CommandBase
 {
     Q_OBJECT
@@ -51,5 +53,5 @@ private:
     int mFolderListJobCount;
     int mInvertMark;
 };
-
+}
 #endif // MARKASCOMMAND_H

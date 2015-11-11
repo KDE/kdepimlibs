@@ -23,7 +23,7 @@
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 #include <itemmodifyjob.h>
-
+using namespace Akonadi;
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert, QObject *parent)
     : CommandBase(parent)
 {

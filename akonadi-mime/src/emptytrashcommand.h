@@ -27,7 +27,8 @@
 
 class QAbstractItemModel;
 class KJob;
-
+namespace Akonadi
+{
 class EmptyTrashCommand : public CommandBase
 {
     Q_OBJECT
@@ -56,5 +57,5 @@ private:
     Akonadi::Collection mFolder;
     int mNumberOfTrashToEmpty;
 };
-
+}
 #endif // EMPTYTRASHCOMMAND_P_H

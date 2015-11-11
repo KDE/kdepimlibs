@@ -28,6 +28,8 @@
 #include <QList>
 
 class KJob;
+namespace Akonadi
+{
 class MoveCommand : public CommandBase
 {
     Q_OBJECT
@@ -42,5 +44,5 @@ private:
     Akonadi::Collection mDestFolder;
     Akonadi::Item::List mMessages;
 };
-
+}
 #endif // MOVECOMMAND_H

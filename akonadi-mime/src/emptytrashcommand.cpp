@@ -31,7 +31,7 @@
 #include <itemdeletejob.h>
 #include <agentmanager.h>
 #include <kmime/kmime_message.h>
-
+using namespace Akonadi;
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel *model, QObject *parent)
     : CommandBase(parent)
     , mModel(model)

@@ -18,7 +18,7 @@
 */
 
 #include "commandbase.h"
-
+using namespace Akonadi;
 CommandBase::CommandBase(QObject *parent)
     : QObject(parent)
 {

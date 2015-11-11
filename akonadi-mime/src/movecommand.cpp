@@ -22,7 +22,7 @@
 
 #include <itemmovejob.h>
 #include <itemdeletejob.h>
-
+using namespace Akonadi;
 MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
                          const Akonadi::Item::List &msgList,
                          QObject *parent)

@@ -21,7 +21,8 @@
 #define COMMANDBASE_H
 
 #include <QtCore/QObject>
-
+namespace Akonadi
+{
 class CommandBase : public QObject
 {
     Q_OBJECT
@@ -43,5 +44,5 @@ Q_SIGNALS:
 protected Q_SLOTS:
     virtual void emitResult(Result result);
 };
-
+}
 #endif // COMMANDBASE_H

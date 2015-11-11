@@ -26,7 +26,7 @@
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 #include <entitytreemodel.h>
-
+using namespace Akonadi;
 MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel *model, const Akonadi::Collection::List &folders, QObject *parent)
     : CommandBase(parent)
 {
