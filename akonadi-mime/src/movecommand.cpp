@@ -23,26 +23,46 @@
 #include <itemmovejob.h>
 #include <itemdeletejob.h>
 using namespace Akonadi;
+
+class Akonadi::MoveCommandPrivate
+{
+public:
+    MoveCommandPrivate()
+    {
+
+    }
+    Akonadi::Collection mDestFolder;
+    Akonadi::Item::List mMessages;
+};
+
+
+
 MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
                          const Akonadi::Item::List &msgList,
                          QObject *parent)
-    : CommandBase(parent)
+    : CommandBase(parent),
+      d(new Akonadi::MoveCommandPrivate())
 {
-    mDestFolder = destFolder;
-    mMessages = msgList;
+    d->mDestFolder = destFolder;
+    d->mMessages = msgList;
+}
+
+MoveCommand::~MoveCommand()
+{
+    delete d;
 }
 
 void MoveCommand::execute()
 {
-    if (mMessages.isEmpty()) {
+    if (d->mMessages.isEmpty()) {
         emitResult(OK);
         return;
     }
-    if (mDestFolder.isValid()) {
-        Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mMessages, mDestFolder, this);
+    if (d->mDestFolder.isValid()) {
+        Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(d->mMessages, d->mDestFolder, this);
         connect(job, &Akonadi::ItemMoveJob::result, this, &MoveCommand::slotMoveResult);
     } else {
-        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mMessages, this);
+        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(d->mMessages, this);
         connect(job, &Akonadi::ItemDeleteJob::result, this, &MoveCommand::slotMoveResult);
     }
 }

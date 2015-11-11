@@ -21,7 +21,7 @@
 #define MOVECOMMAND_H
 
 #include "commandbase.h"
-
+#include "akonadi-mime_export.h"
 #include <collection.h>
 #include <item.h>
 
@@ -30,19 +30,20 @@
 class KJob;
 namespace Akonadi
 {
-class MoveCommand : public CommandBase
+class MoveCommandPrivate;
+class AKONADI_MIME_EXPORT MoveCommand : public CommandBase
 {
     Q_OBJECT
 public:
     MoveCommand(const Akonadi::Collection &destFolder, const Akonadi::Item::List &msgList, QObject *parent = Q_NULLPTR);
+    ~MoveCommand();
     void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotMoveResult(KJob *job);
 
 private:
-    Akonadi::Collection mDestFolder;
-    Akonadi::Item::List mMessages;
+    MoveCommandPrivate *const d;
 };
 }
 #endif // MOVECOMMAND_H
