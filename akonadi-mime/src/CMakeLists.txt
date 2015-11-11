@@ -113,11 +113,13 @@ ecm_generate_headers(AkonadiMime_CamelCase_HEADERS
   HEADER_NAMES
 
   AddressAttribute
+  CommandBase
   MessageFlags
   MessageFolderAttribute
   MessageModel
   MessageParts
   MessageStatus
+  MarkAsCommand
   RemoveDuplicatesJob
   SpecialMailCollections
   SpecialMailCollectionsDiscoveryJob

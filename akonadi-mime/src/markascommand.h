@@ -27,16 +27,19 @@
 #include <item.h>
 
 #include <QList>
+#include "akonadi-mime_export.h"
 
 class KJob;
 namespace Akonadi
 {
-class MarkAsCommand : public CommandBase
+class MarkAsCommandPrivate;
+class AKONADI_MIME_EXPORT MarkAsCommand : public CommandBase
 {
     Q_OBJECT
 public:
     MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert = false, QObject *parent = Q_NULLPTR);
     MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert = false, QObject *parent = Q_NULLPTR);
+    ~MarkAsCommand();
     void execute() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
@@ -45,13 +48,7 @@ private Q_SLOTS:
 
 private:
     void markMessages();
-
-    Akonadi::Collection::List mFolders;
-    Akonadi::Item::List mMessages;
-    Akonadi::MessageStatus mTargetStatus;
-    int mMarkJobCount;
-    int mFolderListJobCount;
-    int mInvertMark;
+    MarkAsCommandPrivate *const d;
 };
 }
 #endif // MARKASCOMMAND_H
