@@ -21,9 +21,10 @@
 #define COMMANDBASE_H
 
 #include <QtCore/QObject>
+#include "akonadi-mime_export.h"
 namespace Akonadi
 {
-class CommandBase : public QObject
+class AKONADI_MIME_EXPORT CommandBase : public QObject
 {
     Q_OBJECT
 
