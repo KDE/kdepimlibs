@@ -1103,10 +1103,9 @@ void POP3Protocol::listDir(const QUrl &url)
         entry.insert(KIO::UDSEntry::UDS_SIZE, realGetSize(i + 1));
         entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IWUSR);
 
-        listEntry(entry, false);
+        listEntry(entry);
         entry.clear();
     }
-    listEntry(entry, true);       // ready
 
     finished();
 }

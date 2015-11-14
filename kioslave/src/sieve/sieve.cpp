@@ -934,11 +934,9 @@ void kio_sieveProtocol::listDir(const QUrl &url)
             //asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 
             ksDebug << "Listing script " << r.getKey() << endl;
-            listEntry(entry, false);
+            listEntry(entry);
         }
     }
-
-    listEntry(entry, true);
 
     finished();
 }
