@@ -20,6 +20,7 @@
 
 #include <QString>
 #include <QVariantMap>
+#include <QJsonDocument>
 
 class Akonadi::SocialNetworkAttributesPrivate
 {
@@ -51,20 +52,14 @@ Akonadi::SocialNetworkAttributes::~SocialNetworkAttributes()
 
 void Akonadi::SocialNetworkAttributes::deserialize(const QByteArray &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    d->attributes = parser.parse(data).toMap();
-#endif
+    auto doc = QJsonDocument::fromJson(data);
+    d->attributes = doc.toVariant().toMap();
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
-#if 0 //QT5
-    QJson::Serializer serializer;
-    return serializer.serialize(d->attributes);
-#else
-    return QByteArray();
-#endif
+    auto doc = QJsonDocument::fromVariant(d->attributes);
+    return doc.toJson(QJsonDocument::Compact);
 }
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
