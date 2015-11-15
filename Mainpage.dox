@@ -10,67 +10,6 @@
  * - <a href="akonadi/html/index.html"><b>Akonadi</b></a>.
  *   <i>A client access library for using the Akonadi PIM data server.</i>
  *
- * - <a href="kabc/html/index.html"><b>kabc</b></a>.
- *   <i>An API for the KDE Addressbook.</i>
- *
- * - <a href="kalarmcal/html/index.html"><b>kalarmcal</b></a>.
- *   <i>An API for KAlarm alarms.</i>
- *
- * - <a href="kblog/html/index.html"><b>kblog</b></a>.
- *   <i>An API for weblogging access.</i>
- *
- * - <a href="kcalcore/html/index.html"><b>kcalcore</b></a>.
- *   <i>An API for the iCalendar and vCalendar formats.</i>
- *
- * - <a href="kcalutils/html/index.html"><b>kcalutils</b></a>.
- *   <i>Utility and user interface functions for accessing calendar data
- *   using the <a href="kcalcore/html/index.html">kcalcore</a> API</i>.
- *
- * - <a href="kholidays/html/index.html"><b>kholidays</b></a>.
- *   <i>A library for calendar holidays.</i>
- *
- * - <a href="kimap/html/index.html"><b>kimap</b></a>.
- *   <i>An API for IMAP support.</i>
- *
- * - <a href="kldap/html/index.html"><b>kldap</b></a>.
- *   <i>An API for accessing LDAP.</i>
- *
- * - <a href="kmbox/html/index.html"><b>kmbox</b></a>.
- *   <i>A library for accessing mail storages in MBox format.</i>
- *
- * - <a href="kmime/html/index.html"><b>kmime</b></a>.
- *   <i>A library for MIME handling.</i>
- *
- * - <a href="kontactinterface/html/index.html"><b>kontactinterface</b></a>
- *   <i>The glue for embedding KParts into Kontact.</i>
- *
- * - <a href="kpimidentities/html/index.html"><b>kpimidentities</b></a>
- *   <i>Library for shared identities between mail applications.</i>
- *
- * - <a href="kpimtextedit/html/index.html"><b>kpimtextedit</b></a>.
- *   <i>A library for PIM-specific text editing utilities.</i>
- *
- * - <a href="kpimutils/html/index.html"><b>kpimutils</b></a>.
- *   <i>A library for general purpose PIM utilities.</i>
- *
- * - <a href="kresources/html/index.html"><b>kresources</b></a>.
- *   <i>The KDE Resource framework.</i>
- *
- * - <a href="ktnef/html/index.html"><b>ktnef</b></a>.
- *   <i>An API for the handling of TNEF data.</i>
- *
- * - <a href="kxmlrpcclient/html/index.html"><b>kxmlrpcclient</b></a>.
- *   <i>An XML-RPC client library.</i>
- *
- * - <a href="mailtransport/html/index.html"><b>mailtransport</b></a>.
- *   <i>An API and support code for managing mail transport.</i>
- *
- * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>.
- *   <i>A C++ wrapper for gpgme.</i>
- *
- * - <a href="syndication/html/index.html"><b>syndication</b></a>.
- *   <i>An RSS feed handling library.</i>
- *
  * @b Read about the KDE-PIM architecture by visiting
  * the <a href="http://techbase.kde.org/Projects/kdepim">KDE PIM Project Page on Techbase</a>.
  *
