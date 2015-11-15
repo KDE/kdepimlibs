@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi-Notes)
 
 # ECM setup
-find_package(ECM 5.14.0 CONFIG REQUIRED)
+find_package(ECM 5.16.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.16.0")
-set(KDEPIMLIBS_VERSION "5.0.49")
+set(KDEPIMLIBS_VERSION "5.0.80")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIMELIB_VERSION "4.83.0")
 
