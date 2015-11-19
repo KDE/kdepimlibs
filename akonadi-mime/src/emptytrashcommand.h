@@ -49,7 +49,7 @@ private:
     void expunge(const Akonadi::Collection &col);
     Akonadi::AgentInstance::List agentInstances();
     Akonadi::Collection trashCollectionFolder();
-    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
+    Akonadi::Collection collectionFromId(Akonadi::Collection::Id id) const;
     bool folderIsTrash(const Akonadi::Collection &col);
 
     const QAbstractItemModel *mModel;

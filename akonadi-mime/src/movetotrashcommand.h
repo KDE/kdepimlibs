@@ -49,7 +49,7 @@ private:
     Akonadi::Collection trashCollectionFromResource(const Akonadi::Collection &col);
     Akonadi::Collection trashCollectionFolder();
     Akonadi::Collection findTrashFolder(const Akonadi::Collection &folder);
-    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
+    Akonadi::Collection collectionFromId(Collection::Id id) const;
 
     Akonadi::Collection::List mFolders;
     Akonadi::Item::List mMessages;

@@ -156,7 +156,7 @@ Akonadi::AgentInstance::List EmptyTrashCommand::agentInstances()
     return relevantInstances;
 }
 
-Akonadi::Collection EmptyTrashCommand::collectionFromId(const Akonadi::Collection::Id &id) const
+Akonadi::Collection EmptyTrashCommand::collectionFromId(Collection::Id id) const
 {
     const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(
                                 mModel, Akonadi::Collection(id));
