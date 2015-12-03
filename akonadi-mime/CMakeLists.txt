@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.16.0")
-set(KDEPIMLIBS_VERSION "5.0.81")
+set(KDEPIMLIBS_VERSION "5.0.90")
 set(KF5_MIME_VERSION "4.85.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADIMIME
