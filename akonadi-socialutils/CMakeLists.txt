@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.16.0")
-set(KDEPIMLIBS_VERSION "5.0.90")
+set(KDEPIMLIBS_VERSION "5.1")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADISOCIALUTILS
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-socialutils_version.h"
