@@ -4,7 +4,7 @@ set(pop3_optional_includes)
 set(pop3_optional_libs)
 
 if(Sasl2_FOUND)
-   set(pop3_optional_includes ${pop3_optional_includes} ${Sasl2_INCLUDE_DIR})
+   set(pop3_optional_includes ${pop3_optional_includes} ${Sasl2_INCLUDE_DIRS})
    set(pop3_optional_libs     ${pop3_optional_libs}     ${Sasl2_LIBRARIES})
    set(HAVE_LIBSASL2 1)
 else()

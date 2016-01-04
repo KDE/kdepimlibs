@@ -7,7 +7,7 @@ set(smtp_optional_includes)
 set(smtp_optional_libs)
 
 if (Sasl2_FOUND)
-   set(smtp_optional_includes ${smtp_optional_includes} ${Sasl2_INCLUDE_DIR})
+   set(smtp_optional_includes ${smtp_optional_includes} ${Sasl2_INCLUDE_DIRS})
    set(smtp_optional_libs     ${smtp_optional_libs}     ${Sasl2_LIBRARIES})
 endif()
 
