@@ -15,7 +15,6 @@ if (KDEPIMLIBS_SUPERBUILD)
 include(SuperBuild.cmake)
 
 
-sb_add_project(akonadi)
 sb_add_project(akonadi-mime)
 sb_add_project(akonadi-contact)
 sb_add_project(akonadi-notes)
@@ -29,7 +28,6 @@ add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 
 # These subdirectories don't depend on anything from kdepimlibs.
 # They shall be built first
-add_subdirectory(akonadi)
 add_subdirectory(akonadi-mime)
 add_subdirectory(akonadi-contact)
 add_subdirectory(akonadi-notes)
