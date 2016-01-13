@@ -154,9 +154,9 @@ bool ICalFormat::fromRawString(const Calendar::Ptr &cal, const QByteArray &strin
     icalcomponent *calendar;
 
     // Let's defend const correctness until the very gates of hell^Wlibical
-    calendar = icalcomponent_new_from_string(const_cast<char*>((const char *)string));
+    calendar = icalcomponent_new_from_string(const_cast<char*>(string.constData()));
     if (!calendar) {
-        kError() << "parse error ; string is empty?" << string.isEmpty();
+        kError() << "parse error from icalcomponent_new_from_string. string=" << QString::fromLatin1(string);
         setException(new Exception(Exception::ParseErrorIcal));
         return false;
     }
