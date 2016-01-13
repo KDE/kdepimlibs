@@ -18,9 +18,9 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.17.0")
-set(KDEPIMLIBS_VERSION "5.1.42")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIMELIB_VERSION "5.1.40")
+set(AKONADI_VERSION "5.1.52")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_version.h"
@@ -34,13 +34,7 @@ find_package(Qt5Xml ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIMELIB_VERSION} CONFIG REQUIRED)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Notes_SOURCE_DIR})
-  find_package(KF5Akonadi CONFIG REQUIRED)
-else()
-  # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
-  # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
-  find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
-endif()
+find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
 
 ########### Targets ###########
 

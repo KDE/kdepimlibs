@@ -36,18 +36,10 @@ find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KF5_MIME_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemModels ${KF5_MIME_VERSION} CONFIG REQUIRED)
 
+find_package(KF5Akonadi ${KDEPIMLIBS_VERSION} CONFIG REQUIRED)
 
 set( SHARED_MIME_INFO_MINIMUM_VERSION "0.40" )
 find_package( SharedMimeInfo REQUIRED )
-
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${Akonadi-Mime_SOURCE_DIR})
-  find_package(KF5Akonadi CONFIG REQUIRED)
-else()
-  # IMPORTED targets are scoped, so KF5::AkonadiPrivate found in ../akonadi
-  # won't work here, and it is a PUBLIC dependency of KF5::Akonadi
-  find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
-endif()
 
 find_package(LibXslt)
 set_package_properties(LibXslt PROPERTIES
