@@ -11,8 +11,8 @@
 #include "nntp.h"
 
 #include <sys/stat.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <cmath>
 #include <QUrl>
 
 #include <QDir>
