@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi-Notes)
 
 # ECM setup
-find_package(ECM 5.16.0 CONFIG REQUIRED)
+find_package(ECM 5.17.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
@@ -17,10 +17,10 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
-set(KF5_VERSION "5.16.0")
+set(KF5_VERSION "5.17.0")
 set(KDEPIMLIBS_VERSION "5.1.42")
 set(QT_REQUIRED_VERSION "5.4.0")
-set(KMIMELIB_VERSION "4.83.0")
+set(KMIMELIB_VERSION "5.1.40")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_version.h"

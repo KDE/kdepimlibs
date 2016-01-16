@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(kioslave)
 
 # ECM setup
-find_package(ECM 5.16.0 CONFIG REQUIRED)
+find_package(ECM 5.17.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 set(CMAKE_MODULE_PATH ${kioslave_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
@@ -20,10 +20,10 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
-set(KF5_VERSION "5.16.0")
+set(KF5_VERSION "5.17.0")
 set(KDEPIMLIBS_VERSION "5.1.42")
-set(MBOXLIB_VERSION "4.79.0")
-set(LDABLIB_VERSION "4.79.0")
+set(MBOXLIB_VERSION "5.1.40")
+set(LDABLIB_VERSION "5.1.40")
 find_package(Sasl2)
 set_package_properties(Sasl2 PROPERTIES
                              DESCRIPTION "The Cyrus-sasl library"
