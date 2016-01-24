@@ -46,7 +46,6 @@ Identity::Identity( const QString &id, const QString &fullName,
   setProperty( QLatin1String(s_email), emailAddr );
   setProperty( QLatin1String(s_organization), organization );
   setProperty( QLatin1String(s_replyto), replyToAddr );
-  setDictionary( Sonnet::defaultLanguageName() );
   setProperty( QLatin1String(s_disabledFcc), false );
   setProperty( QLatin1String(s_defaultDomainName), QHostInfo::localHostName());
 }
@@ -69,11 +68,6 @@ bool Identity::isNull() const
   while ( i != mPropertiesMap.constEnd() ) {
     // Take into account that the defaultDomainName for a null identity is not empty
     if ( i.key() == QLatin1String(s_defaultDomainName) ) {
-      ++i;
-      continue;
-    }
-    // Take into account that the dictionary for a null identity is not empty
-    if ( i.key() == QLatin1String(s_dict) ) {
       ++i;
       continue;
     }
@@ -434,7 +428,11 @@ QString Identity::xface() const
 
 QString Identity::dictionary() const
 {
-  return property( QLatin1String( s_dict ) ).toString();
+  const QString dict = property( QLatin1String( s_dict ) ).toString();
+  if (dict.isEmpty()) {
+      return Sonnet::defaultLanguageName(); // this is slow, so do it on demand
+  }
+  return QString();
 }
 
 QString Identity::templates() const
