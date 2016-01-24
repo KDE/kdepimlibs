@@ -31,6 +31,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <kglobal.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <ksharedconfig.h>
 #include <kuser.h>
 #include <kconfiggroup.h>
 
@@ -90,11 +91,11 @@ IdentityManager::IdentityManager( bool readonly, QObject *parent,
     commit();
   }
 
-  KConfig kmailConf( QLatin1String("kmail2rc") );
+  KSharedConfig::Ptr kmailConf(KSharedConfig::openConfig(QLatin1String("kmail2rc")));
   if (!mReadOnly) {
     bool needCommit = false;
-    if (kmailConf.hasGroup(QLatin1String("Composer"))) {
-      KConfigGroup composerGroup = kmailConf.group(QLatin1String("Composer"));
+    if (kmailConf->hasGroup(QLatin1String("Composer"))) {
+      KConfigGroup composerGroup = kmailConf->group(QLatin1String("Composer"));
       if (composerGroup.hasKey(QLatin1String("pgp-auto-sign"))) {
         const bool pgpAutoSign = composerGroup.readEntry(QLatin1String("pgp-auto-sign"), false);
         QList<Identity>::iterator end = mIdentities.end();
@@ -106,8 +107,8 @@ IdentityManager::IdentityManager( bool readonly, QObject *parent,
         needCommit = true;
       }
     }
-    if (kmailConf.hasGroup(QLatin1String("General"))) {
-      KConfigGroup generalGroup = kmailConf.group(QLatin1String("General"));
+    if (kmailConf->hasGroup(QLatin1String("General"))) {
+      KConfigGroup generalGroup = kmailConf->group(QLatin1String("General"));
       if (generalGroup.hasKey(QLatin1String("Default domain"))) {
          QString defaultDomain = generalGroup.readEntry(QLatin1String("Default domain"));
          if (defaultDomain.isEmpty()) {
