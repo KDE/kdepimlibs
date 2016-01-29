@@ -460,26 +460,6 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   mainLayout->setColumnStretch( 2, 1 );
 
   mainLayout->setRowStretch( 2, 1 );
-#if 0
-  QGroupBox *datesGroupBox = new QGroupBox( i18nc( "@title:group Date related properties of a contact", "Dates" ) );
-  QGroupBox *familyGroupBox = new QGroupBox( i18nc( "@title:group Family related properties of a contact", "Family" ) );
-
-  layout->addWidget( datesGroupBox );
-  layout->addWidget( familyGroupBox );
-
-  QGridLayout *datesLayout = new QGridLayout( datesGroupBox );
-  QGridLayout *familyLayout = new QGridLayout( familyGroupBox );
-
-
-
-  datesLayout->setRowStretch( 2, 1 );
-  datesLayout->setColumnStretch( 1, 1 );
-
-  // widgets from family group
-  familyLayout->addWidget( mPartnerWidget, 0, 1 );
-
-  familyLayout->setRowStretch( 1, 1 );
-#endif
 }
 
 void ContactEditorWidget::Private::initGuiNotesTab()
