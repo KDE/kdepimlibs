@@ -351,6 +351,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
 
   mOrganizationWidget = new KLineEdit;
   mOrganizationWidget->setTrapReturnKey(true);
+  mOrganizationWidget->setClickMessage(i18n("Add organization's name"));
   label->setBuddy( mOrganizationWidget );
   generalLayout->addWidget( mOrganizationWidget, 0, 1 );
 
@@ -359,6 +360,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 1, 0 );
 
   mProfessionWidget = new KLineEdit;
+  mProfessionWidget->setClickMessage(i18n("Add profession"));
   mProfessionWidget->setTrapReturnKey(true);
   label->setBuddy( mProfessionWidget );
   generalLayout->addWidget( mProfessionWidget, 1, 1 );
@@ -368,6 +370,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 2, 0 );
 
   mTitleWidget = new KLineEdit;
+  mTitleWidget->setClickMessage(i18n("Add the title"));
   mTitleWidget->setTrapReturnKey(true);
   label->setBuddy( mTitleWidget );
   generalLayout->addWidget( mTitleWidget , 2, 1 );
@@ -377,6 +380,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 3, 0 );
 
   mDepartmentWidget = new KLineEdit;
+  mDepartmentWidget->setClickMessage(i18n("Add the department"));
   mDepartmentWidget->setTrapReturnKey(true);
   label->setBuddy( mDepartmentWidget );
   generalLayout->addWidget( mDepartmentWidget, 3, 1 );
@@ -387,6 +391,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
 
   mOfficeWidget = new KLineEdit;
   mOfficeWidget->setTrapReturnKey(true);
+  mOfficeWidget->setClickMessage(i18n("Add the office"));
   label->setBuddy( mOfficeWidget );
   generalLayout->addWidget( mOfficeWidget, 4, 1 );
 
@@ -395,6 +400,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 5, 0 );
 
   mManagerWidget = new KLineEdit;
+  mManagerWidget->setClickMessage(i18n("Add manager's name"));
   mManagerWidget->setTrapReturnKey(true);
   label->setBuddy( mManagerWidget );
   generalLayout->addWidget( mManagerWidget, 5, 1 );
@@ -404,6 +410,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   generalLayout->addWidget( label, 6, 0 );
 
   mAssistantWidget = new KLineEdit;
+  mAssistantWidget->setClickMessage(i18n("Add assistant's name"));
   mAssistantWidget->setTrapReturnKey(true);
   label->setBuddy( mAssistantWidget );
   generalLayout->addWidget( mAssistantWidget, 6, 1 );
