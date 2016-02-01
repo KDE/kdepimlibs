@@ -406,8 +406,10 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   // setup groupware group box
   label = new QLabel( i18nc( "@label The free/busy information of a contact", "Free/Busy:" ) );
   generalLayout->addWidget( label, 7, 2 );
+  label->hide();
 
   mFreeBusyWidget = new FreeBusyEditWidget;
+  mFreeBusyWidget->hide();
   label->setBuddy( mFreeBusyWidget );
   generalLayout->addWidget( mFreeBusyWidget, 8, 2 );
   generalLayout->setRowStretch( 9, 1 );
