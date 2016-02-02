@@ -140,22 +140,22 @@ void SpecialMailCollections::verifyI18nDefaultCollection(Type type)
 
     switch (type) {
     case SpecialMailCollections::Inbox:
-        defaultI18n = i18nc("local mail folder", "inbox");
+        defaultI18n = i18nc("local mail folder", "Inbox");
         break;
     case SpecialMailCollections::Outbox:
-        defaultI18n = i18nc("local mail folder", "outbox");
+        defaultI18n = i18nc("local mail folder", "Outbox");
         break;
     case SpecialMailCollections::SentMail:
-        defaultI18n = i18nc("local mail folder", "sent-mail");
+        defaultI18n = i18nc("local mail folder", "Sent mail");
         break;
     case SpecialMailCollections::Trash:
-        defaultI18n = i18nc("local mail folder", "trash");
+        defaultI18n = i18nc("local mail folder", "Trash");
         break;
     case SpecialMailCollections::Drafts:
-        defaultI18n = i18nc("local mail folder", "drafts");
+        defaultI18n = i18nc("local mail folder", "Drafts");
         break;
     case SpecialMailCollections::Templates:
-        defaultI18n = i18nc("local mail folder", "templates");
+        defaultI18n = i18nc("local mail folder", "Templates");
         break;
     default:
         break;
