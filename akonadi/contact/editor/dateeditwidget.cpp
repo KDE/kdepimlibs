@@ -30,15 +30,13 @@
 
 #include <QContextMenuEvent>
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QToolButton>
 
 DateView::DateView(QWidget *parent)
-    : QLabel(parent)
+    : KLineEdit(parent)
 {
-    setTextInteractionFlags(Qt::TextSelectableByMouse);
-    setFrameShape(QFrame::StyledPanel);
-    setFrameShadow(QFrame::Sunken);
+    setClickMessage(i18n("Click to Add Date"));
+    setReadOnly(true);
 }
 
 void DateView::contextMenuEvent(QContextMenuEvent *event)
