@@ -158,6 +158,9 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
         noTextOption->text.clear();
     }
+    if (!index.parent().isValid()) {
+        noTextOption->icon = QIcon();
+    }
 
     if (d->animator) {
 
@@ -210,6 +213,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     QStyleOptionViewItemV4 option4 = option;
     QStyledItemDelegate::initStyleOption(&option4, index);
     QString text = option4.text;
+    if (!index.parent().isValid())
+        text = text.toUpper();
 
     // Now calculate the rectangle for the text
     QStyle *s = d->parent->style();
@@ -224,6 +229,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     if (option.state & QStyle::State_Selected) {
         painter->setPen(textColor.isValid() ? textColor : option.palette.highlightedText().color());
+    } else if (!index.parent().isValid()){
+        painter->setPen(option.palette.color(QPalette::Midlight));
     }
 
     Collection collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
