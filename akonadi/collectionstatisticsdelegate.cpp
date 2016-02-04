@@ -25,6 +25,7 @@
 #include <kdebug.h>
 #include <kio/global.h>
 
+#include <QApplication>
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOption>
@@ -268,22 +269,24 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         QString unread;
 //     qDebug() << expanded << unreadCount << unreadRecursiveCount;
         if (expanded && unreadCount > 0) {
-            unread = QString::fromLatin1(" (%1)").arg(unreadCount);
+            unread = QString::fromLatin1("%1").arg(unreadCount);
         } else if (!expanded) {
             if (unreadCount != unreadRecursiveCount) {
-                unread = QString::fromLatin1(" (%1 + %2)").arg(unreadCount).arg(unreadRecursiveCount - unreadCount);
+                unread = QString::fromLatin1("%1 + %2").arg(unreadCount).arg(unreadRecursiveCount - unreadCount);
             } else if (unreadCount > 0) {
-                unread = QString::fromLatin1(" (%1)").arg(unreadCount);
+                unread = QString::fromLatin1("%1").arg(unreadCount);
             }
         }
 
         PainterStateSaver stateSaver(painter);
 
+#if 0
         if (!unread.isEmpty()) {
             QFont font = painter->font();
             font.setBold(true);
             painter->setFont(font);
         }
+#endif
 
         const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
         const QRect iconRect = s->subElementRect(QStyle::SE_ItemViewItemDecoration, &option4, widget);
@@ -304,17 +307,27 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
                 folderWidth = fm.width(folderName);
             }
             QRect folderRect = textRect;
-            QRect unreadRect = textRect;
             folderRect.setRight(textRect.left() + folderWidth);
-            unreadRect = QRect(folderRect.right(), folderRect.top(), unreadRect.width(), unreadRect.height());
+
+            const int unreadSize = qMax(unreadWidth + 4, fm.height() + 4);
+            const QRect unreadRect(textRect.right() - unreadSize - 20 - 4,
+                                   textRect.top() + (textRect.height() - fm.height() - 4) / 2,
+                                   unreadSize,
+                                   unreadSize);
+
+#if 0
             if (textColor.isValid()) {
                 painter->setPen(textColor);
             }
+#endif
 
             // Draw folder name and unread count
             painter->drawText(folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName);
-            painter->setPen(unreadColor);
-            painter->drawText(unreadRect, Qt::AlignLeft | Qt::AlignVCenter, unread);
+
+            if (!unread.isEmpty()) {
+                painter->fillRect(unreadRect, qApp->palette().color(QPalette::Inactive, QPalette::Highlight));
+                painter->drawText(unreadRect, Qt::AlignCenter, unread);
+            }
         } else if (option.decorationPosition == QStyleOptionViewItem::Top) {
             if (unreadCount > 0) {
                 // draw over the icon
