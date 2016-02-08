@@ -162,6 +162,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
     if (!index.parent().isValid()) {
         noTextOption->icon = QIcon();
     }
+    noTextOption->decorationSize = QSize(20, 20);
 
     if (d->animator) {
 
