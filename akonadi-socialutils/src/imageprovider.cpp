@@ -240,7 +240,8 @@ QImage Akonadi::ImageProvider::loadImage(const QString &who, const QUrl &url,
 void Akonadi::ImageProvider::abortAllJobs()
 {
     Q_D(ImageProvider);
-    Q_FOREACH (KJob *job, d->jobs.keys()) {
+    for (auto it = d->jobs.cbegin(), end = d->jobs.cend(); it != end; ++it) {
+        KJob *job = it.key();
         job->kill();
         d->jobs.remove(job);
         d->jobData.remove(job);
