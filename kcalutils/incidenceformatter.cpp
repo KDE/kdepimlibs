@@ -2427,7 +2427,7 @@ static QString invitationAttendeeList(const Incidence::Ptr &incidence)
                 if (!a->delegate().isEmpty()) {
                     comments << i18n("delegated to %1", a->delegate());
                 }
-                tmpStr += invitationPerson(a->email(), a->name(), QString(), comments.join(QLatin1String(",")));
+                tmpStr += invitationPerson(a->email(), a->name(), QString(), comments.join(i18nc("Comment list separator", ", ")));
                 tmpStr += QLatin1String("<br>\n");
             }
         }
@@ -2486,7 +2486,7 @@ static QString invitationRsvpList(const Incidence::Ptr &incidence, const Attende
                 if (!a->delegate().isEmpty()) {
                     comments << i18n("delegated to %1", a->delegate());
                 }
-                tmpStr += invitationPerson(a->email(), a->name(), QString(), comments.join(QLatin1String(",")));
+                tmpStr += invitationPerson(a->email(), a->name(), QString(), comments.join(i18nc("Comment list separator", ", ")));
                 tmpStr += QLatin1String(" ") + statusStr + QLatin1String("<br>\n");
             }
         }
