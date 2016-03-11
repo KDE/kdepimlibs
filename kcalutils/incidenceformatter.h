@@ -135,14 +135,11 @@ KCALUTILS_EXPORT QString mailBodyStr(const KCalCore::IncidenceBase::Ptr &inciden
   which will be intrepreted as an invitation.
   @param calendar is a pointer to the Calendar that owns the invitation.
   @param helper is a pointer to an InvitationFormatterHelper.
-  @param outlookCompareStyle if true, display updated invitation comparisons in the style
-  of Microsoft Outlook (tm); else use our own "classic" style.
 */
 KCALUTILS_EXPORT QString formatICalInvitation(
     QString invitation,
     const KCalCore::MemoryCalendar::Ptr &calendar,
-    InvitationFormatterHelper *helper,
-    bool outlookCompareStyle);
+    InvitationFormatterHelper *helper);
 
 /**
   Deliver an HTML formatted string displaying an invitation.
@@ -155,15 +152,26 @@ KCALUTILS_EXPORT QString formatICalInvitation(
   @param calendar is a pointer to the Calendar that owns the invitation.
   @param helper is a pointer to an InvitationFormatterHelper.
   @param sender is a QString containing the email address of the person sending the invitation.
-  @param outlookCompareStyle if true, display updated invitation comparisons in the style
-  of Microsoft Outlook (tm); else use our own "classic" style.
 */
 KCALUTILS_EXPORT QString formatICalInvitationNoHtml(
     const QString &invitation,
     const KCalCore::MemoryCalendar::Ptr &calendar,
     InvitationFormatterHelper *helper,
-    const QString &sender,
-    bool outlookCompareStyle);
+    const QString &sender );
+
+/**
+  Returns a formated <start> - <end> string that includes
+  dates and times as necessary.
+
+  @param start start time to use.
+  @param end end time to use.
+  @param floating optional wether or not it is a floating ( full day ) interval.
+  default false.
+**/
+KCALUTILS_EXPORT QString formatStartEnd(const KDateTime &start,
+                                        const KDateTime &end = KDateTime(),
+                                        const KDateTime::Spec &spec = KDateTime::Spec());
+
 
 /**
   Build a pretty QString representation of an Incidence's recurrence info.
@@ -246,7 +254,6 @@ class EventViewerVisitor;
 class ScheduleMessageVisitor;
 class InvitationHeaderVisitor;
 class InvitationBodyVisitor;
-class IncidenceCompareVisitor;
 class ToolTipVisitor;
 class MailBodyVisitor;
 }
