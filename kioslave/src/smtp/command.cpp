@@ -135,7 +135,7 @@ QByteArray EHLOCommand::nextCommandLine(TransactionState *ts)
     Q_UNUSED(ts)
     mNeedResponse = true;
     mComplete = mEHLONotSupported;
-    const char *cmd = mEHLONotSupported ? "HELO " : "EHLO " ;
+    const char *cmd = mEHLONotSupported ? "HELO " : "EHLO ";
     return cmd + QUrl::toAce(mHostname) + "\r\n";   //krazy:exclude=qclasses
 }
 
@@ -561,7 +561,7 @@ QByteArray TransferCommand::nextCommandLine(TransactionState *ts)
     }
     mComplete = true;
     mNeedResponse = true;
-    return mLastChar == '\n' ? dotCRLF : CRLFdotCRLF ;
+    return mLastChar == '\n' ? dotCRLF : CRLFdotCRLF;
 }
 
 bool TransferCommand::processResponse(const Response &r, TransactionState *ts)

@@ -297,7 +297,7 @@ int main(int, char **)
     MailFromCommand mail3(&smtp, "joe@user.org", true, 500);
     ts.clear();
     ts2 = ts;
-    smtp.caps << QStringLiteral("SIZE") << QStringLiteral("8BITMIME") ;
+    smtp.caps << QStringLiteral("SIZE") << QStringLiteral("8BITMIME");
     assert(mail3.nextCommandLine(&ts) == "MAIL FROM:<joe@user.org> BODY=8BITMIME SIZE=500\r\n");
     assert(ts == ts2);
 
@@ -479,7 +479,7 @@ int main(int, char **)
         Error = 16,
         EndOfOptions = 32
     };
-    for (unsigned int i = 0 ; i < EndOfOptions ; ++i)
+    for (unsigned int i = 0; i < EndOfOptions; ++i)
         checkSuccessfulTransferCommand(i & Error, i & Preloading, i & UngetLast,
                                        i & PerformDotStuff, i & EndInLF);
 
@@ -602,10 +602,10 @@ void checkSuccessfulTransferCommand(bool error, bool preload, bool ungetLast,
     const char *s_pre = slaveDotStuff ?
                         mailEndsInNewline ? foobarbaz_lf : foobarbaz
                         :
-                        mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed ;
+                        mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed;
     const unsigned int s_pre_len = qstrlen(s_pre);
 
-    const char *s_post = mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed ;
+    const char *s_post = mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed;
     //const unsigned int s_post_len = qstrlen( s_post );
 
     TransferCommand xfer(&smtp, preload ? s_post : 0);

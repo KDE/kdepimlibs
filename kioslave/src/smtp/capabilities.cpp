@@ -48,7 +48,7 @@ Capabilities Capabilities::fromResponse(const Response &ehlo)
 
     QCStringList l = ehlo.lines();
 
-    for (QCStringList::const_iterator it = ++l.constBegin() ; it != l.constEnd() ; ++it) {
+    for (QCStringList::const_iterator it = ++l.constBegin(); it != l.constEnd(); ++it) {
         c.add(QString::fromLatin1(*it));
     }
 

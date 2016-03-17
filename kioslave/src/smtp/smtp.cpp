@@ -231,7 +231,7 @@ void SMTPProtocol::put(const QUrl &url, int permissions, KIO::JobFlags)
     // Loop through our To and CC recipients, and send the proper
     // SMTP commands, for the benefit of the server.
     const QStringList recipients = request.recipients();
-    for (QStringList::const_iterator it = recipients.begin() ; it != recipients.end() ; ++it) {
+    for (QStringList::const_iterator it = recipients.begin(); it != recipients.end(); ++it) {
         queueCommand(new RcptToCommand(m_sessionIface, (*it).toLatin1()));
     }
 
@@ -458,7 +458,7 @@ bool SMTPProtocol::execute(int type, TransactionState *ts)
 {
     unique_ptr<Command> cmd(Command::createSimpleCommand(type, m_sessionIface));
     if (!cmd.get()) {
-        qCritical() << "Command::createSimpleCommand( " << type << " ) returned null!" ;
+        qCritical() << "Command::createSimpleCommand( " << type << " ) returned null!";
     }
     return execute(cmd.get(), ts);
 }
@@ -469,7 +469,7 @@ bool SMTPProtocol::execute(Command *cmd, TransactionState *ts)
 {
 
     if (!cmd) {
-        qCritical() << "SMTPProtocol::execute() called with no command to run!" ;
+        qCritical() << "SMTPProtocol::execute() called with no command to run!";
     }
 
     if (cmd->doNotExecute(ts)) {

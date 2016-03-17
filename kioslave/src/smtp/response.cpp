@@ -100,7 +100,7 @@ static QByteArray join(char sep, const QCStringList &list)
         return QByteArray();
     }
     QByteArray result = list.front();
-    for (QCStringList::const_iterator it = ++list.begin() ; it != list.end() ; ++it) {
+    for (QCStringList::const_iterator it = ++list.begin(); it != list.end(); ++it) {
         result += sep + *it;
     }
     return result;

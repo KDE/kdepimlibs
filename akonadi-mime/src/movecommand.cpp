@@ -35,8 +35,6 @@ public:
     Akonadi::Item::List mMessages;
 };
 
-
-
 MoveCommand::MoveCommand(const Akonadi::Collection &destFolder,
                          const Akonadi::Item::List &msgList,
                          QObject *parent)

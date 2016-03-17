@@ -90,11 +90,11 @@ public:
 
     QStringList recipients() const
     {
-        return to() + cc() + bcc() ;
+        return to() + cc() + bcc();
     }
     bool hasRecipients() const
     {
-        return !to().empty() || !cc().empty() || !bcc().empty() ;
+        return !to().empty() || !cc().empty() || !bcc().empty();
     }
 
     QStringList to() const

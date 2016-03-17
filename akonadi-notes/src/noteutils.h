@@ -271,5 +271,5 @@ private:
 }
 }
 
-Q_DECLARE_TYPEINFO( Akonadi::NoteUtils::Attachment, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::NoteUtils::Attachment, Q_MOVABLE_TYPE);
 #endif

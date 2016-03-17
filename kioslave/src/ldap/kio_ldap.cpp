@@ -642,7 +642,7 @@ void LDAPProtocol::put(const QUrl &_url, int, KIO::JobFlags flags)
                                            ldif.newSuperior(), ldif.delOldRdn());
                     break;
                 case Ldif::Entry_Mod:
-                    qCDebug(KLDAP_LOG) << "kio_ldap_mod" ;
+                    qCDebug(KLDAP_LOG) << "kio_ldap_mod";
                     ldaperr = mOp.modify_s(ldif.dn(), modops);
                     modops.clear();
                     break;

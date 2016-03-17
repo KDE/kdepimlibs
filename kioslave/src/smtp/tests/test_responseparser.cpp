@@ -15,7 +15,7 @@ static const QByteArray multiLineResponse[] = {
     "250-AUTH PLAIN DIGEST-MD5\r\n",
     "250 PIPELINING\r\n"
 };
-static const unsigned int numMultiLineLines = sizeof multiLineResponse / sizeof * multiLineResponse ;
+static const unsigned int numMultiLineLines = sizeof multiLineResponse / sizeof * multiLineResponse;
 
 void ResponseParserTest::testResponseParser()
 {
@@ -63,7 +63,7 @@ void ResponseParserTest::testResponseParser()
     r.clear();
     QVERIFY(r.isValid());
 
-    for (unsigned int i = 0 ; i < numMultiLineLines ; ++i) {
+    for (unsigned int i = 0; i < numMultiLineLines; ++i) {
         r.parseLine(multiLineResponse[i].data(), multiLineResponse[i].length());
         QVERIFY(r.isWellFormed());
         if (i < numMultiLineLines - 1) {

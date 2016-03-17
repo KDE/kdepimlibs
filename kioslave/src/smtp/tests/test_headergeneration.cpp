@@ -5,7 +5,7 @@
 //using std::cout;
 //using std::endl;
 
-int main(int , char **)
+int main(int, char **)
 {
     static QByteArray expected =
         "From: mutz@kde.org\r\n"
@@ -83,7 +83,7 @@ int main(int , char **)
         std::cout << "Expected:\n" << expected.data() << std::endl;
     }
 
-    return result == expected ? 0 : 1 ;
+    return result == expected ? 0 : 1;
 }
 
 #include "../request.cpp"

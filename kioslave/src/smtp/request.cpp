@@ -49,7 +49,7 @@ Request Request::fromURL(const QUrl &url)
 #ifndef NDEBUG
     qCDebug(SMTP_LOG) << "Parsing request from query:\n" << query.join(QStringLiteral("\n"));
 #endif
-    for (QStringList::const_iterator it = query.begin() ; it != query.end() ; ++it) {
+    for (QStringList::const_iterator it = query.begin(); it != query.end(); ++it) {
         int equalsPos = (*it).indexOf(QLatin1Char('='));
         if (equalsPos <= 0) {
             continue;
@@ -95,7 +95,7 @@ QByteArray Request::heloHostnameCString() const
 
 static bool isUsAscii(const QString &s)
 {
-    for (int i = 0 ; i < s.length() ; ++i) {
+    for (int i = 0; i < s.length(); ++i) {
         if (s[i].unicode() > 127) {
             return false;
         }
@@ -111,13 +111,13 @@ static inline bool isSpecial(char ch)
 
 static inline bool needsQuoting(char ch)
 {
-    return ch == '\\' || ch == '"' || ch == '\n' ;
+    return ch == '\\' || ch == '"' || ch == '\n';
 }
 
 static inline QByteArray rfc2047Encode(const QString &s)
 {
     QByteArray r = s.trimmed().toUtf8().toBase64();
-    return "=?utf-8?b?" + r + "?=" ; // use base64 since that always gives a valid encoded-word
+    return "=?utf-8?b?" + r + "?="; // use base64 since that always gives a valid encoded-word
 }
 
 static QByteArray quote(const QString &s)
@@ -128,7 +128,7 @@ static QByteArray quote(const QString &s)
     bool needsQuotes = false;
 
     unsigned int j = 0;
-    for (int i = 0 ; i < s.length() ; ++i) {
+    for (int i = 0; i < s.length(); ++i) {
         char ch = s[i].toLatin1();
         if (isSpecial(ch)) {
             if (needsQuoting(ch)) {

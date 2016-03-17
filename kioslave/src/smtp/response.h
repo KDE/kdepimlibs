@@ -87,28 +87,28 @@ public:
     }
     unsigned int first() const
     {
-        return code() / 100 ;
+        return code() / 100;
     }
     unsigned int second() const
     {
-        return (code() % 100) / 10 ;
+        return (code() % 100) / 10;
     }
     unsigned int third() const
     {
-        return code() % 10 ;
+        return code() % 10;
     }
 
     bool isPositive() const
     {
-        return first() <= 3 && first() >= 1 ;
+        return first() <= 3 && first() >= 1;
     }
     bool isNegative() const
     {
-        return first() == 4 || first() == 5 ;
+        return first() == 4 || first() == 5;
     }
     bool isUnknown() const
     {
-        return !isPositive() && !isNegative() ;
+        return !isPositive() && !isNegative();
     }
 
     QCStringList lines() const
@@ -130,7 +130,7 @@ public:
      */
     bool isOk() const
     {
-        return isValid() && isComplete() && isPositive() ;
+        return isValid() && isComplete() && isPositive();
     }
 
     /** Indicates whether the response was well-formed, meaning it
