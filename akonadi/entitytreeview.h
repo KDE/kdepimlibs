@@ -25,9 +25,12 @@
 #include "akonadi_export.h"
 
 #include <QTreeView>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 class KXMLGUIClient;
 class QDragMoveEvent;
+class KIcon;
 
 namespace Akonadi
 {
@@ -167,6 +170,21 @@ public:
      */
     void setDefaultPopupMenu(const QString &name);
 
+#ifndef QT_NO_DRAGANDDROP
+    /**
+     * Add custom action to the popup menu that appears when drag is finished.
+     *
+     * @param actionId Custom action identifier
+     * @param icon Action icon
+     * @param text Action label
+     * @param dropAction Type of the action
+     */
+    void addCustomDropAction(const QString &actionId,
+                             const KIcon &icon,
+                             const QString &text,
+                             Qt::DropAction dropAction);
+#endif
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
@@ -215,6 +233,27 @@ Q_SIGNALS:
      * @param item The new current item.
      */
     void currentChanged(const Akonadi::Item &item);
+
+#ifndef QT_NO_DRAGANDDROP
+    /**
+     * Emitted when custom drop action was triggered
+     *
+     * The listener can handle the drop action completely on its own and just call
+     * customDropActionProcessed(const QString &actionId), or it can transform the
+     * @p items and @p collections as needed and pass them back via the other
+     * customDropActionProcessed() overload and let EntityTreeModel to handle
+     *
+     * @param actionId ID of the activated action
+     * @param items Dropped items (if any)
+     * @param collections Dropped collections (if any)
+     * @param destination Drop destination collection
+     */
+    void customDropAction(const QString &actionId,
+                          const Akonadi::Item::List &items,
+                          const Akonadi::Collection::List &collections,
+                          const Akonadi::Collection &destination,
+                          Qt::DropAction dropAction);
+#endif
 
 protected:
     using QTreeView::currentChanged;

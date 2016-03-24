@@ -39,6 +39,7 @@
 #include <akonadi/transactionsequence.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/session.h>
+#include <akonadi/entitytreeview.h>
 #include "collectionfetchscope.h"
 
 #include "collectionutils_p.h"
@@ -583,6 +584,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 return false;
             }
 
+            PasteHelperJob *pasteJob = qobject_cast<PasteHelperJob*>(job);
+            if (pasteJob && pasteJob->hasCustomActionId()) {
+                d->m_pendingDrops.insert(pasteJob->customActionId(), pasteJob);
+                connect(job, SIGNAL(customDropAction(QString,Akonadi::Item::List,Akonadi::Collection::List,Akonadi::Collection,Qt::DropAction)),
+                        this, SIGNAL(customDropAction(QString,Akonadi::Item::List,Akonadi::Collection::List,Akonadi::Collection,Qt::DropAction)));
+            }
             connect(job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)));
 
             // Accpet the event so that it doesn't propagate.
@@ -1263,5 +1270,31 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
     }
     return proxyList;
 }
+
+void EntityTreeModel::customDropActionProcessed(const QString &actionId)
+{
+    Q_D(EntityTreeModel);
+    Q_ASSERT(d->m_pendingDrops.contains(actionId));
+    if (!d->m_pendingDrops.contains(actionId)) {
+        return;
+    }
+
+    d->m_pendingDrops.value(actionId)->customDropActionProcessed();
+}
+
+void EntityTreeModel::customDropActionProcessed(const QString &actionId,
+                                                const Item::List &items,
+                                                const Collection::List &collections,
+                                                Qt::DropAction dropAction)
+{
+    Q_D(EntityTreeModel);
+    Q_ASSERT(d->m_pendingDrops.contains(actionId));
+    if (!d->m_pendingDrops.contains(actionId)) {
+        return;
+    }
+
+    d->m_pendingDrops.value(actionId)->customDropActionProcessed(items, collections, dropAction);
+}
+
 
 #include "moc_entitytreemodel.cpp"

@@ -21,8 +21,13 @@
 #define AKONADI_DRAGDROPMANAGER_P_H
 
 #include <QAbstractItemView>
+#include <QVector>
 
 #include "akonadi/collection.h"
+
+#include <KIcon>
+
+class QObject;
 
 namespace Akonadi
 {
@@ -71,6 +76,9 @@ public:
      */
     void setManualSortingActive(bool active);
 
+    void addCustomAction(const QString &id, const KIcon &icon, const QString &text,
+                         Qt::DropAction dropAction);
+
 private:
     Collection currentDropTarget(QDropEvent *event) const;
 
@@ -78,6 +86,16 @@ private:
     bool mShowDropActionMenu;
     bool mIsManualSortingActive;
     QAbstractItemView *m_view;
+
+    struct CustomAction {
+        CustomAction() : dropAction(Qt::IgnoreAction) {}
+
+        QString id;
+        KIcon icon;
+        QString text;
+        Qt::DropAction dropAction;
+    };
+    QVector<CustomAction> mCustomActions;
 };
 
 }

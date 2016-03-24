@@ -208,27 +208,51 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
 
     // otherwise show up a menu to allow the user to select an action
     QMenu popup(m_view);
-    QAction *moveDropAction = 0;
-    QAction *copyDropAction = 0;
-    QAction *linkAction = 0;
+    QList<QAction *> moveDropActions;
+    QList<QAction *> copyDropActions;
+    QList<QAction *> linkActions;
     QString sequence;
 
     if (moveAllowed) {
         sequence = QKeySequence(Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        moveDropAction = popup.addAction(KIcon(QString::fromLatin1("go-jump")), i18n("&Move Here") + QLatin1Char('\t') + sequence);
+        moveDropActions << popup.addAction(KIcon(QString::fromLatin1("go-jump")), i18n("&Move Here") + QLatin1Char('\t') + sequence);
+        Q_FOREACH (const CustomAction &ca, mCustomActions) {
+            if (ca.dropAction != Qt::MoveAction) {
+                continue;
+            }
+            QAction *action = popup.addAction(ca.icon, ca.text);
+            action->setProperty("customActionId", ca.id);
+            moveDropActions << action;
+        }
     }
 
     if (copyAllowed) {
         sequence = QKeySequence(Qt::ControlModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        copyDropAction = popup.addAction(KIcon(QString::fromLatin1("edit-copy")), i18n("&Copy Here") + QLatin1Char('\t') + sequence);
+        copyDropActions << popup.addAction(KIcon(QString::fromLatin1("edit-copy")), i18n("&Copy Here") + QLatin1Char('\t') + sequence);
+        Q_FOREACH (const CustomAction &ca, mCustomActions) {
+            if (ca.dropAction != Qt::CopyAction) {
+                continue;
+            }
+            QAction *action = popup.addAction(ca.icon, ca.text);
+            action->setProperty("customActionId", ca.id);
+            copyDropActions << action;
+        }
     }
 
     if (linkAllowed) {
         sequence = QKeySequence(Qt::ControlModifier + Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        linkAction = popup.addAction(KIcon(QLatin1String("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
+        linkActions << popup.addAction(KIcon(QLatin1String("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
+        Q_FOREACH (const CustomAction &ca, mCustomActions) {
+            if (ca.dropAction != Qt::LinkAction) {
+                continue;
+            }
+            QAction *action = popup.addAction(ca.icon, ca.text);
+            action->setProperty("customActionId", ca.id);
+            linkActions << action;
+        }
     }
 
     popup.addSeparator();
@@ -238,16 +262,27 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (!activatedAction) {
         menuCanceled = true;
         return false;
-    } else if (activatedAction == moveDropAction) {
+    } else if (moveDropActions.contains(activatedAction)) {
         event->setDropAction(Qt::MoveAction);
-    } else if (activatedAction == copyDropAction) {
+    } else if (copyDropActions.contains(activatedAction)) {
         event->setDropAction(Qt::CopyAction);
-    } else if (activatedAction == linkAction) {
+    } else if (linkActions.contains(activatedAction)) {
         event->setDropAction(Qt::LinkAction);
     } else {
         menuCanceled = true;
         return false;
     }
+
+    // This is a custom action provided by user; we need to encode it into
+    // the QMimeData object so that model can correctly trigger user's handler
+    const QVariant customActionId = activatedAction->property("customActionId");
+    if (customActionId.isValid()) {
+        // FIXME: I know this is super-bad thing to do, but there's no other way
+        // to pass this information to the receiving model :(
+        QMimeData *md = const_cast<QMimeData*>(data);
+        md->setProperty("customActionId", customActionId);
+    }
+
     return true;
 }
 
@@ -330,4 +365,15 @@ bool DragDropManager::isManualSortingActive() const
 void DragDropManager::setManualSortingActive(bool active)
 {
     mIsManualSortingActive = active;
+}
+
+void DragDropManager::addCustomAction(const QString &id, const KIcon &icon,
+                                      const QString &text, Qt::DropAction dropAction)
+{
+    CustomAction ca;
+    ca.id = id;
+    ca.icon = icon;
+    ca.text = text;
+    ca.dropAction = dropAction;
+    mCustomActions << ca;
 }

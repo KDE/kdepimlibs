@@ -24,6 +24,7 @@
 #include "dbusconnectionpool.h"
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
+#include "pastehelper_p.h"
 
 #include <KDE/KLocalizedString>
 #include <KDE/KMessageBox>
@@ -1402,6 +1403,12 @@ void EntityTreeModelPrivate::pasteJobDone(KJob *job)
 
 void EntityTreeModelPrivate::updateJobDone(KJob *job)
 {
+    PasteHelperJob *phj = qobject_cast<PasteHelperJob*>(job);
+    Q_ASSERT(phj);
+    if (phj->hasCustomActionId()) {
+        m_pendingDrops.remove(phj->customActionId());
+    }
+
     if (job->error()) {
         // TODO: handle job errors
         kWarning() << "Job error:" << job->errorString();

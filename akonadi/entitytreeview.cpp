@@ -340,4 +340,16 @@ void EntityTreeView::setDefaultPopupMenu(const QString &name)
     d->mDefaultPopupMenu = name;
 }
 
+
+#ifndef QT_NO_DRAGANDDROP
+void EntityTreeView::addCustomDropAction(const QString &actionId,
+                                         const KIcon &icon,
+                                         const QString &text,
+                                         Qt::DropAction dropAction)
+{
+    d->mDragDropManager->addCustomAction(actionId, icon, text, dropAction);
+}
+#endif
+
+
 #include "moc_entitytreeview.cpp"

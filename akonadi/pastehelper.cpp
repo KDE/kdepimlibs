@@ -28,7 +28,6 @@
 #include "itemmodifyjob.h"
 #include "itemmovejob.h"
 #include "linkjob.h"
-#include "transactionsequence.h"
 #include "session.h"
 #include "unlinkjob.h"
 
@@ -38,65 +37,78 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QMimeData>
 #include <QtCore/QStringList>
-#include <QtCore/QMutexLocker>
+#include <QtCore/QTimer>
 
 #include <boost/bind.hpp>
 
 using namespace Akonadi;
 
-class PasteHelperJob: public Akonadi::TransactionSequence
-{
-    Q_OBJECT
-
-public:
-    explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
-                            const Akonadi::Collection::List &collections,
-                            const Akonadi::Collection &destination,
-                            QObject *parent = 0);
-    virtual ~PasteHelperJob();
-
-private Q_SLOTS:
-    void onDragSourceCollectionFetched(KJob *job);
-
-private:
-    void runActions();
-    void runItemsActions();
-    void runCollectionsActions();
-
-private:
-    Qt::DropAction mAction;
-    Akonadi::Item::List mItems;
-    Akonadi::Collection::List mCollections;
-    Akonadi::Collection mDestCollection;
-};
-
 PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
                                const Collection::List &collections,
                                const Collection &destination,
+                               const QString &customActionId,
                                QObject *parent)
     : TransactionSequence(parent)
     , mAction(action)
     , mItems(items)
     , mCollections(collections)
     , mDestCollection(destination)
+    , mCustomActionId(customActionId)
 {
     //FIXME: The below code disables transactions in otder to avoid data loss due to nested
     //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
     //Remove once this is fixed properly, see the other FIXME comments.
     setProperty("transactionsDisabled", true);
 
+    if (mCustomActionId.isEmpty()) {
+        processDropAction();
+    } else{
+        setAutoDelete(false);
+        QTimer::singleShot(0, this, SLOT(emitCustomDropAction()));
+    }
+}
+
+PasteHelperJob::~PasteHelperJob()
+{
+}
+
+void PasteHelperJob::emitCustomDropAction()
+{
+    Q_EMIT customDropAction(mCustomActionId, mItems, mCollections, mDestCollection, mAction);
+}
+
+void PasteHelperJob::customDropActionProcessed()
+{
+    commit();
+    return;
+}
+
+void PasteHelperJob::customDropActionProcessed(const Akonadi::Item::List &items,
+                                               const Akonadi::Collection::List &collections,
+                                               Qt::DropAction dropAction)
+{
+    setAutoDelete(true);
+    mItems = items;
+    mCollections = collections;
+    mAction = dropAction;
+
+    processDropAction();
+}
+
+void PasteHelperJob::processDropAction()
+{
     Collection dragSourceCollection;
-    if (!items.isEmpty() && items.first().parentCollection().isValid()) {
+    if (!mItems.isEmpty() && mItems.first().parentCollection().isValid()) {
         // Check if all items have the same parent collection ID
-        const Collection parent = items.first().parentCollection();
-        if (std::find_if(items.constBegin(), items.constEnd(),
+        const Collection parent = mItems.first().parentCollection();
+        if (std::find_if(mItems.constBegin(), mItems.constEnd(),
                          boost::bind(&Entity::operator!=, boost::bind(static_cast<Collection (Item::*)() const>(&Item::parentCollection), _1), parent))
-             == items.constEnd())
+             == mItems.constEnd())
         {
             dragSourceCollection = parent;
         }
 
-        kDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+        kDebug() << mItems.first().parentCollection().id() << dragSourceCollection.id();
     }
 
     if (dragSourceCollection.isValid()) {
@@ -112,10 +124,6 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
     } else {
         runActions();
     }
-}
-
-PasteHelperJob::~PasteHelperJob()
-{
 }
 
 void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
@@ -332,9 +340,9 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         // TODO: handle non Akonadi URLs?
     }
 
-
     PasteHelperJob *job = new PasteHelperJob(action, items,
                                              collections, destination,
+                                             mimeData->property("customActionId").toString(),
                                              session);
 
     return job;

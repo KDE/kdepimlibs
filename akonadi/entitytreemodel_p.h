@@ -36,6 +36,7 @@ namespace Akonadi
 class ItemFetchJob;
 class ChangeRecorder;
 class AgentInstance;
+class PasteHelperJob;
 }
 
 struct Node
@@ -141,6 +142,7 @@ public:
     Node *m_rootNode;
     QString m_rootCollectionDisplayName;
     QStringList m_mimeTypeFilter;
+    QMap<QString, PasteHelperJob*> m_pendingDrops;
     MimeTypeChecker m_mimeChecker;
     EntityTreeModel::CollectionFetchStrategy m_collectionFetchStrategy;
     EntityTreeModel::ItemPopulationStrategy m_itemPopulation;

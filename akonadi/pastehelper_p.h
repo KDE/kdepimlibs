@@ -21,6 +21,8 @@
 #define AKONADI_PASTEHELPER_P_H
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/transactionsequence.h>
 
 #include <QtCore/QList>
 
@@ -30,6 +32,51 @@ class QMimeData;
 namespace Akonadi {
 
 class Session;
+
+class PasteHelperJob: public Akonadi::TransactionSequence
+{
+    Q_OBJECT
+
+public:
+    explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
+                            const Akonadi::Collection::List &collections,
+                            const Akonadi::Collection &destination,
+                            const QString &customActionId,
+                            QObject *parent = 0);
+    virtual ~PasteHelperJob();
+
+    void customDropActionProcessed();
+    void customDropActionProcessed(const Akonadi::Item::List &items,
+                                   const Akonadi::Collection::List &collections,
+                                   Qt::DropAction dropAction);
+
+    bool hasCustomActionId() const { return !mCustomActionId.isEmpty(); }
+    QString customActionId() const { return mCustomActionId; }
+
+Q_SIGNALS:
+    void customDropAction(const QString &actionId, const Akonadi::Item::List &items,
+                          const Akonadi::Collection::List &collections,
+                          const Akonadi::Collection &collection,
+                          Qt::DropAction dropAction);
+
+private Q_SLOTS:
+    void emitCustomDropAction();
+    void onDragSourceCollectionFetched(KJob *job);
+
+private:
+    void processDropAction();
+    void runActions();
+    void runItemsActions();
+    void runCollectionsActions();
+
+private:
+    Qt::DropAction mAction;
+    Akonadi::Item::List mItems;
+    Akonadi::Collection::List mCollections;
+    Akonadi::Collection mDestCollection;
+    QString mCustomActionId;
+};
+
 
 /**
   @internal

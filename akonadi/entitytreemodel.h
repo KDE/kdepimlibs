@@ -637,6 +637,36 @@ public:
      */
     static QModelIndexList modelIndexesForItem(const QAbstractItemModel *model, const Item &item);
 
+
+    /** Call when customDropAction() is handled by listener.
+     *
+     * This overload allows passing back transformed Items and Collections as
+     * well as changing the final DropAction that ETM should perform. EntityTreeModel
+     * will continue handling the drop event as if it was a @p dropAction but
+     * will use @p items and @p collections provided by this method instead of
+     * the original ones.
+     *
+     * @param actionId ID of the handled action
+     * @param items Items that were dropped
+     * @param collections Colletions that were dropped
+     * @param dropAction Treat the drop as this dropAction
+     */
+    void customDropActionProcessed(const QString &actionId,
+                                   const Akonadi::Item::List &items,
+                                   const Akonadi::Collection::List &collections,
+                                   Qt::DropAction dropAction);
+
+    /**
+     * Call when customDropAction() is handled by listener.
+     *
+     * This overload indicates to ETM that the drop event has been handled
+     * completely and will not perform any additional action for this particular
+     * drop event.
+     *
+     * @p actionId ID of the handled action
+     */
+    void customDropActionProcessed(const QString &actionId);
+
 Q_SIGNALS:
     /**
      * Signal emitted when the collection tree has been fetched for the first time.
@@ -664,6 +694,25 @@ Q_SIGNALS:
      * @since 4.9.3
      */
     void collectionFetched(int collectionId);
+
+    /**
+     * Emitted when custom drop action (@see EntityTreeView::addCustomDropAction) was triggered
+     *
+     * The listener can handle the drop action completely on its own and just call
+     * customDropActionProcessed(const QString &actionId), or it can transform the
+     * @p items and @p collections as needed and pass them back via the other
+     * customDropActionProcessed() overload and let EntityTreeModel to handle
+     *
+     * @param actionId ID of the activated action
+     * @param items Dropped items (if any)
+     * @param collections Dropped collections (if any)
+     * @param destination Drop destination collection
+     */
+    void customDropAction(const QString &actionId,
+                          const Akonadi::Item::List &items,
+                          const Akonadi::Collection::List &collections,
+                          const Akonadi::Collection &destination,
+                          Qt::DropAction dropAction);
 
 protected:
     /**
