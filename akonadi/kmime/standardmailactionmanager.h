@@ -58,6 +58,7 @@ public:
         MarkMailAsImportant,                              ///< Marks a mail as important
         MarkMailAsActionItem,                             ///< Marks a mail as action item
         MarkAllMailAsRead,                                ///< Marks all mails in a folder as read.
+        MarkAllMailAsReadRecursive,                       ///< Marks all mails in a folder and its subfolders as read.
         MarkAllMailAsUnread,                              ///< Marks all mails in a folder as unread.
         MarkAllMailAsImportant,                           ///< Marks all mails in a folder as important
         MarkAllMailAsActionItem,                          ///< Marks all mails in a folder as action item

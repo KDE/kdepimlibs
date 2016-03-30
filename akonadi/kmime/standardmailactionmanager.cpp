@@ -546,6 +546,11 @@ public:
             invert = true;
             typeStr = typeStr.mid(1);
         }
+        bool recursive = false;
+        if (typeStr.startsWith(':')) {
+            recursive = true;
+            typeStr = typeStr.mid(1);
+        }
 
         StandardMailActionManager::Type type = MarkAllMailAsRead;
         if (typeStr == "U") {
@@ -562,7 +567,7 @@ public:
             return;
         }
 
-        MarkAsCommand *command = new MarkAsCommand(targetStatus, collections, invert, mParent);
+        MarkAsCommand *command = new MarkAsCommand(targetStatus, collections, invert, recursive, mParent);
         command->execute();
     }
 
@@ -777,6 +782,18 @@ KAction *StandardMailActionManager::createAction(Type type)
         action->setData(QByteArray("R"));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
         break;
+    case MarkAllMailAsReadRecursive:
+        action = new KAction(d->mParentWidget);
+        action->setIcon(KIcon(QLatin1String("mail-mark-read")));
+        action->setText(i18n("Mark &All Messages as Read Recursively"));
+        action->setIconText(i18n("Mark All as Read Recursively"));
+        action->setHelpText(i18n("Mark all messages as read recursively."));
+        action->setWhatsThis(i18n("Mark all messages as read recursively."));
+        d->mActions.insert(MarkAllMailAsReadRecursive, action);
+        d->mActionCollection->addAction(QString::fromLatin1("akonadi_mark_all_as_read_recursive"), action);
+        action->setData(QByteArray(":R"));
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()));
+        break;
     case MarkAllMailAsUnread:
         action = new KAction(d->mParentWidget);
         action->setIcon(KIcon(QLatin1String("mail-mark-unread")));
@@ -887,6 +904,7 @@ void StandardMailActionManager::createAllActions()
     createAction(MarkMailAsImportant);
     createAction(MarkMailAsActionItem);
     createAction(MarkAllMailAsRead);
+    createAction(MarkAllMailAsReadRecursive);
     createAction(MarkAllMailAsUnread);
     createAction(MarkAllMailAsImportant);
     createAction(MarkAllMailAsActionItem);

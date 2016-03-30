@@ -22,6 +22,10 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/collectionfetchjob.h>
+
+#include <kmessagebox.h>
+#include <klocalizedstring.h>
 
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Item::List &msgList, bool invert, QObject *parent)
     : CommandBase(parent)
@@ -33,7 +37,7 @@ MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const A
     mMarkJobCount = 0;
 }
 
-MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert, QObject *parent)
+MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List &folders, bool invert, bool recursive, QObject *parent)
     : CommandBase(parent)
 {
     mInvertMark = invert;
@@ -41,6 +45,24 @@ MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const A
     mTargetStatus = targetStatus;
     mFolderListJobCount = mFolders.size();
     mMarkJobCount = 0;
+    mRecursive = recursive;
+}
+
+void MarkAsCommand::slotCollectionFetchDone(KJob *job)
+{
+    if (job->error()) {
+        Util::showJobError(job);
+        emitResult(Failed);
+        return;
+    }
+
+    Akonadi::CollectionFetchJob *fjob = static_cast<Akonadi::CollectionFetchJob *>(job);
+    mFolders += fjob->collections();
+    mFolderListJobCount = mFolders.size();
+
+    // We have the subtree now, so act as if we were passed the collections in ctor
+    mRecursive = false;
+    execute();
 }
 
 void MarkAsCommand::slotFetchDone(KJob *job)
@@ -84,7 +106,18 @@ void MarkAsCommand::slotFetchDone(KJob *job)
 
 void MarkAsCommand::execute()
 {
-    if (!mFolders.isEmpty()) {
+    if (mRecursive && !mFolders.isEmpty()) {
+        if (KMessageBox::questionYesNo(qobject_cast<QWidget*>(parent()),
+                                       i18n("Are you sure you want to mark all messages in this folder and all its subfolders?"),
+                                       i18n("Mark All Recursively?")) == KMessageBox::Yes) {
+            Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(mFolders.first(),
+                                                                              Akonadi::CollectionFetchJob::Recursive,
+                                                                              parent());
+            connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionFetchDone(KJob*)));
+        } else {
+            emitResult(Canceled);
+        }
+    } else if (!mFolders.isEmpty()) {
         //yes, we go backwards, shouldn't matter
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mFolders[mFolderListJobCount - 1], parent());
         job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
