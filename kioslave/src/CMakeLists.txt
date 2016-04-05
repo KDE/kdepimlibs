@@ -2,5 +2,3 @@
 remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 add_subdirectory(sieve)
 
-add_subdirectory( pop3 ) 
-
