@@ -19,7 +19,7 @@ include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.19.0")
 set(QT_REQUIRED_VERSION "5.4.0")
-set(KDEPIMLIBS_VERSION "5.1.90")
+set(KDEPIMLIBS_VERSION "5.2.0")
 set(KMIMELIB_VERSION "5.1.90")
 set(AKONADI_VERSION "5.1.90")
 
