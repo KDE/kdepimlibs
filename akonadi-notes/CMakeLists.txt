@@ -20,8 +20,8 @@ include(ECMQtDeclareLoggingCategory)
 set(KF5_VERSION "5.19.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KDEPIMLIBS_VERSION "5.2.0")
-set(KMIMELIB_VERSION "5.1.90")
-set(AKONADI_VERSION "5.1.90")
+set(KMIMELIB_VERSION "5.2.0")
+set(AKONADI_VERSION "5.2.0")
 
 ecm_setup_version(${KDEPIMLIBS_VERSION} VARIABLE_PREFIX AKONADINOTES
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi-notes_version.h"
