@@ -5,7 +5,7 @@ project(Akonadi-Mime)
 # ECM setup
 find_package(ECM 5.19.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
-
+set(QT_REQUIRED_VERSION "5.5.0")
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)

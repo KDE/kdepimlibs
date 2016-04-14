@@ -1,4 +1,3 @@
-set(QT_REQUIRED_VERSION "5.4.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED COMPONENTS Test Widgets)
 
 add_subdirectory(messagetests)
