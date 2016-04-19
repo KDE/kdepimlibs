@@ -49,6 +49,7 @@
 #include <kmime/kmime_message.h>
 
 #include <QtCore/QPointer>
+#include <QtCore/QStack>
 #include <QItemSelectionModel>
 
 using namespace Akonadi;
@@ -317,6 +318,58 @@ public:
 
     }
 
+    void checkMarkAllAsReadRecursive(const Collection &rootCollection,
+                                     bool &enableMarkAllAsReadRecursive,
+                                     bool &showMarkAllAsReadRecursive)
+    {
+        enableMarkAllAsReadRecursive = false;
+        showMarkAllAsReadRecursive = false;
+
+        const QAbstractItemModel *model = mCollectionSelectionModel->model();
+        const QModelIndex rootIdx = EntityTreeModel::modelIndexForCollection(model, rootCollection);
+        // This method requires model to be ETM or a proxy on top of ETM
+        if (!rootIdx.isValid()) {
+            return;
+        }
+
+        // If rootCollection does not have any descendants don't even bother
+        // showing the recursive action
+        if (model->rowCount(rootIdx) == 0) {
+            enableMarkAllAsReadRecursive = false;
+            showMarkAllAsReadRecursive = false;
+            return;
+        }
+
+        // We have at least one child, makes sense to show the action
+        showMarkAllAsReadRecursive = true;
+
+        // If rootCollection has unread emails, enable the action (this is a shortcut)
+        if (rootCollection.statistics().unreadCount() > 0) {
+            enableMarkAllAsReadRecursive = true;
+            return;
+        }
+
+        // ... otherwise check if there's at least one descendant with an unread email
+        enableMarkAllAsReadRecursive = false;
+
+        QStack<QModelIndex> stack;
+        stack.push(rootIdx);
+        while (!stack.isEmpty()) {
+            const QModelIndex idx = stack.pop();
+            for (int i = 0, e = model->rowCount(idx); i < e; ++i) {
+                const QModelIndex childIdx = model->index(i, 0, idx);
+                const Collection childCol = model->data(childIdx, EntityTreeModel::CollectionRole).value<Collection>();
+                if (childCol.statistics().unreadCount() > 0) {
+                    // We found at least one child with unread email, enable this action
+                    enableMarkAllAsReadRecursive = true;
+                    return;
+                } else if (model->rowCount(childIdx) > 0) {
+                    stack.push(childIdx);
+                }
+            }
+        }
+    }
+
     void updateActions()
     {
         const Akonadi::Item::List selectedItems = mGenericManager->selectedItems();
@@ -412,6 +465,8 @@ public:
         }
 
         bool enableMarkAllAsRead = false;
+        bool enableMarkAllAsReadRecursive = false;
+        bool showMarkAllAsReadRecursive = false;
         bool enableMarkAllAsUnread = false;
         bool canDeleteItem = true;
         bool isSystemFolder = false;
@@ -436,6 +491,9 @@ public:
                                           collection == SpecialMailCollections::self()->defaultCollection(SpecialMailCollections::Drafts) ||
                                           collection == SpecialMailCollections::self()->defaultCollection(SpecialMailCollections::Templates));
                     }
+
+                    checkMarkAllAsReadRecursive(collection, enableMarkAllAsReadRecursive, showMarkAllAsReadRecursive);
+
                     //We will not change after that.
                     if (enableMarkAllAsRead && enableMarkAllAsUnread && !canDeleteItem && isSystemFolder) {
                         break;
@@ -459,6 +517,11 @@ public:
         QAction *action = mActions.value(Akonadi::StandardMailActionManager::MarkAllMailAsRead);
         if (action) {
             action->setEnabled(enableMarkAllAsRead);
+        }
+        action = mActions.value(Akonadi::StandardMailActionManager::MarkAllMailAsReadRecursive);
+        if (action) {
+            action->setEnabled(enableMarkAllAsReadRecursive);
+            action->setVisible(showMarkAllAsReadRecursive);
         }
 
         action = mActions.value(Akonadi::StandardMailActionManager::MarkAllMailAsUnread);
