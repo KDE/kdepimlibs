@@ -197,7 +197,7 @@ bool EmptyTrashCommand::folderIsTrash(const Akonadi::Collection &col)
 
 void EmptyTrashCommand::emitResult(Result value)
 {
-    emit result(value);
+    Q_EMIT result(value);
     mNumberOfTrashToEmpty--;
     if (mNumberOfTrashToEmpty <= 0) {
         deleteLater();

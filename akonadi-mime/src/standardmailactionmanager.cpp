@@ -472,7 +472,7 @@ public:
             action->setEnabled(enableMarkAllAsUnread);
         }
 
-        emit mParent->actionStateUpdated();
+        Q_EMIT mParent->actionStateUpdated();
     }
 
     void updateMarkAction(QAction *action, bool allMarked)

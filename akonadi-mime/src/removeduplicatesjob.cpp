@@ -51,7 +51,7 @@ public:
         mParent->connect(job, SIGNAL(result(KJob*)), mParent, SLOT(slotFetchDone(KJob*)));
         mCurrentJob = job;
 
-        emit mParent->description(mParent, i18n("Retrieving items..."));
+        Q_EMIT mParent->description(mParent, i18n("Retrieving items..."));
     }
 
     void slotFetchDone(KJob *job)
@@ -69,7 +69,7 @@ public:
             return;
         }
 
-        emit mParent->description(mParent, i18n("Searching for duplicates..."));
+        Q_EMIT mParent->description(mParent, i18n("Searching for duplicates..."));
 
         Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob *>(job);
         Akonadi::Item::List items = fjob->items();
@@ -128,7 +128,7 @@ public:
                 mParent->emitResult();
                 return;
             } else {
-                emit mParent->description(mParent, i18n("Removing duplicates..."));
+                Q_EMIT mParent->description(mParent, i18n("Removing duplicates..."));
                 Akonadi::ItemDeleteJob *delCmd = new Akonadi::ItemDeleteJob(mDuplicateItems, mParent);
                 mParent->connect(delCmd, SIGNAL(result(KJob*)), mParent, SLOT(slotDeleteDone(KJob*)));
             }
