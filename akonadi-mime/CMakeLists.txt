@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Akonadi-Mime)
 
 # ECM setup
-find_package(ECM 5.19.0 CONFIG REQUIRED)
+find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 set(QT_REQUIRED_VERSION "5.6.0")
 include(GenerateExportHeader)
@@ -17,7 +17,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 
-set(KF5_VERSION "5.19.0")
+set(KF5_VERSION "5.22.0")
 set(KDEPIMLIBS_VERSION "5.2.40")
 set(AKONADI_VERSION "5.2.40")
 set(KF5_MIME_VERSION "5.2.40")
