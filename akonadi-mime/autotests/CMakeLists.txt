@@ -4,10 +4,6 @@ add_subdirectory(messagetests)
 
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-# TODO apparently QTEST_AKONADIMAIN doesn't like NO_CASTs...
-remove_definitions( -DQT_NO_CAST_FROM_ASCII )
-remove_definitions( -DQT_NO_CAST_TO_ASCII )
-
 macro(add_akonadi_isolated_test _source)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )
