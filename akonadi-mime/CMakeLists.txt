@@ -18,7 +18,7 @@ include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 
 set(KF5_VERSION "5.19.0")
-set(KDEPIMLIBS_VERSION "5.2.2")
+set(KDEPIMLIBS_VERSION "5.2.3")
 set(AKONADI_VERSION "5.2.0")
 set(KF5_MIME_VERSION "5.2.0")
 
