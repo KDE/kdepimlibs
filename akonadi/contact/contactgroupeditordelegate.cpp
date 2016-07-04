@@ -62,7 +62,8 @@ class ContactsWithEmailFilterModel : public QSortFilterProxyModel
     }
 };
 
-ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
+ContactLineEdit::ContactLineEdit( bool isReference, Akonadi::ContactCompletionModel::Columns column,
+                                  QWidget *parent )
   : KLineEdit( parent ), mIsReference( isReference )
 {
   setFrame( false );
@@ -71,7 +72,7 @@ ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
   filter->setSourceModel( Akonadi::ContactCompletionModel::self() );
 
   QCompleter *completer = new QCompleter( filter, this );
-  completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameColumn );
+  completer->setCompletionColumn( column );
   completer->setCaseSensitivity( Qt::CaseInsensitive );
   connect( completer, SIGNAL(activated(QModelIndex)), SLOT(completed(QModelIndex)) );
 
@@ -136,14 +137,9 @@ ContactGroupEditorDelegate::~ContactGroupEditorDelegate()
 QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem&,
                                                    const QModelIndex &index ) const
 {
+  const bool isReference = index.data( ContactGroupModel::IsReferenceRole ).toBool();
   if ( index.column() == 0 ) {
-    ContactLineEdit *edit = 0;
-    if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
-      edit = new ContactLineEdit( true, parent );
-    } else {
-      edit = new ContactLineEdit( false, parent );
-    }
-
+    ContactLineEdit *edit = new ContactLineEdit( isReference, ContactCompletionModel::NameColumn, parent );
     connect( edit, SIGNAL(completed(QWidget*)), SLOT(completed(QWidget*)) );
 
     return edit;
@@ -154,8 +150,8 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
       comboBox->setAutoFillBackground( true );
       return comboBox;
     } else {
-      KLineEdit *lineEdit = new KLineEdit( parent );
-      lineEdit->setFrame( false );
+      ContactLineEdit *lineEdit = new ContactLineEdit( isReference, ContactCompletionModel::EmailColumn, parent);
+      connect( lineEdit, SIGNAL(completed(QWidget*)), SLOT(completed(QWidget*)) );
       return lineEdit;
     }
   }
@@ -219,28 +215,17 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
       model->setData( index, comboBox->currentText(), Qt::EditRole );
     }
   } else {
-    if ( index.column() == 0 ) {
-      ContactLineEdit *lineEdit = static_cast<ContactLineEdit*>( editor );
+    ContactLineEdit *lineEdit = static_cast<ContactLineEdit*>( editor );
 
-      const bool isReference = lineEdit->isReference();
-      const Item item = lineEdit->completedItem();
-      model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
-      if ( isReference ) {
-        if ( item.isValid() ) {
-          model->setData( index, item.id(), Qt::EditRole );
-        }
-      } else
-        model->setData( index, lineEdit->text(), Qt::EditRole );
-    }
-
-    if ( index.column() == 1 ) {
-      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit ) {
-        return;
+    const bool isReference = lineEdit->isReference();
+    const Item item = lineEdit->completedItem();
+    model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
+    if ( isReference ) {
+      if ( item.isValid() ) {
+        model->setData( index.sibling(index.row(), 0), item.id(), Qt::EditRole );
       }
-
+    } else
       model->setData( index, lineEdit->text(), Qt::EditRole );
-    }
   }
 }
 
