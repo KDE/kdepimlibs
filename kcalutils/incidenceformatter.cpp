@@ -1618,7 +1618,7 @@ static QString invitationCommentsIncidence(const Incidence::Ptr &incidence, bool
         html += QLatin1String("<table><tr>\n<td class=\"leftColumn\">");
         if (comments.count() > 1) {
             html += i18n("Comments:") + QLatin1String("</td>\n<td>\n<ul>\n");
-            for (uint i = 0; i < comments.count(); ++i) {
+            for (int i = 0; i < comments.count(); ++i) {
                 html += QLatin1String("<li>") + comments[i] + QLatin1String("</li>\n");
             }
             html += QLatin1String("</ul>\n");
