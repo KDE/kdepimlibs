@@ -706,10 +706,18 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
 void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List &collectionList)
 {
     foreach (const Collection &collection, collectionList) {
-        m_collections[collection.id()] = collection;
 
         const QModelIndex index = indexForCollection(collection);
-        Q_ASSERT(index.isValid());
+        if (!index.isValid()) {
+          // We retrieved an ancestor for which we do not have a corresponding
+          // node in our tree, which means we don't care about this ancestor.
+          // Also remove a possible dummy placeholder collection from the list
+          m_collections.remove(collection.id());
+          return;
+        }
+
+        // Replace the dummy placeholder with an actual collection
+        m_collections[collection.id()] = collection;
         dataChanged(index, index);
     }
 }
