@@ -95,6 +95,12 @@ int LinkLocator::maxAddressLen() const
 
 QString LinkLocator::getUrl()
 {
+    return getUrlAndCheckValidHref();
+}
+
+
+QString LinkLocator::getUrlAndCheckValidHref(bool *badurl)
+{
   QString url;
   if ( atUrl() ) {
     // NOTE: see http://tools.ietf.org/html/rfc3986#appendix-A and especially appendix-C
@@ -129,13 +135,26 @@ QString LinkLocator::getUrl()
 
     url.reserve( maxUrlLen() );  // avoid allocs
     int start = mPos;
+    bool previousCharIsADoubleQuote = false;
     while ( ( mPos < (int)mText.length() ) &&
             ( mText[mPos].isPrint() || mText[mPos].isSpace() ) &&
             ( ( afterUrl.isNull() && !mText[mPos].isSpace() ) ||
               ( !afterUrl.isNull() && mText[mPos] != afterUrl ) ) ) {
       if ( !mText[mPos].isSpace() ) {   // skip whitespace
-        url.append( mText[mPos] );
-        if ( url.length() > maxUrlLen() ) {
+          if (mText[mPos] == QLatin1Char('>') && previousCharIsADoubleQuote) {
+              //it's an invalid url
+              if (badurl) {
+                  *badurl = true;
+              }
+              return QString();
+          }
+          if (mText[mPos] == QLatin1Char('"')) {
+              previousCharIsADoubleQuote = true;
+          } else {
+              previousCharIsADoubleQuote = false;
+          }
+          url.append( mText[mPos] );
+          if ( url.length() > maxUrlLen() ) {
           break;
         }
       }
@@ -367,7 +386,12 @@ QString LinkLocator::convertToHtml( const QString &plainText, int flags,
     } else {
       const int start = locator.mPos;
       if ( !( flags & IgnoreUrls ) ) {
-        str = locator.getUrl();
+        bool badUrl = false;
+        str = locator.getUrlAndCheckValidHref(&badUrl);
+        if (badUrl) {
+            return locator.mText;
+        }
+
         if ( !str.isEmpty() ) {
           QString hyperlink;
           if ( str.left( 4 ) == QLatin1String("www.") ) {

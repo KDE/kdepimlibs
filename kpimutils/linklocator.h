@@ -107,6 +107,7 @@ class KPIMUTILS_EXPORT LinkLocator
       @return The URL at the current scan position, or an empty string.
     */
     QString getUrl();
+    QString getUrlAndCheckValidHref(bool *badurl = 0);
 
     /**
       Attempts to grab an email address. If there is an @ symbol at the
@@ -155,7 +156,7 @@ class KPIMUTILS_EXPORT LinkLocator
     */
     static QString pngToDataUrl( const QString & iconPath );
 
-  protected:
+protected:
     /**
       The plaintext string being scanned for URLs and email addresses.
     */
