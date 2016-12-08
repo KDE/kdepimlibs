@@ -66,7 +66,7 @@ public Q_SLOTS:
 
 public:
     QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
-    QHash<QString,Akonadi::Item::Id> mItemIdByUid;
+    QMultiHash<QString,Akonadi::Item::Id> mItemIdByUid;
     QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
     Akonadi::IncidenceChanger *mIncidenceChanger;
     QHash<QString,QStringList> mParentUidToChildrenUid;

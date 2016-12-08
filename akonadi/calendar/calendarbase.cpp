@@ -103,17 +103,6 @@ void CalendarBasePrivate::internalInsert(const Akonadi::Item &item)
         return;
     }
 
-    if (mItemIdByUid.contains(uid) && mItemIdByUid[uid] != item.id()) {
-        // We only allow duplicate UIDs if they have the same item id, for example
-        // when using virtual folders.
-        kWarning() << "Discarding duplicate incidence with instanceIdentifier=" << uid
-                   << "and summary " << incidence->summary()
-                   << "; recurrenceId() =" << incidence->recurrenceId()
-                   << "; new id=" << item.id()
-                   << "; existing id=" << mItemIdByUid[uid];
-        return;
-    }
-
     if (incidence->type() == KCalCore::Incidence::TypeEvent && !incidence->dtStart().isValid()) {
         // TODO: make the parser discard them would also be a good idea
         kWarning() << "Discarding event with invalid DTSTART. identifier="
@@ -141,6 +130,7 @@ void CalendarBasePrivate::internalInsert(const Akonadi::Item &item)
     }
 
     incidence->setCustomProperty("VOLATILE", "AKONADI-ID", QString::number(item.id()));
+    incidence->setCustomProperty("VOLATILE", "COLLECTION-ID", QString::number(item.storageCollectionId()));
     // Must be the last one due to re-entrancy
     const bool result = q->MemoryCalendar::addIncidence(incidence);
     if (!result) {
@@ -167,8 +157,7 @@ void CalendarBasePrivate::internalRemove(const Akonadi::Item &item)
     if (incidence) {
         mItemById.remove(item.id());
         // kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
-        mItemIdByUid.remove(incidence->instanceIdentifier());
-
+        mItemIdByUid.remove(incidence->instanceIdentifier(), item.id());
         mItemsByCollection.remove(item.storageCollectionId(), item);
 
         if (!incidence->hasRecurrenceId()) {
@@ -277,10 +266,10 @@ void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
     Q_ASSERT(oldIncidence);
 
     const QString newUid = newIncidence->uid();
-    if (mItemIdByUid.contains(newIdentifier)) {
+    if (mItemIdByUid.contains(newIdentifier, newItem.id())) {
         Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
         kWarning() << "New uid shouldn't be known: "  << newIdentifier << "; id="
-                   << newItem.id() << "; oldItem.id=" << mItemIdByUid[newIdentifier]
+                   << newItem.id() << "; oldItem.id=" << oldItem.id()
                    << "; new summary= " << newIncidence->summary()
                    << "; new recurrenceId=" << newIncidence->recurrenceId()
                    << "; oldIncidence" << oldIncidence;
@@ -292,8 +281,7 @@ void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
         Q_ASSERT(false);
         return;
     }
-
-    mItemIdByUid[newIdentifier] = newItem.id();
+    mItemIdByUid.insert(newIdentifier, newItem.id());
 
     // Get the real pointer
     oldIncidence = q->MemoryCalendar::incidence(oldIncidence->uid());
@@ -317,7 +305,7 @@ void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
         return;
     }
 
-    mItemIdByUid.remove(oldIncidence->instanceIdentifier());
+    mItemIdByUid.remove(oldIncidence->instanceIdentifier(), oldItem.id());
     const QString oldUid = oldIncidence->uid();
 
     if (mParentUidToChildrenUid.contains(oldUid)) {
@@ -407,13 +395,14 @@ Akonadi::Item CalendarBase::item(const QString &uid) const
     if (uid.isEmpty())
         return i;
 
-    if (d->mItemIdByUid.contains(uid)) {
-        const Akonadi::Item::Id id = d->mItemIdByUid[uid];
-        if (!d->mItemById.contains(id)) {
+    QHash<QString, Akonadi::Item::Id>::const_iterator it = d->mItemIdByUid.find(uid);
+    if (it != d->mItemIdByUid.constEnd()) {
+        const Akonadi::Item::Id id = *it;
+        i = d->mItemById[id];
+        if (!i.isValid()) {
             kError() << "Item with id " << id << "(uid=" << uid << ") not found, but in uid map";
             Q_ASSERT_X(false, "CalendarBase::item", "not in mItemById");
         }
-        i = d->mItemById[id];
     } else {
         kDebug() << "Can't find any incidence with uid " << uid;
     }
@@ -422,7 +411,40 @@ Akonadi::Item CalendarBase::item(const QString &uid) const
 
 Item CalendarBase::item(const Incidence::Ptr &incidence) const
 {
-    return incidence ? item(incidence->instanceIdentifier()) : Item();
+    Q_D(const CalendarBase);
+    Akonadi::Item i;
+
+    if (!incidence) {
+        return i;
+    }
+
+    const QString uid = incidence->instanceIdentifier();
+    const qint64 collectionId = incidence->customProperty("VOLATILE", "COLLECTION-ID").toLongLong();
+    if (uid.isEmpty() || collectionId <= 0) {
+        return i;
+    }
+
+    QHash<QString, Akonadi::Item::Id>::const_iterator it = d->mItemIdByUid.find(uid);
+    if (it != d->mItemIdByUid.constEnd()) {
+      while (it != d->mItemIdByUid.constEnd() && it.key() == uid) {
+          i = d->mItemById[(*it)];
+          if (!i.isValid()) {
+              kError() << "Item with id " << (*it) << "(uid=" << uid << ") not found, but in uid map";
+              Q_ASSERT_X(false, "CalendarBase::item", "not in mItemById");
+              return i;
+          }
+
+          if (i.storageCollectionId() == collectionId) {
+              break;
+          }
+
+          ++it;
+      }
+    } else {
+        kDebug() << "Can't find any incidence with uid " << uid;
+    }
+
+    return i;
 }
 
 Akonadi::Item::List CalendarBase::items() const
@@ -440,10 +462,11 @@ Akonadi::Item::List CalendarBase::items(Akonadi::Collection::Id id) const
 Akonadi::Item::List CalendarBase::itemList(const KCalCore::Incidence::List &incidences) const
 {
     Akonadi::Item::List items;
+    items.reserve(incidences.size());
 
     foreach(const KCalCore::Incidence::Ptr &incidence, incidences) {
         if (incidence) {
-            items << item(incidence->instanceIdentifier());
+            items << item(incidence);
         } else {
             items << Akonadi::Item();
         }
