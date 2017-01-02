@@ -222,8 +222,7 @@ public:
         }
 
         foreach (LocalNode *childNode, localParentNode->childNodes) {
-            // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
-            if (childNode->collection.name() == name && childNode->collection.remoteId().isEmpty()) {
+            if (childNode->collection.name() == name) {
                 return childNode;
             }
         }
