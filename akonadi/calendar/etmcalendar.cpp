@@ -407,7 +407,13 @@ void ETMCalendarPrivate::updateItem(const Akonadi::Item &item)
     Q_ASSERT(newIncidence);
     Q_ASSERT(!newIncidence->uid().isEmpty());
     newIncidence->setCustomProperty("VOLATILE", "AKONADI-ID", QString::number(item.id()));
-    IncidenceBase::Ptr existingIncidence = q->incidence(newIncidence->uid(), newIncidence->recurrenceId());
+    newIncidence->setCustomProperty("VOLATILE", "COLLECTION-ID", QString::number(item.storageCollectionId()));
+
+    const Akonadi::Item existingItem = q->item(newIncidence);
+    IncidenceBase::Ptr existingIncidence;
+    if (existingItem.isValid()) {
+        existingIncidence = CalendarUtils::incidence(existingItem);
+    }
 
     if (!existingIncidence && !mItemById.contains(item.id())) {
         // We don't know about this one because it was discarded, for example because of not having DTSTART
@@ -415,7 +421,6 @@ void ETMCalendarPrivate::updateItem(const Akonadi::Item &item)
     }
 
     mItemsByCollection.insert(item.storageCollectionId(), item);
-    Akonadi::Item oldItem = mItemById.value(item.id());
 
     if (existingIncidence) {
         // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
@@ -425,11 +430,19 @@ void ETMCalendarPrivate::updateItem(const Akonadi::Item &item)
 
         // Check if RELATED-TO changed, updating parenting information
         handleParentChanged(newIncidence);
+        // KCalCore::IncidenceBase::operator=() triggers notification to all observers.
+        // However since KCalCore does not support multiple incidences with the same UID,
+        // the change notification delivered by KCalCore can have a wrong incidence.
+        // To workaround that we emit the notification ourselves and with the correct
+        // incidence.
+        q->setObserversEnabled(false);
         *(existingIncidence.data()) = *(newIncidence.data());
+        q->setObserversEnabled(true);
+        q->notifyIncidenceChanged(existingIncidence.staticCast<KCalCore::Incidence>());
     } else {
         mItemById.insert(item.id(), item);   // The item needs updating too, revision changed.
         // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
-        handleUidChange(oldItem, item, newIncidence->instanceIdentifier());
+        handleUidChange(existingItem, item, newIncidence->instanceIdentifier());
     }
 }
 

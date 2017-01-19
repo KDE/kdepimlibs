@@ -149,8 +149,11 @@ void CalendarBasePrivate::internalRemove(const Akonadi::Item &item)
         return;
     }
 
+    tmp->setCustomProperty("VOLATILE", "AKONADI-ID", QString::number(item.id()));
+    tmp->setCustomProperty("VOLATILE", "COLLECTION-ID", QString::number(item.storageCollectionId()));
     // We want the one stored in the calendar
-    Incidence::Ptr incidence = q->incidence(tmp->uid(), tmp->recurrenceId());
+    const Akonadi::Item storedItem = q->item(tmp);
+    const Incidence::Ptr incidence = CalendarUtils::incidence(storedItem);
 
     // Null incidence means it was deleted via CalendarBase::deleteIncidence(), but then
     // the ETMCalendar received the monitor notification and tried to delete it again.
